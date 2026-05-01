@@ -1,0 +1,34 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/DashboardScreen.gd" id="1"]
+
+[node name="DashboardScreen" type="Control"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1")
+
+[node name="TopBar" type="HBoxContainer" parent="."]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 40
+
+[node name="ScreenLabel" type="Label" parent="TopBar"]
+text = "Dashboard"
+size_flags_horizontal = 3
+
+[node name="ChangeWorldButton" type="Button" parent="TopBar"]
+text = "Change World"
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 40
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CenterContainer"]
+custom_minimum_size = Vector2(320, 500)
+
+[node name="LessonList" type="VBoxContainer" parent="CenterContainer/ScrollContainer"]
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
