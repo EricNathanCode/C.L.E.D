@@ -14,23 +14,6 @@ autowrap_mode = 3
 [node name="TableLabel" type="Label" parent="."]
 text = "TABLE: answers"
 
-[node name="OptionsTable" type="VBoxContainer" parent="."]
-theme_override_constants/separation = 0
-
-[node name="TableHeader" type="HBoxContainer" parent="OptionsTable"]
-theme_override_constants/separation = 0
-
-[node name="HeaderId" type="Label" parent="OptionsTable/TableHeader"]
-text = " id "
-custom_minimum_size = Vector2(40, 0)
-
-[node name="HeaderOption" type="Label" parent="OptionsTable/TableHeader"]
-text = " option"
-size_flags_horizontal = 3
-
-[node name="OptionRows" type="VBoxContainer" parent="OptionsTable"]
-theme_override_constants/separation = 0
-
 [node name="QueryLabel" type="Label" parent="."]
 text = "> Enter your query:"
 
@@ -51,11 +34,6 @@ text = ";"
 [node name="HintLabel" type="Label" parent="."]
 text = "Hint: (hint goes here)"
 visible = false
-
-[node name="ResultLabel" type="Label" parent="."]
-text = ""
-visible = false
-autowrap_mode = 3
 
 [node name="ButtonRow" type="HBoxContainer" parent="."]
 theme_override_constants/separation = 8

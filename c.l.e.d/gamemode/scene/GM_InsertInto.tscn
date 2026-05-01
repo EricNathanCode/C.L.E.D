@@ -14,6 +14,9 @@ autowrap_mode = 3
 [node name="TableLabel" type="Label" parent="."]
 text = "TABLE: [table]"
 
+[node name="DataTable" type="VBoxContainer" parent="."]
+theme_override_constants/separation = 0
+
 [node name="QueryLabel" type="Label" parent="."]
 text = "> Fill in the blanks:"
 
@@ -66,10 +69,9 @@ text = "' );"
 text = "Hint: (hint goes here)"
 visible = false
 
-[node name="ResultLabel" type="Label" parent="."]
-text = ""
+[node name="ResultBox" type="VBoxContainer" parent="."]
+theme_override_constants/separation = 4
 visible = false
-autowrap_mode = 3
 
 [node name="ButtonRow" type="HBoxContainer" parent="."]
 theme_override_constants/separation = 8
