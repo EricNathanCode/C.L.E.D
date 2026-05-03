@@ -13,6 +13,10 @@ func _ready() -> void:
 	$ButtonRow/HintButton.pressed.connect(_on_hint)
 	$ContinueButton.pressed.connect(_on_continue)
 	$SQLTerminal/QueryLine/IdInput.text_submitted.connect(func(_t): _on_execute())
+	_style_btn($ButtonRow/ExecuteButton, Color("#F59E0B"), Color("#1A1008"))
+	_style_btn_outline($ButtonRow/HintButton, Color("#4fc3f7"))
+	_style_btn($ContinueButton,          Color("#16A34A"), Color.WHITE)
+	$HintLabel.add_theme_color_override("font_color", Color("#4fc3f7"))
 
 func setup(data: Dictionary) -> void:
 	_correct_id = data.get("correct_id", -1)
@@ -138,3 +142,33 @@ func _cell(txt: String, is_header: bool, min_w: float) -> PanelContainer:
 	var lbl: Label = Label.new();  lbl.text = txt
 	if is_header: lbl.modulate = Color(1.0, 0.78, 0.0)
 	pc.add_child(lbl);  return pc
+
+# ── Shared button stylers ─────────────────────────────────
+func _style_btn(btn: Button, bg: Color, fg: Color) -> void:
+	btn.add_theme_color_override("font_color", fg)
+	var s := StyleBoxFlat.new()
+	s.bg_color = bg
+	s.border_color = Color(0, 0, 0, 0.5)
+	s.set_border_width_all(2)
+	s.set_corner_radius_all(6)
+	s.content_margin_left = 14; s.content_margin_right  = 14
+	s.content_margin_top  = 6;  s.content_margin_bottom = 6
+	btn.add_theme_stylebox_override("normal", s)
+	var h := s.duplicate() as StyleBoxFlat; h.bg_color = bg.lightened(0.15)
+	btn.add_theme_stylebox_override("hover", h)
+	var p := s.duplicate() as StyleBoxFlat; p.bg_color = bg.darkened(0.15)
+	btn.add_theme_stylebox_override("pressed", p)
+
+func _style_btn_outline(btn: Button, col: Color) -> void:
+	btn.add_theme_color_override("font_color", col)
+	var s := StyleBoxFlat.new()
+	s.bg_color = Color(0, 0, 0, 0)
+	s.border_color = col
+	s.set_border_width_all(2)
+	s.set_corner_radius_all(6)
+	s.content_margin_left = 14; s.content_margin_right  = 14
+	s.content_margin_top  = 6;  s.content_margin_bottom = 6
+	btn.add_theme_stylebox_override("normal", s)
+	var h := s.duplicate() as StyleBoxFlat; h.bg_color = Color(col.r, col.g, col.b, 0.1)
+	btn.add_theme_stylebox_override("hover", h)
+	btn.add_theme_stylebox_override("pressed", h)
