@@ -20,24 +20,26 @@ theme_override_constants/separation = 0
 [node name="QueryLabel" type="Label" parent="."]
 text = "> Fill in the blank:"
 
-[node name="SQLBlock" type="VBoxContainer" parent="."]
-theme_override_constants/separation = 4
+[node name="SQLTerminal" type="PanelContainer" parent="."]
 
-[node name="Line1" type="Label" parent="SQLBlock"]
+[node name="SQLBlock" type="VBoxContainer" parent="SQLTerminal"]
+theme_override_constants/separation = 6
+
+[node name="Line1" type="Label" parent="SQLTerminal/SQLBlock"]
 text = "SELECT * FROM [table]"
 
-[node name="Line2" type="HBoxContainer" parent="SQLBlock"]
+[node name="Line2" type="HBoxContainer" parent="SQLTerminal/SQLBlock"]
 theme_override_constants/separation = 2
 
-[node name="WhereKeyword" type="Label" parent="SQLBlock/Line2"]
+[node name="WhereKeyword" type="Label" parent="SQLTerminal/SQLBlock/Line2"]
 text = "WHERE [column] = '"
 
-[node name="Blank1" type="LineEdit" parent="SQLBlock/Line2"]
+[node name="Blank1" type="LineEdit" parent="SQLTerminal/SQLBlock/Line2"]
 placeholder_text = "search value"
 custom_minimum_size = Vector2(140, 0)
 max_length = 60
 
-[node name="Suffix" type="Label" parent="SQLBlock/Line2"]
+[node name="Suffix" type="Label" parent="SQLTerminal/SQLBlock/Line2"]
 text = "' ;"
 
 [node name="HintLabel" type="Label" parent="."]

@@ -17,18 +17,20 @@ text = "TABLE: answers"
 [node name="QueryLabel" type="Label" parent="."]
 text = "> Enter your query:"
 
-[node name="QueryLine" type="HBoxContainer" parent="."]
+[node name="SQLTerminal" type="PanelContainer" parent="."]
+
+[node name="QueryLine" type="HBoxContainer" parent="SQLTerminal"]
 theme_override_constants/separation = 4
 
-[node name="QueryPrefix" type="Label" parent="QueryLine"]
+[node name="QueryPrefix" type="Label" parent="SQLTerminal/QueryLine"]
 text = "SELECT * FROM answers WHERE id ="
 
-[node name="IdInput" type="LineEdit" parent="QueryLine"]
+[node name="IdInput" type="LineEdit" parent="SQLTerminal/QueryLine"]
 placeholder_text = "__"
 custom_minimum_size = Vector2(50, 0)
 max_length = 2
 
-[node name="QuerySuffix" type="Label" parent="QueryLine"]
+[node name="QuerySuffix" type="Label" parent="SQLTerminal/QueryLine"]
 text = ";"
 
 [node name="HintLabel" type="Label" parent="."]

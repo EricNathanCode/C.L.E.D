@@ -20,38 +20,40 @@ theme_override_constants/separation = 0
 [node name="QueryLabel" type="Label" parent="."]
 text = "> Fill in the blanks:"
 
-[node name="SQLBlock" type="VBoxContainer" parent="."]
-theme_override_constants/separation = 4
+[node name="SQLTerminal" type="PanelContainer" parent="."]
 
-[node name="Line1" type="Label" parent="SQLBlock"]
+[node name="SQLBlock" type="VBoxContainer" parent="SQLTerminal"]
+theme_override_constants/separation = 6
+
+[node name="Line1" type="Label" parent="SQLTerminal/SQLBlock"]
 text = "UPDATE [table]"
 
-[node name="Line2" type="HBoxContainer" parent="SQLBlock"]
+[node name="Line2" type="HBoxContainer" parent="SQLTerminal/SQLBlock"]
 theme_override_constants/separation = 2
 
-[node name="SetKeyword" type="Label" parent="SQLBlock/Line2"]
+[node name="SetKeyword" type="Label" parent="SQLTerminal/SQLBlock/Line2"]
 text = "SET [column] = '"
 
-[node name="Blank1" type="LineEdit" parent="SQLBlock/Line2"]
+[node name="Blank1" type="LineEdit" parent="SQLTerminal/SQLBlock/Line2"]
 placeholder_text = "new value"
 custom_minimum_size = Vector2(150, 0)
 max_length = 60
 
-[node name="Quote" type="Label" parent="SQLBlock/Line2"]
+[node name="Quote" type="Label" parent="SQLTerminal/SQLBlock/Line2"]
 text = "'"
 
-[node name="Line3" type="HBoxContainer" parent="SQLBlock"]
+[node name="Line3" type="HBoxContainer" parent="SQLTerminal/SQLBlock"]
 theme_override_constants/separation = 2
 
-[node name="WhereKeyword" type="Label" parent="SQLBlock/Line3"]
+[node name="WhereKeyword" type="Label" parent="SQLTerminal/SQLBlock/Line3"]
 text = "WHERE id ="
 
-[node name="Blank2" type="LineEdit" parent="SQLBlock/Line3"]
+[node name="Blank2" type="LineEdit" parent="SQLTerminal/SQLBlock/Line3"]
 placeholder_text = "id"
 custom_minimum_size = Vector2(60, 0)
 max_length = 10
 
-[node name="Semicolon" type="Label" parent="SQLBlock/Line3"]
+[node name="Semicolon" type="Label" parent="SQLTerminal/SQLBlock/Line3"]
 text = ";"
 
 [node name="HintLabel" type="Label" parent="."]

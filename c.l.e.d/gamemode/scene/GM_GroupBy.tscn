@@ -20,27 +20,29 @@ theme_override_constants/separation = 0
 [node name="QueryLabel" type="Label" parent="."]
 text = "> Fill in the blank:"
 
-[node name="SQLBlock" type="VBoxContainer" parent="."]
-theme_override_constants/separation = 4
+[node name="SQLTerminal" type="PanelContainer" parent="."]
 
-[node name="Line1" type="Label" parent="SQLBlock"]
+[node name="SQLBlock" type="VBoxContainer" parent="SQLTerminal"]
+theme_override_constants/separation = 6
+
+[node name="Line1" type="Label" parent="SQLTerminal/SQLBlock"]
 text = "SELECT [column], COUNT(*)"
 
-[node name="Line2" type="Label" parent="SQLBlock"]
+[node name="Line2" type="Label" parent="SQLTerminal/SQLBlock"]
 text = "FROM [table]"
 
-[node name="Line3" type="HBoxContainer" parent="SQLBlock"]
+[node name="Line3" type="HBoxContainer" parent="SQLTerminal/SQLBlock"]
 theme_override_constants/separation = 2
 
-[node name="GroupKeyword" type="Label" parent="SQLBlock/Line3"]
+[node name="GroupKeyword" type="Label" parent="SQLTerminal/SQLBlock/Line3"]
 text = "GROUP BY"
 
-[node name="Blank1" type="LineEdit" parent="SQLBlock/Line3"]
+[node name="Blank1" type="LineEdit" parent="SQLTerminal/SQLBlock/Line3"]
 placeholder_text = "column name"
 custom_minimum_size = Vector2(150, 0)
 max_length = 60
 
-[node name="Semicolon" type="Label" parent="SQLBlock/Line3"]
+[node name="Semicolon" type="Label" parent="SQLTerminal/SQLBlock/Line3"]
 text = ";"
 
 [node name="HintLabel" type="Label" parent="."]

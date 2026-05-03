@@ -8,8 +8,13 @@ var _blanks:    Array      = []
 var _step_data: Dictionary = {}
 
 func _ready() -> void:
-	_blanks = [$SQLBlock/Line2/Blank1, $SQLBlock/Line2/Blank2,
-			   $SQLBlock/Line2/Blank3, $SQLBlock/Line2/Blank4]
+	_blanks = [
+		$SQLTerminal/SQLBlock/Line2/Blank1, $SQLTerminal/SQLBlock/Line2/Blank2,
+		$SQLTerminal/SQLBlock/Line2/Blank3, $SQLTerminal/SQLBlock/Line2/Blank4,
+	]
+	_apply_terminal_style($SQLTerminal)
+	for b in _blanks: _style_input(b as LineEdit)
+	$QueryLabel.add_theme_color_override("font_color", Color("#4fc3f7"))
 	$ButtonRow/ExecuteButton.pressed.connect(_on_execute)
 	$ButtonRow/HintButton.pressed.connect(_on_hint)
 	$ContinueButton.pressed.connect(_on_continue)
@@ -17,13 +22,15 @@ func _ready() -> void:
 
 func setup(data: Dictionary) -> void:
 	_step_data = data;  _answers = data.get("answers", [])
-	$Description.text    = data.get("desc", "")
-	$HintLabel.text      = "Hint: " + data.get("hint", "")
-	$TableLabel.text     = "TABLE: " + data.get("table", "[table]")
-	$SQLBlock/Line1.text = "INSERT INTO " + data.get("table", "[table]") + \
+	$Description.text                 = data.get("desc", "")
+	$HintLabel.text                   = "Hint: " + data.get("hint", "")
+	$TableLabel.text                  = "TABLE: " + data.get("table", "[table]")
+	$SQLTerminal/SQLBlock/Line1.text  = "INSERT INTO " + data.get("table", "[table]") + \
 		" (" + ", ".join(data.get("columns", [])) + ")"
 	$HintLabel.visible = false;  $ResultBox.visible = false;  $ContinueButton.visible = false
-	var seps := [$SQLBlock/Line2/Sep1, $SQLBlock/Line2/Sep2, $SQLBlock/Line2/Sep3]
+	var seps := [$SQLTerminal/SQLBlock/Line2/Sep1,
+				 $SQLTerminal/SQLBlock/Line2/Sep2,
+				 $SQLTerminal/SQLBlock/Line2/Sep3]
 	for i in range(_blanks.size()):
 		var le: LineEdit = _blanks[i];  le.text = "";  le.visible = i < _answers.size()
 	for i in range(seps.size()): (seps[i] as Label).visible = i < (_answers.size() - 1)
@@ -38,8 +45,8 @@ func _on_execute() -> void:
 		if inp.text.strip_edges().to_lower() != exp.to_lower(): all_ok = false
 		else: inp.text = exp
 	if all_ok:
-		_fill_result($ResultBox, _step_data.get("result_headers", []),
-			_step_data.get("result_rows", []), _step_data.get("result_msg", ""))
+		_fill_result($ResultBox, _step_data.get("result_headers",[]),
+			_step_data.get("result_rows",[]), _step_data.get("result_msg",""))
 	else:
 		_fill_error($ResultBox, "Some values are wrong. Check the dialogue and try again.")
 
@@ -64,6 +71,27 @@ func _fill_error(c: Node, msg: String) -> void:
 	lbl.text = "ERROR: " + msg;  lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	c.add_child(lbl);  c.visible = true
 
+func _apply_terminal_style(panel: PanelContainer) -> void:
+	var s := StyleBoxFlat.new()
+	s.bg_color = Color(0.04, 0.07, 0.13)
+	s.border_color = Color(0.22, 0.32, 0.45)
+	s.set_border_width_all(1);  s.border_width_left = 4
+	s.content_margin_left = 14;  s.content_margin_right  = 14
+	s.content_margin_top  = 10;  s.content_margin_bottom = 10
+	panel.add_theme_stylebox_override("panel", s)
+
+func _style_input(inp: LineEdit) -> void:
+	var ns := StyleBoxFlat.new()
+	ns.bg_color = Color(0.04, 0.07, 0.13, 1.0)
+	ns.border_color = Color(1.0, 0.78, 0.0);  ns.border_width_bottom = 2
+	ns.content_margin_left = 6;  ns.content_margin_right  = 6
+	ns.content_margin_top  = 3;  ns.content_margin_bottom = 3
+	inp.add_theme_stylebox_override("normal", ns)
+	var fs := ns.duplicate() as StyleBoxFlat;  fs.border_width_bottom = 3
+	inp.add_theme_stylebox_override("focus", fs)
+	inp.add_theme_color_override("font_color", Color(1.0, 0.78, 0.0))
+	inp.add_theme_color_override("font_placeholder_color", Color(1.0, 0.78, 0.0, 0.3))
+
 func _build_table(headers: Array, rows: Array) -> VBoxContainer:
 	var all_rows: Array = [headers] + rows
 	var font: Font = ThemeDB.fallback_font;  var fsize: int = ThemeDB.fallback_font_size
@@ -78,8 +106,7 @@ func _build_table(headers: Array, rows: Array) -> VBoxContainer:
 	var wrap: VBoxContainer = VBoxContainer.new()
 	wrap.add_theme_constant_override("separation", 0)
 	wrap.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	for i in range(all_rows.size()):
-		wrap.add_child(_make_row(all_rows[i], i == 0, col_min))
+	for i in range(all_rows.size()): wrap.add_child(_make_row(all_rows[i], i == 0, col_min))
 	return wrap
 
 func _make_row(cells: Array, is_header: bool, col_min: Array) -> HBoxContainer:

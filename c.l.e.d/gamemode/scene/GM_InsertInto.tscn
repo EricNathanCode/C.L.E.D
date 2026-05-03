@@ -20,49 +20,51 @@ theme_override_constants/separation = 0
 [node name="QueryLabel" type="Label" parent="."]
 text = "> Fill in the blanks:"
 
-[node name="SQLBlock" type="VBoxContainer" parent="."]
-theme_override_constants/separation = 4
+[node name="SQLTerminal" type="PanelContainer" parent="."]
 
-[node name="Line1" type="Label" parent="SQLBlock"]
+[node name="SQLBlock" type="VBoxContainer" parent="SQLTerminal"]
+theme_override_constants/separation = 6
+
+[node name="Line1" type="Label" parent="SQLTerminal/SQLBlock"]
 text = "INSERT INTO [table] (col1, col2, col3)"
 
-[node name="Line2" type="HBoxContainer" parent="SQLBlock"]
+[node name="Line2" type="HBoxContainer" parent="SQLTerminal/SQLBlock"]
 theme_override_constants/separation = 2
 
-[node name="ValuesKeyword" type="Label" parent="SQLBlock/Line2"]
+[node name="ValuesKeyword" type="Label" parent="SQLTerminal/SQLBlock/Line2"]
 text = "VALUES ( '"
 
-[node name="Blank1" type="LineEdit" parent="SQLBlock/Line2"]
+[node name="Blank1" type="LineEdit" parent="SQLTerminal/SQLBlock/Line2"]
 placeholder_text = "value 1"
 custom_minimum_size = Vector2(100, 0)
 max_length = 60
 
-[node name="Sep1" type="Label" parent="SQLBlock/Line2"]
+[node name="Sep1" type="Label" parent="SQLTerminal/SQLBlock/Line2"]
 text = "' , '"
 
-[node name="Blank2" type="LineEdit" parent="SQLBlock/Line2"]
+[node name="Blank2" type="LineEdit" parent="SQLTerminal/SQLBlock/Line2"]
 placeholder_text = "value 2"
 custom_minimum_size = Vector2(100, 0)
 max_length = 60
 
-[node name="Sep2" type="Label" parent="SQLBlock/Line2"]
+[node name="Sep2" type="Label" parent="SQLTerminal/SQLBlock/Line2"]
 text = "' , '"
 
-[node name="Blank3" type="LineEdit" parent="SQLBlock/Line2"]
+[node name="Blank3" type="LineEdit" parent="SQLTerminal/SQLBlock/Line2"]
 placeholder_text = "value 3"
 custom_minimum_size = Vector2(100, 0)
 max_length = 60
 
-[node name="Sep3" type="Label" parent="SQLBlock/Line2"]
+[node name="Sep3" type="Label" parent="SQLTerminal/SQLBlock/Line2"]
 text = "' , '"
 
-[node name="Blank4" type="LineEdit" parent="SQLBlock/Line2"]
+[node name="Blank4" type="LineEdit" parent="SQLTerminal/SQLBlock/Line2"]
 placeholder_text = "value 4"
 custom_minimum_size = Vector2(100, 0)
 max_length = 60
 visible = false
 
-[node name="CloseParen" type="Label" parent="SQLBlock/Line2"]
+[node name="CloseParen" type="Label" parent="SQLTerminal/SQLBlock/Line2"]
 text = "' );"
 
 [node name="HintLabel" type="Label" parent="."]
