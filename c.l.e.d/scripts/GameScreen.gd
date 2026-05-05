@@ -26,6 +26,7 @@ const GM_SCENES: Dictionary = {
 }
 
 const BG_HOTEL  := "res://images/backgrounds/BG_hotel.png"
+const BG_CAFE   := "res://images/backgrounds/BG_cafe.png"
 const CHAR_BASE := "res://images/characters/NPC_adults/"
 
 # MC expression paths (used as NPC placeholder)
@@ -78,9 +79,13 @@ func _load_all_textures() -> void:
 		if tex:
 			_mc_textures[key] = tex
 
-	var bg := _load_texture(BG_HOTEL)
-	if bg:
-		_bg_textures["hotel"] = bg
+	var bg_hotel := _load_texture(BG_HOTEL)
+	if bg_hotel:
+		_bg_textures["hotel"] = bg_hotel
+
+	var bg_cafe := _load_texture(BG_CAFE)
+	if bg_cafe:
+		_bg_textures["cafe"] = bg_cafe
 
 func _load_texture(res_path: String) -> Texture2D:
 	# Method 1 — Godot resource system (works when file is imported)

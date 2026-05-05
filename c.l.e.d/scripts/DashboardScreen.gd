@@ -1,7 +1,7 @@
 extends Control
 
 const HOTEL_LESSONS := [1, 2, 3, 4, 5, 6, 7]
-const CAFE_LESSONS    := ["C1", "C2", "C3"]
+const CAFE_LESSONS    := ["C1", "C2", "C3", "C4", "C5", "C6", "C7"]
 
 # Lesson names: id → "SQL TYPE — Title"
 const HOTEL_NAMES: Dictionary = {
@@ -18,6 +18,10 @@ const CAFE_NAMES: Dictionary = {
 	"C1": "SELECT — Take the Order",
 	"C2": "INSERT INTO — Log a New Order",
 	"C3": "GROUP BY — End-of-Day Report",
+	"C4": "SELECT WHERE — Find an Order",
+	"C5": "UPDATE SET — Fix a Wrong Order",
+	"C6": "DELETE — Cancel an Order",
+	"C7": "ORDER BY — Sort the Menu Items",
 }
 
 func _ready() -> void:
