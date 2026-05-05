@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://kbta7j66qoq7"
-path="res://.godot/imported/_MC__TALK.png-9cace6d946d618c49c99c80e6dbdbb30.ctex"
+uid="uid://br3gby5j86adt"
+path="res://.godot/imported/confuse.png-2818c7e523eae5bd02b018127c214d7f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://images/characters/MC/_MC__TALK.png"
-dest_files=["res://.godot/imported/_MC__TALK.png-9cace6d946d618c49c99c80e6dbdbb30.ctex"]
+source_file="res://images/characters/NPC_adults/adult_1/confuse.png"
+dest_files=["res://.godot/imported/confuse.png-2818c7e523eae5bd02b018127c214d7f.ctex"]
 
 [params]
 

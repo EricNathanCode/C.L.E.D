@@ -25,15 +25,15 @@ const GM_SCENES: Dictionary = {
 	"group_by":     "res://gamemode/scene/GM_GroupBy.tscn",
 }
 
-const BG_HOTEL := "res://images/background/Office.png"
+const BG_HOTEL := "res://images/backgrounds/BG_hotel.png"
 
 # MC expression paths (used as NPC placeholder)
 const MC_EXPR: Dictionary = {
-	"idle":     "res://images/characters/MC/_MC__IDLE.png",
-	"talk":     "res://images/characters/MC/_MC__TALK.png",
-	"thinking": "res://images/characters/MC/_MC__THINKING.png",
-	"confuse":  "res://images/characters/MC/_MC__CONFUSE.png",
-	"shock":    "res://images/characters/MC/_MC__SHOCK.png",
+	"idle":     "res://images/characters/NPC_adults/adult_1/idle.png",
+	"talk":     "res://images/characters/NPC_adults/adult_1/talk.png",
+	"thinking": "res://images/characters/NPC_adults/adult_1/think.png",
+	"confuse":  "res://images/characters/NPC_adults/adult_1/confuse.png",
+	"shock":    "res://images/characters/NPC_adults/adult_1/shock.png",
 }
 
 # Which MC expression to show per story char key
@@ -82,22 +82,30 @@ func _load_all_textures() -> void:
 		_bg_textures["hotel"] = bg
 
 func _load_texture(res_path: String) -> Texture2D:
+	# Method 1 — Godot resource system (works when file is imported)
 	if ResourceLoader.exists(res_path):
 		var tex := ResourceLoader.load(res_path) as Texture2D
 		if tex:
 			return tex
 
+	# Method 2 — FileAccess buffer (works without .import files)
 	var abs_path: String = ProjectSettings.globalize_path(res_path)
 	var fa := FileAccess.open(abs_path, FileAccess.READ)
 	if fa:
 		var data: PackedByteArray = fa.get_buffer(fa.get_length())
 		fa.close()
 		var img := Image.new()
-		if img.load_png_from_buffer(data) == OK:
+		var loaded := false
+		if res_path.ends_with(".jpg") or res_path.ends_with(".jpeg"):
+			loaded = img.load_jpg_from_buffer(data) == OK
+		else:
+			loaded = img.load_png_from_buffer(data) == OK
+		if loaded:
 			if img.get_format() != Image.FORMAT_RGBA8:
 				img.convert(Image.FORMAT_RGBA8)
 			return ImageTexture.create_from_image(img)
 
+	# Method 3 — Image.load() direct fallback
 	var img2 := Image.new()
 	if img2.load(abs_path) == OK:
 		if img2.get_format() != Image.FORMAT_RGBA8:

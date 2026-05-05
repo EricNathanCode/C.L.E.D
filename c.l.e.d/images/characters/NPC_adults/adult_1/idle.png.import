@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c7m8mp5wm20wb"
-path="res://.godot/imported/_MC__SHOCK.png-3ed6d05dd48a6eeb0ed13518b6ed79e8.ctex"
+uid="uid://dal8dsflwo6vq"
+path="res://.godot/imported/idle.png-0799e034a2537b95ebbcbfca30398d66.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://images/characters/MC/_MC__SHOCK.png"
-dest_files=["res://.godot/imported/_MC__SHOCK.png-3ed6d05dd48a6eeb0ed13518b6ed79e8.ctex"]
+source_file="res://images/characters/NPC_adults/adult_1/idle.png"
+dest_files=["res://.godot/imported/idle.png-0799e034a2537b95ebbcbfca30398d66.ctex"]
 
 [params]
 
