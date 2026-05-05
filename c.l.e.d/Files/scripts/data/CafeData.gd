@@ -1,9 +1,9 @@
 extends Node
 # ═══════════════════════════════════════════════════════
-#  FAST FOOD DATA  —  scripts/data/FFData.gd
+#  CAFE DATA  —  scripts/data/CafeData.gd
 #
 #  Contains all dialogue and SQL challenge data
-#  for the Fast Food World lessons.
+#  for the Cafe World lessons.
 #
 #  Same step structure as HotelData.gd.
 #  Same gamemode keys map to the same GM_ scenes.
@@ -13,21 +13,21 @@ extends Node
 const LESSONS: Dictionary = {
 
 # ─────────────────────────────────────────────
-#  LESSON FF1 — SELECT (sql_choice)
-#  Topic: Taking a customer order at the counter
+#  LESSON C1 — SELECT (sql_choice)
+#  Topic: Taking a customer's order at the cafe counter
 # ─────────────────────────────────────────────
-"FF1": [
+"C1": [
 	{
 		"type": "dialogue",
 		"char": "scene",
 		"name": "SCENE",
-		"text": "The lunch rush begins. A customer steps up to the counter and looks at the menu board."
+		"text": "The morning rush begins. A customer steps up to the counter and glances at the menu."
 	},
 	{
 		"type": "dialogue",
-		"char": "ff_customer",
+		"char": "cafe_customer",
 		"name": "CUSTOMER",
-		"text": "Hi! I'd like to order a burger combo, please."
+		"text": "Hi! I'd like a latte, please."
 	},
 	{
 		"type": "dialogue",
@@ -37,26 +37,26 @@ const LESSONS: Dictionary = {
 	},
 	{
 		"type": "sql_choice",
-		"desc": "A customer just placed an order. Choose the most professional response for a fast food crew member.",
+		"desc": "A customer just placed a coffee order. Choose the most professional response for a cafe staff member.",
 		"options": [
-			[1, "Great choice! Would you like that with regular or large fries?"],
-			[2, "We're out of burgers."],
-			[3, "Just wait over there."]
+			[1, "Of course! What size would you like — small, medium, or large?"],
+			[2, "We're out of lattes."],
+			[3, "Just stand over there and wait."]
 		],
 		"correct_id": 1,
-		"hint": "Confirm the order and upsell politely. Answer: id = 1"
+		"hint": "Confirm the order and ask a helpful follow-up. Answer: id = 1"
 	},
 	{
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
-		"text": "Great choice! Would you like that with regular or large fries?"
+		"text": "Of course! What size would you like — small, medium, or large?"
 	},
 	{
 		"type": "dialogue",
-		"char": "ff_customer",
+		"char": "cafe_customer",
 		"name": "CUSTOMER",
-		"text": "Large fries, please! Thanks, you're quick!"
+		"text": "Medium please! You're so helpful, thank you!"
 	},
 	{
 		"type": "end"
@@ -64,53 +64,53 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON FF2 — INSERT INTO
+#  LESSON C2 — INSERT INTO
 #  Topic: Logging a new order into the system
 # ─────────────────────────────────────────────
-"FF2": [
+"C2": [
 	{
 		"type": "dialogue",
 		"char": "scene",
 		"name": "SCENE",
-		"text": "A customer walks up to the counter with their order ready."
+		"text": "A customer walks up to the counter ready to order."
 	},
 	{
 		"type": "dialogue",
-		"char": "ff_customer",
+		"char": "cafe_customer",
 		"name": "CUSTOMER",
-		"text": "Hi, I'd like a chicken sandwich and a cola, please. Name's Maria."
+		"text": "Hi, I'd like a cappuccino and a blueberry muffin, please. Name's Carlos."
 	},
 	{
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
-		"text": "Got it, Maria! Let me log that order into our system."
+		"text": "Got it, Carlos! Let me log that order into our system."
 	},
 	{
 		"type": "sql_fill",
 		"gamemode": "insert_into",
-		"desc": "Log Maria's order into the orders table. Fill in the customer_name, item, and drink.",
+		"desc": "Log Carlos's order into the orders table. Fill in the customer_name, drink, and food.",
 		"table": "orders",
-		"columns": ["customer_name", "item", "drink"],
-		"table_headers": ["id", "customer_name", "item", "drink"],
+		"columns": ["customer_name", "drink", "food"],
+		"table_headers": ["id", "customer_name", "drink", "food"],
 		"table_rows": [],
-		"answers": ["Maria", "Chicken Sandwich", "Cola"],
-		"hint": "Name: Maria | Item: Chicken Sandwich | Drink: Cola",
-		"result_headers": ["id", "customer_name", "item", "drink"],
-		"result_rows": [["8", "Maria", "Chicken Sandwich", "Cola"]],
+		"answers": ["Carlos", "Cappuccino", "Blueberry Muffin"],
+		"hint": "Name: Carlos | Drink: Cappuccino | Food: Blueberry Muffin",
+		"result_headers": ["id", "customer_name", "drink", "food"],
+		"result_rows": [["5", "Carlos", "Cappuccino", "Blueberry Muffin"]],
 		"result_msg": "1 record inserted into orders."
 	},
 	{
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
-		"text": "Order logged! Your chicken sandwich and cola will be ready shortly, Maria!"
+		"text": "Order logged! Your cappuccino and blueberry muffin will be ready shortly, Carlos!"
 	},
 	{
 		"type": "dialogue",
-		"char": "ff_customer",
+		"char": "cafe_customer",
 		"name": "CUSTOMER",
-		"text": "Perfect, thank you!"
+		"text": "Wonderful, thank you so much!"
 	},
 	{
 		"type": "end"
@@ -118,21 +118,21 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON FF3 — GROUP BY
+#  LESSON C3 — GROUP BY
 #  Topic: End-of-day sales report by category
 # ─────────────────────────────────────────────
-"FF3": [
+"C3": [
 	{
 		"type": "dialogue",
 		"char": "scene",
 		"name": "SCENE",
-		"text": "The shift is ending. Your supervisor walks over with the daily sales sheet."
+		"text": "The cafe is closing up. Your supervisor comes over with today's order sheet."
 	},
 	{
 		"type": "dialogue",
-		"char": "ff_supervisor",
+		"char": "cafe_supervisor",
 		"name": "SUPERVISOR",
-		"text": "Before you clock out, I need a count of today's orders grouped by category."
+		"text": "Before you go, can you pull a count of today's orders grouped by category?"
 	},
 	{
 		"type": "dialogue",
@@ -148,20 +148,18 @@ const LESSONS: Dictionary = {
 		"column": "category",
 		"table_headers": ["id", "item", "category"],
 		"table_rows": [
-			["1", "Burger Combo", "Burgers"],
-			["2", "Chicken Sandwich", "Chicken"],
-			["3", "Fries", "Sides"],
-			["4", "Burger Combo", "Burgers"],
-			["5", "Cola", "Drinks"]
+			["1", "Latte",           "Drinks"],
+			["2", "Cappuccino",      "Drinks"],
+			["3", "Blueberry Muffin","Pastries"],
+			["4", "Croissant",       "Pastries"],
+			["5", "Espresso",        "Drinks"]
 		],
 		"answer": "category",
 		"hint": "You want to count per category. Type: category",
 		"result_headers": ["category", "COUNT(*)"],
 		"result_rows": [
-			["Burgers", "2"],
-			["Chicken", "1"],
-			["Sides", "1"],
-			["Drinks", "1"]
+			["Drinks",   "3"],
+			["Pastries", "2"]
 		],
 		"result_msg": "Orders grouped by category."
 	},
@@ -169,13 +167,13 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
-		"text": "Report done! Burgers: 2, Chicken: 1, Sides: 1, Drinks: 1."
+		"text": "Report done! Drinks: 3, Pastries: 2."
 	},
 	{
 		"type": "dialogue",
-		"char": "ff_supervisor",
+		"char": "cafe_supervisor",
 		"name": "SUPERVISOR",
-		"text": "Good numbers today. Burgers are always the top seller. Nice work, see you tomorrow."
+		"text": "Great numbers today! Drinks always lead. Nice work — see you tomorrow."
 	},
 	{
 		"type": "end"

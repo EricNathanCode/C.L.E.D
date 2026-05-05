@@ -1,0 +1,51 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://gamemode/scripts/GM_Select.gd" id="1"]
+
+[node name="GM_Select" type="VBoxContainer"]
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+script = ExtResource("1")
+
+[node name="Description" type="Label" parent="."]
+text = "Description goes here."
+autowrap_mode = 3
+
+[node name="TableLabel" type="Label" parent="."]
+text = "TABLE: answers"
+
+[node name="QueryLabel" type="Label" parent="."]
+text = "> Enter your query:"
+
+[node name="SQLTerminal" type="PanelContainer" parent="."]
+
+[node name="QueryLine" type="HBoxContainer" parent="SQLTerminal"]
+theme_override_constants/separation = 4
+
+[node name="QueryPrefix" type="Label" parent="SQLTerminal/QueryLine"]
+text = "SELECT * FROM answers WHERE id ="
+
+[node name="IdInput" type="LineEdit" parent="SQLTerminal/QueryLine"]
+placeholder_text = "__"
+custom_minimum_size = Vector2(50, 0)
+max_length = 2
+
+[node name="QuerySuffix" type="Label" parent="SQLTerminal/QueryLine"]
+text = ";"
+
+[node name="HintLabel" type="Label" parent="."]
+text = "Hint: (hint goes here)"
+visible = false
+
+[node name="ButtonRow" type="HBoxContainer" parent="."]
+theme_override_constants/separation = 8
+
+[node name="ExecuteButton" type="Button" parent="ButtonRow"]
+text = "Execute"
+
+[node name="HintButton" type="Button" parent="ButtonRow"]
+text = "Hint"
+
+[node name="ContinueButton" type="Button" parent="."]
+text = "Continue Story"
+visible = false

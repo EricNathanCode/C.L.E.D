@@ -31,7 +31,7 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "scene",
 		"name": "SCENE",
-		"npc":  "adult_1/idle",                  # looking at you — idle
+		"npc":  "adult_1/idle",
 		"text": "A guest steps up to the counter with a friendly wave. It's your first interaction of the day."
 	},
 	{
@@ -45,7 +45,7 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
-		"npc":  "adult_1/idle",                  # looking at you — idle
+		"npc":  "adult_1/think",
 		"text": "Let me check my options before responding..."
 	},
 	{
@@ -63,7 +63,7 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
-		"npc":  "adult_1/idle",                  # looking at you — idle
+		"npc":  "adult_1/talk",
 		"text": "Yes! We have Deluxe and Standard rooms available. Which type would you prefer?"
 	},
 	{
@@ -87,7 +87,7 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "scene",
 		"name": "SCENE",
-		"npc":  "adult_1/idle",                  # looking at you — idle
+		"npc":  "adult_1/idle",
 		"text": "A young man walks in with a rolling suitcase and looks around the lobby, then approaches your desk."
 	},
 	{
@@ -101,7 +101,7 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
-		"npc":  "adult_1/idle",                  # looking at you — idle
+		"npc":  "adult_1/talk",
 		"text": "Good morning! Welcome to Grand Hotel. May I have your full name?"
 	},
 	{
@@ -115,7 +115,7 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
-		"npc":  "adult_1/idle",                  # looking at you — idle
+		"npc":  "adult_1/idle",
 		"text": "Perfect! Let me register that in our system right now."
 	},
 	{
@@ -136,7 +136,7 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
-		"npc":  "adult_1/idle",                  # looking at you — idle
+		"npc":  "adult_1/talk",
 		"text": "You're all set, Mr. Santos! Room 101 is confirmed. Enjoy your stay!"
 	},
 	{
@@ -160,7 +160,7 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "scene",
 		"name": "SCENE",
-		"npc":  "adult_2/idle",                  # looking at you — idle
+		"npc":  "adult_2/confuse",
 		"text": "A nervous young woman approaches, clutching a printed email and looking very worried."
 	},
 	{
@@ -181,7 +181,7 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
-		"npc":  "adult_2/idle",                  # looking at you — idle
+		"npc":  "adult_2/talk",
 		"text": "Hey, breathe! I can search for you. What's your last name?"
 	},
 	{
@@ -213,7 +213,7 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
-		"npc":  "adult_2/idle",                  # looking at you — idle
+		"npc":  "adult_2/talk",
 		"text": "Found you! Room 204, Deluxe Queen — all confirmed, Ms. Dela Cruz!"
 	},
 	{
@@ -238,7 +238,7 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "scene",
 		"name": "SCENE",
-		"npc":  "adult_1/idle",                  # looking at you — idle
+		"npc":  "adult_1/shock",
 		"text": "A stocky man storms up to the front desk, arms crossed, red-faced. You take a deep breath."
 	},
 	{
@@ -263,7 +263,7 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
-		"npc":  "adult_1/idle",                  # looking at you — idle
+		"npc":  "adult_1/talk",
 		"text": "I'm very sorry to hear that. I'll fix it right away. May I have your booking id?"
 	},
 	{
@@ -294,7 +294,7 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
-		"npc":  "adult_1/idle",                  # looking at you — idle
+		"npc":  "adult_1/talk",
 		"text": "Done! Corrected to Hernandez, Mr. Hernandez. I sincerely apologize for the error."
 	},
 	{
@@ -318,7 +318,7 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "scene",
 		"name": "SCENE",
-		"npc":  "adult_2/idle",                  # looking at you — idle
+		"npc":  "adult_2/idle",
 		"text": "The front desk phone rings. You pick it up — it's a guest calling in to cancel her reservation."
 	},
 	{
@@ -332,7 +332,7 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
-		"npc":  "adult_2/idle",                  # looking at you — idle
+		"npc":  "adult_2/talk",
 		"text": "I understand completely. Could I have your name and booking id?"
 	},
 	{
@@ -346,7 +346,7 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
-		"npc":  "adult_2/idle",                  # looking at you — idle
+		"npc":  "adult_2/idle",
 		"text": "Let me pull that up and process the cancellation for you right now."
 	},
 	{
@@ -368,7 +368,7 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
-		"npc":  "adult_2/idle",                  # looking at you — idle
+		"npc":  "adult_2/talk",
 		"text": "Done, Ms. Lim! Your reservation has been cancelled. We hope to see you again soon!"
 	},
 	{
@@ -392,7 +392,7 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "scene",
 		"name": "SCENE",
-		"npc":  "adult_3/idle",                  # looking at you — idle
+		"npc":  "adult_3/idle",
 		"text": "The hotel manager walks over with his clipboard, scanning the guest registry."
 	},
 	{
@@ -406,7 +406,7 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
-		"npc":  "adult_3/idle",                  # looking at you — idle
+		"npc":  "adult_3/idle",
 		"text": "Of course, sir. I'll sort the records right now."
 	},
 	{
@@ -435,7 +435,7 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
-		"npc":  "adult_3/idle",                  # looking at you — idle
+		"npc":  "adult_3/talk",
 		"text": "Here you go, sir — all guests sorted A to Z by last name!"
 	},
 	{
@@ -459,7 +459,7 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "scene",
 		"name": "SCENE",
-		"npc":  "adult_3/idle",                  # looking at you — idle
+		"npc":  "adult_3/think",
 		"text": "Friday afternoon. The manager walks in looking serious, carrying his weekly report clipboard."
 	},
 	{
@@ -473,7 +473,7 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
-		"npc":  "adult_3/idle",                  # looking at you — idle
+		"npc":  "adult_3/idle",
 		"text": "On it, sir. I'll group the data by room type and count them up right now."
 	},
 	{
@@ -504,7 +504,7 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
-		"npc":  "adult_3/idle",                  # looking at you — idle
+		"npc":  "adult_3/talk",
 		"text": "Report ready! Standard: 2, Deluxe: 2, Suite: 1."
 	},
 	{
@@ -518,7 +518,7 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
-		"npc":  "adult_3/idle",                  # looking at you — idle
+		"npc":  "adult_3/talk",
 		"text": "Just doing my job, sir. One query at a time."
 	},
 	{
