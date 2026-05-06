@@ -140,21 +140,21 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "scene",
 		"name": "SCENE",
-		"npc":  "adult_2/idle",
+		"npc":  "NPC_occupations/coffee_owner/idle",
 		"text": "The cafe is closing up. Your supervisor comes over with today's order sheet."
 	},
 	{
 		"type": "dialogue",
 		"char": "cafe_supervisor",
 		"name": "SUPERVISOR",
-		"npc":  "adult_2/talk",
+		"npc":  "NPC_occupations/coffee_owner/talk",
 		"text": "Before you go, can you pull a count of today's orders grouped by category?"
 	},
 	{
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
-		"npc":  "adult_2/idle",
+		"npc":  "NPC_occupations/coffee_owner/idle",
 		"text": "Sure, I'll run that report right now."
 	},
 	{
@@ -184,14 +184,14 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
-		"npc":  "adult_2/idle",
+		"npc":  "NPC_occupations/coffee_owner/idle",
 		"text": "Report done! Drinks: 3, Pastries: 2."
 	},
 	{
 		"type": "dialogue",
 		"char": "cafe_supervisor",
 		"name": "SUPERVISOR",
-		"npc":  "adult_2/think",
+		"npc":  "NPC_occupations/coffee_owner/think",
 		"text": "Great numbers today! Drinks always lead. Nice work — see you tomorrow."
 	},
 	{
@@ -407,21 +407,21 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "scene",
 		"name": "SCENE",
-		"npc":  "adult_2/idle",
+		"npc":  "NPC_occupations/coffee_owner/idle",
 		"text": "Your supervisor walks over with a tablet, checking the digital menu board."
 	},
 	{
 		"type": "dialogue",
 		"char": "cafe_supervisor",
 		"name": "SUPERVISOR",
-		"npc":  "adult_2/talk",
+		"npc":  "NPC_occupations/coffee_owner/talk",
 		"text": "Can you pull up all menu items sorted by price — cheapest to most expensive? We're updating the board."
 	},
 	{
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
-		"npc":  "adult_2/idle",
+		"npc":  "NPC_occupations/coffee_owner/idle",
 		"text": "On it! I'll sort the menu by price right now."
 	},
 	{
@@ -454,14 +454,14 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
-		"npc":  "adult_2/idle",
+		"npc":  "NPC_occupations/coffee_owner/idle",
 		"text": "Done! Sorted from cheapest: Espresso, Croissant, Muffin, Cappuccino, Latte."
 	},
 	{
 		"type": "dialogue",
 		"char": "cafe_supervisor",
 		"name": "SUPERVISOR",
-		"npc":  "adult_2/idle",
+		"npc":  "NPC_occupations/coffee_owner/idle",
 		"text": "Perfect. That's exactly what I needed for the menu board update. Great work!"
 	},
 	{

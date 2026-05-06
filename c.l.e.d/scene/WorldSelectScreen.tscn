@@ -41,6 +41,14 @@ text = "Hotel World"
 custom_minimum_size = Vector2(0, 50)
 text = "Cafe World"
 
+[node name="PoliceButton" type="Button" parent="ScrollContainer/WorldList"]
+custom_minimum_size = Vector2(0, 50)
+text = "Police Station World"
+
+[node name="LibraryButton" type="Button" parent="ScrollContainer/WorldList"]
+custom_minimum_size = Vector2(0, 50)
+text = "Library World"
+
 [node name="ExitButton" type="Button" parent="."]
 layout_mode = 0
 anchor_left = 0.3

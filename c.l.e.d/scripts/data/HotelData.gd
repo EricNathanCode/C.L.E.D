@@ -392,21 +392,21 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "scene",
 		"name": "SCENE",
-		"npc":  "adult_3/idle",                  # looking at you — idle
+		"npc":  "NPC_occupations/hotel_manager/idle",                  # looking at you — idle
 		"text": "The hotel manager walks over with his clipboard, scanning the guest registry."
 	},
 	{
 		"type": "dialogue",
 		"char": "mgr",
 		"name": "MANAGER",
-		"npc":  "adult_3/talk",
+		"npc":  "NPC_occupations/hotel_manager/talk",
 		"text": "I need you to pull up all current guests sorted alphabetically by last name. A to Z, please."
 	},
 	{
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
-		"npc":  "adult_3/idle",                  # looking at you — idle
+		"npc":  "NPC_occupations/hotel_manager/idle",                  # looking at you — idle
 		"text": "Of course, sir. I'll sort the records right now."
 	},
 	{
@@ -435,14 +435,14 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
-		"npc":  "adult_3/idle",                  # looking at you — idle
+		"npc":  "NPC_occupations/hotel_manager/idle",                  # looking at you — idle
 		"text": "Here you go, sir — all guests sorted A to Z by last name!"
 	},
 	{
 		"type": "dialogue",
 		"char": "mgr",
 		"name": "MANAGER",
-		"npc":  "adult_3/think",
+		"npc":  "NPC_occupations/hotel_manager/think",
 		"text": "Excellent. Dela Cruz, Hernandez, Santos. Perfect alphabetical order. Well done."
 	},
 	{
@@ -459,21 +459,21 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "scene",
 		"name": "SCENE",
-		"npc":  "adult_3/idle",                  # looking at you — idle
+		"npc":  "NPC_occupations/hotel_manager/idle",                  # looking at you — idle
 		"text": "Friday afternoon. The manager walks in looking serious, carrying his weekly report clipboard."
 	},
 	{
 		"type": "dialogue",
 		"char": "mgr",
 		"name": "MANAGER",
-		"npc":  "adult_3/talk",
+		"npc":  "NPC_occupations/hotel_manager/talk",
 		"text": "I need a breakdown: how many bookings do we have per room type? For the board meeting."
 	},
 	{
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
-		"npc":  "adult_3/idle",                  # looking at you — idle
+		"npc":  "NPC_occupations/hotel_manager/idle",                  # looking at you — idle
 		"text": "On it, sir. I'll group the data by room type and count them up right now."
 	},
 	{
@@ -504,21 +504,21 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
-		"npc":  "adult_3/idle",                  # looking at you — idle
+		"npc":  "NPC_occupations/hotel_manager/idle",                  # looking at you — idle
 		"text": "Report ready! Standard: 2, Deluxe: 2, Suite: 1."
 	},
 	{
 		"type": "dialogue",
 		"char": "mgr",
 		"name": "MANAGER",
-		"npc":  "adult_3/idle",
+		"npc":  "NPC_occupations/hotel_manager/idle",
 		"text": "Perfect. This is exactly what I needed. You're a natural at this database work."
 	},
 	{
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
-		"npc":  "adult_3/idle",                  # looking at you — idle
+		"npc":  "NPC_occupations/hotel_manager/idle",                  # looking at you — idle
 		"text": "Just doing my job, sir. One query at a time."
 	},
 	{

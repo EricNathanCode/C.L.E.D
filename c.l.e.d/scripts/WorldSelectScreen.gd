@@ -3,11 +3,15 @@ extends Control
 func _ready() -> void:
 	$ScrollContainer/WorldList/HotelButton.pressed.connect(_on_hotel)
 	$ScrollContainer/WorldList/CafeButton.pressed.connect(_on_cafe)
+	$ScrollContainer/WorldList/PoliceButton.pressed.connect(_on_police)
+	$ScrollContainer/WorldList/LibraryButton.pressed.connect(_on_library)
 	$ExitButton.pressed.connect(_on_exit)
 
 	# Style exit button — red so it's clearly different
 	_style_btn($ScrollContainer/WorldList/HotelButton,    Color("#2563EB"), Color.WHITE)
-	_style_btn($ScrollContainer/WorldList/CafeButton, Color("#DC2626"), Color.WHITE)
+	_style_btn($ScrollContainer/WorldList/CafeButton,    Color("#DC2626"), Color.WHITE)
+	_style_btn($ScrollContainer/WorldList/PoliceButton,   Color("#1D4ED8"), Color.WHITE)
+	_style_btn($ScrollContainer/WorldList/LibraryButton,  Color("#7C3AED"), Color.WHITE)
 	_style_btn($ExitButton,                               Color("#374151"), Color.WHITE)
 
 	# Style title
@@ -19,6 +23,14 @@ func _on_hotel() -> void:
 
 func _on_cafe() -> void:
 	GameManager.world = "cafe"
+	get_tree().root.get_node("Main").show_screen("dashboard")
+
+func _on_police() -> void:
+	GameManager.world = "police"
+	get_tree().root.get_node("Main").show_screen("dashboard")
+
+func _on_library() -> void:
+	GameManager.world = "library"
 	get_tree().root.get_node("Main").show_screen("dashboard")
 
 func _on_exit() -> void:

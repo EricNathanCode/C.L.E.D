@@ -27,7 +27,10 @@ const GM_SCENES: Dictionary = {
 
 const BG_HOTEL  := "res://images/backgrounds/BG_hotel.png"
 const BG_CAFE   := "res://images/backgrounds/BG_cafe.png"
+const BG_POLICE := "res://images/backgrounds/BG_police.png"
+const BG_LIBRARY:= "res://images/backgrounds/BG_library.png"
 const CHAR_BASE := "res://images/characters/NPC_adults/"
+const CHAR_ROOT := "res://images/characters/"  # for NPC_occupations paths
 
 # MC expression paths (used as NPC placeholder)
 const MC_EXPR: Dictionary = {
@@ -87,6 +90,14 @@ func _load_all_textures() -> void:
 	if bg_cafe:
 		_bg_textures["cafe"] = bg_cafe
 
+	var bg_police := _load_texture(BG_POLICE)
+	if bg_police:
+		_bg_textures["police"] = bg_police
+
+	var bg_library := _load_texture(BG_LIBRARY)
+	if bg_library:
+		_bg_textures["library"] = bg_library
+
 func _load_texture(res_path: String) -> Texture2D:
 	# Method 1 — Godot resource system (works when file is imported)
 	if ResourceLoader.exists(res_path):
@@ -134,7 +145,14 @@ func _set_expression(char_key: String, npc_override: String = "") -> void:
 	var path: String
 	if npc_override != "":
 		var parts := npc_override.split("/")
-		path = CHAR_BASE + parts[0] + "/" + parts[1] + ".png" if parts.size() == 2 else CHAR_BASE + "adult_1/idle.png"
+		if parts.size() == 3:
+			# e.g. "NPC_occupations/police/talk" → res://images/characters/NPC_occupations/police/talk.png
+			path = CHAR_ROOT + parts[0] + "/" + parts[1] + "/" + parts[2] + ".png"
+		elif parts.size() == 2:
+			# e.g. "adult_1/talk" → res://images/characters/NPC_adults/adult_1/talk.png
+			path = CHAR_BASE + parts[0] + "/" + parts[1] + ".png"
+		else:
+			path = CHAR_BASE + "adult_1/idle.png"
 	else:
 		var expr: String = CHAR_TO_EXPR.get(char_key, "idle")
 		var key:  String = expr if _mc_textures.has(expr) else "idle"
@@ -244,10 +262,12 @@ func _clear_gm() -> void:
 
 func _get_story(id) -> Array:
 	var script: Node
-	if GameManager.world == "hotel":
-		script = preload("res://scripts/data/HotelData.gd").new()
-	else:
-		script = preload("res://scripts/data/CafeData.gd").new()
+	match GameManager.world:
+		"hotel":   script = preload("res://scripts/data/HotelData.gd").new()
+		"cafe":    script = preload("res://scripts/data/CafeData.gd").new()
+		"police":  script = preload("res://scripts/data/PoliceData.gd").new()
+		"library": script = preload("res://scripts/data/LibraryData.gd").new()
+		_:         script = preload("res://scripts/data/HotelData.gd").new()
 	var result: Array = []
 	if script.LESSONS.has(id):
 		result = script.LESSONS[id].duplicate(true)
