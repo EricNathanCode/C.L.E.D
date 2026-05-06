@@ -2,17 +2,16 @@ extends Control
 # ═══════════════════════════════════════════════════════
 #  GAME SCREEN  —  scripts/GameScreen.gd
 #
-#  NPCSprite sits CENTER of screen, ALWAYS visible
-#  during dialogue — including when YOU speak.
-#  Only hides when the SQL terminal opens.
+#  "npc" field format in story data:
+#    "adult_1/talk"                    → NPC_adults/adult_1/talk.png
+#    "NPC_occupations/police/talk"     → NPC_occupations/police/talk.png
+#    "NPC_occupations/librarian/idle"  → NPC_occupations/librarian/idle.png
 #
-#  MC expressions used as placeholder NPC images:
-#    "scene"  / "you"      → IDLE  (default standing)
-#    "guest"  / "guest2"   → TALK  (talking expression)
-#    "guest3"               → SHOCK (angry/surprised)
-#    "mgr"                  → THINKING
-#    "cafe_customer"        → TALK
-#    "cafe_supervisor"      → THINKING
+#  NPC assignments per world:
+#    Hotel:   adult_1, adult_2            boss: NPC_occupations/hotel_manager
+#    Cafe:    adult_3, adult_4            boss: NPC_occupations/coffee_owner
+#    Police:  adult_5, adult_6            boss: NPC_occupations/police
+#    Library: adult_7, adult_8            boss: NPC_occupations/librarian
 # ═══════════════════════════════════════════════════════
 
 const GM_SCENES: Dictionary = {
@@ -25,40 +24,20 @@ const GM_SCENES: Dictionary = {
 	"group_by":     "res://gamemode/scene/GM_GroupBy.tscn",
 }
 
-const BG_HOTEL  := "res://images/backgrounds/BG_hotel.png"
-const BG_CAFE   := "res://images/backgrounds/BG_cafe.png"
-const BG_POLICE := "res://images/backgrounds/BG_police.png"
-const BG_LIBRARY:= "res://images/backgrounds/BG_library.png"
+const BG_HOTEL   := "res://images/backgrounds/BG_hotel.png"
+const BG_CAFE    := "res://images/backgrounds/BG_cafe.png"
+const BG_POLICE  := "res://images/backgrounds/BG_police.png"
+const BG_LIBRARY := "res://images/backgrounds/BG_library.png"
+
+# Base paths for NPC images
 const CHAR_BASE := "res://images/characters/NPC_adults/"
-const CHAR_ROOT := "res://images/characters/"  # for NPC_occupations paths
+const CHAR_ROOT := "res://images/characters/"   # for NPC_occupations/ paths
 
-# MC expression paths (used as NPC placeholder)
-const MC_EXPR: Dictionary = {
-	"idle":     "res://images/characters/NPC_adults/adult_1/idle.png",
-	"talk":     "res://images/characters/NPC_adults/adult_1/talk.png",
-	"thinking": "res://images/characters/NPC_adults/adult_1/think.png",
-	"confuse":  "res://images/characters/NPC_adults/adult_1/confuse.png",
-	"shock":    "res://images/characters/NPC_adults/adult_1/shock.png",
-}
-
-# Which MC expression to show per story char key
-# NPC ALWAYS stays visible — this just swaps the expression
-const CHAR_TO_EXPR: Dictionary = {
-	"you":           "idle",
-	"scene":         "idle",
-	"guest":         "talk",
-	"guest2":        "talk",
-	"guest3":        "shock",
-	"mgr":           "thinking",
-	"cafe_customer":   "talk",
-	"cafe_supervisor": "thinking",
-}
-
-var _mc_textures: Dictionary = {}
-var _bg_textures: Dictionary = {}
-var _story:       Array      = []
-var _step:        int        = 0
-var _current_gm:  Node       = null
+var _tex_cache:  Dictionary = {}   # full res:// path → Texture2D
+var _bg_textures: Dictionary = {}  # world key → Texture2D
+var _story:      Array      = []
+var _step:       int        = 0
+var _current_gm: Node       = null
 
 func _ready() -> void:
 	$TopBar/BackToHubButton.pressed.connect(_on_back_to_hub)
@@ -66,70 +45,58 @@ func _ready() -> void:
 	$DialogueArea/DialogueButtons/BackButton.pressed.connect(_on_back)
 	$SQLOverlay/CenterContainer/PanelContainer/OuterVBox/BackToDialogueButton.pressed.connect(_on_back)
 
-	# Button colours
-	_style_btn($TopBar/BackToHubButton, Color("#DC2626"), Color.WHITE)
-	_style_btn($DialogueArea/DialogueButtons/BackButton, Color("#374151"), Color.WHITE)
-	_style_btn($DialogueArea/DialogueButtons/NextButton, Color("#F59E0B"), Color("#1A1008"))
-	_style_btn($SQLOverlay/CenterContainer/PanelContainer/OuterVBox/BackToDialogueButton,
-		Color("#2563EB"), Color.WHITE)
+	_style_btn($TopBar/BackToHubButton)
+	_style_btn($DialogueArea/DialogueButtons/BackButton)
+	_style_btn($DialogueArea/DialogueButtons/NextButton)
+	_style_btn($SQLOverlay/CenterContainer/PanelContainer/OuterVBox/BackToDialogueButton)
 
 	_load_all_textures()
 
 # ── Texture loading ───────────────────────────────────────
 func _load_all_textures() -> void:
-	for key in MC_EXPR:
-		var tex := _load_texture(MC_EXPR[key])
+	for pair in [["hotel", BG_HOTEL], ["cafe", BG_CAFE],
+	             ["police", BG_POLICE], ["library", BG_LIBRARY]]:
+		var tex := _load_texture(pair[1])
 		if tex:
-			_mc_textures[key] = tex
-
-	var bg_hotel := _load_texture(BG_HOTEL)
-	if bg_hotel:
-		_bg_textures["hotel"] = bg_hotel
-
-	var bg_cafe := _load_texture(BG_CAFE)
-	if bg_cafe:
-		_bg_textures["cafe"] = bg_cafe
-
-	var bg_police := _load_texture(BG_POLICE)
-	if bg_police:
-		_bg_textures["police"] = bg_police
-
-	var bg_library := _load_texture(BG_LIBRARY)
-	if bg_library:
-		_bg_textures["library"] = bg_library
+			_bg_textures[pair[0]] = tex
 
 func _load_texture(res_path: String) -> Texture2D:
-	# Method 1 — Godot resource system (works when file is imported)
+	if _tex_cache.has(res_path):
+		return _tex_cache[res_path]
+
+	var tex: Texture2D = null
+
 	if ResourceLoader.exists(res_path):
-		var tex := ResourceLoader.load(res_path) as Texture2D
-		if tex:
-			return tex
+		tex = ResourceLoader.load(res_path) as Texture2D
 
-	# Method 2 — FileAccess buffer (works without .import files)
-	var abs_path: String = ProjectSettings.globalize_path(res_path)
-	var fa := FileAccess.open(abs_path, FileAccess.READ)
-	if fa:
-		var data: PackedByteArray = fa.get_buffer(fa.get_length())
-		fa.close()
-		var img := Image.new()
-		var loaded := false
-		if res_path.ends_with(".jpg") or res_path.ends_with(".jpeg"):
-			loaded = img.load_jpg_from_buffer(data) == OK
-		else:
-			loaded = img.load_png_from_buffer(data) == OK
-		if loaded:
-			if img.get_format() != Image.FORMAT_RGBA8:
-				img.convert(Image.FORMAT_RGBA8)
-			return ImageTexture.create_from_image(img)
+	if tex == null:
+		var abs_path: String = ProjectSettings.globalize_path(res_path)
+		var fa := FileAccess.open(abs_path, FileAccess.READ)
+		if fa:
+			var data: PackedByteArray = fa.get_buffer(fa.get_length())
+			fa.close()
+			var img := Image.new()
+			var loaded := false
+			if res_path.ends_with(".jpg") or res_path.ends_with(".jpeg"):
+				loaded = img.load_jpg_from_buffer(data) == OK
+			else:
+				loaded = img.load_png_from_buffer(data) == OK
+			if loaded:
+				if img.get_format() != Image.FORMAT_RGBA8:
+					img.convert(Image.FORMAT_RGBA8)
+				tex = ImageTexture.create_from_image(img)
 
-	# Method 3 — Image.load() direct fallback
-	var img2 := Image.new()
-	if img2.load(abs_path) == OK:
-		if img2.get_format() != Image.FORMAT_RGBA8:
-			img2.convert(Image.FORMAT_RGBA8)
-		return ImageTexture.create_from_image(img2)
+	if tex == null:
+		var img2 := Image.new()
+		var abs_path2: String = ProjectSettings.globalize_path(res_path)
+		if img2.load(abs_path2) == OK:
+			if img2.get_format() != Image.FORMAT_RGBA8:
+				img2.convert(Image.FORMAT_RGBA8)
+			tex = ImageTexture.create_from_image(img2)
 
-	return null
+	if tex != null:
+		_tex_cache[res_path] = tex
+	return tex
 
 # ── Apply background ──────────────────────────────────────
 func _set_background(world: String) -> void:
@@ -138,32 +105,32 @@ func _set_background(world: String) -> void:
 	else:
 		$SceneBG.texture = null
 
-# ── Set NPC expression (sprite always stays visible) ──────
-# npc_override: "adult_2/shock" → loads adult_2/shock.png directly
-# Leave empty  → falls back to CHAR_TO_EXPR default for char_key
+# ── Set NPC expression ────────────────────────────────────
+# npc_override format:
+#   "adult_3/talk"                  → NPC_adults/adult_3/talk.png
+#   "NPC_occupations/police/shock"  → NPC_occupations/police/shock.png
 func _set_expression(char_key: String, npc_override: String = "") -> void:
 	var path: String
 	if npc_override != "":
 		var parts := npc_override.split("/")
 		if parts.size() == 3:
-			# e.g. "NPC_occupations/police/talk" → res://images/characters/NPC_occupations/police/talk.png
 			path = CHAR_ROOT + parts[0] + "/" + parts[1] + "/" + parts[2] + ".png"
 		elif parts.size() == 2:
-			# e.g. "adult_1/talk" → res://images/characters/NPC_adults/adult_1/talk.png
 			path = CHAR_BASE + parts[0] + "/" + parts[1] + ".png"
 		else:
 			path = CHAR_BASE + "adult_1/idle.png"
 	else:
-		var expr: String = CHAR_TO_EXPR.get(char_key, "idle")
-		var key:  String = expr if _mc_textures.has(expr) else "idle"
-		path = MC_EXPR.get(key, CHAR_BASE + "adult_1/idle.png")
-	# Load on demand if not cached (handles npc overrides pointing to adult_2, adult_3, etc.)
-	if not _mc_textures.has(path):
-		var tex := _load_texture(path)
-		if tex:
-			_mc_textures[path] = tex
-	if _mc_textures.has(path):
-		$NPCSprite.texture = _mc_textures[path]
+		# Fallback if no "npc" field — default idle for each world
+		match GameManager.world:
+			"hotel":   path = CHAR_BASE + "adult_1/idle.png"
+			"cafe":    path = CHAR_BASE + "adult_3/idle.png"
+			"police":  path = CHAR_BASE + "adult_5/idle.png"
+			"library": path = CHAR_BASE + "adult_7/idle.png"
+			_:         path = CHAR_BASE + "adult_1/idle.png"
+
+	var tex := _load_texture(path)
+	if tex:
+		$NPCSprite.texture = tex
 		$NPCSprite.visible = true
 	else:
 		$NPCSprite.visible = false
@@ -190,8 +157,8 @@ func _run_step() -> void:
 	match s["type"]:
 		"dialogue":
 			var char_key: String = s.get("char", "scene")
-			var npc_key:  String = s.get("npc", "")          # e.g. "adult_2/shock"
-			_set_expression(char_key, npc_key)               # override if "npc" present
+			var npc_key:  String = s.get("npc", "")
+			_set_expression(char_key, npc_key)
 			$DialogueArea/CharacterName.text                  = s.get("name", "")
 			$DialogueArea/DialogueText.text                   = s.get("text", "")
 			$DialogueArea/DialogueButtons/NextButton.visible  = true
@@ -207,7 +174,7 @@ func _run_step() -> void:
 		"end":
 			get_tree().root.get_node("Main").show_screen("complete")
 
-# ── SQL Terminal (hide everything except terminal panel) ───
+# ── SQL Terminal ──────────────────────────────────────────
 func _show_challenge(step: Dictionary, gm_key: String) -> void:
 	var path: String = GM_SCENES.get(gm_key, "")
 	if path.is_empty():
@@ -220,7 +187,6 @@ func _show_challenge(step: Dictionary, gm_key: String) -> void:
 	_current_gm.on_correct.connect(_on_gm_correct)
 	_current_gm.setup(step)
 
-	# Terminal mode — hide scene, show only SQL panel
 	$SceneBG.visible      = false
 	$NPCSprite.visible    = false
 	$DialogueBG.visible   = false
@@ -276,17 +242,21 @@ func _get_story(id) -> Array:
 	script.free()
 	return result
 
-func _style_btn(btn: Button, bg: Color, fg: Color) -> void:
-	btn.add_theme_color_override("font_color", fg)
+func _style_btn(btn: Button) -> void:
+	btn.add_theme_color_override("font_color", Color.BLACK)
 	var s := StyleBoxFlat.new()
-	s.bg_color = bg
-	s.border_color = Color(0, 0, 0, 0.5)
+	s.bg_color     = Color.WHITE
+	s.border_color = Color.BLACK
 	s.set_border_width_all(2)
 	s.set_corner_radius_all(6)
 	s.content_margin_left   = 14;  s.content_margin_right  = 14
 	s.content_margin_top    = 6;   s.content_margin_bottom = 6
 	btn.add_theme_stylebox_override("normal", s)
-	var h := s.duplicate() as StyleBoxFlat; h.bg_color = bg.lightened(0.15)
+	var h := s.duplicate() as StyleBoxFlat
+	h.bg_color     = Color("#F59E0B")  # yellow hover
+	h.border_color = Color("#B45309")
 	btn.add_theme_stylebox_override("hover", h)
-	var p := s.duplicate() as StyleBoxFlat; p.bg_color = bg.darkened(0.15)
+	var p := s.duplicate() as StyleBoxFlat
+	p.bg_color     = Color("#D97706")  # darker yellow press
+	p.border_color = Color("#92400E")
 	btn.add_theme_stylebox_override("pressed", p)

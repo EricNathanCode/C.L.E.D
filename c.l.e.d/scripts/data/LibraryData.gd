@@ -2,14 +2,10 @@ extends Node
 # ═══════════════════════════════════════════════════════
 #  LIBRARY DATA  —  scripts/data/LibraryData.gd
 #
-#  NPC path format:
-#    "adult_N/expr"                    → NPC_adults/adult_N/expr.png
-#    "NPC_occupations/librarian/expr"  → NPC_occupations/librarian/expr.png
-#
-#  Character assignments:
-#    NPC_occupations/librarian = Librarian (boss)
-#    adult_6                   = Adult visitor / student
-#    adult_7                   = Another visitor
+#  NPC assignments (Library World — unique to this world):
+#    adult_7 = Student / visitor
+#    adult_8 = Another visitor / borrower
+#    NPC_occupations/librarian = Head librarian (boss)
 #
 #  Rule: "you" and "scene" always idle — NPC looks at you.
 # ═══════════════════════════════════════════════════════
@@ -25,21 +21,21 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "scene",
 		"name": "SCENE",
-		"npc":  "adult_6/idle",
+		"npc":  "adult_7/idle",
 		"text": "A quiet Tuesday morning at the library. A visitor approaches your desk looking lost."
 	},
 	{
 		"type": "dialogue",
 		"char": "visitor",
 		"name": "VISITOR",
-		"npc":  "adult_6/confuse",
+		"npc":  "adult_7/confuse",
 		"text": "Excuse me... I'm looking for books about SQL and databases. I have no idea where to start."
 	},
 	{
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
-		"npc":  "adult_6/idle",
+		"npc":  "adult_7/idle",
 		"text": "Let me think of the best way to help this visitor."
 	},
 	{
@@ -57,14 +53,14 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
-		"npc":  "adult_6/idle",
+		"npc":  "adult_7/idle",
 		"text": "Great choice! Let me check our database and show you exactly where those books are."
 	},
 	{
 		"type": "dialogue",
 		"char": "visitor",
 		"name": "VISITOR",
-		"npc":  "adult_6/idle",
+		"npc":  "adult_7/talk",
 		"text": "Oh wonderful! You're so much more helpful than I expected. Thank you!"
 	},
 	{
@@ -81,21 +77,21 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "scene",
 		"name": "SCENE",
-		"npc":  "adult_6/idle",
+		"npc":  "adult_7/idle",
 		"text": "A student walks up to the desk wanting to borrow books for the first time."
 	},
 	{
 		"type": "dialogue",
 		"char": "visitor",
 		"name": "STUDENT",
-		"npc":  "adult_6/talk",
+		"npc":  "adult_7/talk",
 		"text": "Hi! I'd like to register as a borrower. My name is Sofia Mendez."
 	},
 	{
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
-		"npc":  "adult_6/idle",
+		"npc":  "adult_7/idle",
 		"text": "Welcome, Sofia! Let me add you to our borrower database right now."
 	},
 	{
@@ -116,14 +112,14 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
-		"npc":  "adult_6/idle",
+		"npc":  "adult_7/idle",
 		"text": "You're all set, Sofia! Your borrower ID is 5. You can borrow up to 5 books at a time."
 	},
 	{
 		"type": "dialogue",
 		"char": "visitor",
 		"name": "STUDENT",
-		"npc":  "adult_6/idle",
+		"npc":  "adult_7/talk",
 		"text": "That's amazing! I'm going to borrow so many books. Thank you!"
 	},
 	{
@@ -133,7 +129,7 @@ const LESSONS: Dictionary = {
 
 # ─────────────────────────────────────────────
 #  LESSON L3 — SELECT WHERE
-#  Topic: Finding a specific book record
+#  Topic: Finding books by genre
 # ─────────────────────────────────────────────
 "L3": [
 	{
@@ -165,10 +161,10 @@ const LESSONS: Dictionary = {
 		"column": "genre",
 		"table_headers": ["id", "title", "author", "genre"],
 		"table_rows": [
-			["1", "SQL Basics",         "Rivera",  "Technology"],
-			["2", "The Universe",       "Hawking",  "Science"],
-			["3", "Brief History",      "Sagan",    "Science"],
-			["4", "Design Patterns",    "GoF",      "Technology"]
+			["1", "SQL Basics",      "Rivera",  "Technology"],
+			["2", "The Universe",    "Hawking",  "Science"],
+			["3", "Brief History",   "Sagan",    "Science"],
+			["4", "Design Patterns", "GoF",      "Technology"]
 		],
 		"answer": "Science",
 		"hint": "Type the genre exactly: Science",
@@ -190,7 +186,7 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "librarian",
 		"name": "LIBRARIAN",
-		"npc":  "NPC_occupations/librarian/idle",
+		"npc":  "NPC_occupations/librarian/talk",
 		"text": "Perfect. That's exactly what the professor needed. Good database work."
 	},
 	{
@@ -207,22 +203,22 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "scene",
 		"name": "SCENE",
-		"npc":  "adult_7/idle",
-		"text": "A borrower calls in requesting a return date extension for their borrowed book."
+		"npc":  "adult_8/idle",
+		"text": "A borrower comes in requesting a return date extension for their borrowed book."
 	},
 	{
 		"type": "dialogue",
 		"char": "visitor",
 		"name": "BORROWER",
-		"npc":  "adult_7/confuse",
-		"text": "Hi, this is Mr. Tan. I borrowed book id 2 but I need more time. Can you extend it to June 30?"
+		"npc":  "adult_8/confuse",
+		"text": "Hi! I borrowed book id 2 but I need more time to finish it. Can you extend my return date to June 30?"
 	},
 	{
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
-		"npc":  "adult_7/idle",
-		"text": "Sure, Mr. Tan! Let me update the return date in the system for you."
+		"npc":  "adult_8/idle",
+		"text": "Sure! Let me update the return date in the system for you."
 	},
 	{
 		"type": "sql_fill",
@@ -231,9 +227,7 @@ const LESSONS: Dictionary = {
 		"table": "borrows",
 		"column": "return_date",
 		"table_headers": ["id", "borrower_name", "book_title", "return_date"],
-		"table_rows": [
-			["2", "Mr. Tan", "The Universe", "June 15"]
-		],
+		"table_rows": [["2", "Mr. Tan", "The Universe", "June 15"]],
 		"answer_value": "June 30",
 		"answer_id": "2",
 		"hint": "New return date: June 30 | Record id: 2",
@@ -245,14 +239,14 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
-		"npc":  "adult_7/idle",
-		"text": "Done, Mr. Tan! Your return date has been extended to June 30. Enjoy the book!"
+		"npc":  "adult_8/idle",
+		"text": "Done! Your return date has been extended to June 30. Enjoy the book!"
 	},
 	{
 		"type": "dialogue",
 		"char": "visitor",
 		"name": "BORROWER",
-		"npc":  "adult_7/idle",
+		"npc":  "adult_8/talk",
 		"text": "Oh thank you so much! You've been incredibly helpful."
 	},
 	{
@@ -262,7 +256,7 @@ const LESSONS: Dictionary = {
 
 # ─────────────────────────────────────────────
 #  LESSON L5 — DELETE
-#  Topic: Removing an overdue record after resolution
+#  Topic: Removing a resolved overdue record
 # ─────────────────────────────────────────────
 "L5": [
 	{
@@ -289,12 +283,10 @@ const LESSONS: Dictionary = {
 	{
 		"type": "sql_fill",
 		"gamemode": "delete",
-		"desc": "Remove the settled overdue record from the overdue table. Record id = 3.",
+		"desc": "Remove the settled overdue record. Record id = 3.",
 		"table": "overdue",
 		"table_headers": ["id", "borrower_name", "book_title", "days_overdue"],
-		"table_rows": [
-			["3", "Sofia Mendez", "SQL Basics", "14"]
-		],
+		"table_rows": [["3", "Sofia Mendez", "SQL Basics", "14"]],
 		"answer_id": "3",
 		"hint": "Delete the record where id = 3",
 		"result_headers": ["STATUS"],
@@ -312,7 +304,7 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "librarian",
 		"name": "LIBRARIAN",
-		"npc":  "NPC_occupations/librarian/idle",
+		"npc":  "NPC_occupations/librarian/talk",
 		"text": "Thank you. A clean overdue list helps us track real problems. Well done."
 	},
 	{
@@ -322,7 +314,7 @@ const LESSONS: Dictionary = {
 
 # ─────────────────────────────────────────────
 #  LESSON L6 — ORDER BY
-#  Topic: Sorting books alphabetically by title
+#  Topic: Sorting books alphabetically
 # ─────────────────────────────────────────────
 "L6": [
 	{
@@ -423,12 +415,12 @@ const LESSONS: Dictionary = {
 		"column": "genre",
 		"table_headers": ["id", "title", "genre"],
 		"table_rows": [
-			["1", "SQL Basics",         "Technology"],
-			["2", "The Universe",       "Science"],
-			["3", "Brief History",      "Science"],
-			["4", "Design Patterns",    "Technology"],
-			["5", "The Great Gatsby",   "Fiction"],
-			["6", "Clean Code",         "Technology"]
+			["1", "SQL Basics",       "Technology"],
+			["2", "The Universe",     "Science"],
+			["3", "Brief History",    "Science"],
+			["4", "Design Patterns",  "Technology"],
+			["5", "The Great Gatsby", "Fiction"],
+			["6", "Clean Code",       "Technology"]
 		],
 		"answer": "genre",
 		"hint": "Group by the genre column. Type: genre",

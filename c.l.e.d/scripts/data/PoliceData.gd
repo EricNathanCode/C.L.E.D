@@ -2,14 +2,10 @@ extends Node
 # ═══════════════════════════════════════════════════════
 #  POLICE DATA  —  scripts/data/PoliceData.gd
 #
-#  NPC path format:
-#    "adult_N/expr"                → NPC_adults/adult_N/expr.png
-#    "NPC_occupations/police/expr" → NPC_occupations/police/expr.png
-#
-#  Character assignments:
-#    NPC_occupations/police    = Officer / Chief (boss)
-#    adult_4                   = Male citizen / suspect
-#    adult_5                   = Female citizen
+#  NPC assignments (Police World — unique to this world):
+#    adult_5 = Male citizen / reporter
+#    adult_6 = Female citizen / witness
+#    NPC_occupations/police = Officer / Chief (boss)
 #
 #  Rule: "you" and "scene" always idle — NPC looks at you.
 # ═══════════════════════════════════════════════════════
@@ -25,21 +21,21 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "scene",
 		"name": "SCENE",
-		"npc":  "adult_4/idle",
+		"npc":  "adult_5/idle",
 		"text": "A nervous citizen walks into the police station and approaches the front desk."
 	},
 	{
 		"type": "dialogue",
 		"char": "citizen",
 		"name": "CITIZEN",
-		"npc":  "adult_4/talk",
+		"npc":  "adult_5/talk",
 		"text": "Officer! My bicycle was stolen outside the mall. I saw who did it but they ran away!"
 	},
 	{
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
-		"npc":  "adult_4/idle",
+		"npc":  "adult_5/idle",
 		"text": "I need to handle this professionally. Let me choose the right response."
 	},
 	{
@@ -57,14 +53,14 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
-		"npc":  "adult_4/idle",
+		"npc":  "adult_5/idle",
 		"text": "I'll take your report right away. Can you describe the suspect and the direction they ran?"
 	},
 	{
 		"type": "dialogue",
 		"char": "citizen",
 		"name": "CITIZEN",
-		"npc":  "adult_4/idle",
+		"npc":  "adult_5/talk",
 		"text": "Thank you, officer! I was so worried you wouldn't help. Here's everything I saw..."
 	},
 	{
@@ -81,27 +77,27 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "scene",
 		"name": "SCENE",
-		"npc":  "adult_4/idle",
+		"npc":  "adult_5/idle",
 		"text": "After taking the citizen's statement, you need to log the case officially."
 	},
 	{
 		"type": "dialogue",
 		"char": "citizen",
 		"name": "CITIZEN",
-		"npc":  "adult_4/talk",
+		"npc":  "adult_5/talk",
 		"text": "My name is Marco Reyes. The stolen bike is a red mountain bike, case type is Theft."
 	},
 	{
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
-		"npc":  "adult_4/idle",
+		"npc":  "adult_5/idle",
 		"text": "Got it, Mr. Reyes. Let me log this case into the system right now."
 	},
 	{
 		"type": "sql_fill",
 		"gamemode": "insert_into",
-		"desc": "Add the new case to the cases table. Fill in the reporter_name, case_type, and status.",
+		"desc": "Add the new case to the cases table. Fill in reporter_name, case_type, and status.",
 		"table": "cases",
 		"columns": ["reporter_name", "case_type", "status"],
 		"table_headers": ["id", "reporter_name", "case_type", "status"],
@@ -116,14 +112,14 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
-		"npc":  "adult_4/idle",
+		"npc":  "adult_5/idle",
 		"text": "Case logged, Mr. Reyes! Your case number is 4. We'll be in touch."
 	},
 	{
 		"type": "dialogue",
 		"char": "citizen",
 		"name": "CITIZEN",
-		"npc":  "adult_4/idle",
+		"npc":  "adult_5/talk",
 		"text": "Thank you so much, officer. I feel better knowing it's on record."
 	},
 	{
@@ -227,9 +223,7 @@ const LESSONS: Dictionary = {
 		"table": "cases",
 		"column": "status",
 		"table_headers": ["id", "reporter_name", "case_type", "status"],
-		"table_rows": [
-			["2", "Ana Cruz", "Vandalism", "Open"]
-		],
+		"table_rows": [["2", "Ana Cruz", "Vandalism", "Open"]],
 		"answer_value": "Closed",
 		"answer_id": "2",
 		"hint": "Change status to: Closed | Record id: 2",
@@ -248,7 +242,7 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "chief",
 		"name": "CHIEF",
-		"npc":  "NPC_occupations/police/idle",
+		"npc":  "NPC_occupations/police/talk",
 		"text": "Good. Keep the database clean — accurate records save lives in this job."
 	},
 	{
@@ -285,12 +279,10 @@ const LESSONS: Dictionary = {
 	{
 		"type": "sql_fill",
 		"gamemode": "delete",
-		"desc": "Remove the cleared case from the active cases table. Case id = 3.",
+		"desc": "Remove the cleared case from active records. Case id = 3.",
 		"table": "cases",
 		"table_headers": ["id", "reporter_name", "case_type", "status"],
-		"table_rows": [
-			["3", "Marco Reyes", "Fraud", "Cleared"]
-		],
+		"table_rows": [["3", "Marco Reyes", "Fraud", "Cleared"]],
 		"answer_id": "3",
 		"hint": "Delete the record where id = 3",
 		"result_headers": ["STATUS"],
@@ -308,7 +300,7 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "chief",
 		"name": "CHIEF",
-		"npc":  "NPC_occupations/police/idle",
+		"npc":  "NPC_occupations/police/talk",
 		"text": "Perfect. A clean database means faster response times. Good discipline."
 	},
 	{

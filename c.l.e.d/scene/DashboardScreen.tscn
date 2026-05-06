@@ -20,11 +20,23 @@ size_flags_horizontal = 3
 [node name="ChangeWorldButton" type="Button" parent="TopBar"]
 text = "Change World"
 
+[node name="WorldTitle" type="Label" parent="."]
+layout_mode = 0
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 0.0
+offset_top = 45.0
+offset_bottom = 95.0
+horizontal_alignment = 1
+vertical_alignment = 1
+text = ""
+
 [node name="CenterContainer" type="CenterContainer" parent="."]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 40
+offset_top = 100
 
 [node name="ScrollContainer" type="ScrollContainer" parent="CenterContainer"]
 custom_minimum_size = Vector2(320, 500)
