@@ -212,6 +212,7 @@ func _run_step() -> void:
 			$DialogueArea/CharacterName.text                  = s.get("name", "")
 			$DialogueArea/DialogueText.text                   = s.get("text", "")
 			$DialogueArea/DialogueButtons/NextButton.visible  = true
+			GameManager.speak(s.get("text", ""), char_key)
 
 		"sql_choice":
 			$DialogueArea/DialogueButtons/NextButton.visible = false
@@ -236,6 +237,7 @@ func _run_step() -> void:
 
 # ── SQL Terminal ──────────────────────────────────────────
 func _show_challenge(step: Dictionary, gm_key: String) -> void:
+	GameManager.stop_speaking()
 	var path: String = GM_SCENES.get(gm_key, "")
 	if path.is_empty():
 		push_error("GameScreen: unknown gamemode key: " + gm_key)
@@ -258,6 +260,7 @@ func _show_challenge(step: Dictionary, gm_key: String) -> void:
 
 # ── Wrong answer — play fail dialogue then retry ──────────
 func _on_gm_wrong() -> void:
+	GameManager.stop_speaking()
 	# Disconnect to prevent multiple triggers
 	if _current_gm and is_instance_valid(_current_gm):
 		if _current_gm.on_wrong.is_connected(_on_gm_wrong):
@@ -291,21 +294,25 @@ func _on_gm_wrong() -> void:
 	_run_step()
 
 func _on_gm_correct() -> void:
+	GameManager.stop_speaking()
 	_close_overlay()
 	_step += 1
 	_run_step()
 
 # ── Navigation ────────────────────────────────────────────
 func _on_next() -> void:
+	GameManager.stop_speaking()
 	_step += 1
 	_run_step()
 
 func _on_back() -> void:
+	GameManager.stop_speaking()
 	_close_overlay()
 	_step = max(0, _step - 1)
 	_run_step()
 
 func _on_back_to_hub() -> void:
+	GameManager.stop_speaking()
 	_close_overlay()
 	get_tree().root.get_node("Main").show_screen("dashboard")
 
