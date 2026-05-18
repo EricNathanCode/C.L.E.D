@@ -53,6 +53,53 @@ func _ready() -> void:
 	_load_all_textures()
 	_style_progress_bar()
 
+
+# ── Keyboard shortcuts ────────────────────────────────────
+# Dialogue scene:  ← Back | → Next | Esc Back to Hub
+# SQL scene:       ← Back to Dialogue | Enter Execute | H Hint | → Continue Story
+func _unhandled_input(event: InputEvent) -> void:
+	if not visible:
+		return
+	if not event is InputEventKey or not event.pressed:
+		return
+
+	var sql_open: bool = $SQLOverlay.visible
+
+	if sql_open:
+		# SQL challenge shortcuts — delegate to the active GM node
+		match event.keycode:
+			KEY_LEFT:
+				# Back to Dialogue
+				_on_back()
+			KEY_ENTER, KEY_KP_ENTER:
+				# Execute — call _on_execute on the GM if it exists
+				if _current_gm and is_instance_valid(_current_gm) and _current_gm.has_method("_on_execute"):
+					_current_gm._on_execute()
+			KEY_H:
+				# Hint
+				if _current_gm and is_instance_valid(_current_gm) and _current_gm.has_method("_on_hint"):
+					_current_gm._on_hint()
+			KEY_RIGHT:
+				# Continue Story — only if ContinueButton is visible
+				if _current_gm and is_instance_valid(_current_gm):
+					var cb: Button = _current_gm.get_node_or_null("ContinueButton")
+					if cb and cb.visible:
+						_current_gm._on_continue()
+	else:
+		# Dialogue scene shortcuts
+		match event.keycode:
+			KEY_RIGHT:
+				# Next — only if NextButton is visible
+				if $DialogueArea/DialogueButtons/NextButton.visible:
+					_on_next()
+			KEY_LEFT:
+				# Back — only if BackButton is visible
+				if $DialogueArea/DialogueButtons/BackButton.visible:
+					_on_back()
+			KEY_ESCAPE:
+				# Back to Hub
+				_on_back_to_hub()
+
 # ── Texture loading ───────────────────────────────────────
 func _load_all_textures() -> void:
 	for pair in [["hotel", BG_HOTEL], ["cafe", BG_CAFE],
@@ -244,25 +291,20 @@ func _get_story(id) -> Array:
 	script.free()
 	return result
 
-
-# ── Update progress bar ───────────────────────────────────
+# ── Progress bar ─────────────────────────────────────────
 func _update_progress() -> void:
-	# Count only meaningful steps (skip "end" type)
 	var total: int = 0
 	for s in _story:
 		if s.get("type", "") != "end":
 			total += 1
 	if total == 0:
 		return
-	# _step = index of current step (0-based), count non-end steps so far
 	var done: int = 0
 	for i in range(min(_step + 1, _story.size())):
 		if _story[i].get("type", "") != "end":
 			done += 1
 	$ProgressBar.value = float(done) / float(total)
 
-
-# ── Style progress bar ────────────────────────────────────
 func _style_progress_bar() -> void:
 	var pb: ProgressBar = $ProgressBar
 	var bg := StyleBoxFlat.new()
