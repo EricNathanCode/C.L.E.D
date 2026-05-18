@@ -47,7 +47,12 @@ const LESSONS: Dictionary = {
 			[3, "You should have locked it better."]
 		],
 		"correct_id": 1,
-		"hint": "A good officer takes the report seriously and asks for details. Answer: id = 1"
+		"hint": "A good officer takes the report seriously and asks for details. Answer: id = 1",
+		"fail": [
+			{ "type": "dialogue", "char": "citizen", "name": "CITIZEN", "npc": "adult_5/shock", "text": "Are you KIDDING me?! I came here for help and this is what I get?!" },
+			{ "type": "dialogue", "char": "scene",   "name": "SCENE",   "npc": "adult_5/idle",  "text": "The citizen storms out. Your chief appears and gives you a long, silent look." },
+			{ "type": "dialogue", "char": "you",     "name": "YOU",     "npc": "adult_5/idle",  "text": "I handled that wrong. Let me choose the correct professional response." }
+		]
 	},
 	{
 		"type": "dialogue",
@@ -106,7 +111,12 @@ const LESSONS: Dictionary = {
 		"hint": "Reporter: Marco Reyes | Type: Theft | Status: Open",
 		"result_headers": ["id", "reporter_name", "case_type", "status"],
 		"result_rows": [["4", "Marco Reyes", "Theft", "Open"]],
-		"result_msg": "1 record inserted into cases."
+		"result_msg": "1 record inserted into cases.",
+					"fail": [
+						{ "type": "dialogue", "char": "citizen", "name": "CITIZEN", "npc": "adult_5/confuse", "text": "That is not right... that is someone else's case. My info is not even there!" },
+						{ "type": "dialogue", "char": "scene",   "name": "SCENE",   "npc": "adult_5/idle",   "text": "Marco Reyes stares at the screen. Inaccurate police records are a serious problem." },
+						{ "type": "dialogue", "char": "you",     "name": "YOU",     "npc": "adult_5/idle",   "text": "I apologize Mr. Reyes. Let me enter the correct information." }
+					]
 	},
 	{
 		"type": "dialogue",
@@ -169,7 +179,12 @@ const LESSONS: Dictionary = {
 		"hint": "Type the last name exactly: Santos",
 		"result_headers": ["id", "first_name", "last_name", "case_type"],
 		"result_rows": [["2", "Luis", "Santos", "Vandalism"]],
-		"result_msg": "1 record found."
+		"result_msg": "1 record found.",
+					"fail": [
+						{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/shock", "text": "That is the WRONG suspect! You could blow the whole investigation!" },
+						{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",  "text": "Your chief paces across the room. The tip could go cold if you do not move fast." },
+						{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "NPC_occupations/police/idle",  "text": "My mistake Chief. Let me search with the correct last name." }
+					]
 	},
 	{
 		"type": "dialogue",
@@ -229,7 +244,12 @@ const LESSONS: Dictionary = {
 		"hint": "Change status to: Closed | Record id: 2",
 		"result_headers": ["id", "reporter_name", "case_type", "status"],
 		"result_rows": [["2", "Ana Cruz", "Vandalism", "Closed"]],
-		"result_msg": "1 record updated."
+		"result_msg": "1 record updated.",
+					"fail": [
+						{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/shock", "text": "The status is STILL Open?! The suspect is in custody right now!" },
+						{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",  "text": "Your chief pulls out their phone, visibly frustrated. Bad records create legal problems." },
+						{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "NPC_occupations/police/idle",  "text": "I will update it to Closed right now Chief." }
+					]
 	},
 	{
 		"type": "dialogue",
@@ -287,7 +307,12 @@ const LESSONS: Dictionary = {
 		"hint": "Delete the record where id = 3",
 		"result_headers": ["STATUS"],
 		"result_rows": [["Record with id = 3 has been removed."]],
-		"result_msg": "1 record deleted from active cases."
+		"result_msg": "1 record deleted from active cases.",
+					"fail": [
+						{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/shock", "text": "That is the WRONG case! You just deleted an active investigation!" },
+						{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",  "text": "Silence. Your chief stares at you for what feels like forever." },
+						{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "NPC_occupations/police/idle",  "text": "I am sorry Chief! I will select the correct record id this time." }
+					]
 	},
 	{
 		"type": "dialogue",
@@ -354,7 +379,12 @@ const LESSONS: Dictionary = {
 			["1", "Theft",     "Open", "2"],
 			["2", "Vandalism", "Open", "1"]
 		],
-		"result_msg": "Records sorted by priority_level DESC."
+		"result_msg": "Records sorted by priority_level DESC.",
+					"fail": [
+						{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/shock", "text": "Lowest priority first?! We are sending the team to handle vandalism while there is an ASSAULT open?!" },
+						{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",  "text": "Your chief grabs the clipboard and looks at you with genuine disbelief." },
+						{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "NPC_occupations/police/idle",  "text": "I will sort highest priority first immediately Chief." }
+					]
 	},
 	{
 		"type": "dialogue",
@@ -424,7 +454,12 @@ const LESSONS: Dictionary = {
 			["Vandalism", "2"],
 			["Assault",   "1"]
 		],
-		"result_msg": "Cases grouped by case_type."
+		"result_msg": "Cases grouped by case_type.",
+					"fail": [
+						{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/shock", "text": "These numbers do not add up! You grouped by the WRONG column. The council meets in an hour!" },
+						{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",  "text": "Your chief takes a long breath. You can feel the clock ticking." },
+						{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "NPC_occupations/police/idle",  "text": "I will fix the GROUP BY right now and get you the correct report." }
+					]
 	},
 	{
 		"type": "dialogue",

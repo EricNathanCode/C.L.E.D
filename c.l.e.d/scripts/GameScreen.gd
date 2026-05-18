@@ -37,7 +37,8 @@ var _tex_cache:  Dictionary = {}   # full res:// path → Texture2D
 var _bg_textures: Dictionary = {}  # world key → Texture2D
 var _story:      Array      = []
 var _step:       int        = 0
-var _current_gm: Node       = null
+var _current_gm:  Node       = null
+var _failed_step: Dictionary = {}  # stores the SQL step to retry after fail dialogue
 
 func _ready() -> void:
 	$TopBar/BackToHubButton.pressed.connect(_on_back_to_hub)
@@ -223,6 +224,16 @@ func _run_step() -> void:
 		"end":
 			get_tree().root.get_node("Main").show_screen("complete")
 
+		"retry":
+			# Fail dialogue finished — show Lesson Failed screen
+			var main := get_tree().root.get_node("Main")
+			if main.has_method("show_failed"):
+				main.show_failed()
+			else:
+				main.show_screen("failed")
+
+
+
 # ── SQL Terminal ──────────────────────────────────────────
 func _show_challenge(step: Dictionary, gm_key: String) -> void:
 	var path: String = GM_SCENES.get(gm_key, "")
@@ -234,6 +245,8 @@ func _show_challenge(step: Dictionary, gm_key: String) -> void:
 	_current_gm = packed.instantiate()
 	$SQLOverlay/CenterContainer/PanelContainer/OuterVBox/ScrollContainer/GMContainer.add_child(_current_gm)
 	_current_gm.on_correct.connect(_on_gm_correct)
+	if _current_gm.has_signal("on_wrong"):
+		_current_gm.on_wrong.connect(_on_gm_wrong)
 	_current_gm.setup(step)
 
 	$SceneBG.visible      = false
@@ -241,6 +254,41 @@ func _show_challenge(step: Dictionary, gm_key: String) -> void:
 	$DialogueBG.visible   = false
 	$DialogueArea.visible = false
 	$SQLOverlay.visible   = true
+
+
+# ── Wrong answer — play fail dialogue then retry ──────────
+func _on_gm_wrong() -> void:
+	# Disconnect to prevent multiple triggers
+	if _current_gm and is_instance_valid(_current_gm):
+		if _current_gm.on_wrong.is_connected(_on_gm_wrong):
+			_current_gm.on_wrong.disconnect(_on_gm_wrong)
+
+	# Check if this step has a fail dialogue
+	var current_step: Dictionary = _story[_step]
+	var fail_steps: Array = current_step.get("fail", [])
+	if fail_steps.is_empty():
+		return  # No fail path — just show the error in terminal as before
+
+	# Store the step so we can retry it
+	_failed_step = current_step
+
+	# Build a temporary fail story and play it
+	var fail_story: Array = fail_steps.duplicate(true)
+	# Add failed sentinel at the end
+	fail_story.append({ "type": "retry" })
+
+	# Override _story temporarily with fail steps
+	var saved_story: Array = _story
+	var saved_step:  int   = _step
+	_story = fail_story
+	_step  = 0
+	_step  = 0
+	_close_overlay()
+
+	# Store originals so retry can restore them
+	set_meta("_saved_story", saved_story)
+	set_meta("_saved_step",  saved_step)
+	_run_step()
 
 func _on_gm_correct() -> void:
 	_close_overlay()

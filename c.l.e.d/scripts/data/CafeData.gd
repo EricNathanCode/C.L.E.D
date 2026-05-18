@@ -74,7 +74,12 @@ const LESSONS: Dictionary = {
 	  "hint": "Name: Carlos | Drink: Cappuccino | Food: Blueberry Muffin",
 	  "result_headers": ["id", "customer_name", "drink", "food"],
 	  "result_rows": [["5", "Carlos", "Cappuccino", "Blueberry Muffin"]],
-	  "result_msg": "1 record inserted into orders." },
+	  "result_msg": "1 record inserted into orders.",
+					"fail": [
+						{ "type": "dialogue", "char": "cafe_customer", "name": "CARLOS",    "npc": "adult_7/confuse", "text": "Wait... that is not my order at all. Who is Hernandez?!" },
+						{ "type": "dialogue", "char": "scene",        "name": "SCENE",     "npc": "adult_7/idle",   "text": "Carlos stares at the screen. The line behind him is growing longer." },
+						{ "type": "dialogue", "char": "you",          "name": "YOU",       "npc": "adult_7/idle",   "text": "I am so sorry Carlos! Let me re-enter your order correctly." }
+					] },
 	{ "type": "dialogue", "char": "you",           "name": "YOU",
 	  "npc": "adult_7/idle",
 	  "text": "Order logged! Your cappuccino and blueberry muffin will be ready shortly, Carlos!" },
@@ -114,7 +119,12 @@ const LESSONS: Dictionary = {
 	  "hint": "You want to count per category. Type: category",
 	  "result_headers": ["category", "COUNT(*)"],
 	  "result_rows": [["Drinks", "3"], ["Pastries", "2"]],
-	  "result_msg": "Orders grouped by category." },
+	  "result_msg": "Orders grouped by category.",
+					"fail": [
+						{ "type": "dialogue", "char": "cafe_supervisor", "name": "SUPERVISOR", "npc": "NPC_occupations/coffee_owner/shock", "text": "This report makes no sense! You grouped by item not category — this is useless!" },
+						{ "type": "dialogue", "char": "scene",          "name": "SCENE",      "npc": "NPC_occupations/coffee_owner/idle",  "text": "Your supervisor shakes their head. You feel the pressure of closing time." },
+						{ "type": "dialogue", "char": "you",            "name": "YOU",        "npc": "NPC_occupations/coffee_owner/idle",  "text": "Let me re-run this with the correct GROUP BY column." }
+					] },
 	{ "type": "dialogue", "char": "you",             "name": "YOU",
 	  "npc": "NPC_occupations/coffee_owner/idle",
 	  "text": "Report done! Drinks: 3, Pastries: 2." },
@@ -152,7 +162,12 @@ const LESSONS: Dictionary = {
 	  "hint": "Type the customer name exactly: Rivera",
 	  "result_headers": ["id", "customer_name", "drink", "food"],
 	  "result_rows": [["2", "Rivera", "Iced Tea", "Croissant"]],
-	  "result_msg": "1 record found." },
+	  "result_msg": "1 record found.",
+					"fail": [
+						{ "type": "dialogue", "char": "cafe_customer", "name": "CUSTOMER",  "npc": "adult_8/shock", "text": "That is not me! You looked up the wrong person! Where is my order?!" },
+						{ "type": "dialogue", "char": "scene",        "name": "SCENE",     "npc": "adult_8/idle",  "text": "The customer is getting visibly upset. Other staff are watching." },
+						{ "type": "dialogue", "char": "you",          "name": "YOU",       "npc": "adult_8/idle",  "text": "I apologize! Let me search again with the right name." }
+					] },
 	{ "type": "dialogue", "char": "you",           "name": "YOU",
 	  "npc": "adult_8/idle",
 	  "text": "Found it! Iced Tea and a Croissant — your order is still being prepared. Sorry for the wait!" },
@@ -190,7 +205,12 @@ const LESSONS: Dictionary = {
 	  "hint": "Change drink to: Iced Latte | Record id: 3",
 	  "result_headers": ["id", "customer_name", "drink", "food"],
 	  "result_rows": [["3", "Santos", "Iced Latte", "None"]],
-	  "result_msg": "1 record updated." },
+	  "result_msg": "1 record updated.",
+					"fail": [
+						{ "type": "dialogue", "char": "cafe_customer", "name": "CUSTOMER",  "npc": "adult_9/shock", "text": "It still says Hot Latte! Did you even change anything?!" },
+						{ "type": "dialogue", "char": "scene",        "name": "SCENE",     "npc": "adult_9/idle",  "text": "The customer is losing patience. Your coworkers pretend not to notice." },
+						{ "type": "dialogue", "char": "you",          "name": "YOU",       "npc": "adult_9/idle",  "text": "I am so sorry! Let me enter the correct values this time." }
+					] },
 	{ "type": "dialogue", "char": "you",           "name": "YOU",
 	  "npc": "adult_9/idle",
 	  "text": "Done! Updated to Iced Latte. Your correct order will be out shortly — sorry again!" },
@@ -226,7 +246,12 @@ const LESSONS: Dictionary = {
 	  "hint": "Delete the record where id = 2",
 	  "result_headers": ["STATUS"],
 	  "result_rows": [["Record with id = 2 has been removed."]],
-	  "result_msg": "1 record deleted." },
+	  "result_msg": "1 record deleted.",
+					"fail": [
+						{ "type": "dialogue", "char": "cafe_customer", "name": "CUSTOMER",  "npc": "adult_10/confuse", "text": "Wait — you cancelled the wrong order! Now someone else's food is gone!" },
+						{ "type": "dialogue", "char": "scene",        "name": "SCENE",     "npc": "adult_10/idle",   "text": "An awkward silence falls. A confused customer checks their phone for their order confirmation." },
+						{ "type": "dialogue", "char": "you",          "name": "YOU",       "npc": "adult_10/idle",   "text": "My apologies! I need to enter the correct order id." }
+					] },
 	{ "type": "dialogue", "char": "you",           "name": "YOU",
 	  "npc": "adult_10/idle",
 	  "text": "Done! Your order has been cancelled. Hope everything is okay — come back soon!" },
@@ -272,7 +297,12 @@ const LESSONS: Dictionary = {
 	  	["3", "Cappuccino",       "Drinks",   "3.50"],
 	  	["2", "Latte",            "Drinks",   "4.00"]
 	  ],
-	  "result_msg": "Records sorted by price ASC." },
+	  "result_msg": "Records sorted by price ASC.",
+					"fail": [
+						{ "type": "dialogue", "char": "cafe_supervisor", "name": "SUPERVISOR", "npc": "NPC_occupations/coffee_owner/shock", "text": "The most expensive first?! Customers will think we are overcharging! Fix it!" },
+						{ "type": "dialogue", "char": "scene",          "name": "SCENE",      "npc": "NPC_occupations/coffee_owner/idle",  "text": "Your supervisor quickly covers the screen before any customers can see." },
+						{ "type": "dialogue", "char": "you",            "name": "YOU",        "npc": "NPC_occupations/coffee_owner/idle",  "text": "I will sort cheapest-first right away!" }
+					] },
 	{ "type": "dialogue", "char": "you",             "name": "YOU",
 	  "npc": "NPC_occupations/coffee_owner/idle",
 	  "text": "Done! Sorted cheapest to most expensive: Espresso, Croissant, Muffin, Cappuccino, Latte." },

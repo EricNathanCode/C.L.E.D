@@ -47,7 +47,12 @@ const LESSONS: Dictionary = {
 			[3, "We only have fiction books here."]
 		],
 		"correct_id": 1,
-		"hint": "A good librarian uses the system and gives direct help. Answer: id = 1"
+		"hint": "A good librarian uses the system and gives direct help. Answer: id = 1",
+		"fail": [
+			{ "type": "dialogue", "char": "visitor", "name": "VISITOR", "npc": "adult_7/shock", "text": "That is not helpful at all. I will just go somewhere else." },
+			{ "type": "dialogue", "char": "scene",   "name": "SCENE",   "npc": "adult_7/idle",  "text": "The visitor turns and leaves. You notice the librarian watching from across the room." },
+			{ "type": "dialogue", "char": "you",     "name": "YOU",     "npc": "adult_7/idle",  "text": "I should have used the database. Let me choose the right response." }
+		]
 	},
 	{
 		"type": "dialogue",
@@ -106,7 +111,12 @@ const LESSONS: Dictionary = {
 		"hint": "First: Sofia | Last: Mendez | Type: Student",
 		"result_headers": ["id", "first_name", "last_name", "membership_type"],
 		"result_rows": [["5", "Sofia", "Mendez", "Student"]],
-		"result_msg": "1 record inserted into borrowers."
+		"result_msg": "1 record inserted into borrowers.",
+					"fail": [
+						{ "type": "dialogue", "char": "visitor",  "name": "STUDENT", "npc": "adult_7/confuse", "text": "That is not my name... Are you sure you typed it right?" },
+						{ "type": "dialogue", "char": "scene",    "name": "SCENE",   "npc": "adult_7/idle",   "text": "Sofia tilts her head at the screen. Other students waiting in line exchange glances." },
+						{ "type": "dialogue", "char": "you",      "name": "YOU",     "npc": "adult_7/idle",   "text": "I am sorry, let me enter your details correctly." }
+					]
 	},
 	{
 		"type": "dialogue",
@@ -173,7 +183,12 @@ const LESSONS: Dictionary = {
 			["2", "The Universe",  "Hawking", "Science"],
 			["3", "Brief History", "Sagan",   "Science"]
 		],
-		"result_msg": "2 records found."
+		"result_msg": "2 records found.",
+					"fail": [
+						{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "That is not the right genre! The professor needed Science not Technology!" },
+						{ "type": "dialogue", "char": "scene",     "name": "SCENE",     "npc": "NPC_occupations/librarian/idle",  "text": "The librarian sighs and glances at the clock. The professor's class starts soon." },
+						{ "type": "dialogue", "char": "you",       "name": "YOU",       "npc": "NPC_occupations/librarian/idle",  "text": "I will search with the correct genre value." }
+					]
 	},
 	{
 		"type": "dialogue",
@@ -233,7 +248,12 @@ const LESSONS: Dictionary = {
 		"hint": "New return date: June 30 | Record id: 2",
 		"result_headers": ["id", "borrower_name", "book_title", "return_date"],
 		"result_rows": [["2", "Mr. Tan", "The Universe", "June 30"]],
-		"result_msg": "1 record updated."
+		"result_msg": "1 record updated.",
+					"fail": [
+						{ "type": "dialogue", "char": "visitor",  "name": "BORROWER", "npc": "adult_8/shock",   "text": "That is still June 15! Nothing changed — did the system even update?" },
+						{ "type": "dialogue", "char": "scene",    "name": "SCENE",    "npc": "adult_8/idle",   "text": "An awkward silence on the call. This is why accurate data entry matters." },
+						{ "type": "dialogue", "char": "you",      "name": "YOU",      "npc": "adult_8/idle",   "text": "I apologize! Let me enter the correct date and id this time." }
+					]
 	},
 	{
 		"type": "dialogue",
@@ -291,7 +311,12 @@ const LESSONS: Dictionary = {
 		"hint": "Delete the record where id = 3",
 		"result_headers": ["STATUS"],
 		"result_rows": [["Record with id = 3 has been removed."]],
-		"result_msg": "1 record deleted from overdue."
+		"result_msg": "1 record deleted from overdue.",
+					"fail": [
+						{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "You deleted the WRONG record! That borrower still has an overdue book!" },
+						{ "type": "dialogue", "char": "scene",     "name": "SCENE",     "npc": "NPC_occupations/librarian/idle",  "text": "The librarian quickly pulls up the database to assess the damage." },
+						{ "type": "dialogue", "char": "you",       "name": "YOU",       "npc": "NPC_occupations/librarian/idle",  "text": "My mistake! I will use the correct id this time." }
+					]
 	},
 	{
 		"type": "dialogue",
@@ -360,7 +385,12 @@ const LESSONS: Dictionary = {
 			["1", "SQL Basics",      "Rivera",  "Technology"],
 			["2", "The Universe",    "Hawking", "Science"]
 		],
-		"result_msg": "Records sorted by title ASC."
+		"result_msg": "Records sorted by title ASC.",
+					"fail": [
+						{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "Z to A?! That is backwards! The whole catalog is upside down now!" },
+						{ "type": "dialogue", "char": "scene",     "name": "SCENE",     "npc": "NPC_occupations/librarian/idle",  "text": "The librarian scrolls through the results with an increasingly pained expression." },
+						{ "type": "dialogue", "char": "you",       "name": "YOU",       "npc": "NPC_occupations/librarian/idle",  "text": "I will sort it A to Z properly right now." }
+					]
 	},
 	{
 		"type": "dialogue",
@@ -430,7 +460,12 @@ const LESSONS: Dictionary = {
 			["Science",    "2"],
 			["Fiction",    "1"]
 		],
-		"result_msg": "Books grouped by genre."
+		"result_msg": "Books grouped by genre.",
+					"fail": [
+						{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "This is grouped by title not genre! These numbers are meaningless for the budget!" },
+						{ "type": "dialogue", "char": "scene",     "name": "SCENE",     "npc": "NPC_occupations/librarian/idle",  "text": "The librarian sets the report down. The budget meeting is tomorrow morning." },
+						{ "type": "dialogue", "char": "you",       "name": "YOU",       "npc": "NPC_occupations/librarian/idle",  "text": "I will group by genre correctly right away." }
+					]
 	},
 	{
 		"type": "dialogue",

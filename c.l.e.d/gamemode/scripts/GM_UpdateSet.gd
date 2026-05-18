@@ -1,6 +1,7 @@
 extends VBoxContainer
 
 signal on_correct
+signal on_wrong
 signal on_quit
 
 var _answer_value: String     = ""
@@ -51,6 +52,7 @@ func _on_execute() -> void:
 		var msg: String = "Wrong: "
 		if not val_ok: msg += "new value is incorrect.  "
 		if not id_ok:  msg += "id is incorrect."
+		on_wrong.emit()
 		_fill_error($ResultBox, msg)
 
 func _on_hint() -> void:    $HintLabel.visible = true

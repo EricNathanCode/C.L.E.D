@@ -40,7 +40,12 @@ const LESSONS: Dictionary = {
 	  	[3, "Come back later."]
 	  ],
 	  "correct_id": 1,
-	  "hint": "A good receptionist informs and offers options. Answer: id = 1" },
+	  "hint": "A good receptionist informs and offers options. Answer: id = 1",
+	  "fail": [
+		{ "type": "dialogue", "char": "guest", "name": "GUEST", "npc": "adult_1/shock", "text": "Excuse me?! That is NOT a helpful response!" },
+		{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "adult_1/idle",  "text": "The guest storms off. Your supervisor sighs from across the lobby." },
+		{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "adult_1/idle",  "text": "That did not go well. Let me choose the correct response this time." }
+	  ] },
 	{ "type": "dialogue", "char": "you",    "name": "YOU",
 	  "npc": "adult_1/idle",
 	  "text": "Yes! We have Deluxe and Standard rooms available. Which type would you prefer?" },
@@ -78,6 +83,11 @@ const LESSONS: Dictionary = {
 	  "table_rows": [],
 	  "answers": ["Alex", "Rivera", "Santos"],
 	  "hint": "Alex Rivera Santos — First: Alex | Middle: Rivera | Last: Santos",
+	  "fail": [
+		{ "type": "dialogue", "char": "guest", "name": "ALEX",  "npc": "adult_2/confuse", "text": "That is not my name at all. Are you sure you typed it right?" },
+		{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "adult_2/idle",   "text": "Alex looks uncomfortable. The guest in line behind him sighs." },
+		{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "adult_2/idle",   "text": "I am so sorry! Let me re-enter that correctly." }
+	  ],
 	  "result_headers": ["id", "first_name", "middle_name", "last_name"],
 	  "result_rows": [["1", "Alex", "Rivera", "Santos"]],
 	  "result_msg": "1 record inserted into customers." },
@@ -122,6 +132,11 @@ const LESSONS: Dictionary = {
 	  ],
 	  "answer": "Dela Cruz",
 	  "hint": "Type her last name exactly: Dela Cruz",
+	  "fail": [
+		{ "type": "dialogue", "char": "guest2", "name": "MAYA",  "npc": "adult_3/shock",  "text": "That is not my name! What if my booking is really gone?!" },
+		{ "type": "dialogue", "char": "scene",  "name": "SCENE", "npc": "adult_3/idle",   "text": "Maya starts to tear up. Someone behind her in the lobby gives you a look." },
+		{ "type": "dialogue", "char": "you",    "name": "YOU",   "npc": "adult_3/idle",   "text": "My apologies! I typed the wrong name. Let me search again." }
+	  ],
 	  "result_headers": ["id", "first_name", "last_name", "room_no"],
 	  "result_rows": [["2", "Maya", "Dela Cruz", "204"]],
 	  "result_msg": "1 record found." },
@@ -152,7 +167,12 @@ const LESSONS: Dictionary = {
 	  	[3, "Not my problem."]
 	  ],
 	  "correct_id": 2,
-	  "hint": "De-escalate calmly and offer to help. Answer: id = 2" },
+	  "hint": "De-escalate calmly and offer to help. Answer: id = 2",
+	  "fail": [
+		{ "type": "dialogue", "char": "guest3", "name": "MR. H", "npc": "adult_4/shock", "text": "ARE YOU SERIOUS?! I want your manager THIS INSTANT!!" },
+		{ "type": "dialogue", "char": "scene",  "name": "SCENE", "npc": "adult_4/idle",  "text": "The whole lobby goes quiet. Your supervisor appears looking displeased." },
+		{ "type": "dialogue", "char": "you",    "name": "YOU",   "npc": "adult_4/idle",  "text": "I need to handle this better. Let me choose the right response." }
+	  ] },
 	{ "type": "dialogue", "char": "you",    "name": "YOU",
 	  "npc": "adult_4/idle",
 	  "text": "I'm very sorry to hear that. I'll fix it right away. May I have your booking id?" },
@@ -169,6 +189,11 @@ const LESSONS: Dictionary = {
 	  "answer_value": "Hernandez",
 	  "answer_id": "3",
 	  "hint": "Correct spelling: Hernandez | Record id: 3",
+	  "fail": [
+		{ "type": "dialogue", "char": "guest3", "name": "MR. H", "npc": "adult_4/shock",   "text": "THAT IS STILL WRONG! Hernandez with a Z! Are you even listening?!" },
+		{ "type": "dialogue", "char": "scene",  "name": "SCENE", "npc": "adult_4/idle",    "text": "Mr. Hernandez slams his fist on the counter. Other guests are staring." },
+		{ "type": "dialogue", "char": "you",    "name": "YOU",   "npc": "adult_4/idle",    "text": "My sincerest apologies. Let me fix that correctly this time." }
+	  ],
 	  "result_headers": ["id", "first_name", "last_name", "room_no"],
 	  "result_rows": [["3", "Jose", "Hernandez", "312"]],
 	  "result_msg": "1 record updated." },
@@ -208,6 +233,11 @@ const LESSONS: Dictionary = {
 	  "table_rows": [["5", "Linda", "Lim", "205"]],
 	  "answer_id": "5",
 	  "hint": "Delete the record where id = 5",
+	  "fail": [
+		{ "type": "dialogue", "char": "guest2", "name": "MS. LIM", "npc": "adult_5/confuse", "text": "That is the wrong record. That is someone else's booking!" },
+		{ "type": "dialogue", "char": "scene",  "name": "SCENE",   "npc": "adult_5/idle",   "text": "A long pause on the phone line. This could be a serious data error." },
+		{ "type": "dialogue", "char": "you",    "name": "YOU",     "npc": "adult_5/idle",   "text": "I am so sorry — let me double check the correct id." }
+	  ],
 	  "result_headers": ["STATUS"],
 	  "result_rows": [["Record with id = 5 has been removed."]],
 	  "result_msg": "1 record deleted." },
@@ -246,6 +276,11 @@ const LESSONS: Dictionary = {
 	  ],
 	  "answer": "ASC",
 	  "hint": "A to Z is Ascending order. Type: ASC",
+	  "fail": [
+		{ "type": "dialogue", "char": "mgr",   "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/shock", "text": "This is sorted Z to A! That is backwards! This is for a board meeting!" },
+		{ "type": "dialogue", "char": "scene", "name": "SCENE",   "npc": "NPC_occupations/hotel_manager/idle",  "text": "The manager pinches the bridge of his nose. You feel your face go red." },
+		{ "type": "dialogue", "char": "you",   "name": "YOU",     "npc": "NPC_occupations/hotel_manager/idle",  "text": "I apologize sir. Let me re-run that with the correct order." }
+	  ],
 	  "result_headers": ["id", "first_name", "last_name", "room_no"],
 	  "result_rows": [
 	  	["2", "Maya", "Dela Cruz",  "204"],
@@ -290,6 +325,11 @@ const LESSONS: Dictionary = {
 	  ],
 	  "answer": "room_type",
 	  "hint": "You want to count per room type. Type: room_type",
+	  "fail": [
+		{ "type": "dialogue", "char": "mgr",   "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/shock", "text": "What is this? These numbers are completely off. It is not grouped by room type!" },
+		{ "type": "dialogue", "char": "scene", "name": "SCENE",   "npc": "NPC_occupations/hotel_manager/idle",  "text": "The manager sets down the report. The board meeting is in one hour." },
+		{ "type": "dialogue", "char": "you",   "name": "YOU",     "npc": "NPC_occupations/hotel_manager/idle",  "text": "I will fix the GROUP BY column right now sir." }
+	  ],
 	  "result_headers": ["room_type", "COUNT(*)"],
 	  "result_rows": [
 	  	["Standard", "2"],

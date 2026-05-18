@@ -1,6 +1,7 @@
 extends VBoxContainer
 
 signal on_correct
+signal on_wrong
 signal on_quit
 
 var _correct_id: int = -1
@@ -49,6 +50,7 @@ func _on_execute() -> void:
 			"Response id = " + val + " chosen.")
 		$ContinueButton.visible = true
 	else:
+		on_wrong.emit()
 		_show_error("id = " + val + " is not the correct response. Try again.")
 
 func _on_hint() -> void:    $HintLabel.visible = true

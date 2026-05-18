@@ -5,9 +5,19 @@ func _ready() -> void:
 	$CenterContainer/VBoxContainer/ChangeWorldButton.pressed.connect(_on_change_world)
 	_style_btn($CenterContainer/VBoxContainer/BackToHubButton)
 	_style_btn($CenterContainer/VBoxContainer/ChangeWorldButton)
-	# Style title
 	$CenterContainer/VBoxContainer/Title.add_theme_font_size_override("font_size", 28)
 	$CenterContainer/VBoxContainer/Title.add_theme_color_override("font_color", Color.WHITE)
+
+func set_mode(mode: String) -> void:
+	var title: Label = $CenterContainer/VBoxContainer/Title
+	if mode == "failed":
+		title.text = "Lesson Failed"
+		title.add_theme_color_override("font_color", Color("#DC2626"))  # red
+		$CenterContainer/VBoxContainer/LessonLabel.text = "Better luck next time!"
+	else:
+		title.text = "Lesson Complete"
+		title.add_theme_color_override("font_color", Color.WHITE)
+		$CenterContainer/VBoxContainer/LessonLabel.text = "Lesson: " + str(GameManager.lesson_id)
 
 func _on_back() -> void:
 	get_tree().root.get_node("Main").show_screen("dashboard")
