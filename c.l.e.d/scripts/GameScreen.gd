@@ -51,6 +51,7 @@ func _ready() -> void:
 	_style_btn($SQLOverlay/CenterContainer/PanelContainer/OuterVBox/BackToDialogueButton)
 
 	_load_all_textures()
+	_style_progress_bar()
 
 # ── Texture loading ───────────────────────────────────────
 func _load_all_textures() -> void:
@@ -151,6 +152,7 @@ func _run_step() -> void:
 		get_tree().root.get_node("Main").show_screen("complete")
 		return
 
+	_update_progress()
 	var s: Dictionary = _story[_step]
 	$DialogueArea/DialogueButtons/BackButton.visible = _step > 0
 
@@ -241,6 +243,39 @@ func _get_story(id) -> Array:
 		push_error("GameScreen: lesson id not found: " + str(id))
 	script.free()
 	return result
+
+
+# ── Update progress bar ───────────────────────────────────
+func _update_progress() -> void:
+	# Count only meaningful steps (skip "end" type)
+	var total: int = 0
+	for s in _story:
+		if s.get("type", "") != "end":
+			total += 1
+	if total == 0:
+		return
+	# _step = index of current step (0-based), count non-end steps so far
+	var done: int = 0
+	for i in range(min(_step + 1, _story.size())):
+		if _story[i].get("type", "") != "end":
+			done += 1
+	$ProgressBar.value = float(done) / float(total)
+
+
+# ── Style progress bar ────────────────────────────────────
+func _style_progress_bar() -> void:
+	var pb: ProgressBar = $ProgressBar
+	var bg := StyleBoxFlat.new()
+	bg.bg_color     = Color(0.15, 0.15, 0.15, 0.85)
+	bg.border_color = Color(0, 0, 0, 0.6)
+	bg.set_border_width_all(1)
+	bg.set_corner_radius_all(10)
+	pb.add_theme_stylebox_override("background", bg)
+	var fill := StyleBoxFlat.new()
+	fill.bg_color = Color("#F59E0B")
+	fill.set_corner_radius_all(10)
+	pb.add_theme_stylebox_override("fill", fill)
+	pb.value = 0.0
 
 func _style_btn(btn: Button) -> void:
 	btn.add_theme_color_override("font_color", Color.BLACK)

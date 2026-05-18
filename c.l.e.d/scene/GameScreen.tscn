@@ -45,6 +45,20 @@ text = "Lesson: -"
 layout_mode = 2
 text = "Back to Hub"
 
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+layout_mode = 0
+anchor_left = 0.25
+anchor_top = 0.0
+anchor_right = 0.75
+anchor_bottom = 0.0
+offset_top = 6.0
+offset_bottom = 30.0
+min_value = 0.0
+max_value = 1.0
+value = 0.0
+show_percentage = false
+
 [node name="NPCSprite" type="TextureRect" parent="."]
 layout_mode = 0
 anchor_left = 0.2
