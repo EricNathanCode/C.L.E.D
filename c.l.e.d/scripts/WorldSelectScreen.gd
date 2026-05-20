@@ -31,12 +31,14 @@ func _ready() -> void:
 	$UpButton.pressed.connect(_on_up)
 	$DownButton.pressed.connect(_on_down)
 	$EnterButton.pressed.connect(_on_enter)
+	$TTSButton.pressed.connect(_on_tts_toggle)
 	$ExitButton.pressed.connect(_on_exit)
 
 	# Style buttons — white bg, black border, black text
 	_style_btn($UpButton,    18)
 	_style_btn($DownButton,  18)
 	_style_btn($EnterButton, 22)
+	_style_btn($TTSButton,   18)
 	_style_btn($ExitButton,  18)
 
 	# Style title
@@ -52,6 +54,7 @@ func _ready() -> void:
 	# Pre-load all backgrounds in the background
 	_preload_backgrounds()
 	_update_display()
+	_update_tts_button()
 
 func _preload_backgrounds() -> void:
 	for world in WORLDS:
@@ -72,6 +75,13 @@ func _on_enter() -> void:
 	GameManager.world = WORLDS[_index]
 	get_tree().root.get_node("Main").show_screen("dashboard")
 
+func _on_tts_toggle() -> void:
+	GameManager.tts_enabled = not GameManager.tts_enabled
+	# Stop any speech immediately if turning off
+	if not GameManager.tts_enabled:
+		GameManager.stop_speaking()
+	_update_tts_button()
+
 func _on_exit() -> void:
 	get_tree().quit()
 
@@ -82,6 +92,12 @@ func _update_display() -> void:
 		$SceneBG.texture = _bg_cache[world]
 	else:
 		$SceneBG.texture = null
+
+func _update_tts_button() -> void:
+	if GameManager.tts_enabled:
+		$TTSButton.text = "🔊  TTS: ON"
+	else:
+		$TTSButton.text = "🔇  TTS: OFF"
 
 # ── Texture loader (same 3-method fallback as GameScreen) ──
 func _load_texture(res_path: String) -> Texture2D:
