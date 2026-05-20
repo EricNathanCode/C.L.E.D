@@ -78,13 +78,23 @@ text = "Enter World  →"
 
 [node name="TTSButton" type="Button" parent="."]
 layout_mode = 0
-anchor_left = 0.38
+anchor_left = 0.33
 anchor_top = 0.0
-anchor_right = 0.62
+anchor_right = 0.495
 anchor_bottom = 0.0
 offset_top = 562.0
 offset_bottom = 612.0
-text = "🔊  TTS: ON"
+text = "🔇  TTS: OFF"
+
+[node name="MusicButton" type="Button" parent="."]
+layout_mode = 0
+anchor_left = 0.505
+anchor_top = 0.0
+anchor_right = 0.67
+anchor_bottom = 0.0
+offset_top = 562.0
+offset_bottom = 612.0
+text = "🎵  Music: ON"
 
 [node name="ExitButton" type="Button" parent="."]
 layout_mode = 0

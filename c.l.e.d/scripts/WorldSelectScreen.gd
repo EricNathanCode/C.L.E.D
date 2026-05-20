@@ -1,10 +1,6 @@
 extends Control
 # ═══════════════════════════════════════════════════════
 #  WORLD SELECT SCREEN  —  scripts/WorldSelectScreen.gd
-#
-#  Carousel-style world picker.
-#  ▲ / ▼ cycle through worlds — background changes live.
-#  "Enter World" confirms and goes to Dashboard.
 # ═══════════════════════════════════════════════════════
 
 const WORLDS: Array = ["hotel", "cafe", "police", "library"]
@@ -23,7 +19,6 @@ const WORLD_BGS: Dictionary = {
 	"library": "res://images/backgrounds/BG_library.png",
 }
 
-# Cache loaded textures so arrow presses are instant
 var _bg_cache: Dictionary = {}
 var _index: int = 0
 
@@ -32,34 +27,32 @@ func _ready() -> void:
 	$DownButton.pressed.connect(_on_down)
 	$EnterButton.pressed.connect(_on_enter)
 	$TTSButton.pressed.connect(_on_tts_toggle)
+	$MusicButton.pressed.connect(_on_music_toggle)
 	$ExitButton.pressed.connect(_on_exit)
 
-	# Style buttons — white bg, black border, black text
 	_style_btn($UpButton,    18)
 	_style_btn($DownButton,  18)
 	_style_btn($EnterButton, 22)
 	_style_btn($TTSButton,   18)
+	_style_btn($MusicButton, 18)
 	_style_btn($ExitButton,  18)
 
-	# Style title
 	$Title.add_theme_font_size_override("font_size", 28)
 	$Title.add_theme_color_override("font_color", Color.WHITE)
 
-	# Style world name
 	$WorldName.add_theme_font_size_override("font_size", 42)
 	$WorldName.add_theme_color_override("font_color", Color.WHITE)
 	$WorldName.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	$WorldName.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
 
-	# Pre-load all backgrounds in the background
 	_preload_backgrounds()
 	_update_display()
 	_update_tts_button()
+	_update_music_button()
 
 func _preload_backgrounds() -> void:
 	for world in WORLDS:
-		var path: String = WORLD_BGS[world]
-		var tex := _load_texture(path)
+		var tex := _load_texture(WORLD_BGS[world])
 		if tex:
 			_bg_cache[world] = tex
 
@@ -77,10 +70,18 @@ func _on_enter() -> void:
 
 func _on_tts_toggle() -> void:
 	GameManager.tts_enabled = not GameManager.tts_enabled
-	# Stop any speech immediately if turning off
 	if not GameManager.tts_enabled:
 		GameManager.stop_speaking()
 	_update_tts_button()
+
+func _on_music_toggle() -> void:
+	GameManager.music_enabled = not GameManager.music_enabled
+	var main = get_tree().root.get_node("Main")
+	if GameManager.music_enabled:
+		main.resume_bgm()
+	else:
+		main.pause_bgm()
+	_update_music_button()
 
 func _on_exit() -> void:
 	get_tree().quit()
@@ -88,18 +89,14 @@ func _on_exit() -> void:
 func _update_display() -> void:
 	var world: String = WORLDS[_index]
 	$WorldName.text = WORLD_NAMES[world]
-	if _bg_cache.has(world):
-		$SceneBG.texture = _bg_cache[world]
-	else:
-		$SceneBG.texture = null
+	$SceneBG.texture = _bg_cache.get(world, null)
 
 func _update_tts_button() -> void:
-	if GameManager.tts_enabled:
-		$TTSButton.text = "🔊  TTS: ON"
-	else:
-		$TTSButton.text = "🔇  TTS: OFF"
+	$TTSButton.text = "🔊  TTS: ON" if GameManager.tts_enabled else "🔇  TTS: OFF"
 
-# ── Texture loader (same 3-method fallback as GameScreen) ──
+func _update_music_button() -> void:
+	$MusicButton.text = "🎵  Music: ON" if GameManager.music_enabled else "🔕  Music: OFF"
+
 func _load_texture(res_path: String) -> Texture2D:
 	if ResourceLoader.exists(res_path):
 		var tex := ResourceLoader.load(res_path) as Texture2D
@@ -122,7 +119,6 @@ func _load_texture(res_path: String) -> Texture2D:
 		return ImageTexture.create_from_image(img2)
 	return null
 
-# ── Button styling — white bg, black border, black text ──
 func _style_btn(btn: Button, font_size: int) -> void:
 	btn.add_theme_font_size_override("font_size", font_size)
 	btn.add_theme_color_override("font_color", Color.BLACK)
@@ -137,10 +133,10 @@ func _style_btn(btn: Button, font_size: int) -> void:
 	s.content_margin_bottom = 10
 	btn.add_theme_stylebox_override("normal", s)
 	var h := s.duplicate() as StyleBoxFlat
-	h.bg_color = Color("#F59E0B")  # yellow on hover
+	h.bg_color = Color("#F59E0B")
 	h.border_color = Color("#B45309")
 	btn.add_theme_stylebox_override("hover", h)
 	var p := s.duplicate() as StyleBoxFlat
-	p.bg_color = Color("#D97706")   # darker yellow on press
+	p.bg_color = Color("#D97706")
 	p.border_color = Color("#92400E")
 	btn.add_theme_stylebox_override("pressed", p)
