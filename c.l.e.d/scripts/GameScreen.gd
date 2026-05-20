@@ -104,7 +104,7 @@ func _unhandled_input(event: InputEvent) -> void:
 # ── Texture loading ───────────────────────────────────────
 func _load_all_textures() -> void:
 	for pair in [["hotel", BG_HOTEL], ["cafe", BG_CAFE],
-	             ["police", BG_POLICE], ["library", BG_LIBRARY]]:
+				 ["police", BG_POLICE], ["library", BG_LIBRARY]]:
 		var tex := _load_texture(pair[1])
 		if tex:
 			_bg_textures[pair[0]] = tex

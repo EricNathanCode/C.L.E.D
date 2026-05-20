@@ -15,7 +15,7 @@ var world:     String = ""
 var lesson_id         = null
 
 # ── TTS toggle — persists across scenes ──────────────────
-var tts_enabled: bool = true
+var tts_enabled: bool = false
 
 # ── Voice profiles per character ──────────────────────────
 # Each entry: [volume, pitch, rate]
