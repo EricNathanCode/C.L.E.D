@@ -285,7 +285,6 @@ func _on_gm_wrong() -> void:
 	var saved_step:  int   = _step
 	_story = fail_story
 	_step  = 0
-	_step  = 0
 	_close_overlay()
 
 	# Store originals so retry can restore them

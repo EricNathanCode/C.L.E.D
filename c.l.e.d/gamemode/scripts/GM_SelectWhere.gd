@@ -41,7 +41,7 @@ func _on_execute() -> void:
 		_fill_result($ResultBox, _step_data.get("result_headers",[]),
 			_step_data.get("result_rows",[]), _step_data.get("result_msg",""))
 	else:
-  on_wrong.emit()
+		on_wrong.emit()
 		_fill_error($ResultBox, "'" + val + "' not found. Check the dialogue and try again.")
 
 func _on_hint() -> void:    $HintLabel.visible = true

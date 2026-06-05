@@ -22,20 +22,31 @@ const WORLD_BGS: Dictionary = {
 var _bg_cache: Dictionary = {}
 var _index: int = 0
 
+# ── Shorthand node paths ──────────────────────────────
+@onready var _panel      := $SettingsOverlay/SettingsPanel
+@onready var _music_btn  := $SettingsOverlay/SettingsPanel/VBox/MusicToggle
+@onready var _tts_btn    := $SettingsOverlay/SettingsPanel/VBox/TTSToggle
+
 func _ready() -> void:
 	$UpButton.pressed.connect(_on_up)
 	$DownButton.pressed.connect(_on_down)
 	$EnterButton.pressed.connect(_on_enter)
-	$TTSButton.pressed.connect(_on_tts_toggle)
-	$MusicButton.pressed.connect(_on_music_toggle)
 	$ExitButton.pressed.connect(_on_exit)
+	$SettingsButton.pressed.connect(_on_settings_open)
+
+	$SettingsOverlay/DimBG.gui_input.connect(_on_dim_input)
+	$SettingsOverlay/SettingsPanel/VBox/TitleRow/CloseButton.pressed.connect(_on_settings_close)
+	_music_btn.pressed.connect(_on_music_toggle)
+	_tts_btn.pressed.connect(_on_tts_toggle)
 
 	_style_btn($UpButton,    18)
 	_style_btn($DownButton,  18)
 	_style_btn($EnterButton, 22)
-	_style_btn($TTSButton,   18)
-	_style_btn($MusicButton, 18)
 	_style_btn($ExitButton,  18)
+	_style_settings_btn($SettingsButton)
+	_style_btn($SettingsOverlay/SettingsPanel/VBox/TitleRow/CloseButton, 16)
+	_style_btn(_music_btn, 18)
+	_style_btn(_tts_btn,   18)
 
 	$Title.add_theme_font_size_override("font_size", 28)
 	$Title.add_theme_color_override("font_color", Color.WHITE)
@@ -44,6 +55,9 @@ func _ready() -> void:
 	$WorldName.add_theme_color_override("font_color", Color.WHITE)
 	$WorldName.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	$WorldName.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
+
+	var title_lbl := $SettingsOverlay/SettingsPanel/VBox/TitleRow/TitleLabel
+	title_lbl.add_theme_font_size_override("font_size", 20)
 
 	_preload_backgrounds()
 	_update_display()
@@ -68,6 +82,20 @@ func _on_enter() -> void:
 	GameManager.world = WORLDS[_index]
 	get_tree().root.get_node("Main").show_screen("dashboard")
 
+func _on_exit() -> void:
+	get_tree().quit()
+
+# ── Settings panel ────────────────────────────────────
+func _on_settings_open() -> void:
+	$SettingsOverlay.visible = true
+
+func _on_settings_close() -> void:
+	$SettingsOverlay.visible = false
+
+func _on_dim_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.pressed:
+		_on_settings_close()
+
 func _on_tts_toggle() -> void:
 	GameManager.tts_enabled = not GameManager.tts_enabled
 	if not GameManager.tts_enabled:
@@ -83,19 +111,16 @@ func _on_music_toggle() -> void:
 		main.pause_bgm()
 	_update_music_button()
 
-func _on_exit() -> void:
-	get_tree().quit()
-
 func _update_display() -> void:
 	var world: String = WORLDS[_index]
 	$WorldName.text = WORLD_NAMES[world]
 	$SceneBG.texture = _bg_cache.get(world, null)
 
 func _update_tts_button() -> void:
-	$TTSButton.text = "🔊  TTS: ON" if GameManager.tts_enabled else "🔇  TTS: OFF"
+	_tts_btn.text = "🔊  TTS: ON" if GameManager.tts_enabled else "🔇  TTS: OFF"
 
 func _update_music_button() -> void:
-	$MusicButton.text = "🎵  Music: ON" if GameManager.music_enabled else "🔕  Music: OFF"
+	_music_btn.text = "🎵  Music: ON" if GameManager.music_enabled else "🔕  Music: OFF"
 
 func _load_texture(res_path: String) -> Texture2D:
 	if ResourceLoader.exists(res_path):
@@ -119,7 +144,7 @@ func _load_texture(res_path: String) -> Texture2D:
 		return ImageTexture.create_from_image(img2)
 	return null
 
-func _style_btn(btn: Button, font_size: int) -> void:
+func _style_btn(btn: Button, font_size: int = 18) -> void:
 	btn.add_theme_font_size_override("font_size", font_size)
 	btn.add_theme_color_override("font_color", Color.BLACK)
 	var s := StyleBoxFlat.new()
@@ -133,10 +158,32 @@ func _style_btn(btn: Button, font_size: int) -> void:
 	s.content_margin_bottom = 10
 	btn.add_theme_stylebox_override("normal", s)
 	var h := s.duplicate() as StyleBoxFlat
-	h.bg_color = Color("#F59E0B")
+	h.bg_color     = Color("#F59E0B")
 	h.border_color = Color("#B45309")
 	btn.add_theme_stylebox_override("hover", h)
 	var p := s.duplicate() as StyleBoxFlat
-	p.bg_color = Color("#D97706")
+	p.bg_color     = Color("#D97706")
+	p.border_color = Color("#92400E")
+	btn.add_theme_stylebox_override("pressed", p)
+
+func _style_settings_btn(btn: Button) -> void:
+	btn.add_theme_font_size_override("font_size", 24)
+	btn.add_theme_color_override("font_color", Color.WHITE)
+	var s := StyleBoxFlat.new()
+	s.bg_color     = Color(0.1, 0.1, 0.15, 0.85)
+	s.border_color = Color.WHITE
+	s.set_border_width_all(2)
+	s.set_corner_radius_all(8)
+	s.content_margin_left   = 10
+	s.content_margin_right  = 10
+	s.content_margin_top    = 8
+	s.content_margin_bottom = 8
+	btn.add_theme_stylebox_override("normal", s)
+	var h := s.duplicate() as StyleBoxFlat
+	h.bg_color     = Color("#F59E0B")
+	h.border_color = Color("#B45309")
+	btn.add_theme_stylebox_override("hover", h)
+	var p := s.duplicate() as StyleBoxFlat
+	p.bg_color     = Color("#D97706")
 	p.border_color = Color("#92400E")
 	btn.add_theme_stylebox_override("pressed", p)
