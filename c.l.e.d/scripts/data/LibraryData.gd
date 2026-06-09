@@ -3,8 +3,9 @@ extends Node
 #  LIBRARY DATA  —  scripts/data/LibraryData.gd
 #
 #  NPC assignments (Library World — unique to this world):
-#    adult_7 = Student / visitor
-#    adult_8 = Another visitor / borrower
+#    adult_7  = Visitor (L1 — gender-neutral)
+#    adult_16 = Sofia Mendez, female student (L2)
+#    adult_8  = Borrower (L4)
 #    NPC_occupations/librarian = Head librarian (boss)
 #
 #  Rule: "you" and "scene" always idle — NPC looks at you.
@@ -82,21 +83,21 @@ const LESSONS: Dictionary = {
 		"type": "dialogue",
 		"char": "scene",
 		"name": "SCENE",
-		"npc":  "adult_7/idle",
+		"npc":  "adult_16/idle",
 		"text": "A student walks up to the desk wanting to borrow books for the first time."
 	},
 	{
 		"type": "dialogue",
 		"char": "visitor",
 		"name": "STUDENT",
-		"npc":  "adult_7/talk",
+		"npc":  "adult_16/talk",
 		"text": "Hi! I'd like to register as a borrower. My name is Sofia Mendez."
 	},
 	{
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
-		"npc":  "adult_7/idle",
+		"npc":  "adult_16/idle",
 		"text": "Welcome, Sofia! Let me add you to our borrower database right now."
 	},
 	{
@@ -113,23 +114,23 @@ const LESSONS: Dictionary = {
 		"result_rows": [["5", "Sofia", "Mendez", "Student"]],
 		"result_msg": "1 record inserted into borrowers.",
 					"fail": [
-						{ "type": "dialogue", "char": "visitor",  "name": "STUDENT", "npc": "adult_7/confuse", "text": "That is not my name... Are you sure you typed it right?" },
-						{ "type": "dialogue", "char": "scene",    "name": "SCENE",   "npc": "adult_7/idle",   "text": "Sofia tilts her head at the screen. Other students waiting in line exchange glances." },
-						{ "type": "dialogue", "char": "you",      "name": "YOU",     "npc": "adult_7/idle",   "text": "I am sorry, let me enter your details correctly." }
+						{ "type": "dialogue", "char": "visitor",  "name": "STUDENT", "npc": "adult_16/confuse", "text": "That is not my name... Are you sure you typed it right?" },
+						{ "type": "dialogue", "char": "scene",    "name": "SCENE",   "npc": "adult_16/idle",   "text": "Sofia tilts her head at the screen. Other students waiting in line exchange glances." },
+						{ "type": "dialogue", "char": "you",      "name": "YOU",     "npc": "adult_16/idle",   "text": "I am sorry, let me enter your details correctly." }
 					]
 	},
 	{
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
-		"npc":  "adult_7/idle",
+		"npc":  "adult_16/idle",
 		"text": "You're all set, Sofia! Your borrower ID is 5. You can borrow up to 5 books at a time."
 	},
 	{
 		"type": "dialogue",
 		"char": "visitor",
 		"name": "STUDENT",
-		"npc":  "adult_7/talk",
+		"npc":  "adult_16/talk",
 		"text": "That's amazing! I'm going to borrow so many books. Thank you!"
 	},
 	{

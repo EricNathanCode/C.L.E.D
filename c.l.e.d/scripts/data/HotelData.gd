@@ -7,10 +7,10 @@ extends Node
 #
 #  Lesson NPC assignments:
 #    L1 → adult_1   (friendly guest)
-#    L2 → adult_2   (Alex, shy guest)
-#    L3 → adult_3   (Maya, nervous woman)
-#    L4 → adult_4   (Mr. H, angry man)
-#    L5 → adult_5   (Ms. Lim, phone cancellation)
+#    L2 → adult_13  (Alex, shy guest)
+#    L3 → adult_12  (Maya, nervous woman)
+#    L4 → adult_9   (Mr. H, angry man)
+#    L5 → adult_14  (Ms. Lim, phone cancellation)
 #    L6 → NPC_occupations/hotel_manager  (boss)
 #    L7 → NPC_occupations/hotel_manager  (boss)
 #
@@ -56,23 +56,23 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON 2 — INSERT INTO  |  NPC: adult_2
+#  LESSON 2 — INSERT INTO  |  NPC: adult_13
 # ─────────────────────────────────────────────
 2: [
 	{ "type": "dialogue", "char": "scene",  "name": "SCENE",
-	  "npc": "adult_2/idle",
+	  "npc": "adult_13/idle",
 	  "text": "A young man walks in with a rolling suitcase and looks around the lobby, then approaches your desk." },
 	{ "type": "dialogue", "char": "guest",  "name": "ALEX",
-	  "npc": "adult_2/confuse",
+	  "npc": "adult_13/confuse",
 	  "text": "Uh, hi... I'd like to book a room, please." },
 	{ "type": "dialogue", "char": "you",    "name": "YOU",
-	  "npc": "adult_2/idle",
+	  "npc": "adult_13/idle",
 	  "text": "Good morning! Welcome to Grand Hotel. May I have your full name?" },
 	{ "type": "dialogue", "char": "guest",  "name": "ALEX",
-	  "npc": "adult_2/talk",
+	  "npc": "adult_13/talk",
 	  "text": "My name is Alex Rivera Santos." },
 	{ "type": "dialogue", "char": "you",    "name": "YOU",
-	  "npc": "adult_2/idle",
+	  "npc": "adult_13/idle",
 	  "text": "Perfect! Let me register that in our system right now." },
 	{ "type": "sql_fill",
 	  "gamemode": "insert_into",
@@ -84,40 +84,40 @@ const LESSONS: Dictionary = {
 	  "answers": ["Alex", "Rivera", "Santos"],
 	  "hint": "Alex Rivera Santos — First: Alex | Middle: Rivera | Last: Santos",
 	  "fail": [
-		{ "type": "dialogue", "char": "guest", "name": "ALEX",  "npc": "adult_2/confuse", "text": "That is not my name at all. Are you sure you typed it right?" },
-		{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "adult_2/idle",   "text": "Alex looks uncomfortable. The guest in line behind him sighs." },
-		{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "adult_2/idle",   "text": "I am so sorry! Let me re-enter that correctly." }
+		{ "type": "dialogue", "char": "guest", "name": "ALEX",  "npc": "adult_13/confuse", "text": "That is not my name at all. Are you sure you typed it right?" },
+		{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "adult_13/idle",   "text": "Alex looks uncomfortable. The guest in line behind him sighs." },
+		{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "adult_13/idle",   "text": "I am so sorry! Let me re-enter that correctly." }
 	  ],
 	  "result_headers": ["id", "first_name", "middle_name", "last_name"],
 	  "result_rows": [["1", "Alex", "Rivera", "Santos"]],
 	  "result_msg": "1 record inserted into customers." },
 	{ "type": "dialogue", "char": "you",    "name": "YOU",
-	  "npc": "adult_2/idle",
+	  "npc": "adult_13/idle",
 	  "text": "You're all set, Mr. Santos! Room 101 is confirmed. Enjoy your stay!" },
 	{ "type": "dialogue", "char": "guest",  "name": "ALEX",
-	  "npc": "adult_2/talk",
+	  "npc": "adult_13/talk",
 	  "text": "That was so fast, thank you! You're amazing!" },
 	{ "type": "end" }
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON 3 — SELECT WHERE  |  NPC: adult_3
+#  LESSON 3 — SELECT WHERE  |  NPC: adult_12
 # ─────────────────────────────────────────────
 3: [
 	{ "type": "dialogue", "char": "scene",  "name": "SCENE",
-	  "npc": "adult_3/idle",
+	  "npc": "adult_12/idle",
 	  "text": "A nervous young woman approaches, clutching a printed email and looking very worried." },
 	{ "type": "dialogue", "char": "guest2", "name": "MAYA",
-	  "npc": "adult_3/confuse",
+	  "npc": "adult_12/confuse",
 	  "text": "Um... sorry to bother you... I made a reservation online but I can't find my confirmation email..." },
 	{ "type": "dialogue", "char": "guest2", "name": "MAYA",
-	  "npc": "adult_3/shock",
+	  "npc": "adult_12/shock",
 	  "text": "What if my booking doesn't exist?? I saved up for this for months!!" },
 	{ "type": "dialogue", "char": "you",    "name": "YOU",
-	  "npc": "adult_3/idle",
+	  "npc": "adult_12/idle",
 	  "text": "Hey, breathe! I can search for you. What's your last name?" },
 	{ "type": "dialogue", "char": "guest2", "name": "MAYA",
-	  "npc": "adult_3/talk",
+	  "npc": "adult_12/talk",
 	  "text": "Dela Cruz. D-E-L-A Cruz." },
 	{ "type": "sql_fill",
 	  "gamemode": "select_where",
@@ -133,31 +133,31 @@ const LESSONS: Dictionary = {
 	  "answer": "Dela Cruz",
 	  "hint": "Type her last name exactly: Dela Cruz",
 	  "fail": [
-		{ "type": "dialogue", "char": "guest2", "name": "MAYA",  "npc": "adult_3/shock",  "text": "That is not my name! What if my booking is really gone?!" },
-		{ "type": "dialogue", "char": "scene",  "name": "SCENE", "npc": "adult_3/idle",   "text": "Maya starts to tear up. Someone behind her in the lobby gives you a look." },
-		{ "type": "dialogue", "char": "you",    "name": "YOU",   "npc": "adult_3/idle",   "text": "My apologies! I typed the wrong name. Let me search again." }
+		{ "type": "dialogue", "char": "guest2", "name": "MAYA",  "npc": "adult_12/shock",  "text": "That is not my name! What if my booking is really gone?!" },
+		{ "type": "dialogue", "char": "scene",  "name": "SCENE", "npc": "adult_12/idle",   "text": "Maya starts to tear up. Someone behind her in the lobby gives you a look." },
+		{ "type": "dialogue", "char": "you",    "name": "YOU",   "npc": "adult_12/idle",   "text": "My apologies! I typed the wrong name. Let me search again." }
 	  ],
 	  "result_headers": ["id", "first_name", "last_name", "room_no"],
 	  "result_rows": [["2", "Maya", "Dela Cruz", "204"]],
 	  "result_msg": "1 record found." },
 	{ "type": "dialogue", "char": "you",    "name": "YOU",
-	  "npc": "adult_3/idle",
+	  "npc": "adult_12/idle",
 	  "text": "Found you! Room 204, Deluxe Queen — all confirmed, Ms. Dela Cruz!" },
 	{ "type": "dialogue", "char": "guest2", "name": "MAYA",
-	  "npc": "adult_3/talk",
+	  "npc": "adult_12/talk",
 	  "text": "Oh THANK GOODNESS!! You're literally a lifesaver, thank you!!" },
 	{ "type": "end" }
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON 4 — UPDATE SET  |  NPC: adult_4
+#  LESSON 4 — UPDATE SET  |  NPC: adult_9
 # ─────────────────────────────────────────────
 4: [
 	{ "type": "dialogue", "char": "scene",  "name": "SCENE",
-	  "npc": "adult_4/idle",
+	  "npc": "adult_9/idle",
 	  "text": "A stocky man storms up to the front desk, arms crossed, red-faced. You take a deep breath." },
 	{ "type": "dialogue", "char": "guest3", "name": "MR. H",
-	  "npc": "adult_4/shock",
+	  "npc": "adult_9/shock",
 	  "text": "EXCUSE ME. There is a MISTAKE in my booking and I am NOT happy about it!!" },
 	{ "type": "sql_choice",
 	  "desc": "An upset guest is in front of you. Choose the most professional response.",
@@ -169,15 +169,15 @@ const LESSONS: Dictionary = {
 	  "correct_id": 2,
 	  "hint": "De-escalate calmly and offer to help. Answer: id = 2",
 	  "fail": [
-		{ "type": "dialogue", "char": "guest3", "name": "MR. H", "npc": "adult_4/shock", "text": "ARE YOU SERIOUS?! I want your manager THIS INSTANT!!" },
-		{ "type": "dialogue", "char": "scene",  "name": "SCENE", "npc": "adult_4/idle",  "text": "The whole lobby goes quiet. Your supervisor appears looking displeased." },
-		{ "type": "dialogue", "char": "you",    "name": "YOU",   "npc": "adult_4/idle",  "text": "I need to handle this better. Let me choose the right response." }
+		{ "type": "dialogue", "char": "guest3", "name": "MR. H", "npc": "adult_9/shock", "text": "ARE YOU SERIOUS?! I want your manager THIS INSTANT!!" },
+		{ "type": "dialogue", "char": "scene",  "name": "SCENE", "npc": "adult_9/idle",  "text": "The whole lobby goes quiet. Your supervisor appears looking displeased." },
+		{ "type": "dialogue", "char": "you",    "name": "YOU",   "npc": "adult_9/idle",  "text": "I need to handle this better. Let me choose the right response." }
 	  ] },
 	{ "type": "dialogue", "char": "you",    "name": "YOU",
-	  "npc": "adult_4/idle",
+	  "npc": "adult_9/idle",
 	  "text": "I'm very sorry to hear that. I'll fix it right away. May I have your booking id?" },
 	{ "type": "dialogue", "char": "guest3", "name": "MR. H",
-	  "npc": "adult_4/shock",
+	  "npc": "adult_9/shock",
 	  "text": "The name is Hernandez! H-E-R-N-A-N-D-E-Z!! You have it as Hernandes — NO Z!! Booking id is 3." },
 	{ "type": "sql_fill",
 	  "gamemode": "update_set",
@@ -190,40 +190,40 @@ const LESSONS: Dictionary = {
 	  "answer_id": "3",
 	  "hint": "Correct spelling: Hernandez | Record id: 3",
 	  "fail": [
-		{ "type": "dialogue", "char": "guest3", "name": "MR. H", "npc": "adult_4/shock",   "text": "THAT IS STILL WRONG! Hernandez with a Z! Are you even listening?!" },
-		{ "type": "dialogue", "char": "scene",  "name": "SCENE", "npc": "adult_4/idle",    "text": "Mr. Hernandez slams his fist on the counter. Other guests are staring." },
-		{ "type": "dialogue", "char": "you",    "name": "YOU",   "npc": "adult_4/idle",    "text": "My sincerest apologies. Let me fix that correctly this time." }
+		{ "type": "dialogue", "char": "guest3", "name": "MR. H", "npc": "adult_9/shock",   "text": "THAT IS STILL WRONG! Hernandez with a Z! Are you even listening?!" },
+		{ "type": "dialogue", "char": "scene",  "name": "SCENE", "npc": "adult_9/idle",    "text": "Mr. Hernandez slams his fist on the counter. Other guests are staring." },
+		{ "type": "dialogue", "char": "you",    "name": "YOU",   "npc": "adult_9/idle",    "text": "My sincerest apologies. Let me fix that correctly this time." }
 	  ],
 	  "result_headers": ["id", "first_name", "last_name", "room_no"],
 	  "result_rows": [["3", "Jose", "Hernandez", "312"]],
 	  "result_msg": "1 record updated." },
 	{ "type": "dialogue", "char": "you",    "name": "YOU",
-	  "npc": "adult_4/idle",
+	  "npc": "adult_9/idle",
 	  "text": "Done! Corrected to Hernandez, Mr. Hernandez. I sincerely apologize for the error." },
 	{ "type": "dialogue", "char": "guest3", "name": "MR. H",
-	  "npc": "adult_4/confuse",
+	  "npc": "adult_9/confuse",
 	  "text": "...Hmph. At least you fixed it quickly. Don't let it happen again." },
 	{ "type": "end" }
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON 5 — DELETE  |  NPC: adult_5
+#  LESSON 5 — DELETE  |  NPC: adult_14
 # ─────────────────────────────────────────────
 5: [
 	{ "type": "dialogue", "char": "scene",  "name": "SCENE",
-	  "npc": "adult_5/idle",
+	  "npc": "adult_14/idle",
 	  "text": "The front desk phone rings. You pick it up — it's a guest calling in to cancel her reservation." },
 	{ "type": "dialogue", "char": "guest2", "name": "MS. LIM",
-	  "npc": "adult_5/confuse",
+	  "npc": "adult_14/confuse",
 	  "text": "Hello... I'm so sorry, but I need to cancel my reservation. Something came up at work." },
 	{ "type": "dialogue", "char": "you",    "name": "YOU",
-	  "npc": "adult_5/idle",
+	  "npc": "adult_14/idle",
 	  "text": "I understand completely. Could I have your name and booking id?" },
 	{ "type": "dialogue", "char": "guest2", "name": "MS. LIM",
-	  "npc": "adult_5/talk",
+	  "npc": "adult_14/talk",
 	  "text": "Linda Lim. My booking id is 5." },
 	{ "type": "dialogue", "char": "you",    "name": "YOU",
-	  "npc": "adult_5/idle",
+	  "npc": "adult_14/idle",
 	  "text": "Let me pull that up and process the cancellation for you right now." },
 	{ "type": "sql_fill",
 	  "gamemode": "delete",
@@ -234,18 +234,18 @@ const LESSONS: Dictionary = {
 	  "answer_id": "5",
 	  "hint": "Delete the record where id = 5",
 	  "fail": [
-		{ "type": "dialogue", "char": "guest2", "name": "MS. LIM", "npc": "adult_5/confuse", "text": "That is the wrong record. That is someone else's booking!" },
-		{ "type": "dialogue", "char": "scene",  "name": "SCENE",   "npc": "adult_5/idle",   "text": "A long pause on the phone line. This could be a serious data error." },
-		{ "type": "dialogue", "char": "you",    "name": "YOU",     "npc": "adult_5/idle",   "text": "I am so sorry — let me double check the correct id." }
+		{ "type": "dialogue", "char": "guest2", "name": "MS. LIM", "npc": "adult_14/confuse", "text": "That is the wrong record. That is someone else's booking!" },
+		{ "type": "dialogue", "char": "scene",  "name": "SCENE",   "npc": "adult_14/idle",   "text": "A long pause on the phone line. This could be a serious data error." },
+		{ "type": "dialogue", "char": "you",    "name": "YOU",     "npc": "adult_14/idle",   "text": "I am so sorry — let me double check the correct id." }
 	  ],
 	  "result_headers": ["STATUS"],
 	  "result_rows": [["Record with id = 5 has been removed."]],
 	  "result_msg": "1 record deleted." },
 	{ "type": "dialogue", "char": "you",    "name": "YOU",
-	  "npc": "adult_5/idle",
+	  "npc": "adult_14/idle",
 	  "text": "Done, Ms. Lim! Your reservation has been cancelled. We hope to see you again soon!" },
 	{ "type": "dialogue", "char": "guest2", "name": "MS. LIM",
-	  "npc": "adult_5/talk",
+	  "npc": "adult_14/talk",
 	  "text": "Thank you so much for being so understanding. I'll rebook next time!" },
 	{ "type": "end" }
 ],
