@@ -109,16 +109,21 @@ const LESSONS: Dictionary = {
 	  "column": "category",
 	  "table_headers": ["id", "item", "category"],
 	  "table_rows": [
-	  	["1", "Latte",            "Drinks"],
-	  	["2", "Cappuccino",       "Drinks"],
-	  	["3", "Blueberry Muffin", "Pastries"],
-	  	["4", "Croissant",        "Pastries"],
-	  	["5", "Espresso",         "Drinks"]
+	  	["1",  "Latte",            "Drinks"],
+	  	["2",  "Cappuccino",       "Drinks"],
+	  	["3",  "Blueberry Muffin", "Pastries"],
+	  	["4",  "Croissant",        "Pastries"],
+	  	["5",  "Espresso",         "Drinks"],
+	  	["6",  "Matcha Latte",     "Drinks"],
+	  	["7",  "Cheesecake",       "Pastries"],
+	  	["8",  "Iced Tea",         "Drinks"],
+	  	["9",  "Donut",            "Pastries"],
+	  	["10", "Cold Brew",        "Drinks"]
 	  ],
 	  "answer": "category",
 	  "hint": "You want to count per category. Type: category",
 	  "result_headers": ["category", "COUNT(*)"],
-	  "result_rows": [["Drinks", "3"], ["Pastries", "2"]],
+	  "result_rows": [["Drinks", "6"], ["Pastries", "4"]],
 	  "result_msg": "Orders grouped by category.",
 					"fail": [
 						{ "type": "dialogue", "char": "cafe_supervisor", "name": "SUPERVISOR", "npc": "NPC_occupations/coffee_owner/shock", "text": "This report makes no sense! You grouped by item not category — this is useless!" },
@@ -154,9 +159,13 @@ const LESSONS: Dictionary = {
 	  "column": "customer_name",
 	  "table_headers": ["id", "customer_name", "drink", "food"],
 	  "table_rows": [
-	  	["1", "Carlos",  "Cappuccino", "Blueberry Muffin"],
-	  	["2", "Rivera",  "Iced Tea",   "Croissant"],
-	  	["3", "Santos",  "Espresso",   "None"]
+	  	["1", "Maria",   "Latte",        "Sandwich"],
+	  	["2", "Rivera",  "Iced Tea",     "Croissant"],
+	  	["3", "Santos",  "Hot Latte",    "None"],
+	  	["4", "Kim",     "Americano",    "Cheesecake"],
+	  	["5", "Carlos",  "Cappuccino",   "Blueberry Muffin"],
+	  	["6", "Reyes",   "Matcha Latte", "None"],
+	  	["7", "Cruz",    "Cold Brew",    "Donut"]
 	  ],
 	  "answer": "Rivera",
 	  "hint": "Type the customer name exactly: Rivera",
@@ -199,7 +208,14 @@ const LESSONS: Dictionary = {
 	  "table": "orders",
 	  "column": "drink",
 	  "table_headers": ["id", "customer_name", "drink", "food"],
-	  "table_rows": [["3", "Santos", "Hot Latte", "None"]],
+	  "table_rows": [
+	  	["1", "Maria",   "Latte",        "Sandwich"],
+	  	["2", "Rivera",  "Iced Tea",     "Croissant"],
+	  	["3", "Santos",  "Hot Latte",    "None"],
+	  	["4", "Kim",     "Americano",    "Cheesecake"],
+	  	["5", "Carlos",  "Cappuccino",   "Blueberry Muffin"],
+	  	["6", "Reyes",   "Matcha Latte", "None"]
+	  ],
 	  "answer_value": "Iced Latte",
 	  "answer_id": "3",
 	  "hint": "Change drink to: Iced Latte | Record id: 3",
@@ -241,7 +257,15 @@ const LESSONS: Dictionary = {
 	  "desc": "Remove the customer's order from the database. Order id = 2.",
 	  "table": "orders",
 	  "table_headers": ["id", "customer_name", "drink", "food"],
-	  "table_rows": [["2", "Rivera", "Iced Tea", "Croissant"]],
+	  "table_rows": [
+	  	["1", "Maria",   "Latte",        "Sandwich"],
+	  	["2", "Rivera",  "Iced Tea",     "Croissant"],
+	  	["3", "Santos",  "Iced Latte",   "None"],
+	  	["4", "Kim",     "Americano",    "Cheesecake"],
+	  	["5", "Carlos",  "Cappuccino",   "Blueberry Muffin"],
+	  	["6", "Reyes",   "Matcha Latte", "None"],
+	  	["7", "Cruz",    "Espresso",     "Donut"]
+	  ],
 	  "answer_id": "2",
 	  "hint": "Delete the record where id = 2",
 	  "result_headers": ["STATUS"],
@@ -281,21 +305,29 @@ const LESSONS: Dictionary = {
 	  "column": "price",
 	  "table_headers": ["id", "item", "category", "price"],
 	  "table_rows": [
-	  	["1", "Espresso",          "Drinks",   "2.50"],
-	  	["2", "Latte",             "Drinks",   "4.00"],
-	  	["3", "Cappuccino",        "Drinks",   "3.50"],
-	  	["4", "Blueberry Muffin",  "Pastries", "3.00"],
-	  	["5", "Croissant",         "Pastries", "2.75"]
+	  	["1", "Espresso",         "Drinks",   "2.50"],
+	  	["2", "Latte",            "Drinks",   "4.00"],
+	  	["3", "Cappuccino",       "Drinks",   "3.50"],
+	  	["4", "Blueberry Muffin", "Pastries", "3.00"],
+	  	["5", "Croissant",        "Pastries", "2.75"],
+	  	["6", "Matcha Latte",     "Drinks",   "4.25"],
+	  	["7", "Cheesecake",       "Pastries", "3.75"],
+	  	["8", "Cold Brew",        "Drinks",   "3.25"],
+	  	["9", "Donut",            "Pastries", "2.00"]
 	  ],
 	  "answer": "ASC",
 	  "hint": "Cheapest first = lowest to highest = Ascending. Type: ASC",
 	  "result_headers": ["id", "item", "category", "price"],
 	  "result_rows": [
+	  	["9", "Donut",            "Pastries", "2.00"],
 	  	["1", "Espresso",         "Drinks",   "2.50"],
 	  	["5", "Croissant",        "Pastries", "2.75"],
 	  	["4", "Blueberry Muffin", "Pastries", "3.00"],
+	  	["8", "Cold Brew",        "Drinks",   "3.25"],
 	  	["3", "Cappuccino",       "Drinks",   "3.50"],
-	  	["2", "Latte",            "Drinks",   "4.00"]
+	  	["7", "Cheesecake",       "Pastries", "3.75"],
+	  	["2", "Latte",            "Drinks",   "4.00"],
+	  	["6", "Matcha Latte",     "Drinks",   "4.25"]
 	  ],
 	  "result_msg": "Records sorted by price ASC.",
 					"fail": [

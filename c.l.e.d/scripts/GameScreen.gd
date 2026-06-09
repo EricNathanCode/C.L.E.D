@@ -3,6 +3,33 @@ extends Control
 #  GAME SCREEN  —  scripts/GameScreen.gd
 # ═══════════════════════════════════════════════════════
 
+const GM_TO_SQL: Dictionary = {
+	"select":       "SELECT",
+	"insert_into":  "INSERT INTO",
+	"select_where": "SELECT WHERE",
+	"update_set":   "UPDATE SET",
+	"delete":       "DELETE",
+	"order_by":     "ORDER BY",
+	"group_by":     "GROUP BY",
+}
+
+const SQL_GLOSSARY: Array = [
+	["SELECT",       "Retrieves data from one or more columns in a table.",
+		"SELECT column1, column2\nFROM table_name;"],
+	["INSERT INTO",  "Adds a new row of data into a table.",
+		"INSERT INTO table_name (col1, col2)\nVALUES ('value1', 'value2');"],
+	["SELECT WHERE", "Retrieves rows filtered by a specific condition.",
+		"SELECT * FROM table_name\nWHERE column = 'value';"],
+	["UPDATE SET",   "Modifies values in existing rows of a table.",
+		"UPDATE table_name\nSET column = 'new_value'\nWHERE condition;"],
+	["DELETE",       "Removes rows from a table based on a condition.",
+		"DELETE FROM table_name\nWHERE column = 'value';"],
+	["ORDER BY",     "Sorts result rows in ascending or descending order.",
+		"SELECT * FROM table_name\nORDER BY column ASC;"],
+	["GROUP BY",     "Groups rows that share the same column value.",
+		"SELECT column, COUNT(*)\nFROM table_name\nGROUP BY column;"],
+]
+
 const GM_SCENES: Dictionary = {
 	"select":       "res://gamemode/scene/GM_Select.tscn",
 	"insert_into":  "res://gamemode/scene/GM_InsertInto.tscn",
@@ -40,12 +67,13 @@ var _type_accum: float  = 0.0
 var _typing:     bool   = false
 
 # ── General ───────────────────────────────────────────
-var _tex_cache:   Dictionary = {}
-var _bg_textures: Dictionary = {}
-var _story:       Array      = []
-var _step:        int        = 0
-var _current_gm:  Node       = null
-var _failed_step: Dictionary = {}
+var _tex_cache:       Dictionary = {}
+var _bg_textures:     Dictionary = {}
+var _story:           Array      = []
+var _step:            int        = 0
+var _current_gm:      Node       = null
+var _failed_step:     Dictionary = {}
+var _glossary_overlay: Control   = null
 
 func _ready() -> void:
 	$TopBar/BackToHubButton.pressed.connect(_on_back_to_hub)
@@ -110,7 +138,19 @@ func _ready() -> void:
 	$DialogueArea/DialogueText.add_theme_font_size_override("font_size", 18)
 	$DialogueArea/DialogueText.add_theme_color_override("font_color", Color(0.93, 0.94, 0.97))
 
+	# Let clicks pass through the overlay containers to the TopBar.
+	# Only the PanelContainer (the actual panel) and its children keep STOP.
+	$SQLOverlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	$SQLOverlay/CenterContainer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+	# Move TopBar to last child so it receives input before SQLOverlay.
+	# Godot 4 processes UI input from the last tree child first.
+	var tb = $TopBar
+	remove_child(tb)
+	add_child(tb)
+
 	_style_sql_panel()
+	_build_glossary()
 	_load_all_textures()
 	_style_progress_bar()
 
@@ -295,6 +335,7 @@ func _set_expression(char_key: String, npc_override: String = "") -> void:
 		$NPCSprite.visible = false
 
 func load_lesson(id) -> void:
+	GameManager.start_lesson()
 	_story = _get_story(id)
 	_step  = 0
 	$TopBar/LessonLabel.text = "  Lesson  " + str(id)
@@ -306,7 +347,7 @@ func load_lesson(id) -> void:
 # ── Story engine ──────────────────────────────────────
 func _run_step() -> void:
 	if _step >= _story.size():
-		get_tree().root.get_node("Main").show_screen("complete")
+		_go_complete()
 		return
 
 	_update_progress()
@@ -338,7 +379,7 @@ func _run_step() -> void:
 			_show_challenge(s, s.get("gamemode", ""))
 
 		"end":
-			get_tree().root.get_node("Main").show_screen("complete")
+			_go_complete()
 
 		"retry":
 			var main := get_tree().root.get_node("Main")
@@ -349,6 +390,8 @@ func _run_step() -> void:
 
 # ── SQL Terminal ──────────────────────────────────────
 func _show_challenge(step: Dictionary, gm_key: String) -> void:
+	if GM_TO_SQL.has(gm_key):
+		GameManager.record_sql(GM_TO_SQL[gm_key])
 	GameManager.stop_speaking()
 	_stop_bob()
 	_finish_typewriter()
@@ -382,6 +425,9 @@ func _on_gm_wrong() -> void:
 	var fail_steps: Array = current_step.get("fail", [])
 	if fail_steps.is_empty():
 		return
+
+	# Only count as a wrong attempt when a fail path actually branches
+	GameManager.record_wrong()
 
 	_failed_step = current_step
 
@@ -440,6 +486,142 @@ func _clear_gm() -> void:
 	if _current_gm != null and is_instance_valid(_current_gm):
 		_current_gm.queue_free()
 		_current_gm = null
+
+func _go_complete() -> void:
+	GameManager.finish_lesson()
+	get_tree().root.get_node("Main").show_screen("complete")
+
+# ── SQL Glossary overlay ──────────────────────────────
+func _build_glossary() -> void:
+	# Glossary toggle button in TopBar
+	var gloss_btn := Button.new()
+	gloss_btn.text = "📖  Glossary"
+	gloss_btn.pressed.connect(_toggle_glossary)
+	_style_btn(gloss_btn, "secondary", 13)
+	$TopBar.add_child(gloss_btn)
+
+	# Full-screen overlay — added last so it's on top of all scene children
+	_glossary_overlay = Control.new()
+	_glossary_overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_glossary_overlay.visible = false
+	_glossary_overlay.z_index = 100
+	_glossary_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(_glossary_overlay)
+
+	# Dark backdrop
+	var backdrop := ColorRect.new()
+	backdrop.set_anchors_preset(Control.PRESET_FULL_RECT)
+	backdrop.color = Color(0.0, 0.0, 0.0, 0.80)
+	backdrop.mouse_filter = Control.MOUSE_FILTER_STOP
+	_glossary_overlay.add_child(backdrop)
+
+	# Centered panel
+	var center := CenterContainer.new()
+	center.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_glossary_overlay.add_child(center)
+
+	var panel := PanelContainer.new()
+	panel.custom_minimum_size = Vector2(480, 0)
+	var ps := StyleBoxFlat.new()
+	ps.bg_color = Color(0.09, 0.11, 0.16, 0.98)
+	ps.border_color = Color("#F59E0B")
+	ps.set_border_width_all(2)
+	ps.set_corner_radius_all(12)
+	ps.content_margin_left   = 28
+	ps.content_margin_right  = 28
+	ps.content_margin_top    = 24
+	ps.content_margin_bottom = 24
+	panel.add_theme_stylebox_override("panel", ps)
+	center.add_child(panel)
+
+	var vbox := VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 10)
+	panel.add_child(vbox)
+
+	# Header row
+	var header_row := HBoxContainer.new()
+	vbox.add_child(header_row)
+	var header_lbl := Label.new()
+	header_lbl.text = "SQL Glossary"
+	header_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	header_lbl.add_theme_font_size_override("font_size", 20)
+	header_lbl.add_theme_color_override("font_color", Color("#F59E0B"))
+	header_row.add_child(header_lbl)
+	var close_btn := Button.new()
+	close_btn.text = "✕"
+	close_btn.pressed.connect(_toggle_glossary)
+	_style_btn(close_btn, "ghost", 16)
+	header_row.add_child(close_btn)
+
+	# Divider
+	var sep := ColorRect.new()
+	sep.custom_minimum_size = Vector2(0, 1)
+	sep.color = Color(0.25, 0.30, 0.42)
+	vbox.add_child(sep)
+
+	# Entries
+	for entry in SQL_GLOSSARY:
+		# Wrapper column so example panel sits below the row
+		var entry_col := VBoxContainer.new()
+		entry_col.add_theme_constant_override("separation", 4)
+		vbox.add_child(entry_col)
+
+		# Main info row
+		var row := HBoxContainer.new()
+		row.add_theme_constant_override("separation", 10)
+		entry_col.add_child(row)
+
+		var cmd_lbl := Label.new()
+		cmd_lbl.text = entry[0]
+		cmd_lbl.custom_minimum_size = Vector2(120, 0)
+		cmd_lbl.add_theme_font_size_override("font_size", 14)
+		cmd_lbl.add_theme_color_override("font_color", Color("#F59E0B"))
+		row.add_child(cmd_lbl)
+
+		var def_lbl := Label.new()
+		def_lbl.text = entry[1]
+		def_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		def_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		def_lbl.add_theme_font_size_override("font_size", 13)
+		def_lbl.add_theme_color_override("font_color", Color(0.80, 0.83, 0.90))
+		row.add_child(def_lbl)
+
+		# Example toggle button
+		var ex_btn := Button.new()
+		ex_btn.text = "{ }"
+		ex_btn.tooltip_text = "Show example"
+		_style_btn(ex_btn, "ghost", 12)
+		row.add_child(ex_btn)
+
+		# Collapsible syntax panel (hidden by default)
+		var snippet_panel := PanelContainer.new()
+		snippet_panel.visible = false
+		var sp := StyleBoxFlat.new()
+		sp.bg_color = Color(0.04, 0.05, 0.08, 1.0)
+		sp.border_color = Color("#F59E0B")
+		sp.border_width_left = 3
+		sp.content_margin_left  = 12
+		sp.content_margin_right = 12
+		sp.content_margin_top   = 8
+		sp.content_margin_bottom = 8
+		snippet_panel.add_theme_stylebox_override("panel", sp)
+		entry_col.add_child(snippet_panel)
+
+		var snippet_lbl := Label.new()
+		snippet_lbl.text = entry[2]
+		snippet_lbl.add_theme_font_size_override("font_size", 13)
+		snippet_lbl.add_theme_color_override("font_color", Color("#4ADE80"))
+		snippet_panel.add_child(snippet_lbl)
+
+		# Toggle visibility on button press
+		ex_btn.pressed.connect(func():
+			snippet_panel.visible = not snippet_panel.visible
+			ex_btn.text = "▲" if snippet_panel.visible else "{ }"
+		)
+
+func _toggle_glossary() -> void:
+	if _glossary_overlay:
+		_glossary_overlay.visible = not _glossary_overlay.visible
 
 func _get_story(id) -> Array:
 	var script: Node

@@ -133,19 +133,37 @@ func build_lessons() -> void:
 	var num: int = 0
 	for id in ids:
 		num += 1
+		var captured_id = id
+
+		# Row wrapper so we can show star badge next to button
+		var row := HBoxContainer.new()
+		row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		row.add_theme_constant_override("separation", 6)
+
 		var btn := Button.new()
 		btn.text = "%02d  " % num + names.get(id, "Lesson " + str(id))
 		btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		btn.text_overrun_behavior = TextServer.OVERRUN_NO_TRIMMING
 		btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		var captured_id = id
 		btn.pressed.connect(func():
 			GameManager.lesson_id = captured_id
 			get_tree().root.get_node("Main").show_screen("game")
 		)
 		btn.mouse_entered.connect(func(): _show_preview(captured_id))
 		_style_btn(btn, "secondary", 14)
-		_lesson_list.add_child(btn)
+		row.add_child(btn)
+
+		# Star badge for completed lessons
+		var stars: int = GameManager.get_stars(GameManager.world, captured_id)
+		if stars > 0:
+			var star_lbl := Label.new()
+			star_lbl.text = "★".repeat(stars) + "☆".repeat(3 - stars)
+			star_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+			star_lbl.add_theme_font_size_override("font_size", 14)
+			star_lbl.add_theme_color_override("font_color", Color("#F59E0B"))
+			row.add_child(star_lbl)
+
+		_lesson_list.add_child(row)
 
 	# Show placeholder until hover
 	_reset_preview()

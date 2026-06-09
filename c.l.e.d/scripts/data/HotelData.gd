@@ -126,9 +126,14 @@ const LESSONS: Dictionary = {
 	  "column": "last_name",
 	  "table_headers": ["id", "first_name", "last_name", "room_no"],
 	  "table_rows": [
-	  	["1", "Alex", "Santos", "101"],
-	  	["2", "Maya", "Dela Cruz", "204"],
-	  	["3", "Jose", "Hernandez", "312"]
+	  	["1", "Alex",   "Santos",     "101"],
+	  	["2", "Maya",   "Dela Cruz",  "204"],
+	  	["3", "Jose",   "Hernandez",  "312"],
+	  	["4", "Carlos", "Garcia",     "412"],
+	  	["5", "Linda",  "Lim",        "205"],
+	  	["6", "Marco",  "Reyes",      "108"],
+	  	["7", "Sofia",  "Torres",     "310"],
+	  	["8", "Ana",    "Villanueva", "217"]
 	  ],
 	  "answer": "Dela Cruz",
 	  "hint": "Type her last name exactly: Dela Cruz",
@@ -185,7 +190,14 @@ const LESSONS: Dictionary = {
 	  "table": "customers",
 	  "column": "last_name",
 	  "table_headers": ["id", "first_name", "last_name", "room_no"],
-	  "table_rows": [["3", "Jose", "Hernandes", "312"]],
+	  "table_rows": [
+	  	["1", "Alex",   "Santos",     "101"],
+	  	["2", "Maya",   "Dela Cruz",  "204"],
+	  	["3", "Jose",   "Hernandes",  "312"],
+	  	["4", "Carlos", "Garcia",     "412"],
+	  	["5", "Linda",  "Lim",        "205"],
+	  	["6", "Marco",  "Reyes",      "108"]
+	  ],
 	  "answer_value": "Hernandez",
 	  "answer_id": "3",
 	  "hint": "Correct spelling: Hernandez | Record id: 3",
@@ -230,7 +242,16 @@ const LESSONS: Dictionary = {
 	  "desc": "Remove Ms. Lim's reservation from the database. Her booking id = 5.",
 	  "table": "customers",
 	  "table_headers": ["id", "first_name", "last_name", "room_no"],
-	  "table_rows": [["5", "Linda", "Lim", "205"]],
+	  "table_rows": [
+	  	["1", "Alex",   "Santos",     "101"],
+	  	["2", "Maya",   "Dela Cruz",  "204"],
+	  	["3", "Jose",   "Hernandez",  "312"],
+	  	["4", "Carlos", "Garcia",     "412"],
+	  	["5", "Linda",  "Lim",        "205"],
+	  	["6", "Marco",  "Reyes",      "108"],
+	  	["7", "Sofia",  "Torres",     "310"],
+	  	["8", "Ana",    "Villanueva", "217"]
+	  ],
 	  "answer_id": "5",
 	  "hint": "Delete the record where id = 5",
 	  "fail": [
@@ -270,9 +291,14 @@ const LESSONS: Dictionary = {
 	  "column": "last_name",
 	  "table_headers": ["id", "first_name", "last_name", "room_no"],
 	  "table_rows": [
-	  	["1", "Alex", "Santos",    "101"],
-	  	["2", "Maya", "Dela Cruz", "204"],
-	  	["3", "Jose", "Hernandez", "312"]
+	  	["1", "Alex",   "Santos",     "101"],
+	  	["2", "Maya",   "Dela Cruz",  "204"],
+	  	["3", "Jose",   "Hernandez",  "312"],
+	  	["4", "Carlos", "Garcia",     "412"],
+	  	["5", "Linda",  "Lim",        "205"],
+	  	["6", "Marco",  "Reyes",      "108"],
+	  	["7", "Sofia",  "Torres",     "310"],
+	  	["8", "Ana",    "Villanueva", "217"]
 	  ],
 	  "answer": "ASC",
 	  "hint": "A to Z is Ascending order. Type: ASC",
@@ -283,9 +309,14 @@ const LESSONS: Dictionary = {
 	  ],
 	  "result_headers": ["id", "first_name", "last_name", "room_no"],
 	  "result_rows": [
-	  	["2", "Maya", "Dela Cruz",  "204"],
-	  	["3", "Jose", "Hernandez",  "312"],
-	  	["1", "Alex", "Santos",     "101"]
+	  	["2", "Maya",   "Dela Cruz",  "204"],
+	  	["4", "Carlos", "Garcia",     "412"],
+	  	["3", "Jose",   "Hernandez",  "312"],
+	  	["5", "Linda",  "Lim",        "205"],
+	  	["6", "Marco",  "Reyes",      "108"],
+	  	["1", "Alex",   "Santos",     "101"],
+	  	["7", "Sofia",  "Torres",     "310"],
+	  	["8", "Ana",    "Villanueva", "217"]
 	  ],
 	  "result_msg": "Records sorted by last_name ASC." },
 	{ "type": "dialogue", "char": "you",    "name": "YOU",
@@ -317,11 +348,16 @@ const LESSONS: Dictionary = {
 	  "column": "room_type",
 	  "table_headers": ["id", "first_name", "room_type"],
 	  "table_rows": [
-	  	["1", "Alex",  "Standard"],
-	  	["2", "Maya",  "Deluxe"],
-	  	["3", "Jose",  "Suite"],
-	  	["4", "Linda", "Deluxe"],
-	  	["5", "Marco", "Standard"]
+	  	["1",  "Alex",   "Standard"],
+	  	["2",  "Maya",   "Deluxe"],
+	  	["3",  "Jose",   "Suite"],
+	  	["4",  "Carlos", "Standard"],
+	  	["5",  "Linda",  "Deluxe"],
+	  	["6",  "Marco",  "Suite"],
+	  	["7",  "Sofia",  "Standard"],
+	  	["8",  "Ana",    "Deluxe"],
+	  	["9",  "Miguel", "Suite"],
+	  	["10", "Rosa",   "Standard"]
 	  ],
 	  "answer": "room_type",
 	  "hint": "You want to count per room type. Type: room_type",
@@ -332,9 +368,9 @@ const LESSONS: Dictionary = {
 	  ],
 	  "result_headers": ["room_type", "COUNT(*)"],
 	  "result_rows": [
-	  	["Standard", "2"],
-	  	["Deluxe",   "2"],
-	  	["Suite",    "1"]
+	  	["Standard", "4"],
+	  	["Deluxe",   "3"],
+	  	["Suite",    "3"]
 	  ],
 	  "result_msg": "Data grouped successfully." },
 	{ "type": "dialogue", "char": "you",    "name": "YOU",

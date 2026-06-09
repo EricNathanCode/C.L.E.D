@@ -171,15 +171,22 @@ const LESSONS: Dictionary = {
 		"column": "last_name",
 		"table_headers": ["id", "first_name", "last_name", "case_type"],
 		"table_rows": [
-			["1", "Marco",  "Reyes",  "Theft"],
-			["2", "Luis",   "Santos", "Vandalism"],
-			["3", "Ana",    "Cruz",   "Fraud"]
+			["1",  "Marco",   "Reyes",     "Theft"],
+			["2",  "Luis",    "Santos",    "Vandalism"],
+			["3",  "Ana",     "Cruz",      "Fraud"],
+			["4",  "Carlos",  "Dela Cruz", "Assault"],
+			["5",  "Maria",   "Santos",    "Theft"],
+			["6",  "Jose",    "Lim",       "Vandalism"],
+			["7",  "Rosa",    "Garcia",    "Fraud"],
+			["8",  "Miguel",  "Torres",    "Theft"],
+			["9",  "Sofia",   "Santos",    "Assault"],
+			["10", "Pedro",   "Villanueva","Vandalism"]
 		],
 		"answer": "Santos",
 		"hint": "Type the last name exactly: Santos",
 		"result_headers": ["id", "first_name", "last_name", "case_type"],
-		"result_rows": [["2", "Luis", "Santos", "Vandalism"]],
-		"result_msg": "1 record found.",
+		"result_rows": [["2", "Luis", "Santos", "Vandalism"], ["5", "Maria", "Santos", "Theft"], ["9", "Sofia", "Santos", "Assault"]],
+		"result_msg": "3 records found.",
 					"fail": [
 						{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/shock", "text": "That is the WRONG suspect! You could blow the whole investigation!" },
 						{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",  "text": "Your chief paces across the room. The tip could go cold if you do not move fast." },
@@ -191,7 +198,7 @@ const LESSONS: Dictionary = {
 		"char": "you",
 		"name": "YOU",
 		"npc":  "NPC_occupations/police/idle",
-		"text": "Found it! Luis Santos, linked to a Vandalism case. Pulling the full file now, Chief."
+		"text": "Found 3 suspects with last name Santos — Luis (Vandalism), Maria (Theft), Sofia (Assault). Pulling full files now, Chief."
 	},
 	{
 		"type": "dialogue",
@@ -238,7 +245,14 @@ const LESSONS: Dictionary = {
 		"table": "cases",
 		"column": "status",
 		"table_headers": ["id", "reporter_name", "case_type", "status"],
-		"table_rows": [["2", "Ana Cruz", "Vandalism", "Open"]],
+		"table_rows": [
+			["1", "Marco Reyes",  "Theft",     "Open"],
+			["2", "Ana Cruz",     "Vandalism", "Open"],
+			["3", "Jose Lim",     "Assault",   "Closed"],
+			["4", "Rosa Garcia",  "Fraud",     "Open"],
+			["5", "Miguel Torres","Theft",      "Closed"],
+			["6", "Sofia Santos", "Assault",   "Open"]
+		],
 		"answer_value": "Closed",
 		"answer_id": "2",
 		"hint": "Change status to: Closed | Record id: 2",
@@ -302,7 +316,15 @@ const LESSONS: Dictionary = {
 		"desc": "Remove the cleared case from active records. Case id = 3.",
 		"table": "cases",
 		"table_headers": ["id", "reporter_name", "case_type", "status"],
-		"table_rows": [["3", "Marco Reyes", "Fraud", "Cleared"]],
+		"table_rows": [
+			["1", "Marco Reyes",   "Theft",     "Open"],
+			["2", "Ana Cruz",      "Vandalism", "Closed"],
+			["3", "Marco Reyes",   "Fraud",     "Cleared"],
+			["4", "Carlos Dela Cruz", "Assault", "Open"],
+			["5", "Maria Santos",  "Theft",     "Open"],
+			["6", "Jose Lim",      "Vandalism", "Cleared"],
+			["7", "Sofia Santos",  "Assault",   "Closed"]
+		],
 		"answer_id": "3",
 		"hint": "Delete the record where id = 3",
 		"result_headers": ["STATUS"],
@@ -369,15 +391,25 @@ const LESSONS: Dictionary = {
 		"table_rows": [
 			["1", "Theft",     "Open", "2"],
 			["2", "Vandalism", "Open", "1"],
-			["4", "Assault",   "Open", "3"]
+			["4", "Assault",   "Open", "3"],
+			["5", "Fraud",     "Open", "2"],
+			["6", "Theft",     "Open", "1"],
+			["7", "Assault",   "Open", "3"],
+			["8", "Vandalism", "Open", "2"],
+			["9", "Fraud",     "Open", "3"]
 		],
 		"answer": "DESC",
 		"hint": "Highest first = largest number first = Descending. Type: DESC",
 		"result_headers": ["id", "case_type", "status", "priority_level"],
 		"result_rows": [
 			["4", "Assault",   "Open", "3"],
+			["7", "Assault",   "Open", "3"],
+			["9", "Fraud",     "Open", "3"],
 			["1", "Theft",     "Open", "2"],
-			["2", "Vandalism", "Open", "1"]
+			["5", "Fraud",     "Open", "2"],
+			["8", "Vandalism", "Open", "2"],
+			["2", "Vandalism", "Open", "1"],
+			["6", "Theft",     "Open", "1"]
 		],
 		"result_msg": "Records sorted by priority_level DESC.",
 					"fail": [
@@ -439,20 +471,25 @@ const LESSONS: Dictionary = {
 		"column": "case_type",
 		"table_headers": ["id", "case_type", "status"],
 		"table_rows": [
-			["1", "Theft",     "Open"],
-			["2", "Vandalism", "Closed"],
-			["3", "Theft",     "Open"],
-			["4", "Assault",   "Open"],
-			["5", "Vandalism", "Open"],
-			["6", "Theft",     "Closed"]
+			["1",  "Theft",     "Open"],
+			["2",  "Vandalism", "Closed"],
+			["3",  "Theft",     "Open"],
+			["4",  "Assault",   "Open"],
+			["5",  "Vandalism", "Open"],
+			["6",  "Theft",     "Closed"],
+			["7",  "Assault",   "Closed"],
+			["8",  "Fraud",     "Open"],
+			["9",  "Theft",     "Open"],
+			["10", "Fraud",     "Closed"]
 		],
 		"answer": "case_type",
 		"hint": "Group by the crime type column. Type: case_type",
 		"result_headers": ["case_type", "COUNT(*)"],
 		"result_rows": [
-			["Theft",     "3"],
+			["Theft",     "4"],
 			["Vandalism", "2"],
-			["Assault",   "1"]
+			["Assault",   "2"],
+			["Fraud",     "2"]
 		],
 		"result_msg": "Cases grouped by case_type.",
 					"fail": [

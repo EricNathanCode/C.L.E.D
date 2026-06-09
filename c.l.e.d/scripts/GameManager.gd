@@ -10,6 +10,43 @@ var lesson_id         = null
 var tts_enabled:   bool = false
 var music_enabled: bool = true
 
+# ── Progress & scoring ────────────────────────────────
+var completed_lessons: Dictionary = {}   # "world_lid" → star_count (1–3)
+var last_stars:        int        = 0
+var _wrongs_this_lesson:      int   = 0
+var _sql_commands_this_lesson: Array = []
+
+func start_lesson() -> void:
+	_wrongs_this_lesson       = 0
+	_sql_commands_this_lesson = []
+
+func record_wrong() -> void:
+	_wrongs_this_lesson += 1
+
+func record_sql(display_name: String) -> void:
+	if display_name not in _sql_commands_this_lesson:
+		_sql_commands_this_lesson.append(display_name)
+
+func finish_lesson() -> int:
+	var stars: int
+	if _wrongs_this_lesson == 0:
+		stars = 3
+	elif _wrongs_this_lesson <= 2:
+		stars = 2
+	else:
+		stars = 1
+	last_stars = stars
+	var key: String = world + "_" + str(lesson_id)
+	if not completed_lessons.has(key) or completed_lessons[key] < stars:
+		completed_lessons[key] = stars
+	return stars
+
+func get_stars(w: String, lid) -> int:
+	return completed_lessons.get(w + "_" + str(lid), 0)
+
+func get_sql_recap() -> Array:
+	return _sql_commands_this_lesson.duplicate()
+
 # ── Voice profiles per character ──────────────────────────
 # Each entry: [volume, pitch, rate]
 const VOICE_PROFILES: Dictionary = {
