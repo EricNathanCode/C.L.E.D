@@ -1,0 +1,92 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://gamemode/scripts/GM_Join.gd" id="1"]
+
+[node name="GM_Join" type="VBoxContainer"]
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+script = ExtResource("1")
+
+[node name="Description" type="Label" parent="."]
+text = "Description goes here."
+autowrap_mode = 3
+
+[node name="TablesRow" type="HBoxContainer" parent="."]
+theme_override_constants/separation = 12
+
+[node name="TableColA" type="VBoxContainer" parent="TablesRow"]
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="TableLabelA" type="Label" parent="TablesRow/TableColA"]
+text = "TABLE A"
+
+[node name="DataTableA" type="VBoxContainer" parent="TablesRow/TableColA"]
+theme_override_constants/separation = 0
+
+[node name="TableColB" type="VBoxContainer" parent="TablesRow"]
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="TableLabelB" type="Label" parent="TablesRow/TableColB"]
+text = "TABLE B"
+
+[node name="DataTableB" type="VBoxContainer" parent="TablesRow/TableColB"]
+theme_override_constants/separation = 0
+
+[node name="QueryLabel" type="Label" parent="."]
+text = "> Fill in the ON condition columns:"
+
+[node name="SQLTerminal" type="PanelContainer" parent="."]
+
+[node name="SQLBlock" type="VBoxContainer" parent="SQLTerminal"]
+theme_override_constants/separation = 6
+
+[node name="Line1" type="Label" parent="SQLTerminal/SQLBlock"]
+text = "SELECT * FROM [table_a]"
+
+[node name="Line2" type="Label" parent="SQLTerminal/SQLBlock"]
+text = "JOIN [table_b]"
+
+[node name="Line3" type="HBoxContainer" parent="SQLTerminal/SQLBlock"]
+theme_override_constants/separation = 2
+
+[node name="OnKeyword" type="Label" parent="SQLTerminal/SQLBlock/Line3"]
+text = "ON [table_a]."
+
+[node name="Blank1" type="LineEdit" parent="SQLTerminal/SQLBlock/Line3"]
+placeholder_text = "column"
+custom_minimum_size = Vector2(100, 0)
+max_length = 40
+
+[node name="Equals" type="Label" parent="SQLTerminal/SQLBlock/Line3"]
+text = " = [table_b]."
+
+[node name="Blank2" type="LineEdit" parent="SQLTerminal/SQLBlock/Line3"]
+placeholder_text = "column"
+custom_minimum_size = Vector2(100, 0)
+max_length = 40
+
+[node name="Semicolon" type="Label" parent="SQLTerminal/SQLBlock/Line3"]
+text = " ;"
+
+[node name="HintLabel" type="Label" parent="."]
+text = "Hint: (hint goes here)"
+visible = false
+
+[node name="ResultBox" type="VBoxContainer" parent="."]
+theme_override_constants/separation = 4
+visible = false
+
+[node name="ButtonRow" type="HBoxContainer" parent="."]
+theme_override_constants/separation = 8
+
+[node name="ExecuteButton" type="Button" parent="ButtonRow"]
+text = "Execute"
+
+[node name="HintButton" type="Button" parent="ButtonRow"]
+text = "Hint"
+
+[node name="ContinueButton" type="Button" parent="."]
+text = "Continue Story"
+visible = false

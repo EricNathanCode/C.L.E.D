@@ -383,6 +383,163 @@ const LESSONS: Dictionary = {
 	  "npc": "NPC_occupations/hotel_manager/idle",
 	  "text": "Just doing my job, sir. One query at a time." },
 	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON 8 — IS NULL  |  NPC: hotel_manager
+#  Topic: Find guests with no email on file
+# ─────────────────────────────────────────────
+8: [
+	{ "type": "dialogue", "char": "scene",  "name": "SCENE",
+	  "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "Billing season. The manager pulls you aside before the morning rush." },
+	{ "type": "dialogue", "char": "mgr",    "name": "MANAGER",
+	  "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "I need to send digital invoices, but some guests never gave us their email. Can you find which guests have no email on file?" },
+	{ "type": "dialogue", "char": "you",    "name": "YOU",
+	  "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "On it. In SQL, a missing value is called NULL. I can filter for IS NULL to find them." },
+	{
+		"type": "sql_fill",
+		"gamemode": "select_where_null",
+		"desc": "Find all guests with no email address. The missing fields show as NULL. Type NULL after IS.",
+		"table": "guests",
+		"column": "email",
+		"table_headers": ["id", "first_name", "last_name", "email"],
+		"table_rows": [
+			["1", "Alex",   "Santos",    "alex@mail.com"],
+			["2", "Maya",   "Dela Cruz", ""],
+			["3", "Jose",   "Hernandez", "jose@mail.com"],
+			["4", "Carlos", "Garcia",    ""],
+			["5", "Linda",  "Lim",       "linda@mail.com"],
+			["6", "Marco",  "Reyes",     ""]
+		],
+		"answer": "NULL",
+		"hint": "Missing values are NULL. Type: NULL",
+		"result_headers": ["id", "first_name", "last_name", "email"],
+		"result_rows": [
+			["2", "Maya",   "Dela Cruz", "NULL"],
+			["4", "Carlos", "Garcia",    "NULL"],
+			["6", "Marco",  "Reyes",     "NULL"]
+		],
+		"result_msg": "3 guests have no email on file.",
+		"fail": [
+			{ "type": "dialogue", "char": "mgr",  "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/shock", "text": "That is not right. NULL means the value is missing — it is not a regular word to search for." },
+			{ "type": "dialogue", "char": "scene", "name": "SCENE",  "npc": "NPC_occupations/hotel_manager/idle",  "text": "The manager turns back to his desk, waiting." },
+			{ "type": "dialogue", "char": "you",   "name": "YOU",    "npc": "NPC_occupations/hotel_manager/idle",  "text": "Right — I need to type NULL after IS to check for missing values." }
+		]
+	},
+	{ "type": "dialogue", "char": "you",   "name": "YOU",
+	  "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "Found them! Maya Dela Cruz, Carlos Garcia, and Marco Reyes have no email. We can reach them by phone." },
+	{ "type": "dialogue", "char": "mgr",   "name": "MANAGER",
+	  "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "Perfect. IS NULL is a powerful tool for finding gaps in our data. Good thinking." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON 9 — PRIMARY KEY  |  NPC: adult_13 (new trainee)
+#  Topic: CREATE TABLE with PRIMARY KEY constraint
+# ─────────────────────────────────────────────
+9: [
+	{ "type": "dialogue", "char": "scene",  "name": "SCENE",
+	  "npc": "adult_13/idle",
+	  "text": "A new trainee joins you at the front desk. They want to understand how the guest table was originally set up." },
+	{ "type": "dialogue", "char": "guest",  "name": "TRAINEE",
+	  "npc": "adult_13/talk",
+	  "text": "Can you show me how a table is created in SQL? Especially the id column — what makes it different from the others?" },
+	{ "type": "dialogue", "char": "you",    "name": "YOU",
+	  "npc": "adult_13/idle",
+	  "text": "Sure! When we CREATE TABLE, we add a special constraint to the id column called PRIMARY KEY. It forces every id to be unique and never empty. Let me show you." },
+	{
+		"type": "sql_fill",
+		"gamemode": "create_table",
+		"desc": "Complete the CREATE TABLE statement for the guests table. The 'id' column must be the PRIMARY KEY — type it in the blank.",
+		"table": "guests",
+		"pk_col": "id",
+		"columns": [
+			["id",         "INT"],
+			["first_name", "TEXT"],
+			["last_name",  "TEXT"],
+			["email",      "TEXT"]
+		],
+		"answer": "PRIMARY KEY",
+		"hint": "The constraint that makes a column unique for every row is: PRIMARY KEY",
+		"result_msg": "Table created! The PRIMARY KEY on 'id' means no two guests can share the same id, and id can never be left empty.",
+		"fail": [
+			{ "type": "dialogue", "char": "guest",  "name": "TRAINEE", "npc": "adult_13/confuse", "text": "That is not right. The constraint name has two words — PRIMARY and KEY." },
+			{ "type": "dialogue", "char": "scene",  "name": "SCENE",   "npc": "adult_13/idle",    "text": "The trainee watches the screen carefully, waiting." },
+			{ "type": "dialogue", "char": "you",    "name": "YOU",     "npc": "adult_13/idle",    "text": "Let me type the constraint correctly — PRIMARY KEY." }
+		]
+	},
+	{ "type": "dialogue", "char": "guest",  "name": "TRAINEE",
+	  "npc": "adult_13/talk",
+	  "text": "So PRIMARY KEY goes right after the column type! And it means that column will always be unique. Got it!" },
+	{ "type": "dialogue", "char": "you",    "name": "YOU",
+	  "npc": "adult_13/idle",
+	  "text": "Exactly. Every table should have a PRIMARY KEY so the database can always tell rows apart." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON 10 — JOIN  |  NPC: hotel_manager
+#  Topic: FOREIGN KEY / JOIN — combining two tables
+# ─────────────────────────────────────────────
+10: [
+	{ "type": "dialogue", "char": "scene",  "name": "SCENE",
+	  "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "The manager needs a combined report of guest names and their room bookings — from two separate tables." },
+	{ "type": "dialogue", "char": "mgr",    "name": "MANAGER",
+	  "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "Our guest info and booking info are in different tables. Can you JOIN them so I can see everything in one report?" },
+	{ "type": "dialogue", "char": "you",    "name": "YOU",
+	  "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "Sure! A JOIN combines two tables using a shared column — the guests.id links to bookings.guest_id. That linking column in bookings is called a Foreign Key." },
+	{
+		"type": "sql_fill",
+		"gamemode": "join",
+		"desc": "JOIN the guests table with the bookings table. The guests 'id' column links to the bookings 'guest_id' column. Fill in both column names.",
+		"table_a": "guests",
+		"table_b": "bookings",
+		"table_a_headers": ["id", "first_name", "last_name"],
+		"table_a_rows": [
+			["1", "Alex",   "Santos"],
+			["2", "Maya",   "Dela Cruz"],
+			["3", "Jose",   "Hernandez"],
+			["4", "Carlos", "Garcia"]
+		],
+		"table_b_headers": ["id", "guest_id", "room_type", "check_in"],
+		"table_b_rows": [
+			["1", "1", "Standard", "June 1"],
+			["2", "3", "Deluxe",   "June 5"],
+			["3", "2", "Suite",    "June 8"],
+			["4", "4", "Standard", "June 12"]
+		],
+		"join_col_a": "id",
+		"join_col_b": "guest_id",
+		"hint": "Table A linking column: id | Table B linking column: guest_id",
+		"result_headers": ["first_name", "last_name", "room_type", "check_in"],
+		"result_rows": [
+			["Alex",   "Santos",    "Standard", "June 1"],
+			["Maya",   "Dela Cruz", "Suite",    "June 8"],
+			["Jose",   "Hernandez", "Deluxe",   "June 5"],
+			["Carlos", "Garcia",    "Standard", "June 12"]
+		],
+		"result_msg": "4 records joined successfully.",
+		"fail": [
+			{ "type": "dialogue", "char": "mgr",   "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/shock", "text": "The JOIN failed! Check which column in guests links to which column in bookings." },
+			{ "type": "dialogue", "char": "scene",  "name": "SCENE",  "npc": "NPC_occupations/hotel_manager/idle",  "text": "The manager taps the two table headers on the screen with a finger." },
+			{ "type": "dialogue", "char": "you",    "name": "YOU",    "npc": "NPC_occupations/hotel_manager/idle",  "text": "I see — guests.id must equal bookings.guest_id. Let me type those correctly." }
+		]
+	},
+	{ "type": "dialogue", "char": "you",   "name": "YOU",
+	  "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "Done! The JOIN combined both tables using the guest id. Now you can see each guest's name next to their booking." },
+	{ "type": "dialogue", "char": "mgr",   "name": "MANAGER",
+	  "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "Excellent. JOIN is one of the most important SQL tools — it lets us connect data spread across multiple tables." },
+	{ "type": "end" }
 ]
 
 } # end LESSONS

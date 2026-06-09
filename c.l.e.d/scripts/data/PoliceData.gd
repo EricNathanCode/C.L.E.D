@@ -515,6 +515,229 @@ const LESSONS: Dictionary = {
 	{
 		"type": "end"
 	}
+],
+
+# ─────────────────────────────────────────────
+#  LESSON P8 — IS NULL  |  NPC: chief
+#  Topic: Find suspects with no assigned officer
+# ─────────────────────────────────────────────
+"P8": [
+	{
+		"type": "dialogue",
+		"char": "scene",
+		"name": "SCENE",
+		"npc":  "NPC_occupations/police/idle",
+		"text": "Morning briefing. The chief reviews the suspect database and spots a problem."
+	},
+	{
+		"type": "dialogue",
+		"char": "chief",
+		"name": "CHIEF",
+		"npc":  "NPC_occupations/police/talk",
+		"text": "Some suspects have no assigned officer yet — those fields will show as NULL. Can you find which suspects are unassigned?"
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "NPC_occupations/police/idle",
+		"text": "Right away Chief. IS NULL will find all rows where the assigned_officer column has no value."
+	},
+	{
+		"type": "sql_fill",
+		"gamemode": "select_where_null",
+		"desc": "Find all suspects with no assigned officer. Unassigned suspects show as NULL. Type NULL after IS.",
+		"table": "suspects",
+		"column": "assigned_officer",
+		"table_headers": ["id", "name", "case_type", "assigned_officer"],
+		"table_rows": [
+			["1", "Luis Santos",    "Vandalism", "Officer Cruz"],
+			["2", "Ana Cruz",       "Fraud",     ""],
+			["3", "Carlos Torres",  "Theft",     "Officer Reyes"],
+			["4", "Maria Garcia",   "Assault",   ""],
+			["5", "Miguel Lim",     "Vandalism", "Officer Santos"],
+			["6", "Rosa Dela Cruz", "Theft",     ""]
+		],
+		"answer": "NULL",
+		"hint": "No assigned officer = NULL. Type: NULL",
+		"result_headers": ["id", "name", "case_type", "assigned_officer"],
+		"result_rows": [
+			["2", "Ana Cruz",       "Fraud",   "NULL"],
+			["4", "Maria Garcia",   "Assault", "NULL"],
+			["6", "Rosa Dela Cruz", "Theft",   "NULL"]
+		],
+		"result_msg": "3 suspects have no assigned officer.",
+		"fail": [
+			{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/shock", "text": "That is wrong! NULL means the officer field is empty — nobody is assigned yet." },
+			{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",  "text": "The chief taps the blank cells in the assigned_officer column." },
+			{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "NPC_occupations/police/idle",  "text": "Right — IS NULL checks for missing values. Let me use it correctly." }
+		]
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "NPC_occupations/police/idle",
+		"text": "Found them Chief! Ana Cruz, Maria Garcia, and Rosa Dela Cruz are all unassigned."
+	},
+	{
+		"type": "dialogue",
+		"char": "chief",
+		"name": "CHIEF",
+		"npc":  "NPC_occupations/police/think",
+		"text": "Good. IS NULL is a critical tool for finding gaps in our records. Assign officers to those three immediately."
+	},
+	{
+		"type": "end"
+	}
+],
+
+# ─────────────────────────────────────────────
+#  LESSON P9 — PRIMARY KEY  |  NPC: adult_6 (new officer)
+#  Topic: CREATE TABLE with PRIMARY KEY constraint
+# ─────────────────────────────────────────────
+"P9": [
+	{
+		"type": "dialogue",
+		"char": "scene",
+		"name": "SCENE",
+		"npc":  "adult_6/idle",
+		"text": "A new officer joins the station and wants to understand how the cases database was built from scratch."
+	},
+	{
+		"type": "dialogue",
+		"char": "citizen",
+		"name": "OFFICER",
+		"npc":  "adult_6/talk",
+		"text": "Can you show me the SQL that creates the cases table? I want to understand why every case gets a unique id."
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "adult_6/idle",
+		"text": "Sure! The id column gets a constraint called PRIMARY KEY when we CREATE TABLE. It ensures every case id is unique and can never be left blank."
+	},
+	{
+		"type": "sql_fill",
+		"gamemode": "create_table",
+		"desc": "Complete the CREATE TABLE statement for the cases table. The 'id' column must be the PRIMARY KEY — type it in the blank.",
+		"table": "cases",
+		"pk_col": "id",
+		"columns": [
+			["id",            "INT"],
+			["reporter_name", "TEXT"],
+			["case_type",     "TEXT"],
+			["status",        "TEXT"]
+		],
+		"answer": "PRIMARY KEY",
+		"hint": "The constraint that makes a column unique for every row is: PRIMARY KEY",
+		"result_msg": "Table created! The PRIMARY KEY on 'id' means every case gets a permanent unique number — even if two cases involve the same suspect.",
+		"fail": [
+			{ "type": "dialogue", "char": "citizen", "name": "OFFICER", "npc": "adult_6/confuse", "text": "That is not correct. The constraint is two words — PRIMARY and KEY together." },
+			{ "type": "dialogue", "char": "scene",   "name": "SCENE",   "npc": "adult_6/idle",   "text": "The officer waits, arms crossed." },
+			{ "type": "dialogue", "char": "you",     "name": "YOU",     "npc": "adult_6/idle",   "text": "Let me type the constraint correctly — PRIMARY KEY." }
+		]
+	},
+	{
+		"type": "dialogue",
+		"char": "citizen",
+		"name": "OFFICER",
+		"npc":  "adult_6/talk",
+		"text": "So PRIMARY KEY goes right after INT! That means case id 4 will always be case id 4 — it can never be reused or duplicated."
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "adult_6/idle",
+		"text": "Exactly. The PRIMARY KEY is what gives every row its own permanent identity in the database."
+	},
+	{
+		"type": "end"
+	}
+],
+
+# ─────────────────────────────────────────────
+#  LESSON P10 — JOIN  |  NPC: chief
+#  Topic: FOREIGN KEY / JOIN — combining two tables
+# ─────────────────────────────────────────────
+"P10": [
+	{
+		"type": "dialogue",
+		"char": "scene",
+		"name": "SCENE",
+		"npc":  "NPC_occupations/police/idle",
+		"text": "The chief wants a combined report — case details alongside assigned officer names — from two separate tables."
+	},
+	{
+		"type": "dialogue",
+		"char": "chief",
+		"name": "CHIEF",
+		"npc":  "NPC_occupations/police/talk",
+		"text": "Case info and officer assignments are in separate tables. Can you JOIN them so I see each case with its officer in one report?"
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "NPC_occupations/police/idle",
+		"text": "Understood Chief. The cases.id links to assignments.case_id — that is the Foreign Key. I will JOIN on those two columns."
+	},
+	{
+		"type": "sql_fill",
+		"gamemode": "join",
+		"desc": "JOIN the cases table with the assignments table. The cases 'id' links to assignments 'case_id'. Fill in both column names.",
+		"table_a": "cases",
+		"table_b": "assignments",
+		"table_a_headers": ["id", "case_type", "status"],
+		"table_a_rows": [
+			["1", "Theft",     "Open"],
+			["2", "Vandalism", "Open"],
+			["3", "Assault",   "Closed"],
+			["4", "Fraud",     "Open"]
+		],
+		"table_b_headers": ["id", "case_id", "officer_name", "badge"],
+		"table_b_rows": [
+			["1", "1", "Officer Cruz",   "B-101"],
+			["2", "3", "Officer Reyes",  "B-204"],
+			["3", "2", "Officer Santos", "B-312"],
+			["4", "4", "Officer Lim",    "B-417"]
+		],
+		"join_col_a": "id",
+		"join_col_b": "case_id",
+		"hint": "Table A linking column: id | Table B linking column: case_id",
+		"result_headers": ["case_type", "status", "officer_name", "badge"],
+		"result_rows": [
+			["Theft",     "Open",   "Officer Cruz",   "B-101"],
+			["Vandalism", "Open",   "Officer Santos", "B-312"],
+			["Assault",   "Closed", "Officer Reyes",  "B-204"],
+			["Fraud",     "Open",   "Officer Lim",    "B-417"]
+		],
+		"result_msg": "4 records joined successfully.",
+		"fail": [
+			{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/shock", "text": "The JOIN failed! You need the linking column from each table — check the headers carefully." },
+			{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",  "text": "The chief taps the id column in cases and the case_id column in assignments." },
+			{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "NPC_occupations/police/idle",  "text": "I see — cases.id must equal assignments.case_id. Let me correct it." }
+		]
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "NPC_occupations/police/idle",
+		"text": "Done Chief! Cases and officer assignments are now joined in one report."
+	},
+	{
+		"type": "dialogue",
+		"char": "chief",
+		"name": "CHIEF",
+		"npc":  "NPC_occupations/police/think",
+		"text": "Good. JOIN lets us connect data across tables — that is exactly how a real police database works. Well done."
+	},
+	{
+		"type": "end"
+	}
 ]
 
 } # end LESSONS

@@ -4,13 +4,16 @@ extends Control
 # ═══════════════════════════════════════════════════════
 
 const GM_TO_SQL: Dictionary = {
-	"select":       "SELECT",
-	"insert_into":  "INSERT INTO",
-	"select_where": "SELECT WHERE",
-	"update_set":   "UPDATE SET",
-	"delete":       "DELETE",
-	"order_by":     "ORDER BY",
-	"group_by":     "GROUP BY",
+	"select":            "SELECT",
+	"insert_into":       "INSERT INTO",
+	"select_where":      "SELECT WHERE",
+	"update_set":        "UPDATE SET",
+	"delete":            "DELETE",
+	"order_by":          "ORDER BY",
+	"group_by":          "GROUP BY",
+	"select_where_null": "IS NULL / IS NOT NULL",
+	"join":              "JOIN",
+	"create_table":      "PRIMARY KEY",
 }
 
 const SQL_GLOSSARY: Array = [
@@ -26,8 +29,14 @@ const SQL_GLOSSARY: Array = [
 		"DELETE FROM table_name\nWHERE column = 'value';"],
 	["ORDER BY",     "Sorts result rows in ascending or descending order.",
 		"SELECT * FROM table_name\nORDER BY column ASC;"],
-	["GROUP BY",     "Groups rows that share the same column value.",
+	["GROUP BY",           "Groups rows that share the same column value.",
 		"SELECT column, COUNT(*)\nFROM table_name\nGROUP BY column;"],
+	["PRIMARY KEY",           "A column constraint that makes each row's value unique and non-NULL.",
+		"CREATE TABLE table_name (\n    id INT PRIMARY KEY,\n    name TEXT\n);"],
+	["IS NULL / IS NOT NULL", "Checks whether a column's value is missing or present.",
+		"SELECT * FROM table_name\nWHERE column IS NULL;\n\nSELECT * FROM table_name\nWHERE column IS NOT NULL;"],
+	["JOIN",               "Combines rows from two tables using a shared linking column.",
+		"SELECT * FROM table_a\nJOIN table_b\nON table_a.id = table_b.ref_id;"],
 ]
 
 const GM_SCENES: Dictionary = {
@@ -36,8 +45,11 @@ const GM_SCENES: Dictionary = {
 	"select_where": "res://gamemode/scene/GM_SelectWhere.tscn",
 	"update_set":   "res://gamemode/scene/GM_UpdateSet.tscn",
 	"delete":       "res://gamemode/scene/GM_Delete.tscn",
-	"order_by":     "res://gamemode/scene/GM_OrderBy.tscn",
-	"group_by":     "res://gamemode/scene/GM_GroupBy.tscn",
+	"order_by":          "res://gamemode/scene/GM_OrderBy.tscn",
+	"group_by":          "res://gamemode/scene/GM_GroupBy.tscn",
+	"select_where_null": "res://gamemode/scene/GM_SelectWhereNull.tscn",
+	"join":              "res://gamemode/scene/GM_Join.tscn",
+	"create_table":      "res://gamemode/scene/GM_CreateTable.tscn",
 }
 
 const BG_HOTEL   := "res://images/backgrounds/BG_hotel.png"

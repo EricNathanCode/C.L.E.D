@@ -342,6 +342,163 @@ const LESSONS: Dictionary = {
 	  "npc": "NPC_occupations/coffee_owner/talk",
 	  "text": "Perfect. That's exactly what I needed for the menu board update. Great work!" },
 	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON C8 — IS NULL  |  NPC: coffee_owner
+#  Topic: Find orders with no special notes
+# ─────────────────────────────────────────────
+"C8": [
+	{ "type": "dialogue", "char": "scene",           "name": "SCENE",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "Mid-morning rush. The supervisor wants to see which orders need no special preparation." },
+	{ "type": "dialogue", "char": "cafe_supervisor",  "name": "SUPERVISOR",
+	  "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "Can you pull up all orders where the customer left no special notes? Those go straight to the standard recipe." },
+	{ "type": "dialogue", "char": "you",              "name": "YOU",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "Sure! In SQL, empty fields are stored as NULL. I'll use IS NULL to find orders with no notes." },
+	{
+		"type": "sql_fill",
+		"gamemode": "select_where_null",
+		"desc": "Find all orders that have no special notes. NULL means no note was left. Type NULL after IS.",
+		"table": "orders",
+		"column": "notes",
+		"table_headers": ["id", "customer", "item", "notes"],
+		"table_rows": [
+			["1", "Maria",  "Latte",        ""],
+			["2", "Rivera", "Iced Tea",     "Less ice"],
+			["3", "Santos", "Hot Latte",    ""],
+			["4", "Kim",    "Americano",    "Extra shot"],
+			["5", "Carlos", "Cappuccino",   ""],
+			["6", "Reyes",  "Matcha Latte", "Oat milk"]
+		],
+		"answer": "NULL",
+		"hint": "No notes = missing value = NULL. Type: NULL",
+		"result_headers": ["id", "customer", "item", "notes"],
+		"result_rows": [
+			["1", "Maria",  "Latte",      "NULL"],
+			["3", "Santos", "Hot Latte",  "NULL"],
+			["5", "Carlos", "Cappuccino", "NULL"]
+		],
+		"result_msg": "3 orders have no special notes.",
+		"fail": [
+			{ "type": "dialogue", "char": "cafe_supervisor", "name": "SUPERVISOR", "npc": "NPC_occupations/coffee_owner/shock", "text": "That is not right! NULL is not a customer name — it means the field is empty." },
+			{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/coffee_owner/idle", "text": "A long line of customers forms at the counter. Time is short." },
+			{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "NPC_occupations/coffee_owner/idle", "text": "I need to use IS NULL to check for missing values." }
+		]
+	},
+	{ "type": "dialogue", "char": "you",             "name": "YOU",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "Found them! Maria, Santos, and Carlos left no notes — standard recipes for all three." },
+	{ "type": "dialogue", "char": "cafe_supervisor",  "name": "SUPERVISOR",
+	  "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "Perfect. IS NULL is great for catching incomplete data. Nice SQL work." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON C9 — PRIMARY KEY  |  NPC: coffee_owner
+#  Topic: CREATE TABLE with PRIMARY KEY constraint
+# ─────────────────────────────────────────────
+"C9": [
+	{ "type": "dialogue", "char": "scene",           "name": "SCENE",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "The café owner wants to understand how the orders table was built from the start." },
+	{ "type": "dialogue", "char": "cafe_supervisor",  "name": "SUPERVISOR",
+	  "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "Can you show me how to create the orders table in SQL? I want to see how the id column is made special." },
+	{ "type": "dialogue", "char": "you",              "name": "YOU",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "Of course! The id column gets a constraint called PRIMARY KEY when we create the table. It makes sure every order id is unique and never blank." },
+	{
+		"type": "sql_fill",
+		"gamemode": "create_table",
+		"desc": "Complete the CREATE TABLE statement for the orders table. The 'id' column must be the PRIMARY KEY — type it in the blank.",
+		"table": "orders",
+		"pk_col": "id",
+		"columns": [
+			["id",       "INT"],
+			["customer", "TEXT"],
+			["item",     "TEXT"],
+			["price",    "REAL"]
+		],
+		"answer": "PRIMARY KEY",
+		"hint": "The constraint that makes a column unique for every row is: PRIMARY KEY",
+		"result_msg": "Table created! The PRIMARY KEY on 'id' means every order gets a unique number — even if two customers order the same thing.",
+		"fail": [
+			{ "type": "dialogue", "char": "cafe_supervisor", "name": "SUPERVISOR", "npc": "NPC_occupations/coffee_owner/confuse", "text": "That is not it. The constraint is two words — PRIMARY and KEY together." },
+			{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/coffee_owner/idle", "text": "The supervisor leans in to look at the screen." },
+			{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "NPC_occupations/coffee_owner/idle", "text": "Let me type it correctly — PRIMARY KEY." }
+		]
+	},
+	{ "type": "dialogue", "char": "cafe_supervisor",  "name": "SUPERVISOR",
+	  "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "So PRIMARY KEY goes right after INT! And every id will be different. That is how databases stay organised." },
+	{ "type": "dialogue", "char": "you",             "name": "YOU",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "Exactly. Every table should have a PRIMARY KEY column so records are never confused." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON C10 — JOIN  |  NPC: coffee_owner
+#  Topic: FOREIGN KEY / JOIN — combining two tables
+# ─────────────────────────────────────────────
+"C10": [
+	{ "type": "dialogue", "char": "scene",           "name": "SCENE",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "The owner wants a full report — customer names beside their ordered items — but the data is in two separate tables." },
+	{ "type": "dialogue", "char": "cafe_supervisor",  "name": "SUPERVISOR",
+	  "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "Can you JOIN the customers and orders tables so I can see each customer with their order in one view?" },
+	{ "type": "dialogue", "char": "you",              "name": "YOU",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "Of course! The customers.id links to orders.customer_id — that linking column is called a Foreign Key. I will JOIN on that." },
+	{
+		"type": "sql_fill",
+		"gamemode": "join",
+		"desc": "JOIN the customers table with the orders table. The customers 'id' links to orders 'customer_id'. Fill in both column names.",
+		"table_a": "customers",
+		"table_b": "orders",
+		"table_a_headers": ["id", "name", "loyalty_level"],
+		"table_a_rows": [
+			["1", "Maria",  "Gold"],
+			["2", "Rivera", "Silver"],
+			["3", "Santos", "Bronze"],
+			["4", "Kim",    "Gold"]
+		],
+		"table_b_headers": ["id", "customer_id", "item", "price"],
+		"table_b_rows": [
+			["1", "1", "Latte",      "4.00"],
+			["2", "2", "Iced Tea",   "3.50"],
+			["3", "3", "Hot Latte",  "4.00"],
+			["4", "4", "Americano",  "2.50"]
+		],
+		"join_col_a": "id",
+		"join_col_b": "customer_id",
+		"hint": "Table A linking column: id | Table B linking column: customer_id",
+		"result_headers": ["name", "loyalty_level", "item", "price"],
+		"result_rows": [
+			["Maria",  "Gold",   "Latte",     "4.00"],
+			["Rivera", "Silver", "Iced Tea",  "3.50"],
+			["Santos", "Bronze", "Hot Latte", "4.00"],
+			["Kim",    "Gold",   "Americano", "2.50"]
+		],
+		"result_msg": "4 records joined successfully.",
+		"fail": [
+			{ "type": "dialogue", "char": "cafe_supervisor", "name": "SUPERVISOR", "npc": "NPC_occupations/coffee_owner/shock", "text": "The JOIN failed! Match the right columns between the two tables." },
+			{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/coffee_owner/idle", "text": "The supervisor points at both table headers." },
+			{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "NPC_occupations/coffee_owner/idle", "text": "I see — customers.id must equal orders.customer_id. Let me correct it." }
+		]
+	},
+	{ "type": "dialogue", "char": "you",             "name": "YOU",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "Done! Both tables are joined. You can now see each customer with their order in one clean list." },
+	{ "type": "dialogue", "char": "cafe_supervisor",  "name": "SUPERVISOR",
+	  "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "That is exactly what I needed. JOIN is incredibly useful for pulling connected data together!" },
+	{ "type": "end" }
 ]
 
 } # end LESSONS

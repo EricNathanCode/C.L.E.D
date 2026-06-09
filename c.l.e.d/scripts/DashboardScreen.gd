@@ -9,46 +9,58 @@ const _DATA_PATHS: Dictionary = {
 }
 
 # ── Lesson metadata ───────────────────────────────────────
-const HOTEL_LESSONS  := [1, 2, 3, 4, 5, 6, 7]
-const CAFE_LESSONS   := ["C1", "C2", "C3", "C4", "C5", "C6", "C7"]
-const POLICE_LESSONS := ["P1", "P2", "P3", "P4", "P5", "P6", "P7"]
-const LIBRARY_LESSONS:= ["L1", "L2", "L3", "L4", "L5", "L6", "L7"]
+const HOTEL_LESSONS  := [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+const CAFE_LESSONS   := ["C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9", "C10"]
+const POLICE_LESSONS := ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "P9", "P10"]
+const LIBRARY_LESSONS:= ["L1", "L2", "L3", "L4", "L5", "L6", "L7", "L8", "L9", "L10"]
 
 const HOTEL_NAMES: Dictionary = {
-	1: "SELECT — Choose Your Response",
-	2: "INSERT INTO — Book a New Guest",
-	3: "SELECT WHERE — Search a Guest Record",
-	4: "UPDATE SET — Fix a Wrong Record",
-	5: "DELETE — Cancel a Booking",
-	6: "ORDER BY — Sort Guest Records",
-	7: "GROUP BY — Generate a Report",
+	1:  "SELECT — Choose Your Response",
+	2:  "INSERT INTO — Book a New Guest",
+	3:  "SELECT WHERE — Search a Guest Record",
+	4:  "UPDATE SET — Fix a Wrong Record",
+	5:  "DELETE — Cancel a Booking",
+	6:  "ORDER BY — Sort Guest Records",
+	7:  "GROUP BY — Generate a Report",
+	8:  "IS NULL — Find Missing Guest Emails",
+	9:  "PRIMARY KEY — What Makes a Record Unique",
+	10: "JOIN — Combine Guests and Bookings",
 }
 const CAFE_NAMES: Dictionary = {
-	"C1": "SELECT — Take the Order",
-	"C2": "INSERT INTO — Log a New Order",
-	"C3": "GROUP BY — End-of-Day Report",
-	"C4": "SELECT WHERE — Find an Order",
-	"C5": "UPDATE SET — Fix a Wrong Order",
-	"C6": "DELETE — Cancel an Order",
-	"C7": "ORDER BY — Sort the Menu Items",
+	"C1":  "SELECT — Take the Order",
+	"C2":  "INSERT INTO — Log a New Order",
+	"C3":  "GROUP BY — End-of-Day Report",
+	"C4":  "SELECT WHERE — Find an Order",
+	"C5":  "UPDATE SET — Fix a Wrong Order",
+	"C6":  "DELETE — Cancel an Order",
+	"C7":  "ORDER BY — Sort the Menu Items",
+	"C8":  "IS NULL — Find Orders with No Notes",
+	"C9":  "PRIMARY KEY — What Makes a Record Unique",
+	"C10": "JOIN — Combine Customers and Orders",
 }
 const POLICE_NAMES: Dictionary = {
-	"P1": "SELECT — Handle a Citizen Report",
-	"P2": "INSERT INTO — Log a New Case",
-	"P3": "SELECT WHERE — Search a Suspect",
-	"P4": "UPDATE SET — Update Case Status",
-	"P5": "DELETE — Close a Cleared Case",
-	"P6": "ORDER BY — Sort Cases by Priority",
-	"P7": "GROUP BY — Crime Category Report",
+	"P1":  "SELECT — Handle a Citizen Report",
+	"P2":  "INSERT INTO — Log a New Case",
+	"P3":  "SELECT WHERE — Search a Suspect",
+	"P4":  "UPDATE SET — Update Case Status",
+	"P5":  "DELETE — Close a Cleared Case",
+	"P6":  "ORDER BY — Sort Cases by Priority",
+	"P7":  "GROUP BY — Crime Category Report",
+	"P8":  "IS NULL — Find Unassigned Suspects",
+	"P9":  "PRIMARY KEY — What Makes a Record Unique",
+	"P10": "JOIN — Combine Cases and Officers",
 }
 const LIBRARY_NAMES: Dictionary = {
-	"L1": "SELECT — Help a Visitor",
-	"L2": "INSERT INTO — Register a New Borrower",
-	"L3": "SELECT WHERE — Find a Book Record",
-	"L4": "UPDATE SET — Update a Return Date",
-	"L5": "DELETE — Remove an Overdue Record",
-	"L6": "ORDER BY — Sort Books Alphabetically",
-	"L7": "GROUP BY — Books by Genre Report",
+	"L1":  "SELECT — Help a Visitor",
+	"L2":  "INSERT INTO — Register a New Borrower",
+	"L3":  "SELECT WHERE — Find a Book Record",
+	"L4":  "UPDATE SET — Update a Return Date",
+	"L5":  "DELETE — Remove an Overdue Record",
+	"L6":  "ORDER BY — Sort Books Alphabetically",
+	"L7":  "GROUP BY — Books by Genre Report",
+	"L8":  "IS NULL — Find Unreturned Books",
+	"L9":  "PRIMARY KEY — What Makes a Record Unique",
+	"L10": "JOIN — Combine Borrowers and Books",
 }
 const WORLD_DISPLAY: Dictionary = {
 	"hotel":   "Hotel World",

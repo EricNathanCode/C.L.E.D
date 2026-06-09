@@ -525,6 +525,229 @@ const LESSONS: Dictionary = {
 	{
 		"type": "end"
 	}
+],
+
+# ─────────────────────────────────────────────
+#  LESSON L8 — IS NULL  |  NPC: librarian
+#  Topic: Find borrow records with no return date (still out)
+# ─────────────────────────────────────────────
+"L8": [
+	{
+		"type": "dialogue",
+		"char": "scene",
+		"name": "SCENE",
+		"npc":  "NPC_occupations/librarian/idle",
+		"text": "End of month check. The librarian needs to know which books have not been returned yet."
+	},
+	{
+		"type": "dialogue",
+		"char": "librarian",
+		"name": "LIBRARIAN",
+		"npc":  "NPC_occupations/librarian/talk",
+		"text": "Books still out have no return date in the system — that field is NULL. Can you find all borrows with no return date?"
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "NPC_occupations/librarian/idle",
+		"text": "Sure! IS NULL will filter for rows where the return_date has no value yet."
+	},
+	{
+		"type": "sql_fill",
+		"gamemode": "select_where_null",
+		"desc": "Find all borrow records where the book has not been returned. Missing return dates show as NULL. Type NULL after IS.",
+		"table": "borrows",
+		"column": "return_date",
+		"table_headers": ["id", "borrower", "book", "return_date"],
+		"table_rows": [
+			["1", "Maria Santos",  "SQL Basics",      "June 10"],
+			["2", "Mr. Tan",       "The Universe",    ""],
+			["3", "Sofia Mendez",  "Brief History",   "June 20"],
+			["4", "Carlos Reyes",  "Clean Code",      ""],
+			["5", "Ana Torres",    "Design Patterns", "June 25"],
+			["6", "Kim Park",      "Cosmos",          ""]
+		],
+		"answer": "NULL",
+		"hint": "No return date = NULL. Type: NULL",
+		"result_headers": ["id", "borrower", "book", "return_date"],
+		"result_rows": [
+			["2", "Mr. Tan",      "The Universe", "NULL"],
+			["4", "Carlos Reyes", "Clean Code",   "NULL"],
+			["6", "Kim Park",     "Cosmos",       "NULL"]
+		],
+		"result_msg": "3 books have not been returned yet.",
+		"fail": [
+			{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "That is not right! NULL means the value is absent — no return date has been recorded." },
+			{ "type": "dialogue", "char": "scene",     "name": "SCENE",     "npc": "NPC_occupations/librarian/idle",  "text": "The librarian points at the blank cells in the return_date column." },
+			{ "type": "dialogue", "char": "you",       "name": "YOU",       "npc": "NPC_occupations/librarian/idle",  "text": "I see — IS NULL checks for missing values. Let me use it correctly." }
+		]
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "NPC_occupations/librarian/idle",
+		"text": "Found them! Mr. Tan, Carlos Reyes, and Kim Park have not returned their books yet."
+	},
+	{
+		"type": "dialogue",
+		"char": "librarian",
+		"name": "LIBRARIAN",
+		"npc":  "NPC_occupations/librarian/talk",
+		"text": "Thank you. IS NULL is perfect for finding records where information is still missing."
+	},
+	{
+		"type": "end"
+	}
+],
+
+# ─────────────────────────────────────────────
+#  LESSON L9 — PRIMARY KEY  |  NPC: adult_16 (Sofia returns)
+#  Topic: CREATE TABLE with PRIMARY KEY constraint
+# ─────────────────────────────────────────────
+"L9": [
+	{
+		"type": "dialogue",
+		"char": "scene",
+		"name": "SCENE",
+		"npc":  "adult_16/idle",
+		"text": "Sofia, the student you registered, comes back curious about how the borrowers table was originally built."
+	},
+	{
+		"type": "dialogue",
+		"char": "visitor",
+		"name": "STUDENT",
+		"npc":  "adult_16/talk",
+		"text": "Can you show me the SQL used to create the borrowers table? I want to know why every borrower gets a unique id."
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "adult_16/idle",
+		"text": "Sure! The id column gets a special constraint called PRIMARY KEY when we create the table. It ensures every id is unique and can never be blank. Watch."
+	},
+	{
+		"type": "sql_fill",
+		"gamemode": "create_table",
+		"desc": "Complete the CREATE TABLE statement for the borrowers table. The 'id' column must be the PRIMARY KEY — type it in the blank.",
+		"table": "borrowers",
+		"pk_col": "id",
+		"columns": [
+			["id",              "INT"],
+			["first_name",      "TEXT"],
+			["last_name",       "TEXT"],
+			["membership_type", "TEXT"]
+		],
+		"answer": "PRIMARY KEY",
+		"hint": "The constraint that makes a column unique for every row is: PRIMARY KEY",
+		"result_msg": "Table created! The PRIMARY KEY on 'id' means no two borrowers share the same id — even if they have the same name.",
+		"fail": [
+			{ "type": "dialogue", "char": "visitor", "name": "STUDENT", "npc": "adult_16/confuse", "text": "That is not right. The constraint is two words — PRIMARY and KEY together." },
+			{ "type": "dialogue", "char": "scene",   "name": "SCENE",   "npc": "adult_16/idle",   "text": "Sofia watches the screen, waiting for the correct answer." },
+			{ "type": "dialogue", "char": "you",     "name": "YOU",     "npc": "adult_16/idle",   "text": "Let me type it correctly — PRIMARY KEY." }
+		]
+	},
+	{
+		"type": "dialogue",
+		"char": "visitor",
+		"name": "STUDENT",
+		"npc":  "adult_16/talk",
+		"text": "Oh! PRIMARY KEY goes right after INT. So my id = 5 will always be unique — no other borrower will ever have id 5. That makes so much sense!"
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "adult_16/idle",
+		"text": "Exactly. The PRIMARY KEY is what keeps every row in a table distinct from all the others."
+	},
+	{
+		"type": "end"
+	}
+],
+
+# ─────────────────────────────────────────────
+#  LESSON L10 — JOIN  |  NPC: librarian
+#  Topic: FOREIGN KEY / JOIN — combining two tables
+# ─────────────────────────────────────────────
+"L10": [
+	{
+		"type": "dialogue",
+		"char": "scene",
+		"name": "SCENE",
+		"npc":  "NPC_occupations/librarian/idle",
+		"text": "The librarian needs a combined report — borrower names alongside the books they borrowed — from two separate tables."
+	},
+	{
+		"type": "dialogue",
+		"char": "librarian",
+		"name": "LIBRARIAN",
+		"npc":  "NPC_occupations/librarian/talk",
+		"text": "Borrower info and borrow records are in different tables. Can you JOIN them so I can see who has which book?"
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "NPC_occupations/librarian/idle",
+		"text": "Sure! The borrowers.id links to borrows.borrower_id — that linking column is the Foreign Key. I will JOIN on that."
+	},
+	{
+		"type": "sql_fill",
+		"gamemode": "join",
+		"desc": "JOIN the borrowers table with the borrows table. The borrowers 'id' links to borrows 'borrower_id'. Fill in both column names.",
+		"table_a": "borrowers",
+		"table_b": "borrows",
+		"table_a_headers": ["id", "first_name", "last_name", "membership_type"],
+		"table_a_rows": [
+			["1", "Maria",  "Santos", "Regular"],
+			["2", "Carlos", "Reyes",  "Student"],
+			["3", "Ana",    "Torres", "Regular"],
+			["5", "Sofia",  "Mendez", "Student"]
+		],
+		"table_b_headers": ["id", "borrower_id", "book_title", "return_date"],
+		"table_b_rows": [
+			["1", "1", "SQL Basics",    "June 10"],
+			["2", "5", "The Universe",  "NULL"],
+			["3", "3", "Brief History", "June 20"],
+			["4", "2", "Clean Code",    "NULL"]
+		],
+		"join_col_a": "id",
+		"join_col_b": "borrower_id",
+		"hint": "Table A linking column: id | Table B linking column: borrower_id",
+		"result_headers": ["first_name", "last_name", "book_title", "return_date"],
+		"result_rows": [
+			["Maria",  "Santos", "SQL Basics",    "June 10"],
+			["Sofia",  "Mendez", "The Universe",  "NULL"],
+			["Ana",    "Torres", "Brief History", "June 20"],
+			["Carlos", "Reyes",  "Clean Code",    "NULL"]
+		],
+		"result_msg": "4 records joined successfully.",
+		"fail": [
+			{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "The JOIN failed! Match the linking column from each table correctly." },
+			{ "type": "dialogue", "char": "scene",     "name": "SCENE",     "npc": "NPC_occupations/librarian/idle",  "text": "The librarian points at the id column in borrowers and the borrower_id column in borrows." },
+			{ "type": "dialogue", "char": "you",       "name": "YOU",       "npc": "NPC_occupations/librarian/idle",  "text": "I see — borrowers.id must equal borrows.borrower_id. Let me correct it." }
+		]
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "NPC_occupations/librarian/idle",
+		"text": "Done! Both tables are joined. You can now see each borrower name next to the book they have."
+	},
+	{
+		"type": "dialogue",
+		"char": "librarian",
+		"name": "LIBRARIAN",
+		"npc":  "NPC_occupations/librarian/think",
+		"text": "Excellent. JOIN is essential when your data is spread across multiple tables — it brings everything together in one view."
+	},
+	{
+		"type": "end"
+	}
 ]
 
 } # end LESSONS
