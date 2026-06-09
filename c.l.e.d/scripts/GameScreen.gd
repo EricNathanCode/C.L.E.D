@@ -29,16 +29,15 @@ const BG_CAFE    := "res://images/backgrounds/BG_cafe.png"
 const BG_POLICE  := "res://images/backgrounds/BG_police.png"
 const BG_LIBRARY := "res://images/backgrounds/BG_library.png"
 
-# Base paths for NPC images
 const CHAR_BASE := "res://images/characters/NPC_adults/"
-const CHAR_ROOT := "res://images/characters/"   # for NPC_occupations/ paths
+const CHAR_ROOT := "res://images/characters/"
 
-var _tex_cache:  Dictionary = {}   # full res:// path → Texture2D
-var _bg_textures: Dictionary = {}  # world key → Texture2D
-var _story:      Array      = []
-var _step:       int        = 0
+var _tex_cache:   Dictionary = {}
+var _bg_textures: Dictionary = {}
+var _story:       Array      = []
+var _step:        int        = 0
 var _current_gm:  Node       = null
-var _failed_step: Dictionary = {}  # stores the SQL step to retry after fail dialogue
+var _failed_step: Dictionary = {}
 
 func _ready() -> void:
 	$TopBar/BackToHubButton.pressed.connect(_on_back_to_hub)
@@ -46,18 +45,85 @@ func _ready() -> void:
 	$DialogueArea/DialogueButtons/BackButton.pressed.connect(_on_back)
 	$SQLOverlay/CenterContainer/PanelContainer/OuterVBox/BackToDialogueButton.pressed.connect(_on_back)
 
-	_style_btn($TopBar/BackToHubButton)
-	_style_btn($DialogueArea/DialogueButtons/BackButton)
-	_style_btn($DialogueArea/DialogueButtons/NextButton)
-	_style_btn($SQLOverlay/CenterContainer/PanelContainer/OuterVBox/BackToDialogueButton)
+	# Top bar dark strip
+	var tb_bg := ColorRect.new()
+	tb_bg.color        = Color(0.04, 0.05, 0.08, 0.94)
+	tb_bg.anchor_right = 1.0
+	tb_bg.offset_bottom = 42.0
+	tb_bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	tb_bg.z_index      = 2
+	add_child(tb_bg)
+
+	# Top bar bottom amber accent line
+	var tb_line := ColorRect.new()
+	tb_line.color        = Color("#F59E0B")
+	tb_line.anchor_right = 1.0
+	tb_line.offset_top   = 41.0
+	tb_line.offset_bottom = 43.0
+	tb_line.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	tb_line.z_index      = 2
+	add_child(tb_line)
+
+	# Amber accent line at top edge of dialogue box
+	var dlg_line := ColorRect.new()
+	dlg_line.color        = Color("#F59E0B")
+	dlg_line.anchor_top   = 1.0
+	dlg_line.anchor_right = 1.0
+	dlg_line.anchor_bottom = 1.0
+	dlg_line.offset_top   = -222.0
+	dlg_line.offset_bottom = -218.0
+	dlg_line.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	dlg_line.z_index      = 3
+	add_child(dlg_line)
+
+	# TopBar — ensure labels render above our bg strips
+	$TopBar.z_index = 3
+	$ProgressBar.z_index = 3
+
+	# TopBar label
+	$TopBar/LessonLabel.add_theme_font_size_override("font_size", 14)
+	$TopBar/LessonLabel.add_theme_color_override("font_color", Color(0.60, 0.65, 0.76))
+
+	# Button hierarchy
+	_style_btn($TopBar/BackToHubButton, "secondary", 13)
+	$TopBar/BackToHubButton.text = "← Hub"
+
+	_style_btn($DialogueArea/DialogueButtons/BackButton, "ghost", 15)
+	_style_btn($DialogueArea/DialogueButtons/NextButton, "primary", 15)
+	$DialogueArea/DialogueButtons/NextButton.text = "Next  →"
+
+	_style_btn($SQLOverlay/CenterContainer/PanelContainer/OuterVBox/BackToDialogueButton, "secondary", 14)
+	$SQLOverlay/CenterContainer/PanelContainer/OuterVBox/BackToDialogueButton.text = "← Dialogue"
+
+	# Dialogue character name — amber accent
+	$DialogueArea/CharacterName.add_theme_font_size_override("font_size", 14)
+	$DialogueArea/CharacterName.add_theme_color_override("font_color", Color("#F59E0B"))
+	$DialogueArea/CharacterName.add_theme_constant_override("outline_size", 1)
+	$DialogueArea/CharacterName.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.7))
+
+	# Dialogue text
+	$DialogueArea/DialogueText.add_theme_font_size_override("font_size", 15)
+	$DialogueArea/DialogueText.add_theme_color_override("font_color", Color(0.92, 0.93, 0.96))
+
+	# SQL overlay panel
+	_style_sql_panel()
 
 	_load_all_textures()
 	_style_progress_bar()
 
+func _style_sql_panel() -> void:
+	var panel_style := StyleBoxFlat.new()
+	panel_style.bg_color = Color(0.08, 0.10, 0.15, 0.98)
+	panel_style.border_color = Color(0.24, 0.30, 0.42)
+	panel_style.set_border_width_all(2)
+	panel_style.set_corner_radius_all(12)
+	panel_style.content_margin_left   = 0
+	panel_style.content_margin_right  = 0
+	panel_style.content_margin_top    = 0
+	panel_style.content_margin_bottom = 0
+	$SQLOverlay/CenterContainer/PanelContainer.add_theme_stylebox_override("panel", panel_style)
 
 # ── Keyboard shortcuts ────────────────────────────────────
-# Dialogue scene:  ← Back | → Next | Esc Back to Hub
-# SQL scene:       ← Back to Dialogue | Enter Execute | H Hint | → Continue Story
 func _unhandled_input(event: InputEvent) -> void:
 	if not visible:
 		return
@@ -67,38 +133,29 @@ func _unhandled_input(event: InputEvent) -> void:
 	var sql_open: bool = $SQLOverlay.visible
 
 	if sql_open:
-		# SQL challenge shortcuts — delegate to the active GM node
 		match event.keycode:
 			KEY_LEFT:
-				# Back to Dialogue
 				_on_back()
 			KEY_ENTER, KEY_KP_ENTER:
-				# Execute — call _on_execute on the GM if it exists
 				if _current_gm and is_instance_valid(_current_gm) and _current_gm.has_method("_on_execute"):
 					_current_gm._on_execute()
 			KEY_H:
-				# Hint
 				if _current_gm and is_instance_valid(_current_gm) and _current_gm.has_method("_on_hint"):
 					_current_gm._on_hint()
 			KEY_RIGHT:
-				# Continue Story — only if ContinueButton is visible
 				if _current_gm and is_instance_valid(_current_gm):
 					var cb: Button = _current_gm.get_node_or_null("ContinueButton")
 					if cb and cb.visible:
 						_current_gm._on_continue()
 	else:
-		# Dialogue scene shortcuts
 		match event.keycode:
 			KEY_RIGHT:
-				# Next — only if NextButton is visible
 				if $DialogueArea/DialogueButtons/NextButton.visible:
 					_on_next()
 			KEY_LEFT:
-				# Back — only if BackButton is visible
 				if $DialogueArea/DialogueButtons/BackButton.visible:
 					_on_back()
 			KEY_ESCAPE:
-				# Back to Hub
 				_on_back_to_hub()
 
 # ── Texture loading ───────────────────────────────────────
@@ -147,17 +204,12 @@ func _load_texture(res_path: String) -> Texture2D:
 		_tex_cache[res_path] = tex
 	return tex
 
-# ── Apply background ──────────────────────────────────────
 func _set_background(world: String) -> void:
 	if _bg_textures.has(world):
 		$SceneBG.texture = _bg_textures[world]
 	else:
 		$SceneBG.texture = null
 
-# ── Set NPC expression ────────────────────────────────────
-# npc_override format:
-#   "adult_3/talk"                  → NPC_adults/adult_3/talk.png
-#   "NPC_occupations/police/shock"  → NPC_occupations/police/shock.png
 func _set_expression(char_key: String, npc_override: String = "") -> void:
 	var path: String
 	if npc_override != "":
@@ -169,7 +221,6 @@ func _set_expression(char_key: String, npc_override: String = "") -> void:
 		else:
 			path = CHAR_BASE + "adult_1/idle.png"
 	else:
-		# Fallback if no "npc" field — default idle for each world
 		match GameManager.world:
 			"hotel":   path = CHAR_BASE + "adult_1/idle.png"
 			"cafe":    path = CHAR_BASE + "adult_3/idle.png"
@@ -184,17 +235,15 @@ func _set_expression(char_key: String, npc_override: String = "") -> void:
 	else:
 		$NPCSprite.visible = false
 
-# ── Load lesson ───────────────────────────────────────────
 func load_lesson(id) -> void:
 	_story = _get_story(id)
 	_step  = 0
-	$TopBar/LessonLabel.text = "Lesson: " + str(id)
+	$TopBar/LessonLabel.text = "  Lesson  " + str(id)
 	_set_background(GameManager.world)
 	_set_expression("scene")
 	_close_overlay()
 	_run_step()
 
-# ── Story engine ──────────────────────────────────────────
 func _run_step() -> void:
 	if _step >= _story.size():
 		get_tree().root.get_node("Main").show_screen("complete")
@@ -226,16 +275,12 @@ func _run_step() -> void:
 			get_tree().root.get_node("Main").show_screen("complete")
 
 		"retry":
-			# Fail dialogue finished — show Lesson Failed screen
 			var main := get_tree().root.get_node("Main")
 			if main.has_method("show_failed"):
 				main.show_failed()
 			else:
 				main.show_screen("failed")
 
-
-
-# ── SQL Terminal ──────────────────────────────────────────
 func _show_challenge(step: Dictionary, gm_key: String) -> void:
 	GameManager.stop_speaking()
 	var path: String = GM_SCENES.get(gm_key, "")
@@ -257,37 +302,28 @@ func _show_challenge(step: Dictionary, gm_key: String) -> void:
 	$DialogueArea.visible = false
 	$SQLOverlay.visible   = true
 
-
-# ── Wrong answer — play fail dialogue then retry ──────────
 func _on_gm_wrong() -> void:
 	GameManager.stop_speaking()
-	# Disconnect to prevent multiple triggers
 	if _current_gm and is_instance_valid(_current_gm):
 		if _current_gm.on_wrong.is_connected(_on_gm_wrong):
 			_current_gm.on_wrong.disconnect(_on_gm_wrong)
 
-	# Check if this step has a fail dialogue
 	var current_step: Dictionary = _story[_step]
 	var fail_steps: Array = current_step.get("fail", [])
 	if fail_steps.is_empty():
-		return  # No fail path — just show the error in terminal as before
+		return
 
-	# Store the step so we can retry it
 	_failed_step = current_step
 
-	# Build a temporary fail story and play it
 	var fail_story: Array = fail_steps.duplicate(true)
-	# Add failed sentinel at the end
 	fail_story.append({ "type": "retry" })
 
-	# Override _story temporarily with fail steps
 	var saved_story: Array = _story
 	var saved_step:  int   = _step
 	_story = fail_story
 	_step  = 0
 	_close_overlay()
 
-	# Store originals so retry can restore them
 	set_meta("_saved_story", saved_story)
 	set_meta("_saved_step",  saved_step)
 	_run_step()
@@ -298,7 +334,6 @@ func _on_gm_correct() -> void:
 	_step += 1
 	_run_step()
 
-# ── Navigation ────────────────────────────────────────────
 func _on_next() -> void:
 	GameManager.stop_speaking()
 	_step += 1
@@ -315,7 +350,6 @@ func _on_back_to_hub() -> void:
 	_close_overlay()
 	get_tree().root.get_node("Main").show_screen("dashboard")
 
-# ── Helpers ───────────────────────────────────────────────
 func _close_overlay() -> void:
 	$SceneBG.visible      = true
 	$NPCSprite.visible    = true
@@ -345,7 +379,7 @@ func _get_story(id) -> Array:
 	script.free()
 	return result
 
-# ── Progress bar ─────────────────────────────────────────
+# ── Progress bar ─────────────────────────────────────
 func _update_progress() -> void:
 	var total: int = 0
 	for s in _story:
@@ -362,8 +396,8 @@ func _update_progress() -> void:
 func _style_progress_bar() -> void:
 	var pb: ProgressBar = $ProgressBar
 	var bg := StyleBoxFlat.new()
-	bg.bg_color     = Color(0.15, 0.15, 0.15, 0.85)
-	bg.border_color = Color(0, 0, 0, 0.6)
+	bg.bg_color     = Color(0.10, 0.11, 0.16, 0.90)
+	bg.border_color = Color(0.22, 0.27, 0.38)
 	bg.set_border_width_all(1)
 	bg.set_corner_radius_all(10)
 	pb.add_theme_stylebox_override("background", bg)
@@ -373,21 +407,51 @@ func _style_progress_bar() -> void:
 	pb.add_theme_stylebox_override("fill", fill)
 	pb.value = 0.0
 
-func _style_btn(btn: Button) -> void:
-	btn.add_theme_color_override("font_color", Color.BLACK)
+# ── 3-variant button style ────────────────────────────
+func _style_btn(btn: Button, variant: String = "primary", font_size: int = 16) -> void:
+	btn.add_theme_font_size_override("font_size", font_size)
 	var s := StyleBoxFlat.new()
-	s.bg_color     = Color.WHITE
-	s.border_color = Color.BLACK
-	s.set_border_width_all(2)
-	s.set_corner_radius_all(6)
-	s.content_margin_left   = 14;  s.content_margin_right  = 14
-	s.content_margin_top    = 6;   s.content_margin_bottom = 6
-	btn.add_theme_stylebox_override("normal", s)
+	s.set_corner_radius_all(7)
+
+	match variant:
+		"primary":
+			btn.add_theme_color_override("font_color", Color(0.10, 0.06, 0.00))
+			s.bg_color     = Color("#F59E0B")
+			s.border_color = Color("#D97706")
+			s.set_border_width_all(0)
+			s.content_margin_left   = 22; s.content_margin_right  = 22
+			s.content_margin_top    = 8;  s.content_margin_bottom = 8
+		"secondary":
+			btn.add_theme_color_override("font_color", Color(0.85, 0.88, 0.94))
+			s.bg_color     = Color(0.13, 0.15, 0.21, 0.95)
+			s.border_color = Color(0.28, 0.33, 0.44)
+			s.set_border_width_all(2)
+			s.content_margin_left   = 16; s.content_margin_right  = 16
+			s.content_margin_top    = 6;  s.content_margin_bottom = 6
+		"ghost":
+			btn.add_theme_color_override("font_color", Color(0.55, 0.60, 0.70))
+			s.bg_color     = Color(0, 0, 0, 0)
+			s.border_color = Color(0.30, 0.35, 0.46)
+			s.set_border_width_all(2)
+			s.content_margin_left   = 16; s.content_margin_right  = 16
+			s.content_margin_top    = 6;  s.content_margin_bottom = 6
+
 	var h := s.duplicate() as StyleBoxFlat
-	h.bg_color     = Color("#F59E0B")  # yellow hover
-	h.border_color = Color("#B45309")
-	btn.add_theme_stylebox_override("hover", h)
 	var p := s.duplicate() as StyleBoxFlat
-	p.bg_color     = Color("#D97706")  # darker yellow press
-	p.border_color = Color("#92400E")
+
+	match variant:
+		"primary":
+			h.bg_color = Color("#FBBF24")
+			p.bg_color = Color("#D97706")
+		"secondary":
+			h.bg_color     = Color(0.19, 0.22, 0.30, 0.95)
+			h.border_color = Color("#F59E0B")
+			p.bg_color     = Color(0.09, 0.11, 0.16, 0.95)
+		"ghost":
+			h.bg_color     = Color(0.12, 0.15, 0.21, 0.50)
+			h.border_color = Color(0.50, 0.56, 0.68)
+			p.bg_color     = Color(0.08, 0.10, 0.14, 0.50)
+
+	btn.add_theme_stylebox_override("normal",  s)
+	btn.add_theme_stylebox_override("hover",   h)
 	btn.add_theme_stylebox_override("pressed", p)

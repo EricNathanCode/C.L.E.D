@@ -8,25 +8,48 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource("1")
 
+[node name="FullBG" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.07, 0.08, 0.11, 1.0)
+mouse_filter = 2
+
 [node name="CenterContainer" type="CenterContainer" parent="."]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
-custom_minimum_size = Vector2(300, 0)
-theme_override_constants/separation = 16
+[node name="CardPanel" type="PanelContainer" parent="CenterContainer"]
+custom_minimum_size = Vector2(360, 0)
+layout_mode = 2
 
-[node name="Title" type="Label" parent="CenterContainer/VBoxContainer"]
-text = "Lesson Complete"
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/CardPanel"]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="IconLabel" type="Label" parent="CenterContainer/CardPanel/VBoxContainer"]
+layout_mode = 2
 horizontal_alignment = 1
+text = "★"
 
-[node name="LessonLabel" type="Label" parent="CenterContainer/VBoxContainer"]
+[node name="Title" type="Label" parent="CenterContainer/CardPanel/VBoxContainer"]
+layout_mode = 2
+horizontal_alignment = 1
+text = "Lesson Complete!"
+
+[node name="LessonLabel" type="Label" parent="CenterContainer/CardPanel/VBoxContainer"]
+layout_mode = 2
+horizontal_alignment = 1
 text = "Lesson: -"
-horizontal_alignment = 1
 
-[node name="BackToHubButton" type="Button" parent="CenterContainer/VBoxContainer"]
+[node name="BackToHubButton" type="Button" parent="CenterContainer/CardPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
 text = "Back to Hub"
 
-[node name="ChangeWorldButton" type="Button" parent="CenterContainer/VBoxContainer"]
+[node name="ChangeWorldButton" type="Button" parent="CenterContainer/CardPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
 text = "Change World"

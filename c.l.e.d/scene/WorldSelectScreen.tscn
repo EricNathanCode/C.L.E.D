@@ -44,7 +44,7 @@ offset_left = -62.0
 offset_top = 10.0
 offset_right = -10.0
 offset_bottom = 62.0
-text = "⚙"
+text = "⚙︎"
 
 [node name="UpButton" type="Button" parent="."]
 layout_mode = 0
