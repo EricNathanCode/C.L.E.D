@@ -4,87 +4,55 @@ signal on_correct
 signal on_wrong
 signal on_quit
 
-var _join_col_a: String     = ""
-var _join_col_b: String     = ""
-var _step_data:  Dictionary = {}
+var _answer:    String     = ""
+var _step_data: Dictionary = {}
+var _blank:     LineEdit   = null
 
 func _ready() -> void:
 	_apply_terminal_style($SQLTerminal)
-	_style_input($SQLTerminal/SQLBlock/Line3/Blank1)
-	_style_input($SQLTerminal/SQLBlock/Line3/Blank2)
 	$QueryLabel.add_theme_color_override("font_color", Color("#4fc3f7"))
 	$ButtonRow/ExecuteButton.pressed.connect(_on_execute)
 	$ButtonRow/HintButton.pressed.connect(_on_hint)
 	$ContinueButton.pressed.connect(_on_continue)
-	$SQLTerminal/SQLBlock/Line3/Blank1.text_submitted.connect(func(_t): _on_execute())
-	$SQLTerminal/SQLBlock/Line3/Blank2.text_submitted.connect(func(_t): _on_execute())
 	_style_btn($ButtonRow/ExecuteButton, Color("#F59E0B"), Color("#1A1008"))
 	_style_btn_outline($ButtonRow/HintButton, Color("#4fc3f7"))
-	_style_btn($ContinueButton,          Color("#16A34A"), Color.WHITE)
+	_style_btn($ContinueButton, Color("#16A34A"), Color.WHITE)
 	$HintLabel.add_theme_color_override("font_color", Color("#4fc3f7"))
-
-func setup(data: Dictionary) -> void:
-	_step_data  = data
-	_join_col_a = data.get("join_col_a", "")
-	_join_col_b = data.get("join_col_b", "")
-	var ta: String = data.get("table_a", "[table_a]")
-	var tb: String = data.get("table_b", "[table_b]")
-	$Description.text = data.get("desc", "")
-	$HintLabel.text   = "Hint: " + data.get("hint", "")
-	$TablesRow/TableColA/TableLabelA.text = "TABLE: " + ta
-	$TablesRow/TableColB/TableLabelB.text = "TABLE: " + tb
-	$SQLTerminal/SQLBlock/Line1.text           = "SELECT * FROM " + ta
-	$SQLTerminal/SQLBlock/Line2.text           = data.get("join_type", "JOIN") + " " + tb
-	$SQLTerminal/SQLBlock/Line3/OnKeyword.text = "ON " + ta + "."
-	$SQLTerminal/SQLBlock/Line3/Equals.text    = " = " + tb + "."
-	$SQLTerminal/SQLBlock/Line3/Blank1.text    = ""
-	$SQLTerminal/SQLBlock/Line3/Blank2.text    = ""
-	$HintLabel.visible      = false
-	$ResultBox.visible      = false
-	$ContinueButton.visible = false
-	_fill_table($TablesRow/TableColA/DataTableA,
-		data.get("table_a_headers", []), data.get("table_a_rows", []))
-	_fill_table($TablesRow/TableColB/DataTableB,
-		data.get("table_b_headers", []), data.get("table_b_rows", []))
-	$SQLTerminal/SQLBlock/Line3/Blank1.grab_focus()
-
-func _on_execute() -> void:
-	var b1: LineEdit = $SQLTerminal/SQLBlock/Line3/Blank1
-	var b2: LineEdit = $SQLTerminal/SQLBlock/Line3/Blank2
-	var v1: String   = b1.text.strip_edges()
-	var v2: String   = b2.text.strip_edges()
-	if v1.is_empty() or v2.is_empty():
-		_fill_error($ResultBox, "Fill in both column names in the ON condition.")
-		return
-	if v1.to_lower() == _join_col_a.to_lower() and v2.to_lower() == _join_col_b.to_lower():
-		b1.text = _join_col_a
-		b2.text = _join_col_b
-		_fill_result($ResultBox, _step_data.get("result_headers", []),
-			_step_data.get("result_rows", []), _step_data.get("result_msg", ""))
-	else:
-		on_wrong.emit()
-		_fill_error($ResultBox, "Incorrect column names. Check the table headers for the linking columns.")
 
 func _on_hint()     -> void: $HintLabel.visible = true
 func _on_continue() -> void: on_correct.emit()
 
-func _fill_table(c: Node, headers: Array, rows: Array) -> void:
-	for ch in c.get_children(): ch.queue_free()
-	if headers.is_empty(): c.visible = false; return
-	c.visible = true;  c.add_child(_build_table(headers, rows))
+func setup(data: Dictionary) -> void:
+	_step_data = data
+	_answer    = data.get("answer", "AND")
+	$Description.text   = data.get("desc", "")
+	$HintLabel.text     = "Hint: " + data.get("hint", "")
+	$TableLabel.text    = "TABLE: " + data.get("table", "[table]")
+	$HintLabel.visible      = false
+	$ResultBox.visible      = false
+	$ContinueButton.visible = false
+	for ch in $SQLTerminal/SQLBlock.get_children(): ch.queue_free()
+	_add_code_line("SELECT * FROM " + data.get("table","table"))
+	var row := HBoxContainer.new(); row.add_theme_constant_override("separation", 4)
+	$SQLTerminal/SQLBlock.add_child(row)
+	var pre := Label.new(); pre.text = "WHERE " + data.get("condition1","cond1") + "  "; _style_code_label(pre); row.add_child(pre)
+	_blank = LineEdit.new(); _blank.placeholder_text = "AND / OR"
+	_blank.custom_minimum_size = Vector2(90, 0); _blank.max_length = 3
+	_blank.text_submitted.connect(func(_t): _on_execute()); _style_input(_blank); row.add_child(_blank)
+	var suf := Label.new(); suf.text = "  " + data.get("condition2","cond2") + ";"; _style_code_label(suf); row.add_child(suf)
+	_fill_table($DataTable, data.get("table_headers",[]), data.get("table_rows",[]))
+	_blank.grab_focus()
 
-func _fill_result(c: Node, headers: Array, rows: Array, msg: String) -> void:
-	for ch in c.get_children(): ch.queue_free()
-	var ok: Label = Label.new(); ok.text = "Query executed successfully."; c.add_child(ok)
-	if not headers.is_empty(): c.add_child(_build_table(headers, rows))
-	if not msg.is_empty(): var ml: Label = Label.new(); ml.text = msg; c.add_child(ml)
-	c.visible = true;  $ContinueButton.visible = true
-
-func _fill_error(c: Node, msg: String) -> void:
-	for ch in c.get_children(): ch.queue_free()
-	var lbl: Label = Label.new()
-	lbl.text = "ERROR: " + msg;  lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	c.add_child(lbl);  c.visible = true
+func _on_execute() -> void:
+	if _blank == null: return
+	var val: String = _blank.text.strip_edges()
+	if val.is_empty(): _fill_error($ResultBox, "Type AND or OR."); return
+	if val.to_upper() == _answer.to_upper():
+		_blank.text = _answer
+		_fill_result($ResultBox, _step_data.get("result_headers",[]), _step_data.get("result_rows",[]), _step_data.get("result_msg",""))
+	else:
+		on_wrong.emit()
+		_fill_error($ResultBox, "'" + val + "' is not correct. AND requires both conditions. OR requires either one.")
 
 func _apply_terminal_style(panel: PanelContainer) -> void:
 	var s := StyleBoxFlat.new()
@@ -106,6 +74,41 @@ func _style_input(inp: LineEdit) -> void:
 	inp.add_theme_stylebox_override("focus", fs)
 	inp.add_theme_color_override("font_color", Color(1.0, 0.78, 0.0))
 	inp.add_theme_color_override("font_placeholder_color", Color(1.0, 0.78, 0.0, 0.3))
+
+func _style_code_label(lbl: Label) -> void:
+	lbl.add_theme_font_size_override("font_size", 14)
+	lbl.add_theme_color_override("font_color", Color(0.78, 0.85, 0.95))
+
+func _add_code_line(txt: String) -> void:
+	var lbl := Label.new()
+	lbl.text = txt
+	_style_code_label(lbl)
+	$SQLTerminal/SQLBlock.add_child(lbl)
+
+func _fill_table(c: Node, headers: Array, rows: Array) -> void:
+	for ch in c.get_children(): ch.queue_free()
+	if headers.is_empty(): c.visible = false; return
+	c.visible = true;  c.add_child(_build_table(headers, rows))
+
+func _fill_result(c: Node, headers: Array, rows: Array, msg: String) -> void:
+	for ch in c.get_children(): ch.queue_free()
+	var ok: Label = Label.new()
+	ok.text = "Query executed successfully."
+	ok.add_theme_color_override("font_color", Color("#4ADE80"))
+	c.add_child(ok)
+	if not headers.is_empty(): c.add_child(_build_table(headers, rows))
+	if not msg.is_empty():
+		var ml: Label = Label.new(); ml.text = msg
+		ml.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		ml.add_theme_color_override("font_color", Color(0.80, 0.85, 0.95))
+		c.add_child(ml)
+	c.visible = true;  $ContinueButton.visible = true
+
+func _fill_error(c: Node, msg: String) -> void:
+	for ch in c.get_children(): ch.queue_free()
+	var lbl: Label = Label.new()
+	lbl.text = "ERROR: " + msg;  lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	c.add_child(lbl);  c.visible = true
 
 func _build_table(headers: Array, rows: Array) -> VBoxContainer:
 	var all_rows: Array = [headers] + rows
@@ -129,35 +132,30 @@ func _make_row(cells: Array, is_header: bool, col_min: Array) -> HBoxContainer:
 	row.add_theme_constant_override("separation", 0)
 	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	for i in range(cells.size()):
-		# Highlight the FK/PK linking columns (header row, first column named "id" or ending in "_id")
-		var is_link: bool = is_header and (str(cells[i]) == "id" or str(cells[i]).ends_with("_id"))
-		row.add_child(_cell(str(cells[i]), is_header, col_min[i] if i < col_min.size() else 60.0, is_link))
+		row.add_child(_cell(str(cells[i]), is_header, col_min[i] if i < col_min.size() else 60.0))
 	return row
 
-func _cell(txt: String, is_header: bool, min_w: float, highlight_link: bool = false) -> PanelContainer:
+func _cell(txt: String, is_header: bool, min_w: float) -> PanelContainer:
 	var pc: PanelContainer = PanelContainer.new()
 	pc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	pc.custom_minimum_size   = Vector2(min_w, 0)
 	var s: StyleBoxFlat = StyleBoxFlat.new()
-	s.bg_color     = Color(0.05, 0.09, 0.16) if is_header else Color(0.08, 0.13, 0.2)
+	s.bg_color = Color(0.05, 0.09, 0.16) if is_header else Color(0.08, 0.13, 0.2)
+	if txt == "NULL" and not is_header: s.bg_color = Color(0.18, 0.07, 0.07)
 	s.border_color = Color(0.22, 0.32, 0.45);  s.set_border_width_all(1)
 	s.content_margin_left = 10;  s.content_margin_right  = 10
 	s.content_margin_top  = 5;   s.content_margin_bottom = 5
 	pc.add_theme_stylebox_override("panel", s)
 	var lbl: Label = Label.new();  lbl.text = txt
-	if is_header and highlight_link:
-		lbl.modulate = Color("#4ADE80")  # green = linking key column
-	elif is_header:
-		lbl.modulate = Color(1.0, 0.78, 0.0)
+	if is_header: lbl.modulate = Color(1.0, 0.78, 0.0)
+	elif txt == "NULL": lbl.modulate = Color(0.80, 0.35, 0.35)
 	pc.add_child(lbl);  return pc
 
 func _style_btn(btn: Button, bg: Color, fg: Color) -> void:
 	btn.add_theme_color_override("font_color", fg)
 	var s := StyleBoxFlat.new()
-	s.bg_color = bg
-	s.border_color = Color(0, 0, 0, 0.5)
-	s.set_border_width_all(2)
-	s.set_corner_radius_all(6)
+	s.bg_color = bg; s.border_color = Color(0, 0, 0, 0.5)
+	s.set_border_width_all(2); s.set_corner_radius_all(6)
 	s.content_margin_left = 14; s.content_margin_right  = 14
 	s.content_margin_top  = 6;  s.content_margin_bottom = 6
 	btn.add_theme_stylebox_override("normal", s)
@@ -169,13 +167,10 @@ func _style_btn(btn: Button, bg: Color, fg: Color) -> void:
 func _style_btn_outline(btn: Button, col: Color) -> void:
 	btn.add_theme_color_override("font_color", col)
 	var s := StyleBoxFlat.new()
-	s.bg_color = Color(0, 0, 0, 0)
-	s.border_color = col
-	s.set_border_width_all(2)
-	s.set_corner_radius_all(6)
+	s.bg_color = Color(0, 0, 0, 0); s.border_color = col
+	s.set_border_width_all(2); s.set_corner_radius_all(6)
 	s.content_margin_left = 14; s.content_margin_right  = 14
 	s.content_margin_top  = 6;  s.content_margin_bottom = 6
 	btn.add_theme_stylebox_override("normal", s)
 	var h := s.duplicate() as StyleBoxFlat; h.bg_color = Color(col.r, col.g, col.b, 0.1)
-	btn.add_theme_stylebox_override("hover", h)
-	btn.add_theme_stylebox_override("pressed", h)
+	btn.add_theme_stylebox_override("hover", h); btn.add_theme_stylebox_override("pressed", h)

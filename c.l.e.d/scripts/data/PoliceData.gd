@@ -1063,6 +1063,541 @@ const LESSONS: Dictionary = {
 	{
 		"type": "end"
 	}
+],
+
+# ─────────────────────────────────────────────
+#  LESSON P16 — SELECT DISTINCT  |  NPC: police chief
+# ─────────────────────────────────────────────
+"P16": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",
+	  "text": "The chief wants a summary of what types of cases the station handles — without counting each case individually." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
+	  "text": "I need a list of all distinct case types we have on record. Each type should appear only once." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
+	  "text": "SELECT DISTINCT returns unique values from a column. Duplicate entries are automatically removed." },
+	{ "type": "sql_fill", "gamemode": "select_distinct",
+	  "desc": "Return only the unique case types from the cases table. Fill in the column name after SELECT DISTINCT.",
+	  "table": "cases",
+	  "column": "case_type",
+	  "table_headers": ["id","suspect","case_type","status"],
+	  "table_rows": [["1","Santos","Theft","Open"],["2","Cruz","Vandalism","Closed"],["3","Reyes","Theft","Open"],["4","Lim","Assault","Open"],["5","Garcia","Vandalism","Closed"],["6","Torres","Theft","Open"]],
+	  "hint": "The column with repeating case categories: case_type",
+	  "result_headers": ["case_type"],
+	  "result_rows": [["Theft"],["Vandalism"],["Assault"]],
+	  "result_msg": "3 unique case types. DISTINCT removed repeated Theft and Vandalism entries.",
+	  "fail": [
+		{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/shock", "text": "That column does not exist in the cases table!" },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle", "text": "The column is: case_type" }
+	  ]
+	},
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
+	  "text": "Theft, Vandalism, Assault. DISTINCT gives me a clean category list without manual deduplication." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
+	  "text": "Right. Without DISTINCT you would see Theft three times and Vandalism twice in the results." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON P17 — AND/OR  |  NPC: police chief
+# ─────────────────────────────────────────────
+"P17": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",
+	  "text": "The chief needs to find open theft cases specifically — not just any theft and not just any open case." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
+	  "text": "I need cases where type is 'Theft' AND status is 'Open'. Both conditions must apply at the same time." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
+	  "text": "AND requires both conditions true simultaneously. OR would include any theft OR any open case." },
+	{ "type": "sql_fill", "gamemode": "where_and_or",
+	  "desc": "Find cases where case_type is 'Theft' AND status is 'Open'. Fill in AND or OR.",
+	  "table": "cases",
+	  "condition1": "case_type = 'Theft'",
+	  "condition2": "status = 'Open'",
+	  "answer": "AND",
+	  "table_headers": ["id","suspect","case_type","status"],
+	  "table_rows": [["1","Santos","Theft","Open"],["2","Cruz","Vandalism","Open"],["3","Reyes","Theft","Closed"],["4","Lim","Theft","Open"],["5","Garcia","Assault","Open"]],
+	  "hint": "Both conditions required: AND",
+	  "result_headers": ["id","suspect","case_type","status"],
+	  "result_rows": [["1","Santos","Theft","Open"],["4","Lim","Theft","Open"]],
+	  "result_msg": "2 open theft cases. AND is strict — both conditions must hold. OR would give 4 results.",
+	  "fail": [
+		{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/shock", "text": "Too many results. I need BOTH conditions true — not one or the other." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle", "text": "Both conditions required: AND." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
+	  "text": "Only Santos and Lim — open theft cases. AND narrows the search precisely." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
+	  "text": "OR would include Cruz (open but not theft) and Reyes (theft but closed) — too broad." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON P18 — BETWEEN  |  NPC: police chief
+# ─────────────────────────────────────────────
+"P18": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",
+	  "text": "The chief wants a report on mid-range fines to identify payment compliance patterns." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
+	  "text": "Show me cases where the fine is between 500 and 2000. Include those exact amounts too." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
+	  "text": "BETWEEN filters an inclusive range — 500 and 2000 are included in the results." },
+	{ "type": "sql_fill", "gamemode": "where_between",
+	  "desc": "Find cases where fine_amount is between 500 and 2000. Fill in the range keyword.",
+	  "table": "cases",
+	  "column": "fine_amount",
+	  "low": "500", "high": "2000",
+	  "answer": "BETWEEN",
+	  "table_headers": ["id","suspect","case_type","fine_amount"],
+	  "table_rows": [["1","Santos","Theft","2500"],["2","Cruz","Vandalism","800"],["3","Reyes","Theft","500"],["4","Lim","Assault","300"],["5","Garcia","Vandalism","1500"],["6","Torres","Theft","3000"]],
+	  "hint": "The inclusive range keyword: BETWEEN",
+	  "result_headers": ["id","suspect","case_type","fine_amount"],
+	  "result_rows": [["2","Cruz","Vandalism","800"],["3","Reyes","Theft","500"],["5","Garcia","Vandalism","1500"]],
+	  "result_msg": "3 cases in range. Santos (2500) and Torres (3000) are too high. Lim (300) is too low.",
+	  "fail": [
+		{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/shock", "text": "Wrong keyword. BETWEEN is used for range filtering." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle", "text": "The range keyword is BETWEEN." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
+	  "text": "3 mid-range fines. BETWEEN is more readable than fine_amount >= 500 AND fine_amount <= 2000." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
+	  "text": "BETWEEN also works on dates: WHERE incident_date BETWEEN '2024-01-01' AND '2024-12-31'." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON P19 — LIKE  |  NPC: police chief
+# ─────────────────────────────────────────────
+"P19": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",
+	  "text": "A witness reported a suspect whose last name starts with M. The chief needs all such suspects." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
+	  "text": "Find all suspects whose last name starts with the letter M. We have a partial name match situation." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
+	  "text": "LIKE with 'M%' matches any last name that starts with M, followed by any characters." },
+	{ "type": "sql_fill", "gamemode": "where_like",
+	  "desc": "Find suspects whose last_name starts with 'M'. Fill in the LIKE pattern.",
+	  "table": "suspects",
+	  "column": "last_name",
+	  "answer": "'M%'",
+	  "table_headers": ["id","first_name","last_name"],
+	  "table_rows": [["1","Jose","Mendoza"],["2","Ana","Santos"],["3","Carlos","Mallari"],["4","Linda","Reyes"],["5","Marco","Manalo"],["6","Felix","Torres"]],
+	  "hint": "Starts with M then anything: 'M%'",
+	  "result_headers": ["id","first_name","last_name"],
+	  "result_rows": [["1","Jose","Mendoza"],["3","Carlos","Mallari"],["5","Marco","Manalo"]],
+	  "result_msg": "3 suspects found. Mendoza, Mallari, Manalo all start with M.",
+	  "fail": [
+		{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/shock", "text": "Wrong pattern. To match names starting with M: 'M%'" },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle", "text": "The pattern is: 'M%'" }
+	  ]
+	},
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
+	  "text": "Mendoza, Mallari, Manalo. LIKE handles partial matches that exact WHERE cannot." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
+	  "text": "'%doza' would find names ending with doza. '%end%' would find names containing 'end'." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON P20 — IN  |  NPC: police chief
+# ─────────────────────────────────────────────
+"P20": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",
+	  "text": "The chief wants a report covering only theft and vandalism cases for a community meeting." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
+	  "text": "I only need Theft and Vandalism. Is there a cleaner way than writing two OR conditions?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
+	  "text": "IN lets you check if a column value matches any item in a list. Much cleaner than chained OR." },
+	{ "type": "sql_fill", "gamemode": "where_in",
+	  "desc": "Find cases where case_type is Theft or Vandalism. Fill in the list membership keyword.",
+	  "table": "cases",
+	  "column": "case_type",
+	  "in_list": "('Theft', 'Vandalism')",
+	  "answer": "IN",
+	  "table_headers": ["id","suspect","case_type","status"],
+	  "table_rows": [["1","Santos","Theft","Open"],["2","Cruz","Vandalism","Closed"],["3","Reyes","Assault","Open"],["4","Lim","Theft","Open"],["5","Garcia","Vandalism","Closed"]],
+	  "hint": "The list membership keyword is: IN",
+	  "result_headers": ["id","suspect","case_type","status"],
+	  "result_rows": [["1","Santos","Theft","Open"],["2","Cruz","Vandalism","Closed"],["4","Lim","Theft","Open"],["5","Garcia","Vandalism","Closed"]],
+	  "result_msg": "4 cases found. Reyes (Assault) excluded. IN ('Theft','Vandalism') matches either value.",
+	  "fail": [
+		{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/shock", "text": "Wrong keyword. Use IN to match against a list." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle", "text": "The keyword is IN." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
+	  "text": "4 cases for the report. IN is very useful when filtering against several known values." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
+	  "text": "NOT IN works too — WHERE case_type NOT IN ('Assault') would exclude assault cases." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON P21 — LIMIT  |  NPC: police chief
+# ─────────────────────────────────────────────
+"P21": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",
+	  "text": "The chief wants a quick look at the most recently filed cases without scrolling through hundreds of records." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
+	  "text": "Just show me the first 5 open cases. I want a quick overview, not the full list." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
+	  "text": "LIMIT caps the number of rows returned. It prevents large queries from overwhelming the screen." },
+	{ "type": "sql_fill", "gamemode": "limit",
+	  "desc": "Return only the first 5 cases. Type the number after LIMIT.",
+	  "table": "cases",
+	  "answer": "5",
+	  "table_headers": ["id","suspect","case_type","status"],
+	  "table_rows": [["1","Santos","Theft","Open"],["2","Cruz","Vandalism","Closed"],["3","Reyes","Assault","Open"],["4","Lim","Theft","Open"],["5","Garcia","Vandalism","Closed"],["6","Torres","Theft","Open"],["7","Flores","Assault","Open"]],
+	  "hint": "Show only 5 rows — type: 5",
+	  "result_headers": ["id","suspect","case_type","status"],
+	  "result_rows": [["1","Santos","Theft","Open"],["2","Cruz","Vandalism","Closed"],["3","Reyes","Assault","Open"],["4","Lim","Theft","Open"],["5","Garcia","Vandalism","Closed"]],
+	  "result_msg": "5 cases shown. Torres and Flores were not fetched. LIMIT is essential for large databases.",
+	  "fail": [
+		{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/shock", "text": "That is not 5 cases. Type the number 5." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle", "text": "Type the number 5 after LIMIT." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
+	  "text": "5 cases only — clean overview. LIMIT with ORDER BY id DESC would give the most recent cases first." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
+	  "text": "Exactly. TOP 5 most urgent: ORDER BY priority DESC LIMIT 5." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON P22 — COUNT  |  NPC: police chief
+# ─────────────────────────────────────────────
+"P22": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",
+	  "text": "The precinct report requires the total number of suspects currently in the database." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
+	  "text": "How many suspects do we have on record? Give me a single number for the quarterly report." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
+	  "text": "COUNT is an aggregate function that returns the number of matching rows." },
+	{ "type": "sql_fill", "gamemode": "aggregate",
+	  "desc": "Count the total number of suspects. Fill in the aggregate function name.",
+	  "table": "suspects",
+	  "column": "id",
+	  "answer": "COUNT",
+	  "table_headers": ["id","first_name","last_name","case_id"],
+	  "table_rows": [["1","Jose","Mendoza","1"],["2","Ana","Santos","2"],["3","Carlos","Mallari","3"],["4","Linda","Reyes","4"],["5","Marco","Manalo","5"]],
+	  "hint": "To count rows: COUNT",
+	  "result_headers": ["COUNT(id)"],
+	  "result_rows": [["5"]],
+	  "result_msg": "5 suspects on record.\n\nOther aggregate functions:\n- SUM(fine_amount) totals all fines collected\n- AVG(fine_amount) finds the average fine",
+	  "fail": [
+		{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/shock", "text": "Wrong function. To count rows: COUNT." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle", "text": "The counting function is COUNT." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
+	  "text": "5 suspects. COUNT is my go-to for quick census queries." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
+	  "text": "SELECT SUM(fine_amount) gives total fines issued. AVG shows the average fine per case." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON P23 — HAVING  |  NPC: police chief
+# ─────────────────────────────────────────────
+"P23": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",
+	  "text": "The chief wants to identify case types that have more than 2 reported incidents — a crime trend report." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
+	  "text": "I grouped by case_type but need to filter out types with only 1 or 2 cases. WHERE won't work here." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
+	  "text": "Use HAVING — it filters after GROUP BY. WHERE cannot reference aggregate results like COUNT." },
+	{ "type": "sql_fill", "gamemode": "having",
+	  "desc": "Show case types with more than 2 incidents. Fill in the aggregate function in HAVING.",
+	  "table": "cases",
+	  "group_col": "case_type",
+	  "answer": "COUNT",
+	  "table_headers": ["id","suspect","case_type"],
+	  "table_rows": [["1","Santos","Theft"],["2","Cruz","Vandalism"],["3","Reyes","Theft"],["4","Lim","Assault"],["5","Garcia","Theft"],["6","Torres","Vandalism"]],
+	  "hint": "HAVING filters groups using: COUNT",
+	  "result_headers": ["case_type","COUNT(*)"],
+	  "result_rows": [["Theft","3"]],
+	  "result_msg": "Only Theft has more than 2 cases. Vandalism has 2 (not more than 2). Assault has 1.",
+	  "fail": [
+		{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/shock", "text": "Wrong function in HAVING. Use COUNT to filter by group size." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle", "text": "HAVING uses COUNT." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
+	  "text": "Theft is the dominant crime type. HAVING let me filter groups that WHERE cannot reach." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
+	  "text": "Think of it as: WHERE = filter rows first, GROUP BY = form groups, HAVING = filter the groups." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON P24 — AS (Aliases)  |  NPC: police chief
+# ─────────────────────────────────────────────
+"P24": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",
+	  "text": "The chief needs a readable report showing fine discounts — but the expression name is messy." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
+	  "text": "The column shows 'fine_amount * 0.1' instead of a proper label. Can we rename it in the output?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
+	  "text": "AS gives a column a display alias. It only changes the label in output — the table is untouched." },
+	{ "type": "sql_fill", "gamemode": "select_alias",
+	  "desc": "Rename the calculated column to 'discount_amount'. Fill in the alias name after AS.",
+	  "table": "cases",
+	  "col_expr": "fine_amount * 0.1",
+	  "answer": "discount_amount",
+	  "table_headers": ["id","suspect","fine_amount"],
+	  "table_rows": [["1","Santos","2500"],["2","Cruz","800"],["3","Reyes","500"]],
+	  "hint": "The alias for the discount column: discount_amount",
+	  "result_headers": ["discount_amount"],
+	  "result_rows": [["250.0"],["80.0"],["50.0"]],
+	  "result_msg": "Column displays as 'discount_amount'. AS is purely cosmetic — fine_amount is unchanged in the table.",
+	  "fail": [
+		{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/shock", "text": "Wrong alias. The alias should be: discount_amount" },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle", "text": "Type the alias: discount_amount" }
+	  ]
+	},
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
+	  "text": "Readable report! AS is useful for any calculated column that would otherwise have an ugly name." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
+	  "text": "You can also alias table names: FROM cases AS c — shortens long JOIN queries." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON P25 — NOT NULL + UNIQUE  |  NPC: adult_5 citizen
+# ─────────────────────────────────────────────
+"P25": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "adult_5/idle",
+	  "text": "A citizen asks the desk officer about how case records are protected from incomplete or duplicate data." },
+	{ "type": "dialogue", "char": "citizen", "name": "CITIZEN", "npc": "adult_5/talk",
+	  "text": "What happens if an officer files a case without a reporter name? Or if two cases get the same badge number?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_5/idle",
+	  "text": "Column constraints! NOT NULL blocks empty values. UNIQUE blocks duplicates." },
+	{ "type": "sql_fill", "gamemode": "create_table",
+	  "desc": "The reporter_name column must always have a value. Add the NOT NULL constraint.",
+	  "table": "cases",
+	  "pk_col": "reporter_name",
+	  "columns": [["id","INT PRIMARY KEY"],["case_type","TEXT"],["reporter_name","TEXT"]],
+	  "answer": "NOT NULL",
+	  "blank_hint": "constraint",
+	  "error_hint": "The constraint that prevents empty values is NOT NULL.",
+	  "result_msg": "NOT NULL set! Cases without a reporter_name will now be rejected.",
+	  "hint": "Prevent empty values: NOT NULL",
+	  "fail": [
+		{ "type": "dialogue", "char": "citizen", "name": "CITIZEN", "npc": "adult_5/confuse", "text": "That is not right. NOT NULL prevents empty values." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_5/idle", "text": "Type: NOT NULL" }
+	  ]
+	},
+	{ "type": "dialogue", "char": "citizen", "name": "CITIZEN", "npc": "adult_5/talk",
+	  "text": "Good. And how do we stop two officers from having the same badge number?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_5/idle",
+	  "text": "UNIQUE constraint — no two rows can share the same value in that column." },
+	{ "type": "sql_fill", "gamemode": "create_table",
+	  "desc": "The badge_number must be unique per officer. Add the UNIQUE constraint.",
+	  "table": "officers",
+	  "pk_col": "badge_number",
+	  "columns": [["id","INT PRIMARY KEY"],["name","TEXT"],["badge_number","TEXT"]],
+	  "answer": "UNIQUE",
+	  "blank_hint": "constraint",
+	  "error_hint": "The constraint that prevents duplicate values is UNIQUE.",
+	  "result_msg": "UNIQUE set! Duplicate badge numbers will now be rejected on INSERT.",
+	  "hint": "Prevent duplicate values: UNIQUE",
+	  "fail": [
+		{ "type": "dialogue", "char": "citizen", "name": "CITIZEN", "npc": "adult_5/confuse", "text": "Wrong. UNIQUE prevents duplicate values in a column." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_5/idle", "text": "Type: UNIQUE" }
+	  ]
+	},
+	{ "type": "dialogue", "char": "citizen", "name": "CITIZEN", "npc": "adult_5/talk",
+	  "text": "NOT NULL stops blanks, UNIQUE stops duplicates. The database enforces its own rules." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_5/idle",
+	  "text": "Combine them: badge_number TEXT NOT NULL UNIQUE — mandatory and always different." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON P26 — ALTER TABLE  |  NPC: police chief
+# ─────────────────────────────────────────────
+"P26": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",
+	  "text": "The precinct's case management system needs a priority column that was forgotten in the original design." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
+	  "text": "We need to add a priority column to cases. Can we do that without losing existing case records?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
+	  "text": "ALTER TABLE ADD is the safe way. It adds a column without touching existing rows." },
+	{ "type": "sql_fill", "gamemode": "alter_table",
+	  "desc": "Add a priority column to the cases table. Fill in the keyword that adds a column.",
+	  "table": "cases",
+	  "new_col": "priority",
+	  "col_type": "TEXT",
+	  "answer": "ADD",
+	  "hint": "The keyword to add a column: ADD",
+	  "result_msg": "priority column added! Existing case records are preserved — ADD is non-destructive.",
+	  "fail": [
+		{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/shock", "text": "Wrong keyword. Use: ALTER TABLE cases ADD priority TEXT" },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle", "text": "The keyword is ADD." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
+	  "text": "Priority column added and all 500 existing cases are intact. ALTER TABLE is how we grow the schema." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
+	  "text": "You can also RENAME COLUMN or DROP COLUMN with ALTER TABLE to fix naming mistakes." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON P27 — DROP TABLE  |  NPC: police chief
+# ─────────────────────────────────────────────
+"P27": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",
+	  "text": "A database cleanup is underway. The temporary evidence log from last year is no longer needed." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
+	  "text": "The temp_evidence table is outdated. Can we remove it completely from the system?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
+	  "text": "DROP TABLE permanently deletes the table structure and all its data. This is irreversible." },
+	{ "type": "sql_fill", "gamemode": "drop_table",
+	  "desc": "Remove the temp_evidence table permanently. Fill in the keyword after DROP.",
+	  "table": "temp_evidence",
+	  "answer": "TABLE",
+	  "hint": "After DROP, the keyword to remove a table: TABLE",
+	  "result_msg": "temp_evidence dropped! Always create a backup before using DROP TABLE in production.",
+	  "fail": [
+		{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/shock", "text": "Wrong keyword. The syntax is: DROP TABLE table_name" },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle", "text": "Type TABLE after DROP." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
+	  "text": "Table removed. DROP TABLE is the most destructive SQL command — always double-check first." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
+	  "text": "Safety tip: DROP TABLE IF EXISTS temp_evidence will not throw an error if the table is already gone." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON P28 — LEFT JOIN  |  NPC: police chief
+# ─────────────────────────────────────────────
+"P28": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",
+	  "text": "The chief wants a full roster of officers — including those not yet assigned to any case." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
+	  "text": "A regular JOIN only shows officers WITH assignments. I need ALL officers — unassigned ones must appear too." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
+	  "text": "LEFT JOIN returns all rows from the left table plus matches from the right. No match becomes NULL." },
+	{ "type": "sql_fill", "gamemode": "join",
+	  "join_type": "LEFT JOIN",
+	  "desc": "LEFT JOIN officers with assignments. All officers appear even without an assignment. Fill in the linking column names.",
+	  "table_a": "officers", "table_b": "assignments",
+	  "table_a_headers": ["id","name","rank"],
+	  "table_a_rows": [["1","Santos","Sergeant"],["2","Cruz","Officer"],["3","Reyes","Detective"],["4","Lim","Officer"]],
+	  "table_b_headers": ["id","officer_id","case_id"],
+	  "table_b_rows": [["1","1","101"],["2","3","102"]],
+	  "join_col_a": "id", "join_col_b": "officer_id",
+	  "hint": "officers linking column: id | assignments linking column: officer_id",
+	  "result_headers": ["name","rank","case_id"],
+	  "result_rows": [["Santos","Sergeant","101"],["Cruz","Officer","NULL"],["Reyes","Detective","102"],["Lim","Officer","NULL"]],
+	  "result_msg": "All 4 officers shown. Cruz and Lim have no assignments — their case_id is NULL.",
+	  "fail": [
+		{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/shock", "text": "Wrong linking columns! officers.id connects to assignments.officer_id." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle", "text": "Left: id | Right: officer_id" }
+	  ]
+	},
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
+	  "text": "Full roster! Cruz and Lim are available — LEFT JOIN revealed officers with no current assignment." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
+	  "text": "INNER JOIN would hide Cruz and Lim. LEFT JOIN = all left rows, matching or not." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON P29 — DEFAULT  |  NPC: adult_5 citizen
+# ─────────────────────────────────────────────
+"P29": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "adult_5/idle",
+	  "text": "A citizen filing a report asks why new suspects automatically show 'Under Investigation'." },
+	{ "type": "dialogue", "char": "citizen", "name": "CITIZEN", "npc": "adult_5/talk",
+	  "text": "Every new suspect record shows 'Under Investigation' without the officer typing it. Is that a database feature?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_5/idle",
+	  "text": "Yes! The DEFAULT constraint sets an automatic value when no value is provided on INSERT." },
+	{ "type": "sql_fill", "gamemode": "create_table",
+	  "desc": "Set suspects.status to auto-fill with 'Under Investigation'. Type: DEFAULT 'Under Investigation'",
+	  "table": "suspects",
+	  "pk_col": "status",
+	  "columns": [["id","INT PRIMARY KEY"],["name","TEXT"],["case_id","INT"],["status","TEXT"]],
+	  "answer": "DEFAULT 'Under Investigation'",
+	  "blank_hint": "constraint",
+	  "error_hint": "The syntax is: DEFAULT 'value'",
+	  "result_msg": "DEFAULT set! New suspects automatically get 'Under Investigation' status on INSERT.",
+	  "hint": "Auto-fill status: DEFAULT 'Under Investigation'",
+	  "fail": [
+		{ "type": "dialogue", "char": "citizen", "name": "CITIZEN", "npc": "adult_5/confuse", "text": "Not quite. DEFAULT sets the automatic fallback value." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_5/idle", "text": "Type: DEFAULT 'Under Investigation'" }
+	  ]
+	},
+	{ "type": "dialogue", "char": "citizen", "name": "CITIZEN", "npc": "adult_5/talk",
+	  "text": "So DEFAULT is just the starting value until an officer updates it to 'Cleared' or 'Charged'?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_5/idle",
+	  "text": "Exactly. DEFAULT reduces data entry errors by providing a safe starting state automatically." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON P30 — Normalization  |  NPC: adult_5 citizen
+# ─────────────────────────────────────────────
+"P30": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "adult_5/idle",
+	  "text": "A citizen who works in IT spots something wrong with the old case filing system." },
+	{ "type": "dialogue", "char": "citizen", "name": "CITIZEN", "npc": "adult_5/talk",
+	  "text": "The old system stored the officer's precinct address in every single case record. When the precinct moved, they had to update thousands of rows!" },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_5/idle",
+	  "text": "That is the classic redundancy problem. Database normalization was designed to solve exactly this." },
+	{ "type": "sql_choice",
+	  "desc": "A cases table stores officer_name, officer_precinct_address, case_type in EVERY row. What is the main design problem?",
+	  "options": [
+		[1, "Data redundancy — officer precinct address repeats in every case, causing update anomalies."],
+		[2, "The table has too many indexes. Remove some to fix it."],
+		[3, "A LIMIT clause is missing from the SELECT query on this table."]
+	  ],
+	  "correct_id": 1,
+	  "hint": "Repeated data across rows is called redundancy. Answer: id = 1",
+	  "fail": [
+		{ "type": "dialogue", "char": "citizen", "name": "CITIZEN", "npc": "adult_5/confuse", "text": "Not right. The repeated data problem is called redundancy." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_5/idle", "text": "Answer 1 — data redundancy is the issue." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_5/idle",
+	  "text": "Normalization splits officer data into its own table. Cases just store officer_id as a reference." },
+	{ "type": "dialogue", "char": "citizen", "name": "CITIZEN", "npc": "adult_5/talk",
+	  "text": "One update to the officers table fixes the address across all cases. That is so much cleaner!" },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_5/idle",
+	  "text": "3NF — third normal form. Each fact is stored once and referenced by ID everywhere else." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON P31 — Transactions  |  NPC: police chief
+# ─────────────────────────────────────────────
+"P31": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",
+	  "text": "A system crash occurred during a case transfer — the case was removed from one officer but never assigned to the new one." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
+	  "text": "The case is in limbo — nobody is handling it. How do we ensure the transfer is all-or-nothing next time?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
+	  "text": "Transactions! BEGIN wraps multiple statements. COMMIT saves all or ROLLBACK cancels all." },
+	{ "type": "sql_fill", "gamemode": "transaction",
+	  "desc": "The case transfer UPDATE is done. COMMIT to save both changes permanently.",
+	  "update_line": "UPDATE cases SET officer_id = 3 WHERE case_id = 101",
+	  "answer": "COMMIT",
+	  "hint": "To save a transaction: COMMIT",
+	  "result_msg": "Transaction committed! Case transfer saved atomically.\n\nACID guarantee:\n- Atomicity: both operations complete or neither does\n- Consistency: case always has exactly one officer\n- Durability: changes survive crashes after COMMIT",
+	  "fail": [
+		{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/shock", "text": "Wrong! Type COMMIT to save or ROLLBACK to cancel." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle", "text": "Type COMMIT to finalize." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
+	  "text": "Transfer committed! If anything had failed before COMMIT, ROLLBACK would undo both steps." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
+	  "text": "ACID properties are why databases are trusted for critical systems like law enforcement records." },
+	{ "type": "end" }
 ]
 
 } # end LESSONS

@@ -58,7 +58,7 @@ func setup(data: Dictionary) -> void:
 			row.add_child(indent)
 
 			_blank = LineEdit.new()
-			_blank.placeholder_text = "constraint"
+			_blank.placeholder_text = data.get("blank_hint", "constraint")
 			_blank.custom_minimum_size = Vector2(160, 0)
 			_blank.max_length = 20
 			_blank.text_submitted.connect(func(_t): _on_execute())
@@ -101,7 +101,7 @@ func _on_execute() -> void:
 			"Table created successfully! The PRIMARY KEY column will always be unique and never NULL."))
 	else:
 		on_wrong.emit()
-		_fill_error($ResultBox, "'" + val + "' is not correct. The unique row constraint is called PRIMARY KEY.")
+		_fill_error($ResultBox, "'" + val + "' is not correct. " + _step_data.get("error_hint", "The unique row constraint is called PRIMARY KEY."))
 
 func _on_hint()     -> void: $HintLabel.visible = true
 func _on_continue() -> void: on_correct.emit()

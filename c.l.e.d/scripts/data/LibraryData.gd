@@ -1073,6 +1073,541 @@ const LESSONS: Dictionary = {
 	{
 		"type": "end"
 	}
+],
+
+# ─────────────────────────────────────────────
+#  LESSON L16 — SELECT DISTINCT  |  NPC: librarian
+# ─────────────────────────────────────────────
+"L16": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/librarian/idle",
+	  "text": "The head librarian needs a clean list of every genre available in the library's catalog." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "We have hundreds of books but I want each genre listed only once. No duplicates — just the distinct categories." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
+	  "text": "SELECT DISTINCT removes duplicate values. Each unique genre appears exactly once in the result." },
+	{ "type": "sql_fill", "gamemode": "select_distinct",
+	  "desc": "Return only the unique genres from the books table. Fill in the column name after SELECT DISTINCT.",
+	  "table": "books",
+	  "column": "genre",
+	  "table_headers": ["id","title","author","genre"],
+	  "table_rows": [["1","Dune","Herbert","Sci-Fi"],["2","1984","Orwell","Fiction"],["3","Foundation","Asimov","Sci-Fi"],["4","Hamlet","Shakespeare","Drama"],["5","Neuromancer","Gibson","Sci-Fi"],["6","Macbeth","Shakespeare","Drama"]],
+	  "hint": "The column with repeating genres: genre",
+	  "result_headers": ["genre"],
+	  "result_rows": [["Sci-Fi"],["Fiction"],["Drama"]],
+	  "result_msg": "3 unique genres. DISTINCT collapsed 3 Sci-Fi and 2 Drama entries into one each.",
+	  "fail": [
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "That column does not exist in the books table!" },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle", "text": "The column is: genre" }
+	  ]
+	},
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "Sci-Fi, Fiction, Drama. DISTINCT is exactly what I needed for the genre catalogue display." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
+	  "text": "Without DISTINCT you would see Sci-Fi three times and Drama twice, which looks unprofessional." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON L17 — AND/OR  |  NPC: librarian
+# ─────────────────────────────────────────────
+"L17": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/librarian/idle",
+	  "text": "A display shelf needs to show available books in the Sci-Fi genre only." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "I need books where genre is Sci-Fi AND status is Available. Both conditions together." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
+	  "text": "AND requires both conditions true. OR would return Sci-Fi books OR any available book — too broad." },
+	{ "type": "sql_fill", "gamemode": "where_and_or",
+	  "desc": "Find available Sci-Fi books. Fill in AND or OR.",
+	  "table": "books",
+	  "condition1": "genre = 'Sci-Fi'",
+	  "condition2": "status = 'Available'",
+	  "answer": "AND",
+	  "table_headers": ["id","title","genre","status"],
+	  "table_rows": [["1","Dune","Sci-Fi","Available"],["2","1984","Fiction","Available"],["3","Foundation","Sci-Fi","Borrowed"],["4","Neuromancer","Sci-Fi","Available"],["5","Hamlet","Drama","Available"]],
+	  "hint": "Both conditions required: AND",
+	  "result_headers": ["id","title","genre","status"],
+	  "result_rows": [["1","Dune","Sci-Fi","Available"],["4","Neuromancer","Sci-Fi","Available"]],
+	  "result_msg": "2 available Sci-Fi books. Foundation (Sci-Fi but Borrowed) and 1984 (Available but not Sci-Fi) are excluded.",
+	  "fail": [
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "Too many results! I need Sci-Fi AND Available — both at once." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle", "text": "Both conditions required: AND." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "Dune and Neuromancer only. AND ensures both conditions apply simultaneously." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
+	  "text": "OR would include every available book and every Sci-Fi book regardless of the other condition." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON L18 — BETWEEN  |  NPC: librarian
+# ─────────────────────────────────────────────
+"L18": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/librarian/idle",
+	  "text": "The librarian is creating a display for books published in a specific era." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "I want all books published between 1950 and 1990. Including those exact years." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
+	  "text": "BETWEEN is perfect — it is inclusive at both ends, so 1950 and 1990 are included." },
+	{ "type": "sql_fill", "gamemode": "where_between",
+	  "desc": "Find books published between 1950 and 1990. Fill in the range keyword.",
+	  "table": "books",
+	  "column": "year_published",
+	  "low": "1950", "high": "1990",
+	  "answer": "BETWEEN",
+	  "table_headers": ["id","title","author","year_published"],
+	  "table_rows": [["1","Dune","Herbert","1965"],["2","Hamlet","Shakespeare","1603"],["3","1984","Orwell","1949"],["4","Foundation","Asimov","1951"],["5","Neuromancer","Gibson","1984"],["6","Brave New World","Huxley","1932"]],
+	  "hint": "The inclusive range keyword: BETWEEN",
+	  "result_headers": ["id","title","author","year_published"],
+	  "result_rows": [["1","Dune","Herbert","1965"],["4","Foundation","Asimov","1951"],["5","Neuromancer","Gibson","1984"]],
+	  "result_msg": "3 books found. 1984 (Orwell, 1949) and Hamlet (1603) and Brave New World (1932) are outside the range.",
+	  "fail": [
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "Wrong keyword! The inclusive range keyword is BETWEEN." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle", "text": "The range keyword is BETWEEN." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "Dune, Foundation, Neuromancer — the mid-century shelf is ready." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
+	  "text": "BETWEEN also works with dates: WHERE borrow_date BETWEEN '2024-01-01' AND '2024-06-30'." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON L19 — LIKE  |  NPC: librarian
+# ─────────────────────────────────────────────
+"L19": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/librarian/idle",
+	  "text": "A visitor partially remembers a book title — it starts with 'The' but they cannot recall the rest." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "How do we search for books when we only know part of the title?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
+	  "text": "LIKE with a wildcard. 'The%' matches any title starting with 'The' followed by anything." },
+	{ "type": "sql_fill", "gamemode": "where_like",
+	  "desc": "Find books whose title starts with 'The'. Fill in the LIKE pattern.",
+	  "table": "books",
+	  "column": "title",
+	  "answer": "'The%'",
+	  "table_headers": ["id","title","author"],
+	  "table_rows": [["1","The Hobbit","Tolkien"],["2","Dune","Herbert"],["3","The Name of the Wind","Rothfuss"],["4","1984","Orwell"],["5","The Martian","Weir"],["6","Foundation","Asimov"]],
+	  "hint": "Starts with 'The' then anything: 'The%'",
+	  "result_headers": ["id","title","author"],
+	  "result_rows": [["1","The Hobbit","Tolkien"],["3","The Name of the Wind","Rothfuss"],["5","The Martian","Weir"]],
+	  "result_msg": "3 books found. Dune, 1984, and Foundation do not start with 'The'.",
+	  "fail": [
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "Wrong pattern. For titles starting with 'The': 'The%'" },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle", "text": "The pattern is: 'The%'" }
+	  ]
+	},
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "The Hobbit, The Name of the Wind, The Martian. LIKE is essential for partial-title searches." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
+	  "text": "'%wind%' would find any title containing the word 'wind' anywhere in the title." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON L20 — IN  |  NPC: librarian
+# ─────────────────────────────────────────────
+"L20": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/librarian/idle",
+	  "text": "A reading club needs books only from certain specific genres for their next meeting." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "I need books from Sci-Fi, Fantasy, or Mystery only. Is there a cleaner way than three OR conditions?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
+	  "text": "IN lets you match against a list of values in one clean expression." },
+	{ "type": "sql_fill", "gamemode": "where_in",
+	  "desc": "Find books in Sci-Fi, Fantasy, or Mystery. Fill in the list membership keyword.",
+	  "table": "books",
+	  "column": "genre",
+	  "in_list": "('Sci-Fi', 'Fantasy', 'Mystery')",
+	  "answer": "IN",
+	  "table_headers": ["id","title","genre"],
+	  "table_rows": [["1","Dune","Sci-Fi"],["2","Hamlet","Drama"],["3","The Hobbit","Fantasy"],["4","1984","Fiction"],["5","Sherlock Holmes","Mystery"],["6","Foundation","Sci-Fi"]],
+	  "hint": "The list membership keyword is: IN",
+	  "result_headers": ["id","title","genre"],
+	  "result_rows": [["1","Dune","Sci-Fi"],["3","The Hobbit","Fantasy"],["5","Sherlock Holmes","Mystery"],["6","Foundation","Sci-Fi"]],
+	  "result_msg": "4 books found. Hamlet (Drama) and 1984 (Fiction) not in the specified genres.",
+	  "fail": [
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "Wrong keyword. Use IN to match against a list." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle", "text": "The keyword is IN." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "4 books for the reading club. IN is cleaner than genre='Sci-Fi' OR genre='Fantasy' OR genre='Mystery'." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
+	  "text": "NOT IN ('Drama','Fiction') would give the same result by exclusion — both approaches work." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON L21 — LIMIT  |  NPC: librarian
+# ─────────────────────────────────────────────
+"L21": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/librarian/idle",
+	  "text": "The library website needs a 'Recently Added' section showing only the top 5 books." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "We cannot display all 5000 books on the homepage. I just need the first 5 for the preview." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
+	  "text": "LIMIT restricts how many rows are returned. LIMIT 5 returns at most 5 rows." },
+	{ "type": "sql_fill", "gamemode": "limit",
+	  "desc": "Return only the first 5 books from the catalog. Type the number after LIMIT.",
+	  "table": "books",
+	  "answer": "5",
+	  "table_headers": ["id","title","author","genre"],
+	  "table_rows": [["1","Dune","Herbert","Sci-Fi"],["2","1984","Orwell","Fiction"],["3","The Hobbit","Tolkien","Fantasy"],["4","Foundation","Asimov","Sci-Fi"],["5","Hamlet","Shakespeare","Drama"],["6","Neuromancer","Gibson","Sci-Fi"],["7","Sherlock Holmes","Doyle","Mystery"]],
+	  "hint": "Show only 5 rows — type: 5",
+	  "result_headers": ["id","title","author","genre"],
+	  "result_rows": [["1","Dune","Herbert","Sci-Fi"],["2","1984","Orwell","Fiction"],["3","The Hobbit","Tolkien","Fantasy"],["4","Foundation","Asimov","Sci-Fi"],["5","Hamlet","Shakespeare","Drama"]],
+	  "result_msg": "5 books shown. Neuromancer and Sherlock Holmes not fetched. LIMIT keeps queries fast.",
+	  "fail": [
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "That is not 5 books. Type the number 5." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle", "text": "Type the number 5 after LIMIT." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "5 books for the homepage. LIMIT with ORDER BY date_added DESC would give the newest books." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
+	  "text": "LIMIT is also used for pagination: LIMIT 10 OFFSET 20 returns books 21–30." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON L22 — COUNT  |  NPC: librarian
+# ─────────────────────────────────────────────
+"L22": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/librarian/idle",
+	  "text": "The annual report needs the total number of books in the library's collection." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "How many books do we have total? I need a single number for the board of trustees." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
+	  "text": "COUNT is an aggregate function that counts the number of rows in the result." },
+	{ "type": "sql_fill", "gamemode": "aggregate",
+	  "desc": "Count the total number of books. Fill in the aggregate function name.",
+	  "table": "books",
+	  "column": "id",
+	  "answer": "COUNT",
+	  "table_headers": ["id","title","author","genre"],
+	  "table_rows": [["1","Dune","Herbert","Sci-Fi"],["2","1984","Orwell","Fiction"],["3","The Hobbit","Tolkien","Fantasy"],["4","Foundation","Asimov","Sci-Fi"],["5","Hamlet","Shakespeare","Drama"]],
+	  "hint": "To count rows: COUNT",
+	  "result_headers": ["COUNT(id)"],
+	  "result_rows": [["5"]],
+	  "result_msg": "5 books in the catalog.\n\nOther aggregate functions:\n- SUM(pages) totals all page counts\n- AVG(year_published) finds the average publication year",
+	  "fail": [
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "Wrong function. COUNT is used to count rows." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle", "text": "The counting function is COUNT." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "5 books — though in reality we have thousands. COUNT(*) counts all rows including NULLs." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
+	  "text": "COUNT(column) skips NULL values. COUNT(*) counts every row regardless of NULLs." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON L23 — HAVING  |  NPC: librarian
+# ─────────────────────────────────────────────
+"L23": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/librarian/idle",
+	  "text": "The librarian wants to find genres that have more than 2 books — to plan the display shelves." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "I grouped by genre but now I need to filter out genres with only 1 or 2 books. WHERE cannot do that." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
+	  "text": "HAVING filters after GROUP BY. It can use aggregate results like COUNT(*) > 2." },
+	{ "type": "sql_fill", "gamemode": "having",
+	  "desc": "Show genres with more than 2 books. Fill in the aggregate function in HAVING.",
+	  "table": "books",
+	  "group_col": "genre",
+	  "answer": "COUNT",
+	  "table_headers": ["id","title","genre"],
+	  "table_rows": [["1","Dune","Sci-Fi"],["2","Hamlet","Drama"],["3","Foundation","Sci-Fi"],["4","1984","Fiction"],["5","Neuromancer","Sci-Fi"],["6","Macbeth","Drama"]],
+	  "hint": "HAVING filters groups using: COUNT",
+	  "result_headers": ["genre","COUNT(*)"],
+	  "result_rows": [["Sci-Fi","3"]],
+	  "result_msg": "Only Sci-Fi has more than 2 books. Drama has exactly 2 (not more). Fiction has 1.",
+	  "fail": [
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "Wrong function in HAVING. COUNT filters by group size." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle", "text": "HAVING uses COUNT." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "Sci-Fi is the biggest section with 3 books. HAVING is the WHERE for groups." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
+	  "text": "Remember: WHERE filters rows, GROUP BY groups them, HAVING filters the groups." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON L24 — AS (Aliases)  |  NPC: librarian
+# ─────────────────────────────────────────────
+"L24": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/librarian/idle",
+	  "text": "A borrower report needs to show overdue fees in a clearly labeled column." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "The calculated column shows 'overdue_days * 0.50' — that is not user-friendly at all." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
+	  "text": "AS renames the column in the output. It does not change the table, only the display label." },
+	{ "type": "sql_fill", "gamemode": "select_alias",
+	  "desc": "Rename the calculated column to 'late_fee'. Fill in the alias name after AS.",
+	  "table": "borrowers",
+	  "col_expr": "overdue_days * 0.50",
+	  "answer": "late_fee",
+	  "table_headers": ["id","name","overdue_days"],
+	  "table_rows": [["1","Mendez","10"],["2","Santos","4"],["3","Reyes","0"]],
+	  "hint": "The alias for the fee column: late_fee",
+	  "result_headers": ["late_fee"],
+	  "result_rows": [["5.0"],["2.0"],["0.0"]],
+	  "result_msg": "Column displays as 'late_fee'. AS is cosmetic — overdue_days is unchanged in the table.",
+	  "fail": [
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "Wrong alias. The alias should be: late_fee" },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle", "text": "Type the alias: late_fee" }
+	  ]
+	},
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "late_fee is clear and readable. AS makes reports professional without touching the schema." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
+	  "text": "You can also alias table names in joins: FROM borrowers AS b — saves typing in long queries." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON L25 — NOT NULL + UNIQUE  |  NPC: adult_7 visitor
+# ─────────────────────────────────────────────
+"L25": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "adult_7/idle",
+	  "text": "A library visitor wonders how the system prevents missing or duplicated borrower card numbers." },
+	{ "type": "dialogue", "char": "visitor", "name": "VISITOR", "npc": "adult_7/talk",
+	  "text": "Can someone register a library card without giving their name? Or have the same card number twice?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_7/idle",
+	  "text": "Database constraints prevent both. NOT NULL blocks empty names. UNIQUE blocks duplicate card numbers." },
+	{ "type": "sql_fill", "gamemode": "create_table",
+	  "desc": "The borrower_name must always have a value. Add the NOT NULL constraint.",
+	  "table": "borrowers",
+	  "pk_col": "borrower_name",
+	  "columns": [["id","INT PRIMARY KEY"],["borrower_name","TEXT"],["card_number","TEXT"]],
+	  "answer": "NOT NULL",
+	  "blank_hint": "constraint",
+	  "error_hint": "The constraint that prevents empty values is NOT NULL.",
+	  "result_msg": "NOT NULL set! Borrowers without a name will be rejected on INSERT.",
+	  "hint": "Prevent empty values: NOT NULL",
+	  "fail": [
+		{ "type": "dialogue", "char": "visitor", "name": "VISITOR", "npc": "adult_7/confuse", "text": "Not right. NOT NULL prevents empty values." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_7/idle", "text": "Type: NOT NULL" }
+	  ]
+	},
+	{ "type": "dialogue", "char": "visitor", "name": "VISITOR", "npc": "adult_7/talk",
+	  "text": "And how do we prevent two people from having the same card number?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_7/idle",
+	  "text": "UNIQUE ensures no two rows share the same value in that column." },
+	{ "type": "sql_fill", "gamemode": "create_table",
+	  "desc": "The card_number must be unique per borrower. Add the UNIQUE constraint.",
+	  "table": "borrowers",
+	  "pk_col": "card_number",
+	  "columns": [["id","INT PRIMARY KEY"],["borrower_name","TEXT"],["card_number","TEXT"]],
+	  "answer": "UNIQUE",
+	  "blank_hint": "constraint",
+	  "error_hint": "The constraint that prevents duplicate values is UNIQUE.",
+	  "result_msg": "UNIQUE set! Duplicate card numbers will now be rejected.",
+	  "hint": "Prevent duplicate values: UNIQUE",
+	  "fail": [
+		{ "type": "dialogue", "char": "visitor", "name": "VISITOR", "npc": "adult_7/confuse", "text": "Wrong. UNIQUE prevents duplicates." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_7/idle", "text": "Type: UNIQUE" }
+	  ]
+	},
+	{ "type": "dialogue", "char": "visitor", "name": "VISITOR", "npc": "adult_7/talk",
+	  "text": "NOT NULL stops blanks and UNIQUE stops duplicates. The rules are built right into the table." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_7/idle",
+	  "text": "You can even combine them: card_number TEXT NOT NULL UNIQUE — mandatory and always different." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON L26 — ALTER TABLE  |  NPC: librarian
+# ─────────────────────────────────────────────
+"L26": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/librarian/idle",
+	  "text": "The library is tracking the physical shelf location of books — but the original table has no such column." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "We forgot to include a shelf_location column when we built the books table. Can we add it now?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
+	  "text": "ALTER TABLE ADD adds a new column to an existing table without disturbing existing records." },
+	{ "type": "sql_fill", "gamemode": "alter_table",
+	  "desc": "Add a shelf_location column to the books table. Fill in the keyword that adds a column.",
+	  "table": "books",
+	  "new_col": "shelf_location",
+	  "col_type": "TEXT",
+	  "answer": "ADD",
+	  "hint": "The keyword to add a column: ADD",
+	  "result_msg": "shelf_location column added! All existing book records are preserved.",
+	  "fail": [
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "Wrong keyword. The syntax is: ALTER TABLE books ADD shelf_location TEXT" },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle", "text": "The keyword is ADD." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "shelf_location added — all 3000 books still have their original data intact." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
+	  "text": "Existing rows get NULL for the new column unless you specify a DEFAULT value." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON L27 — DROP TABLE  |  NPC: librarian
+# ─────────────────────────────────────────────
+"L27": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/librarian/idle",
+	  "text": "The old temporary_holds table from a pilot program is cluttering the database and confusing new staff." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "We do not use the temporary_holds table any more. Can we delete it completely?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
+	  "text": "DROP TABLE removes the table structure and all its data permanently. Back it up first." },
+	{ "type": "sql_fill", "gamemode": "drop_table",
+	  "desc": "Remove the temporary_holds table permanently. Fill in the keyword after DROP.",
+	  "table": "temporary_holds",
+	  "answer": "TABLE",
+	  "hint": "After DROP, the keyword to remove a table: TABLE",
+	  "result_msg": "temporary_holds dropped! This is irreversible — always take a backup before DROP TABLE.",
+	  "fail": [
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "Wrong keyword. The syntax is: DROP TABLE table_name" },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle", "text": "Type TABLE after DROP." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "Table removed. DROP TABLE is irreversible — we confirmed the backup first." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
+	  "text": "DROP TABLE IF EXISTS temporary_holds avoids errors if the table was already removed." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON L28 — LEFT JOIN  |  NPC: librarian
+# ─────────────────────────────────────────────
+"L28": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/librarian/idle",
+	  "text": "The librarian wants to see all books — even those that have never been borrowed." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "A regular JOIN only shows books WITH borrow records. I want every book, borrowed or not." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
+	  "text": "LEFT JOIN returns all rows from the left table. Non-matching right table rows show as NULL." },
+	{ "type": "sql_fill", "gamemode": "join",
+	  "join_type": "LEFT JOIN",
+	  "desc": "LEFT JOIN books with borrow_records. All books appear even without borrow entries. Fill in the linking columns.",
+	  "table_a": "books", "table_b": "borrow_records",
+	  "table_a_headers": ["id","title","genre"],
+	  "table_a_rows": [["1","Dune","Sci-Fi"],["2","Hamlet","Drama"],["3","The Hobbit","Fantasy"],["4","Foundation","Sci-Fi"]],
+	  "table_b_headers": ["id","book_id","borrower_name"],
+	  "table_b_rows": [["1","1","Mendez"],["2","3","Santos"]],
+	  "join_col_a": "id", "join_col_b": "book_id",
+	  "hint": "books linking column: id | borrow_records linking column: book_id",
+	  "result_headers": ["title","genre","borrower_name"],
+	  "result_rows": [["Dune","Sci-Fi","Mendez"],["Hamlet","Drama","NULL"],["The Hobbit","Fantasy","Santos"],["Foundation","Sci-Fi","NULL"]],
+	  "result_msg": "All 4 books shown. Hamlet and Foundation have never been borrowed — borrower_name is NULL.",
+	  "fail": [
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "Wrong linking columns! books.id connects to borrow_records.book_id." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle", "text": "Left: id | Right: book_id" }
+	  ]
+	},
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "All 4 books visible. Hamlet and Foundation are never borrowed — I should promote those." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
+	  "text": "LEFT JOIN WHERE borrow_records.book_id IS NULL would isolate only the never-borrowed books." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON L29 — DEFAULT  |  NPC: adult_7 visitor
+# ─────────────────────────────────────────────
+"L29": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "adult_7/idle",
+	  "text": "A visitor notices that every newly added book automatically shows 'Available' as its status." },
+	{ "type": "dialogue", "char": "visitor", "name": "VISITOR", "npc": "adult_7/talk",
+	  "text": "When a new book is added to the catalog, it already says Available without anyone typing it. How?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_7/idle",
+	  "text": "The DEFAULT constraint! It sets an automatic value for a column when no value is provided." },
+	{ "type": "sql_fill", "gamemode": "create_table",
+	  "desc": "Set books.status to auto-fill with 'Available'. Type: DEFAULT 'Available'",
+	  "table": "books",
+	  "pk_col": "status",
+	  "columns": [["id","INT PRIMARY KEY"],["title","TEXT"],["genre","TEXT"],["status","TEXT"]],
+	  "answer": "DEFAULT 'Available'",
+	  "blank_hint": "constraint",
+	  "error_hint": "The syntax is: DEFAULT 'value'",
+	  "result_msg": "DEFAULT set! New books automatically get 'Available' status on INSERT.",
+	  "hint": "Auto-fill status: DEFAULT 'Available'",
+	  "fail": [
+		{ "type": "dialogue", "char": "visitor", "name": "VISITOR", "npc": "adult_7/confuse", "text": "Not quite. DEFAULT sets the fallback value when none is provided." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_7/idle", "text": "Type: DEFAULT 'Available'" }
+	  ]
+	},
+	{ "type": "dialogue", "char": "visitor", "name": "VISITOR", "npc": "adult_7/talk",
+	  "text": "So DEFAULT is the starting state — staff only need to update it when someone borrows the book?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_7/idle",
+	  "text": "Exactly. DEFAULT reduces manual data entry and prevents missing values at the same time." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON L30 — Normalization  |  NPC: adult_7 visitor
+# ─────────────────────────────────────────────
+"L30": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "adult_7/idle",
+	  "text": "A library science student asks about why the old card catalog system was so hard to maintain." },
+	{ "type": "dialogue", "char": "visitor", "name": "VISITOR", "npc": "adult_7/talk",
+	  "text": "The old system stored the author's full biography in every single book record. When the author updated their biography it had to be changed in hundreds of rows!" },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
+	  "text": "That is the classic data redundancy problem. Normalization solves it by storing each fact once." },
+	{ "type": "sql_choice",
+	  "desc": "An old books table stores: title, author_name, author_bio, author_nationality in EVERY row. What is the main design problem?",
+	  "options": [
+		[1, "Data redundancy — author information repeats in every book row, causing update anomalies."],
+		[2, "The table needs more columns — add ISBN and publication year to fix it."],
+		[3, "The PRIMARY KEY is wrong — use author_name as the primary key instead of id."]
+	  ],
+	  "correct_id": 1,
+	  "hint": "Repeated data across rows is called redundancy. Answer: id = 1",
+	  "fail": [
+		{ "type": "dialogue", "char": "visitor", "name": "VISITOR", "npc": "adult_7/confuse", "text": "Not right. The repeated author info in every row is the problem — it is called data redundancy." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_7/idle", "text": "Answer 1 — data redundancy." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_7/idle",
+	  "text": "Normalization creates a separate authors table. Books store only author_id as a reference." },
+	{ "type": "dialogue", "char": "visitor", "name": "VISITOR", "npc": "adult_7/talk",
+	  "text": "One change to the authors table fixes the biography for all 300 books by that author. Brilliant!" },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_7/idle",
+	  "text": "That is the core principle of 3NF — third normal form. Every fact stored exactly once." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON L31 — Transactions  |  NPC: librarian
+# ─────────────────────────────────────────────
+"L31": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/librarian/idle",
+	  "text": "A system error mid-process left a book marked as 'Borrowed' but no borrow record was created — the database is inconsistent." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "The status update ran but the borrow record INSERT never completed. How do we prevent partial updates?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
+	  "text": "Transactions! BEGIN groups multiple statements. COMMIT saves all of them or ROLLBACK cancels all." },
+	{ "type": "sql_fill", "gamemode": "transaction",
+	  "desc": "The borrow INSERT is done. COMMIT to save both the status update and the borrow record.",
+	  "update_line": "INSERT INTO borrow_records (book_id, borrower_id) VALUES (1, 42)",
+	  "answer": "COMMIT",
+	  "hint": "To save a transaction: COMMIT",
+	  "result_msg": "Transaction committed! Both the status update and borrow record saved atomically.\n\nACID guarantee:\n- Atomicity: both statements complete or neither does\n- Consistency: book status always matches borrow records\n- Durability: committed changes survive crashes",
+	  "fail": [
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "Wrong! Type COMMIT to save or ROLLBACK to cancel the transaction." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle", "text": "Type COMMIT to finalize." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "Both operations committed as one unit. If the INSERT had failed, ROLLBACK would undo the status change too." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
+	  "text": "ACID guarantees make databases reliable. Transactions are the foundation of data integrity." },
+	{ "type": "end" }
 ]
 
 } # end LESSONS

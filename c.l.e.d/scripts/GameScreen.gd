@@ -17,6 +17,18 @@ const GM_TO_SQL: Dictionary = {
 	"create_table_keyword":   "CREATE TABLE",
 	"data_type":              "Data Types",
 	"create_table":           "PRIMARY KEY",
+	"select_distinct":   "SELECT DISTINCT",
+	"where_and_or":      "AND / OR",
+	"where_between":     "BETWEEN",
+	"where_like":        "LIKE",
+	"where_in":          "IN",
+	"limit":             "LIMIT",
+	"aggregate":         "COUNT / SUM / AVG",
+	"having":            "HAVING",
+	"select_alias":      "AS (Alias)",
+	"alter_table":       "ALTER TABLE",
+	"drop_table":        "DROP TABLE",
+	"transaction":       "Transactions",
 }
 
 const SQL_GLOSSARY: Array = [
@@ -46,6 +58,23 @@ const SQL_GLOSSARY: Array = [
 		"SELECT * FROM table_name\nWHERE column IS NULL;\n\nSELECT * FROM table_name\nWHERE column IS NOT NULL;"],
 	["JOIN",               "Combines rows from two tables using a shared linking column.",
 		"SELECT * FROM table_a\nJOIN table_b\nON table_a.id = table_b.ref_id;"],
+	["SELECT DISTINCT", "Returns only unique (non-duplicate) values in a result column.", "SELECT DISTINCT column\nFROM table_name;"],
+	["AND / OR",        "AND requires ALL conditions. OR requires AT LEAST ONE condition.", "SELECT * FROM t WHERE a=1 AND b=2;\nSELECT * FROM t WHERE a=1 OR b=2;"],
+	["BETWEEN",         "Filters rows where a value falls within an inclusive range.", "SELECT * FROM t\nWHERE price BETWEEN 10 AND 50;"],
+	["LIKE",            "Pattern matching. % = any characters, _ = one character.", "SELECT * FROM t\nWHERE name LIKE 'S%';"],
+	["IN",              "Filters rows where a column value matches any item in a list.", "SELECT * FROM t\nWHERE city IN ('Manila','Cebu');"],
+	["LIMIT",           "Restricts how many rows are returned by a query.", "SELECT * FROM t\nLIMIT 10;"],
+	["COUNT / SUM / AVG","Aggregate functions: COUNT counts rows, SUM adds values, AVG averages them.", "SELECT COUNT(id) FROM t;\nSELECT SUM(price) FROM t;\nSELECT AVG(price) FROM t;"],
+	["HAVING",          "Filters groups after GROUP BY — like WHERE but for grouped data.", "SELECT col, COUNT(*) FROM t\nGROUP BY col\nHAVING COUNT(*) > 1;"],
+	["AS (Alias)",      "Renames a column or expression in the result. Does not change the table.", "SELECT price * 1.12 AS price_with_tax\nFROM orders;"],
+	["NOT NULL",        "Column constraint: prevents empty (NULL) values from being stored.", "CREATE TABLE t (\n    email TEXT NOT NULL\n);"],
+	["UNIQUE",          "Column constraint: prevents duplicate values in a column.", "CREATE TABLE t (\n    username TEXT UNIQUE\n);"],
+	["DEFAULT",         "Column constraint: sets an automatic value when none is provided.", "CREATE TABLE t (\n    status TEXT DEFAULT 'Pending'\n);"],
+	["ALTER TABLE",     "Modifies an existing table — adds, removes, or changes columns.", "ALTER TABLE table_name\nADD column_name TEXT;"],
+	["DROP TABLE",      "Permanently deletes a table and all its data.", "DROP TABLE table_name;"],
+	["LEFT JOIN",       "Returns ALL rows from the left table plus matching rows from the right. Unmatched = NULL.", "SELECT * FROM a\nLEFT JOIN b ON a.id = b.ref_id;"],
+	["Normalization",   "Organizing a database to reduce redundancy and improve data integrity.", "1NF: atomic values\n2NF: no partial dependencies\n3NF: no transitive dependencies"],
+	["Transactions",    "Groups SQL statements into one unit — all succeed (COMMIT) or all cancel (ROLLBACK).", "BEGIN;\n  UPDATE ...;\nCOMMIT;"],
 ]
 
 const GM_SCENES: Dictionary = {
@@ -62,6 +91,18 @@ const GM_SCENES: Dictionary = {
 	"create_table_keyword":  "res://gamemode/scene/GM_CreateTableKeyword.tscn",
 	"data_type":             "res://gamemode/scene/GM_DataType.tscn",
 	"create_table":          "res://gamemode/scene/GM_CreateTable.tscn",
+	"select_distinct":  "res://gamemode/scene/GM_SelectDistinct.tscn",
+	"where_and_or":     "res://gamemode/scene/GM_WhereAndOr.tscn",
+	"where_between":    "res://gamemode/scene/GM_WhereBetween.tscn",
+	"where_like":       "res://gamemode/scene/GM_WhereLike.tscn",
+	"where_in":         "res://gamemode/scene/GM_WhereIn.tscn",
+	"limit":            "res://gamemode/scene/GM_Limit.tscn",
+	"aggregate":        "res://gamemode/scene/GM_Aggregate.tscn",
+	"having":           "res://gamemode/scene/GM_Having.tscn",
+	"select_alias":     "res://gamemode/scene/GM_SelectAlias.tscn",
+	"alter_table":      "res://gamemode/scene/GM_AlterTable.tscn",
+	"drop_table":       "res://gamemode/scene/GM_DropTable.tscn",
+	"transaction":      "res://gamemode/scene/GM_Transaction.tscn",
 }
 
 const BG_HOTEL   := "res://images/backgrounds/BG_hotel.png"
@@ -545,21 +586,22 @@ func _build_glossary() -> void:
 	_glossary_overlay.add_child(center)
 
 	var panel := PanelContainer.new()
-	panel.custom_minimum_size = Vector2(480, 0)
+	panel.custom_minimum_size = Vector2(520, 560)
 	var ps := StyleBoxFlat.new()
 	ps.bg_color = Color(0.09, 0.11, 0.16, 0.98)
 	ps.border_color = Color("#F59E0B")
 	ps.set_border_width_all(2)
 	ps.set_corner_radius_all(12)
-	ps.content_margin_left   = 28
-	ps.content_margin_right  = 28
-	ps.content_margin_top    = 24
-	ps.content_margin_bottom = 24
+	ps.content_margin_left   = 24
+	ps.content_margin_right  = 24
+	ps.content_margin_top    = 20
+	ps.content_margin_bottom = 20
 	panel.add_theme_stylebox_override("panel", ps)
 	center.add_child(panel)
 
 	var vbox := VBoxContainer.new()
-	vbox.add_theme_constant_override("separation", 10)
+	vbox.add_theme_constant_override("separation", 8)
+	vbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	panel.add_child(vbox)
 
 	# Header row
@@ -568,7 +610,7 @@ func _build_glossary() -> void:
 	var header_lbl := Label.new()
 	header_lbl.text = "SQL Glossary"
 	header_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	header_lbl.add_theme_font_size_override("font_size", 20)
+	header_lbl.add_theme_font_size_override("font_size", 18)
 	header_lbl.add_theme_color_override("font_color", Color("#F59E0B"))
 	header_row.add_child(header_lbl)
 	var close_btn := Button.new()
@@ -583,12 +625,56 @@ func _build_glossary() -> void:
 	sep.color = Color(0.25, 0.30, 0.42)
 	vbox.add_child(sep)
 
+	# Filter search bar
+	var filter_box := LineEdit.new()
+	filter_box.placeholder_text = "🔍  Filter terms..."
+	filter_box.clear_button_enabled = true
+	filter_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var fns := StyleBoxFlat.new()
+	fns.bg_color = Color(0.04, 0.07, 0.13, 1.0)
+	fns.border_color = Color(1.0, 0.78, 0.0)
+	fns.border_width_bottom = 2
+	fns.content_margin_left = 8; fns.content_margin_right  = 8
+	fns.content_margin_top  = 5; fns.content_margin_bottom = 5
+	filter_box.add_theme_stylebox_override("normal", fns)
+	var ffs := fns.duplicate() as StyleBoxFlat; ffs.border_width_bottom = 3
+	filter_box.add_theme_stylebox_override("focus", ffs)
+	filter_box.add_theme_color_override("font_color", Color(1.0, 0.78, 0.0))
+	filter_box.add_theme_color_override("font_placeholder_color", Color(1.0, 0.78, 0.0, 0.3))
+	filter_box.add_theme_font_size_override("font_size", 13)
+	vbox.add_child(filter_box)
+
+	var sep2 := ColorRect.new()
+	sep2.custom_minimum_size = Vector2(0, 1)
+	sep2.color = Color(0.25, 0.30, 0.42)
+	vbox.add_child(sep2)
+
+	# Scrollable entries area
+	var scroll := ScrollContainer.new()
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	vbox.add_child(scroll)
+
+	var entry_list := VBoxContainer.new()
+	entry_list.add_theme_constant_override("separation", 6)
+	entry_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.add_child(entry_list)
+
+	# entries_meta filled below — lambda captures array reference so filtering works
+	var entries_meta: Array = []
+	filter_box.text_changed.connect(func(query: String):
+		var q := query.strip_edges().to_lower()
+		for pair in entries_meta:
+			pair[0].visible = q.is_empty() or pair[1].contains(q)
+	)
+
 	# Entries
 	for entry in SQL_GLOSSARY:
 		# Wrapper column so example panel sits below the row
 		var entry_col := VBoxContainer.new()
 		entry_col.add_theme_constant_override("separation", 4)
-		vbox.add_child(entry_col)
+		entry_list.add_child(entry_col)
+		entries_meta.append([entry_col, (entry[0] + " " + entry[1]).to_lower()])
 
 		# Main info row
 		var row := HBoxContainer.new()

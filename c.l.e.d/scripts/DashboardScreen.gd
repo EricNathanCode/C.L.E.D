@@ -9,10 +9,10 @@ const _DATA_PATHS: Dictionary = {
 }
 
 # ── Lesson metadata ───────────────────────────────────────
-const HOTEL_LESSONS  := [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
-const CAFE_LESSONS   := ["C1","C2","C3","C4","C5","C6","C7","C8","C9","C10","C11","C12","C13","C14","C15"]
-const POLICE_LESSONS := ["P1","P2","P3","P4","P5","P6","P7","P8","P9","P10","P11","P12","P13","P14","P15"]
-const LIBRARY_LESSONS:= ["L1","L2","L3","L4","L5","L6","L7","L8","L9","L10","L11","L12","L13","L14","L15"]
+const HOTEL_LESSONS  := [1,2,3,4,5, 6,8,16,17,18,19,20,21, 7,12,22,23,24,28, 9,10,11,13,14,15,25,29, 26,27,30,31]
+const CAFE_LESSONS   := ["C1","C2","C4","C5","C6", "C7","C8","C16","C17","C18","C19","C20","C21", "C3","C12","C22","C23","C24","C28", "C9","C10","C11","C13","C14","C15","C25","C29", "C26","C27","C30","C31"]
+const POLICE_LESSONS := ["P1","P2","P3","P4","P5", "P6","P8","P16","P17","P18","P19","P20","P21", "P7","P12","P22","P23","P24","P28", "P9","P10","P11","P13","P14","P15","P25","P29", "P26","P27","P30","P31"]
+const LIBRARY_LESSONS:= ["L1","L2","L3","L4","L5", "L6","L8","L16","L17","L18","L19","L20","L21", "L7","L12","L22","L23","L24","L28", "L9","L10","L11","L13","L14","L15","L25","L29", "L26","L27","L30","L31"]
 
 const HOTEL_NAMES: Dictionary = {
 	1:  "SELECT — Choose Your Response",
@@ -30,6 +30,22 @@ const HOTEL_NAMES: Dictionary = {
 	13: "INT — Whole Number Data Type",
 	14: "TEXT — String / Word Data Type",
 	15: "REAL — Decimal Number Data Type",
+	16: "SELECT DISTINCT — Unique Guest Types",
+	17: "AND / OR — Filter Multiple Conditions",
+	18: "BETWEEN — Guests in a Price Range",
+	19: "LIKE — Search by Partial Name",
+	20: "IN — Guests from Specific Cities",
+	21: "LIMIT — Show Top 5 Bookings",
+	22: "COUNT / SUM / AVG — Booking Statistics",
+	23: "HAVING — Rooms with Many Bookings",
+	24: "AS — Rename a Calculated Column",
+	25: "NOT NULL + UNIQUE — Guest Record Integrity",
+	26: "ALTER TABLE — Add a Column",
+	27: "DROP TABLE — Remove an Old Table",
+	28: "LEFT JOIN — All Rooms Including Empty",
+	29: "DEFAULT — Auto-fill Check-in Status",
+	30: "Normalization — Remove Repeated Data",
+	31: "Transactions — Atomic Room Transfer",
 }
 const CAFE_NAMES: Dictionary = {
 	"C1":  "SELECT — Take the Order",
@@ -47,6 +63,22 @@ const CAFE_NAMES: Dictionary = {
 	"C13": "INT — Whole Number Data Type",
 	"C14": "TEXT — String / Word Data Type",
 	"C15": "REAL — Decimal Number Data Type",
+	"C16": "SELECT DISTINCT — Unique Drink Types",
+	"C17": "AND / OR — Filter Multiple Conditions",
+	"C18": "BETWEEN — Orders in a Price Range",
+	"C19": "LIKE — Search by Partial Item Name",
+	"C20": "IN — Orders from Specific Categories",
+	"C21": "LIMIT — Show Top 5 Orders",
+	"C22": "COUNT / SUM / AVG — Sales Statistics",
+	"C23": "HAVING — Items Ordered Many Times",
+	"C24": "AS — Rename a Calculated Column",
+	"C25": "NOT NULL + UNIQUE — Order Record Integrity",
+	"C26": "ALTER TABLE — Add a Column",
+	"C27": "DROP TABLE — Remove an Old Table",
+	"C28": "LEFT JOIN — All Customers Including New",
+	"C29": "DEFAULT — Auto-fill Order Status",
+	"C30": "Normalization — Remove Repeated Data",
+	"C31": "Transactions — Atomic Order Processing",
 }
 const POLICE_NAMES: Dictionary = {
 	"P1":  "SELECT — Handle a Citizen Report",
@@ -64,6 +96,22 @@ const POLICE_NAMES: Dictionary = {
 	"P13": "INT — Whole Number Data Type",
 	"P14": "TEXT — String / Word Data Type",
 	"P15": "REAL — Decimal Number Data Type",
+	"P16": "SELECT DISTINCT — Unique Case Types",
+	"P17": "AND / OR — Filter Multiple Conditions",
+	"P18": "BETWEEN — Fines in a Range",
+	"P19": "LIKE — Search by Partial Suspect Name",
+	"P20": "IN — Cases of Specific Types",
+	"P21": "LIMIT — Show Top 5 Open Cases",
+	"P22": "COUNT / SUM / AVG — Case Statistics",
+	"P23": "HAVING — Case Types with Many Incidents",
+	"P24": "AS — Rename a Calculated Column",
+	"P25": "NOT NULL + UNIQUE — Case Record Integrity",
+	"P26": "ALTER TABLE — Add a Column",
+	"P27": "DROP TABLE — Remove an Old Table",
+	"P28": "LEFT JOIN — All Officers Including Unassigned",
+	"P29": "DEFAULT — Auto-fill Suspect Status",
+	"P30": "Normalization — Remove Repeated Data",
+	"P31": "Transactions — Atomic Case Transfer",
 }
 const LIBRARY_NAMES: Dictionary = {
 	"L1":  "SELECT — Help a Visitor",
@@ -81,6 +129,22 @@ const LIBRARY_NAMES: Dictionary = {
 	"L13": "INT — Whole Number Data Type",
 	"L14": "TEXT — String / Word Data Type",
 	"L15": "REAL — Decimal Number Data Type",
+	"L16": "SELECT DISTINCT — Unique Book Genres",
+	"L17": "AND / OR — Filter Multiple Conditions",
+	"L18": "BETWEEN — Books in a Publication Range",
+	"L19": "LIKE — Search by Partial Title",
+	"L20": "IN — Books of Specific Genres",
+	"L21": "LIMIT — Show Top 5 Books",
+	"L22": "COUNT / SUM / AVG — Collection Statistics",
+	"L23": "HAVING — Genres with Many Books",
+	"L24": "AS — Rename a Calculated Column",
+	"L25": "NOT NULL + UNIQUE — Borrower Record Integrity",
+	"L26": "ALTER TABLE — Add a Column",
+	"L27": "DROP TABLE — Remove an Old Table",
+	"L28": "LEFT JOIN — All Books Including Unborrowed",
+	"L29": "DEFAULT — Auto-fill Book Status",
+	"L30": "Normalization — Remove Repeated Data",
+	"L31": "Transactions — Atomic Borrow Processing",
 }
 const WORLD_DISPLAY: Dictionary = {
 	"hotel":   "Hotel World",
@@ -91,28 +155,32 @@ const WORLD_DISPLAY: Dictionary = {
 
 # ── Folder groupings per world ────────────────────────────
 const HOTEL_FOLDERS := [
-	{ "name": "SQL Queries",       "ids": [1, 2, 3, 4, 5] },
-	{ "name": "Sorting & Reports", "ids": [6, 7] },
-	{ "name": "Database Concepts", "ids": [8, 9, 10, 11, 12] },
-	{ "name": "Data Types",        "ids": [13, 14, 15] },
+	{ "name": "Basic SQL",            "ids": [1,2,3,4,5] },
+	{ "name": "Filtering & Sorting",  "ids": [6,8,16,17,18,19,20,21] },
+	{ "name": "Aggregates & Joins",   "ids": [7,12,22,23,24,28] },
+	{ "name": "Database Design",      "ids": [9,10,11,13,14,15,25,29] },
+	{ "name": "Schema & Concepts",    "ids": [26,27,30,31] },
 ]
 const CAFE_FOLDERS := [
-	{ "name": "SQL Queries",       "ids": ["C1", "C2", "C4", "C5", "C6"] },
-	{ "name": "Sorting & Reports", "ids": ["C3", "C7"] },
-	{ "name": "Database Concepts", "ids": ["C8", "C9", "C10", "C11", "C12"] },
-	{ "name": "Data Types",        "ids": ["C13", "C14", "C15"] },
+	{ "name": "Basic SQL",            "ids": ["C1","C2","C4","C5","C6"] },
+	{ "name": "Filtering & Sorting",  "ids": ["C7","C8","C16","C17","C18","C19","C20","C21"] },
+	{ "name": "Aggregates & Joins",   "ids": ["C3","C12","C22","C23","C24","C28"] },
+	{ "name": "Database Design",      "ids": ["C9","C10","C11","C13","C14","C15","C25","C29"] },
+	{ "name": "Schema & Concepts",    "ids": ["C26","C27","C30","C31"] },
 ]
 const POLICE_FOLDERS := [
-	{ "name": "SQL Queries",       "ids": ["P1", "P2", "P3", "P4", "P5"] },
-	{ "name": "Sorting & Reports", "ids": ["P6", "P7"] },
-	{ "name": "Database Concepts", "ids": ["P8", "P9", "P10", "P11", "P12"] },
-	{ "name": "Data Types",        "ids": ["P13", "P14", "P15"] },
+	{ "name": "Basic SQL",            "ids": ["P1","P2","P3","P4","P5"] },
+	{ "name": "Filtering & Sorting",  "ids": ["P6","P8","P16","P17","P18","P19","P20","P21"] },
+	{ "name": "Aggregates & Joins",   "ids": ["P7","P12","P22","P23","P24","P28"] },
+	{ "name": "Database Design",      "ids": ["P9","P10","P11","P13","P14","P15","P25","P29"] },
+	{ "name": "Schema & Concepts",    "ids": ["P26","P27","P30","P31"] },
 ]
 const LIBRARY_FOLDERS := [
-	{ "name": "SQL Queries",       "ids": ["L1", "L2", "L3", "L4", "L5"] },
-	{ "name": "Sorting & Reports", "ids": ["L6", "L7"] },
-	{ "name": "Database Concepts", "ids": ["L8", "L9", "L10", "L11", "L12"] },
-	{ "name": "Data Types",        "ids": ["L13", "L14", "L15"] },
+	{ "name": "Basic SQL",            "ids": ["L1","L2","L3","L4","L5"] },
+	{ "name": "Filtering & Sorting",  "ids": ["L6","L8","L16","L17","L18","L19","L20","L21"] },
+	{ "name": "Aggregates & Joins",   "ids": ["L7","L12","L22","L23","L24","L28"] },
+	{ "name": "Database Design",      "ids": ["L9","L10","L11","L13","L14","L15","L25","L29"] },
+	{ "name": "Schema & Concepts",    "ids": ["L26","L27","L30","L31"] },
 ]
 
 # ── Node refs ─────────────────────────────────────────────
@@ -212,14 +280,15 @@ func build_lessons() -> void:
 
 		# ── Folder header button ─────────────────────────
 		var hdr := Button.new()
-		hdr.text = "▼  " + folder_name + badge
+		hdr.text = "▶  " + folder_name + badge
 		hdr.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		hdr.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		_style_folder_btn(hdr)
 		_lesson_list.add_child(hdr)
 
-		# ── Lesson container (starts expanded) ───────────
+		# ── Lesson container (starts collapsed) ──────────
 		var box := VBoxContainer.new()
+		box.visible = false
 		box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		box.add_theme_constant_override("separation", 4)
 		_lesson_list.add_child(box)

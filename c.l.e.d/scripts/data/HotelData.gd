@@ -757,4 +757,541 @@ const LESSONS: Dictionary = {
 	{ "type": "end" }
 ]
 
+,
+
+# ─────────────────────────────────────────────
+#  LESSON 16 — SELECT DISTINCT  |  NPC: hotel_manager
+# ─────────────────────────────────────────────
+16: [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "The hotel manager is preparing a room availability report and needs a list of unique room types." },
+	{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "Our bookings table has hundreds of rows but only three room types. I need each type listed once — no duplicates." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "SELECT DISTINCT returns only unique values in a column — duplicates are automatically removed." },
+	{ "type": "sql_fill", "gamemode": "select_distinct",
+	  "desc": "Return only the unique room types from the bookings table. Fill in the column name after SELECT DISTINCT.",
+	  "table": "bookings",
+	  "column": "room_type",
+	  "table_headers": ["id","guest_id","room_type","check_in"],
+	  "table_rows": [["1","1","Standard","June 1"],["2","2","Deluxe","June 3"],["3","3","Standard","June 4"],["4","4","Suite","June 5"],["5","5","Deluxe","June 6"],["6","6","Standard","June 7"]],
+	  "hint": "The column with repeating values to deduplicate: room_type",
+	  "result_headers": ["room_type"],
+	  "result_rows": [["Standard"],["Deluxe"],["Suite"]],
+	  "result_msg": "3 unique room types found. DISTINCT removed duplicate 'Standard' and 'Deluxe' entries.",
+	  "fail": [
+		{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/shock", "text": "That column does not exist in the bookings table!" },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle", "text": "The column with repeated room names is: room_type." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "Standard, Deluxe, Suite. DISTINCT is perfect when I only want to know what values exist, not how many times each appears." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "Exactly. Without DISTINCT you would get 'Standard' three times. DISTINCT returns each value once." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON 17 — AND/OR  |  NPC: hotel_manager
+# ─────────────────────────────────────────────
+17: [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "The manager needs to find VIP guests who also have an active booking — both conditions must be true." },
+	{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "I need guests who are VIP status AND have a booking. Not just one or the other — both must apply." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "AND requires both conditions to be true at the same time. OR would include guests with either condition." },
+	{ "type": "sql_fill", "gamemode": "where_and_or",
+	  "desc": "Find guests who are VIP status AND have a booking. Fill in AND or OR.",
+	  "table": "guests",
+	  "condition1": "status = 'VIP'",
+	  "condition2": "has_booking = 'Yes'",
+	  "answer": "AND",
+	  "table_headers": ["id","first_name","status","has_booking"],
+	  "table_rows": [["1","Alex","VIP","Yes"],["2","Maya","Regular","Yes"],["3","Jose","VIP","No"],["4","Carlos","VIP","Yes"],["5","Linda","Regular","No"]],
+	  "hint": "Both conditions must be true simultaneously: AND",
+	  "result_headers": ["id","first_name","status","has_booking"],
+	  "result_rows": [["1","Alex","VIP","Yes"],["4","Carlos","VIP","Yes"]],
+	  "result_msg": "2 VIP guests with active bookings. AND requires BOTH conditions. OR would return 4 rows.",
+	  "fail": [
+		{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/shock", "text": "Wrong connector! That gave too many results. I need BOTH conditions true at once." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle", "text": "For both conditions required: AND." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "Only Alex and Carlos — the ones who are both VIP and have a booking. AND is strict." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "Right. OR would include Jose who is VIP but has no booking, and Maya who has a booking but is not VIP." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON 18 — BETWEEN  |  NPC: hotel_manager
+# ─────────────────────────────────────────────
+18: [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "The manager wants to find mid-range bookings — not the cheapest rooms, not the most expensive." },
+	{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "I need bookings where the price per night is between 100 and 300. Both 100 and 300 should be included." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "BETWEEN filters a range inclusively. 'BETWEEN 100 AND 300' means price >= 100 AND price <= 300." },
+	{ "type": "sql_fill", "gamemode": "where_between",
+	  "desc": "Find bookings where price_per_night is between 100 and 300. Fill in the range keyword.",
+	  "table": "bookings",
+	  "column": "price_per_night",
+	  "low": "100", "high": "300",
+	  "answer": "BETWEEN",
+	  "table_headers": ["id","room_type","price_per_night"],
+	  "table_rows": [["1","Standard","85"],["2","Deluxe","150"],["3","Suite","350"],["4","Standard","95"],["5","Deluxe","220"],["6","Suite","400"],["7","Standard","110"]],
+	  "hint": "The range filtering keyword is: BETWEEN",
+	  "result_headers": ["id","room_type","price_per_night"],
+	  "result_rows": [["2","Deluxe","150"],["5","Deluxe","220"],["7","Standard","110"]],
+	  "result_msg": "3 bookings in the 100-300 range. BETWEEN is inclusive — 100 and 300 themselves would also match.",
+	  "fail": [
+		{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/shock", "text": "That is not the range keyword! I need BETWEEN to filter inclusive ranges." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle", "text": "The inclusive range keyword is BETWEEN." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "3 mid-range bookings. BETWEEN is much cleaner than writing 'price >= 100 AND price <= 300'." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "Exactly. BETWEEN also works with dates: WHERE check_in BETWEEN '2024-01-01' AND '2024-12-31'." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON 19 — LIKE  |  NPC: hotel_manager
+# ─────────────────────────────────────────────
+19: [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "A family reunion group with surnames starting with S has made multiple bookings. The manager needs to find them all." },
+	{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "Can you find all guests whose last name starts with the letter S? LIKE can help with partial text matching." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "LIKE uses % as a wildcard. 'S%' means starts with S, followed by any characters. '%S%' would find S anywhere." },
+	{ "type": "sql_fill", "gamemode": "where_like",
+	  "desc": "Find all guests whose last_name starts with 'S'. Fill in the LIKE pattern.",
+	  "table": "guests",
+	  "column": "last_name",
+	  "answer": "'S%'",
+	  "table_headers": ["id","first_name","last_name"],
+	  "table_rows": [["1","Alex","Santos"],["2","Maya","Dela Cruz"],["3","Jose","Hernandez"],["4","Carlos","Santos"],["5","Linda","Sim"],["6","Marco","Reyes"]],
+	  "hint": "Starts with S then any characters: 'S%'",
+	  "result_headers": ["id","first_name","last_name"],
+	  "result_rows": [["1","Alex","Santos"],["4","Carlos","Santos"],["5","Linda","Sim"]],
+	  "result_msg": "3 guests found. 'S%' = starts with S, then anything. Santos and Sim both match.",
+	  "fail": [
+		{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/shock", "text": "That pattern did not match the right guests. Remember % means any characters." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle", "text": "For names starting with S: 'S%'" }
+	  ]
+	},
+	{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "Alex Santos, Carlos Santos, and Linda Sim. The % wildcard is powerful for partial text searches." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "And '_im' would match exactly one character before 'im'. 'Sim' and 'Kim' would match, but 'Slim' would not." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON 20 — IN  |  NPC: hotel_manager
+# ─────────────────────────────────────────────
+20: [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "The manager wants bookings for Standard and Deluxe rooms only — Suite rooms are excluded from this report." },
+	{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "I need bookings for Standard and Deluxe. Instead of writing two OR conditions, is there a shorter way?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "Yes — IN lets you check if a value matches any item in a list. It is cleaner than multiple OR conditions." },
+	{ "type": "sql_fill", "gamemode": "where_in",
+	  "desc": "Find bookings where room_type is Standard or Deluxe. Fill in the list membership keyword.",
+	  "table": "bookings",
+	  "column": "room_type",
+	  "in_list": "('Standard', 'Deluxe')",
+	  "answer": "IN",
+	  "table_headers": ["id","room_type","price_per_night"],
+	  "table_rows": [["1","Standard","85"],["2","Deluxe","150"],["3","Suite","350"],["4","Standard","95"],["5","Deluxe","220"],["6","Suite","400"]],
+	  "hint": "The list membership keyword is: IN",
+	  "result_headers": ["id","room_type","price_per_night"],
+	  "result_rows": [["1","Standard","85"],["2","Deluxe","150"],["4","Standard","95"],["5","Deluxe","220"]],
+	  "result_msg": "4 bookings found. IN ('Standard','Deluxe') equals: room_type='Standard' OR room_type='Deluxe'.",
+	  "fail": [
+		{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/shock", "text": "That keyword is wrong. The list matching keyword is IN." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle", "text": "The keyword for list matching is IN." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "4 non-Suite bookings. IN with a list is much cleaner than chaining OR conditions." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "IN also works with numbers: WHERE id IN (1, 3, 5). You can also use NOT IN to exclude values." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON 21 — LIMIT  |  NPC: hotel_manager
+# ─────────────────────────────────────────────
+21: [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "The manager wants a quick preview of recent guest records — not all 500 rows, just the first few." },
+	{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "I just need a sample of the guests table to verify the data format. Show me only the first 5 rows." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "LIMIT restricts how many rows a query returns. It is especially useful for previewing large tables." },
+	{ "type": "sql_fill", "gamemode": "limit",
+	  "desc": "Return only the first 5 rows from the guests table. Type the number after LIMIT.",
+	  "table": "guests",
+	  "answer": "5",
+	  "table_headers": ["id","first_name","last_name","email"],
+	  "table_rows": [["1","Alex","Santos","alex@mail.com"],["2","Maya","Dela Cruz","maya@mail.com"],["3","Jose","Hernandez","jose@mail.com"],["4","Carlos","Garcia","carlos@mail.com"],["5","Linda","Lim","linda@mail.com"],["6","Marco","Reyes","marco@mail.com"],["7","Ana","Torres","ana@mail.com"]],
+	  "hint": "Show only 5 rows — type the number: 5",
+	  "result_headers": ["id","first_name","last_name","email"],
+	  "result_rows": [["1","Alex","Santos","alex@mail.com"],["2","Maya","Dela Cruz","maya@mail.com"],["3","Jose","Hernandez","jose@mail.com"],["4","Carlos","Garcia","carlos@mail.com"],["5","Linda","Lim","linda@mail.com"]],
+	  "result_msg": "5 rows returned. Rows 6 and 7 were not fetched. LIMIT saves time on large tables.",
+	  "fail": [
+		{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/shock", "text": "That is not 5 rows. Type the number 5." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle", "text": "Type the number 5 after LIMIT." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "5 rows only — much faster. LIMIT is great with ORDER BY to get the top or bottom N records." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "For example: SELECT * FROM guests ORDER BY id DESC LIMIT 3 gives the 3 most recently added guests." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON 22 — COUNT/SUM/AVG  |  NPC: hotel_manager
+# ─────────────────────────────────────────────
+22: [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "Quarter-end report time. The manager needs a total count of all registered guests." },
+	{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "How many guests do we have in the system? I need a single number — not a list." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "COUNT is an aggregate function — it collapses many rows into a single calculated value." },
+	{ "type": "sql_fill", "gamemode": "aggregate",
+	  "desc": "Count the total number of guests. Fill in the aggregate function name.",
+	  "table": "guests",
+	  "column": "id",
+	  "answer": "COUNT",
+	  "table_headers": ["id","first_name","last_name"],
+	  "table_rows": [["1","Alex","Santos"],["2","Maya","Dela Cruz"],["3","Jose","Hernandez"],["4","Carlos","Garcia"],["5","Linda","Lim"],["6","Marco","Reyes"]],
+	  "hint": "To count the number of rows: COUNT",
+	  "result_headers": ["COUNT(id)"],
+	  "result_rows": [["6"]],
+	  "result_msg": "6 guests total.\n\nOther aggregate functions:\n- SUM(price) adds all values\n- AVG(price) calculates the average\n- MIN/MAX finds smallest or largest value",
+	  "fail": [
+		{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/shock", "text": "That is not a valid aggregate function. To count rows use COUNT." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle", "text": "The counting aggregate function is COUNT." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "6 guests. Aggregate functions like COUNT, SUM, and AVG are essential for reports and analysis." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "Right. SELECT SUM(price_per_night) FROM bookings gives total revenue. AVG gives the average nightly rate." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON 23 — HAVING  |  NPC: hotel_manager
+# ─────────────────────────────────────────────
+23: [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "The manager wants to know which room types have been booked more than once — popular rooms for promotions." },
+	{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "I need room types with more than 1 booking. But WHERE cannot filter on GROUP BY results. What do I use?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "HAVING filters AFTER grouping. WHERE filters individual rows before grouping. HAVING works on group results." },
+	{ "type": "sql_fill", "gamemode": "having",
+	  "desc": "Show only room types booked more than once. Fill in the aggregate function in HAVING.",
+	  "table": "bookings",
+	  "group_col": "room_type",
+	  "answer": "COUNT",
+	  "table_headers": ["id","room_type","guest_id"],
+	  "table_rows": [["1","Standard","1"],["2","Deluxe","2"],["3","Standard","3"],["4","Suite","4"],["5","Deluxe","5"],["6","Standard","6"]],
+	  "hint": "HAVING uses the aggregate function: COUNT",
+	  "result_headers": ["room_type","COUNT(*)"],
+	  "result_rows": [["Standard","3"],["Deluxe","2"]],
+	  "result_msg": "Standard (3) and Deluxe (2) appear more than once. Suite had only 1 booking so it was filtered out.",
+	  "fail": [
+		{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/shock", "text": "Wrong function. HAVING uses COUNT here to check group size." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle", "text": "HAVING filters groups using COUNT." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "Standard and Deluxe are most popular! HAVING is just like WHERE but it runs after GROUP BY." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "Exactly. WHERE cannot reference COUNT(*) because groups do not exist yet when WHERE runs." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON 24 — AS (Aliases)  |  NPC: hotel_manager
+# ─────────────────────────────────────────────
+24: [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "The manager wants a report showing prices with tax, but the column name should be readable." },
+	{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "The column 'price_per_night * 1.12' shows up as just that expression in the report. Can we rename it?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "AS gives a column a friendly display name called an alias. The table itself is unchanged." },
+	{ "type": "sql_fill", "gamemode": "select_alias",
+	  "desc": "Rename the calculated column to 'price_with_tax'. Fill in the alias name after AS.",
+	  "table": "bookings",
+	  "col_expr": "price_per_night * 1.12",
+	  "answer": "price_with_tax",
+	  "table_headers": ["id","room_type","price_per_night"],
+	  "table_rows": [["1","Standard","100"],["2","Deluxe","200"],["3","Suite","300"]],
+	  "hint": "The alias name for the tax column: price_with_tax",
+	  "result_headers": ["price_with_tax"],
+	  "result_rows": [["112.0"],["224.0"],["336.0"]],
+	  "result_msg": "Column now displays as 'price_with_tax' in results. AS only affects output — the table is unchanged.",
+	  "fail": [
+		{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/shock", "text": "That alias is not right. The alias should be: price_with_tax" },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle", "text": "Type the alias: price_with_tax" }
+	  ]
+	},
+	{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "Clean! AS also works on table names in JOINs: FROM bookings AS b — useful in long queries." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "Right. Short aliases like 'b' or 'g' keep JOIN queries readable when referencing multiple tables." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON 25 — NOT NULL + UNIQUE  |  NPC: adult_13 trainee
+# ─────────────────────────────────────────────
+25: [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "adult_13/idle",
+	  "text": "The new trainee is helping set up the guest registration table and asks about preventing bad data." },
+	{ "type": "dialogue", "char": "trainee", "name": "TRAINEE", "npc": "adult_13/talk",
+	  "text": "What if someone registers a guest without a phone number? Or two guests with the same email? Can we block that?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_13/idle",
+	  "text": "Column constraints! NOT NULL prevents empty values. UNIQUE prevents duplicates. Let me show you." },
+	{ "type": "sql_fill", "gamemode": "create_table",
+	  "desc": "The phone column must always have a value. Add the NOT NULL constraint.",
+	  "table": "contacts",
+	  "pk_col": "phone",
+	  "columns": [["id","INT PRIMARY KEY"],["name","TEXT"],["phone","TEXT"]],
+	  "answer": "NOT NULL",
+	  "blank_hint": "constraint",
+	  "error_hint": "The constraint that prevents empty values is NOT NULL.",
+	  "result_msg": "NOT NULL added! Any INSERT that omits the phone column will now be rejected by the database.",
+	  "hint": "Prevent empty values: NOT NULL",
+	  "fail": [
+		{ "type": "dialogue", "char": "trainee", "name": "TRAINEE", "npc": "adult_13/confuse", "text": "That is not right. The constraint that prevents NULL is NOT NULL." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_13/idle", "text": "Type: NOT NULL" }
+	  ]
+	},
+	{ "type": "dialogue", "char": "trainee", "name": "TRAINEE", "npc": "adult_13/talk",
+	  "text": "NOT NULL — phone is mandatory. What about preventing two guests from using the same email?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_13/idle",
+	  "text": "That is the UNIQUE constraint — no two rows can have the same value in that column." },
+	{ "type": "sql_fill", "gamemode": "create_table",
+	  "desc": "The email column must be unique. Add the UNIQUE constraint.",
+	  "table": "guests",
+	  "pk_col": "email",
+	  "columns": [["id","INT PRIMARY KEY"],["first_name","TEXT"],["email","TEXT"]],
+	  "answer": "UNIQUE",
+	  "blank_hint": "constraint",
+	  "error_hint": "The constraint that prevents duplicate values is UNIQUE.",
+	  "result_msg": "UNIQUE added! The database will now reject any INSERT that reuses an existing email address.",
+	  "hint": "Prevent duplicate values: UNIQUE",
+	  "fail": [
+		{ "type": "dialogue", "char": "trainee", "name": "TRAINEE", "npc": "adult_13/confuse", "text": "Not right. The constraint that prevents duplicates is UNIQUE." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_13/idle", "text": "Type: UNIQUE" }
+	  ]
+	},
+	{ "type": "dialogue", "char": "trainee", "name": "TRAINEE", "npc": "adult_13/talk",
+	  "text": "NOT NULL = must have a value. UNIQUE = no duplicates. Two constraints that keep data clean!" },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_13/idle",
+	  "text": "You can even combine them: email TEXT NOT NULL UNIQUE — must have a value AND must be unique." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON 26 — ALTER TABLE  |  NPC: hotel_manager
+# ─────────────────────────────────────────────
+26: [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "The hotel system went live without a check_out column in the bookings table. It needs to be added." },
+	{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "We forgot the check_out date! Can we add it to the existing table without losing all the current data?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "ALTER TABLE lets you modify a table after creation. The ADD keyword adds a new column safely." },
+	{ "type": "sql_fill", "gamemode": "alter_table",
+	  "desc": "Add the check_out column to the bookings table. Fill in the keyword that adds a column.",
+	  "table": "bookings",
+	  "new_col": "check_out",
+	  "col_type": "TEXT",
+	  "answer": "ADD",
+	  "hint": "The keyword to add a column to an existing table: ADD",
+	  "result_msg": "check_out column added! All existing rows still have their data — ALTER TABLE is non-destructive.",
+	  "fail": [
+		{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/shock", "text": "That keyword is wrong. To add a column use: ALTER TABLE name ADD column type" },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle", "text": "The keyword is ADD." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "Column added and all existing bookings are safe! ALTER TABLE is how we evolve a database over time." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "You can also use ALTER TABLE to RENAME COLUMN or DROP COLUMN to remove a column entirely." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON 27 — DROP TABLE  |  NPC: hotel_manager
+# ─────────────────────────────────────────────
+27: [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "The renovation is over and the temporary waitlist table is no longer needed." },
+	{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "The temp_waitlist table was only for the renovation period. Can we remove it completely from the database?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "DROP TABLE permanently deletes a table — every column definition and every row of data. It cannot be undone." },
+	{ "type": "sql_fill", "gamemode": "drop_table",
+	  "desc": "Delete the temp_waitlist table permanently. Fill in the keyword after DROP.",
+	  "table": "temp_waitlist",
+	  "answer": "TABLE",
+	  "hint": "The keyword after DROP to remove a table: TABLE",
+	  "result_msg": "temp_waitlist dropped! The table and all its data are gone permanently. Always back up before dropping.",
+	  "fail": [
+		{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/shock", "text": "That keyword is wrong. To delete a table: DROP TABLE name" },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle", "text": "The keyword is TABLE." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "Gone! DROP TABLE is final. DROP DATABASE removes the entire database with all its tables." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "Always use IF EXISTS to avoid errors: DROP TABLE IF EXISTS temp_waitlist — safe even if it does not exist." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON 28 — LEFT JOIN  |  NPC: hotel_manager
+# ─────────────────────────────────────────────
+28: [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "The manager wants a complete guest list — including guests who have not made any booking yet." },
+	{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "A regular JOIN only shows guests WITH bookings. I need ALL guests — unbooked ones should show NULL in booking columns." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "LEFT JOIN returns every row from the left table plus matches from the right. Unmatched right rows become NULL." },
+	{ "type": "sql_fill", "gamemode": "join",
+	  "join_type": "LEFT JOIN",
+	  "desc": "LEFT JOIN guests with bookings. All guests appear even if they have no booking. Fill in the linking column names.",
+	  "table_a": "guests", "table_b": "bookings",
+	  "table_a_headers": ["id","first_name","last_name"],
+	  "table_a_rows": [["1","Alex","Santos"],["2","Maya","Dela Cruz"],["3","Jose","Hernandez"],["4","Carlos","Garcia"]],
+	  "table_b_headers": ["id","guest_id","room_type"],
+	  "table_b_rows": [["1","1","Standard"],["2","3","Deluxe"]],
+	  "join_col_a": "id", "join_col_b": "guest_id",
+	  "hint": "guests linking column: id | bookings linking column: guest_id",
+	  "result_headers": ["first_name","last_name","room_type"],
+	  "result_rows": [["Alex","Santos","Standard"],["Maya","Dela Cruz","NULL"],["Jose","Hernandez","Deluxe"],["Carlos","Garcia","NULL"]],
+	  "result_msg": "All 4 guests shown. Maya and Carlos have no booking so room_type is NULL. INNER JOIN would hide them.",
+	  "fail": [
+		{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/shock", "text": "Check the linking columns! guests.id connects to bookings.guest_id." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle", "text": "Left column: id | Right column: guest_id" }
+	  ]
+	},
+	{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "All 4 guests visible! Maya and Carlos show NULL for room_type — LEFT JOIN keeps the full left table." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "INNER JOIN = only matches. LEFT JOIN = all left rows + matches. RIGHT JOIN = all right rows + matches." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON 29 — DEFAULT  |  NPC: adult_13 trainee
+# ─────────────────────────────────────────────
+29: [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "adult_13/idle",
+	  "text": "The trainee is setting up the bookings table and asks about automatic values." },
+	{ "type": "dialogue", "char": "trainee", "name": "TRAINEE", "npc": "adult_13/talk",
+	  "text": "If someone creates a booking without entering a status, what should it be automatically? Can we set that?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_13/idle",
+	  "text": "Yes! DEFAULT sets an automatic value that is used when no value is provided on INSERT." },
+	{ "type": "sql_fill", "gamemode": "create_table",
+	  "desc": "Set status to automatically be 'Pending' when not specified. Type: DEFAULT 'Pending'",
+	  "table": "bookings",
+	  "pk_col": "status",
+	  "columns": [["id","INT PRIMARY KEY"],["guest_id","INT"],["room_type","TEXT"],["status","TEXT"]],
+	  "answer": "DEFAULT 'Pending'",
+	  "blank_hint": "constraint",
+	  "error_hint": "The syntax for a default value is: DEFAULT 'value'",
+	  "result_msg": "DEFAULT 'Pending' set! Any INSERT that omits status will automatically store 'Pending'.",
+	  "hint": "Auto-value when none given: DEFAULT 'Pending'",
+	  "fail": [
+		{ "type": "dialogue", "char": "trainee", "name": "TRAINEE", "npc": "adult_13/confuse", "text": "That is not right. DEFAULT sets an automatic value — like DEFAULT 'Pending'." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_13/idle", "text": "Type: DEFAULT 'Pending'" }
+	  ]
+	},
+	{ "type": "dialogue", "char": "trainee", "name": "TRAINEE", "npc": "adult_13/talk",
+	  "text": "So DEFAULT is like a fallback — only used when the INSERT does not provide a value for that column." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_13/idle",
+	  "text": "Exactly. DEFAULT 0 for numbers, DEFAULT CURRENT_TIMESTAMP for automatic timestamps, DEFAULT 'Unknown' for text." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON 30 — Normalization  |  NPC: adult_13 trainee
+# ─────────────────────────────────────────────
+30: [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "adult_13/idle",
+	  "text": "The trainee found a messy table and wants to understand what went wrong with its design." },
+	{ "type": "dialogue", "char": "trainee", "name": "TRAINEE", "npc": "adult_13/talk",
+	  "text": "I found a bookings table that stores the guest's full address in every single booking row. Why is that a problem?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_13/idle",
+	  "text": "That is data redundancy — the main problem that database normalization solves. Let me ask you a question." },
+	{ "type": "sql_choice",
+	  "desc": "A bookings table stores guest_name, guest_address, room_type in EVERY booking row. What is the main problem with this design?",
+	  "options": [
+		[1, "Data redundancy — the guest's address is repeated in every booking, wasting space and causing update problems."],
+		[2, "The table has too many columns. Rename some of them to fix it."],
+		[3, "The table is missing a LIMIT clause on the SELECT statement."]
+	  ],
+	  "correct_id": 1,
+	  "hint": "Repeated data across multiple rows is called data redundancy. Answer: id = 1",
+	  "fail": [
+		{ "type": "dialogue", "char": "trainee", "name": "TRAINEE", "npc": "adult_13/confuse", "text": "Not quite. The problem is the same data being stored over and over — redundancy." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_13/idle", "text": "Answer 1 is correct — data redundancy is the problem." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_13/idle",
+	  "text": "Normalization fixes this by splitting data into related tables. Guest address belongs in the guests table, not bookings." },
+	{ "type": "dialogue", "char": "trainee", "name": "TRAINEE", "npc": "adult_13/talk",
+	  "text": "So if a guest moves, we update their address in ONE place instead of updating every booking row?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_13/idle",
+	  "text": "Exactly! That is 3NF — third normal form. Each piece of data stored once, referenced everywhere else by ID." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON 31 — Transactions  |  NPC: hotel_manager
+# ─────────────────────────────────────────────
+31: [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "A system crash happened mid-operation — a guest was being moved between rooms and the data is now inconsistent." },
+	{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "The old booking was deleted but the new one was never created! The guest has no room. How do we prevent this?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "Transactions! BEGIN groups multiple statements together. Either ALL execute (COMMIT) or NONE do (ROLLBACK)." },
+	{ "type": "sql_fill", "gamemode": "transaction",
+	  "desc": "The booking update is done. Complete the transaction to save the changes permanently.",
+	  "update_line": "UPDATE bookings SET room_type = 'Suite' WHERE guest_id = 1",
+	  "answer": "COMMIT",
+	  "hint": "To save a transaction permanently: COMMIT",
+	  "result_msg": "Transaction committed! Both changes are saved as one atomic unit.\n\nACID properties:\n- Atomicity: all or nothing\n- Consistency: rules always maintained\n- Isolation: transactions do not interfere\n- Durability: committed data survives crashes",
+	  "fail": [
+		{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/shock", "text": "That is not right. Type COMMIT to save or ROLLBACK to cancel the transaction." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle", "text": "Type COMMIT to permanently save the transaction." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "COMMIT saves everything. If anything fails before COMMIT, ROLLBACK undoes all changes automatically." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "ACID properties make databases reliable for critical operations like banking, medical records, and hotel bookings." },
+	{ "type": "end" }
+]
+
 } # end LESSONS
