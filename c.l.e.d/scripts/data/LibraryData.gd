@@ -1608,6 +1608,84 @@ const LESSONS: Dictionary = {
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
 	  "text": "ACID guarantees make databases reliable. Transactions are the foundation of data integrity." },
 	{ "type": "end" }
-]
+],
+
+# ─────────────────────────────────────────────
+#  LESSON L32 — FOREIGN KEY  |  NPC: librarian
+# ─────────────────────────────────────────────
+"L32": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/librarian/idle",
+	  "text": "The library has two tables — borrowers and loans. The librarian wants to ensure every loan record belongs to a registered borrower." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "A FOREIGN KEY constraint links a column to the PRIMARY KEY of another table. A loan can't reference a borrower who doesn't exist in our system." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
+	  "text": "This prevents ghost records — loans that belong to nobody?" },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "Exactly — referential integrity. The keyword pointing to the other table is REFERENCES." },
+	{ "type": "sql_fill", "gamemode": "foreign_key",
+	  "desc": "Complete the FOREIGN KEY constraint to link loans.borrower_id to the borrowers table.",
+	  "table": "loans", "fk_col": "borrower_id", "ref_table": "borrowers",
+	  "answer": "REFERENCES",
+	  "hint": "The keyword that points to another table is REFERENCES.",
+	  "result_msg": "FOREIGN KEY created! Every borrower_id in loans must now exist in the borrowers table.",
+	  "fail": [
+	    { "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	      "text": "Not quite. After FOREIGN KEY (borrower_id), type REFERENCES followed by the table and column." }
+	  ]
+	},
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON L33 — Indexes  |  NPC: librarian
+# ─────────────────────────────────────────────
+"L33": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/librarian/idle",
+	  "text": "The library catalog has grown to tens of thousands of books. Searching by title is noticeably slow." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "An INDEX is like a back-of-book index — it maps values to row locations so the database can jump straight to matches without reading every row." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
+	  "text": "It doesn't change what's stored in the table — it just changes how fast we can find things?" },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "Precisely. Create an index on the title column of the books table." },
+	{ "type": "sql_fill", "gamemode": "create_index",
+	  "desc": "Create an index on the books table to speed up searches by title.",
+	  "index_name": "idx_title", "table": "books", "column": "title",
+	  "answer": "INDEX",
+	  "hint": "The keyword after CREATE is INDEX.",
+	  "result_msg": "Index created! Book title searches will now be much faster.",
+	  "fail": [
+	    { "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	      "text": "Not quite. The syntax is CREATE INDEX name ON table(column)." }
+	  ]
+	},
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON L34 — Views  |  NPC: librarian
+# ─────────────────────────────────────────────
+"L34": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/librarian/idle",
+	  "text": "Staff check overdue books every day using a long SELECT with a WHERE clause. The librarian wants a simpler way to access this list." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "A VIEW stores a SELECT query as a virtual table. Instead of rewriting the query, staff just SELECT from the view — always getting the current data." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
+	  "text": "Like bookmarking a filtered page in the catalog — it updates automatically as books are returned?" },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "Perfect way to think about it. Create the overdue books view." },
+	{ "type": "sql_fill", "gamemode": "create_view",
+	  "desc": "Create a view called vw_overdue that shows all loans with status 'Overdue'.",
+	  "view_name": "vw_overdue", "select_cols": "*", "table": "loans", "condition": "status = 'Overdue'",
+	  "answer": "VIEW",
+	  "hint": "The keyword after CREATE is VIEW.",
+	  "result_msg": "View created! SELECT * FROM vw_overdue now shows all overdue loans instantly.",
+	  "fail": [
+	    { "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	      "text": "Not quite. The syntax is CREATE VIEW name AS SELECT ... The keyword after CREATE is VIEW." }
+	  ]
+	},
+	{ "type": "end" }
+],
 
 } # end LESSONS

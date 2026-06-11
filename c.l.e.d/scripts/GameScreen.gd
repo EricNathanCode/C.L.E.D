@@ -29,6 +29,9 @@ const GM_TO_SQL: Dictionary = {
 	"alter_table":       "ALTER TABLE",
 	"drop_table":        "DROP TABLE",
 	"transaction":       "Transactions",
+	"foreign_key":       "FOREIGN KEY",
+	"create_index":      "CREATE INDEX",
+	"create_view":       "CREATE VIEW",
 }
 
 const SQL_GLOSSARY: Array = [
@@ -75,6 +78,9 @@ const SQL_GLOSSARY: Array = [
 	["LEFT JOIN",       "Returns ALL rows from the left table plus matching rows from the right. Unmatched = NULL.", "SELECT * FROM a\nLEFT JOIN b ON a.id = b.ref_id;"],
 	["Normalization",   "Organizing a database to reduce redundancy and improve data integrity.", "1NF: atomic values\n2NF: no partial dependencies\n3NF: no transitive dependencies"],
 	["Transactions",    "Groups SQL statements into one unit — all succeed (COMMIT) or all cancel (ROLLBACK).", "BEGIN;\n  UPDATE ...;\nCOMMIT;"],
+	["FOREIGN KEY",     "Links a column in one table to the primary key of another, enforcing referential integrity.", "CREATE TABLE orders (\n    customer_id INT,\n    FOREIGN KEY (customer_id) REFERENCES customers(id)\n);"],
+	["CREATE INDEX",    "Creates a lookup structure on a column to speed up SELECT queries on large tables.", "CREATE INDEX idx_last_name\nON guests(last_name);"],
+	["CREATE VIEW",     "Saves a SELECT query as a virtual table you can query like a real table.", "CREATE VIEW vw_active AS\nSELECT * FROM guests\nWHERE status = 'Active';"],
 ]
 
 const GM_SCENES: Dictionary = {
@@ -103,6 +109,9 @@ const GM_SCENES: Dictionary = {
 	"alter_table":      "res://gamemode/scene/GM_AlterTable.tscn",
 	"drop_table":       "res://gamemode/scene/GM_DropTable.tscn",
 	"transaction":      "res://gamemode/scene/GM_Transaction.tscn",
+	"foreign_key":      "res://gamemode/scene/GM_ForeignKey.tscn",
+	"create_index":     "res://gamemode/scene/GM_CreateIndex.tscn",
+	"create_view":      "res://gamemode/scene/GM_CreateView.tscn",
 }
 
 const BG_HOTEL   := "res://images/backgrounds/BG_hotel.png"

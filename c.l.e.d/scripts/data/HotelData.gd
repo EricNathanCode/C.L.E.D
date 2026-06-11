@@ -1292,6 +1292,84 @@ const LESSONS: Dictionary = {
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle",
 	  "text": "ACID properties make databases reliable for critical operations like banking, medical records, and hotel bookings." },
 	{ "type": "end" }
-]
+],
+
+# ─────────────────────────────────────────────
+#  LESSON 32 — FOREIGN KEY  |  NPC: hotel_manager
+# ─────────────────────────────────────────────
+32: [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "The hotel now has two tables — guests and bookings. The manager wants to make sure every booking belongs to a real guest." },
+	{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "A FOREIGN KEY links a column in one table to the PRIMARY KEY of another. It prevents orphan rows — bookings that point to guests who don't exist." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "So if I try to insert a booking with a guest_id that isn't in the guests table, the database will reject it?" },
+	{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "Exactly. The keyword that points to the other table is REFERENCES. Complete the CREATE TABLE statement." },
+	{ "type": "sql_fill", "gamemode": "foreign_key",
+	  "desc": "Complete the FOREIGN KEY constraint to link bookings.guest_id to the guests table.",
+	  "table": "bookings", "fk_col": "guest_id", "ref_table": "guests",
+	  "answer": "REFERENCES",
+	  "hint": "The keyword that points to another table is REFERENCES.",
+	  "result_msg": "FOREIGN KEY created! Every guest_id in bookings must now exist in the guests table.",
+	  "fail": [
+	    { "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/talk",
+	      "text": "Not quite. After FOREIGN KEY (guest_id), type REFERENCES followed by the table and column you're linking to." }
+	  ]
+	},
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON 33 — Indexes  |  NPC: hotel_manager
+# ─────────────────────────────────────────────
+33: [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "The guests table now has thousands of rows. Searching by last name is getting slow." },
+	{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "An INDEX creates a hidden lookup structure on a column — like a book index. The database skips scanning every row and jumps straight to matches." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "Does adding an index change the data in the table?" },
+	{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "No — it only affects query speed. The syntax is CREATE INDEX name ON table(column). Try it." },
+	{ "type": "sql_fill", "gamemode": "create_index",
+	  "desc": "Create an index on the guests table to speed up searches by last_name.",
+	  "index_name": "idx_last_name", "table": "guests", "column": "last_name",
+	  "answer": "INDEX",
+	  "hint": "The keyword after CREATE is INDEX.",
+	  "result_msg": "Index created! Searches on last_name will now skip a full table scan.",
+	  "fail": [
+	    { "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/talk",
+	      "text": "Not quite. The syntax is CREATE INDEX name ON table(column). The keyword after CREATE is INDEX." }
+	  ]
+	},
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON 34 — Views  |  NPC: hotel_manager
+# ─────────────────────────────────────────────
+34: [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "The front desk runs the same long SELECT query every morning to list active guests. The manager wants a shortcut." },
+	{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "A VIEW is a saved SELECT query stored under a name. You query it exactly like a table, but the data always reflects the latest state." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "So it's like an alias for a query — I don't have to rewrite it every time?" },
+	{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "Exactly. CREATE VIEW name AS SELECT ... — create the view for active guests." },
+	{ "type": "sql_fill", "gamemode": "create_view",
+	  "desc": "Create a view called vw_active_guests that shows all guests whose status is 'Active'.",
+	  "view_name": "vw_active_guests", "select_cols": "*", "table": "guests", "condition": "status = 'Active'",
+	  "answer": "VIEW",
+	  "hint": "The keyword after CREATE is VIEW.",
+	  "result_msg": "View created! SELECT * FROM vw_active_guests now shows all active guests automatically.",
+	  "fail": [
+	    { "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/talk",
+	      "text": "Not quite. The syntax is CREATE VIEW name AS SELECT ... The keyword after CREATE is VIEW." }
+	  ]
+	},
+	{ "type": "end" }
+],
 
 } # end LESSONS

@@ -1249,6 +1249,84 @@ const LESSONS: Dictionary = {
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/coffee_owner/idle",
 	  "text": "That is atomicity — the A in ACID. Transactions are all-or-nothing." },
 	{ "type": "end" }
-]
+],
+
+# ─────────────────────────────────────────────
+#  LESSON C32 — FOREIGN KEY  |  NPC: coffee_owner
+# ─────────────────────────────────────────────
+"C32": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "The café has separate tables for customers and orders. The owner wants to ensure every order belongs to a real customer." },
+	{ "type": "dialogue", "char": "owner", "name": "OWNER", "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "A FOREIGN KEY enforces that a column in one table must match a PRIMARY KEY in another. No orphan orders allowed." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "So if a customer is deleted, any orders linked to them would be blocked unless we handle that too?" },
+	{ "type": "dialogue", "char": "owner", "name": "OWNER", "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "Correct — referential integrity at work. The keyword that points to the other table is REFERENCES." },
+	{ "type": "sql_fill", "gamemode": "foreign_key",
+	  "desc": "Complete the FOREIGN KEY constraint to link orders.customer_id to the customers table.",
+	  "table": "orders", "fk_col": "customer_id", "ref_table": "customers",
+	  "answer": "REFERENCES",
+	  "hint": "The keyword that points to another table is REFERENCES.",
+	  "result_msg": "FOREIGN KEY created! Every customer_id in orders must now exist in the customers table.",
+	  "fail": [
+	    { "type": "dialogue", "char": "owner", "name": "OWNER", "npc": "NPC_occupations/coffee_owner/talk",
+	      "text": "Not quite. After FOREIGN KEY (customer_id), type REFERENCES followed by the table and column." }
+	  ]
+	},
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON C33 — Indexes  |  NPC: coffee_owner
+# ─────────────────────────────────────────────
+"C33": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "The menu table has grown large and searches by item name are slowing down during the morning rush." },
+	{ "type": "dialogue", "char": "owner", "name": "OWNER", "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "An INDEX speeds up queries by building a lookup structure — like tabs in a recipe binder. No change to the data, just faster searching." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "Can I add an index to any column?" },
+	{ "type": "dialogue", "char": "owner", "name": "OWNER", "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "Yes — focus on columns you search or filter often. Create an index on item_name now." },
+	{ "type": "sql_fill", "gamemode": "create_index",
+	  "desc": "Create an index on the menu table to speed up searches by item_name.",
+	  "index_name": "idx_item_name", "table": "menu", "column": "item_name",
+	  "answer": "INDEX",
+	  "hint": "The keyword after CREATE is INDEX.",
+	  "result_msg": "Index created! Searches on item_name will now run significantly faster.",
+	  "fail": [
+	    { "type": "dialogue", "char": "owner", "name": "OWNER", "npc": "NPC_occupations/coffee_owner/talk",
+	      "text": "Not quite. The syntax is CREATE INDEX name ON table(column)." }
+	  ]
+	},
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON C34 — Views  |  NPC: coffee_owner
+# ─────────────────────────────────────────────
+"C34": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "Every shift the staff prints a list of today's pending orders. They run the same SELECT query each time." },
+	{ "type": "dialogue", "char": "owner", "name": "OWNER", "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "A VIEW saves that query under a name. Staff can just SELECT from the view — it always returns the freshest data." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "So a view is like a named window into the current data?" },
+	{ "type": "dialogue", "char": "owner", "name": "OWNER", "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "Exactly. CREATE VIEW name AS SELECT ... — create the pending orders view now." },
+	{ "type": "sql_fill", "gamemode": "create_view",
+	  "desc": "Create a view called vw_pending_orders that shows all orders with status 'Pending'.",
+	  "view_name": "vw_pending_orders", "select_cols": "*", "table": "orders", "condition": "status = 'Pending'",
+	  "answer": "VIEW",
+	  "hint": "The keyword after CREATE is VIEW.",
+	  "result_msg": "View created! SELECT * FROM vw_pending_orders now always shows live pending orders.",
+	  "fail": [
+	    { "type": "dialogue", "char": "owner", "name": "OWNER", "npc": "NPC_occupations/coffee_owner/talk",
+	      "text": "Not quite. The syntax is CREATE VIEW name AS SELECT ... The keyword after CREATE is VIEW." }
+	  ]
+	},
+	{ "type": "end" }
+],
 
 } # end LESSONS

@@ -1598,6 +1598,84 @@ const LESSONS: Dictionary = {
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
 	  "text": "ACID properties are why databases are trusted for critical systems like law enforcement records." },
 	{ "type": "end" }
-]
+],
+
+# ─────────────────────────────────────────────
+#  LESSON P32 — FOREIGN KEY  |  NPC: police chief
+# ─────────────────────────────────────────────
+"P32": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",
+	  "text": "The station has two tables — officers and cases. The chief wants to enforce that every case is assigned to a real officer." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
+	  "text": "A FOREIGN KEY ensures a column's values exist in another table. No case can reference an officer ID that doesn't exist." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
+	  "text": "So it's a data integrity constraint — the database itself enforces the relationship?" },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
+	  "text": "Exactly. The keyword linking to the other table is REFERENCES. Complete the statement." },
+	{ "type": "sql_fill", "gamemode": "foreign_key",
+	  "desc": "Complete the FOREIGN KEY constraint to link cases.officer_id to the officers table.",
+	  "table": "cases", "fk_col": "officer_id", "ref_table": "officers",
+	  "answer": "REFERENCES",
+	  "hint": "The keyword that points to another table is REFERENCES.",
+	  "result_msg": "FOREIGN KEY created! Every officer_id in cases must now exist in the officers table.",
+	  "fail": [
+	    { "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
+	      "text": "Not quite. After FOREIGN KEY (officer_id), type REFERENCES followed by the table and column." }
+	  ]
+	},
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON P33 — Indexes  |  NPC: police chief
+# ─────────────────────────────────────────────
+"P33": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",
+	  "text": "The cases table now holds years of records. Searching by suspect name during an investigation is taking too long." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
+	  "text": "An INDEX is a behind-the-scenes lookup structure. The database uses it to find matching rows instantly instead of scanning every record." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
+	  "text": "Like a card catalog in a records room — you go straight to the drawer without checking every file?" },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
+	  "text": "Perfect analogy. Create the index on suspect_name now." },
+	{ "type": "sql_fill", "gamemode": "create_index",
+	  "desc": "Create an index on the cases table to speed up searches by suspect_name.",
+	  "index_name": "idx_suspect_name", "table": "cases", "column": "suspect_name",
+	  "answer": "INDEX",
+	  "hint": "The keyword after CREATE is INDEX.",
+	  "result_msg": "Index created! Suspect searches will now skip a full table scan.",
+	  "fail": [
+	    { "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
+	      "text": "Not quite. The syntax is CREATE INDEX name ON table(column)." }
+	  ]
+	},
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON P34 — Views  |  NPC: police chief
+# ─────────────────────────────────────────────
+"P34": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",
+	  "text": "Officers check open cases every morning with the same complex SELECT query. The chief wants a simpler way." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
+	  "text": "A VIEW wraps a SELECT query into a named virtual table. Officers can query it directly without writing the full query each time." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
+	  "text": "And the view always reflects the current data — it's not a snapshot?" },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
+	  "text": "Correct — live data every time. Create the open cases view." },
+	{ "type": "sql_fill", "gamemode": "create_view",
+	  "desc": "Create a view called vw_open_cases that shows all cases with status 'Open'.",
+	  "view_name": "vw_open_cases", "select_cols": "*", "table": "cases", "condition": "status = 'Open'",
+	  "answer": "VIEW",
+	  "hint": "The keyword after CREATE is VIEW.",
+	  "result_msg": "View created! Officers can now SELECT * FROM vw_open_cases for instant access.",
+	  "fail": [
+	    { "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
+	      "text": "Not quite. The syntax is CREATE VIEW name AS SELECT ... The keyword after CREATE is VIEW." }
+	  ]
+	},
+	{ "type": "end" }
+],
 
 } # end LESSONS
