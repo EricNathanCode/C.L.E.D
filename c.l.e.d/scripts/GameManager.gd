@@ -7,8 +7,9 @@ var world:     String = ""
 var lesson_id         = null
 
 # ── Toggles — persist across scenes ──────────────────
-var tts_enabled:   bool = false
-var music_enabled: bool = true
+var tts_enabled:         bool = false
+var music_enabled:       bool = true
+var dark_overlay_enabled: bool = false
 
 # ── Progress & scoring ────────────────────────────────
 var completed_lessons: Dictionary = {}   # "world_lid" → star_count (1–3)

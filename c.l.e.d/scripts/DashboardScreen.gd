@@ -9,10 +9,10 @@ const _DATA_PATHS: Dictionary = {
 }
 
 # ── Lesson metadata ───────────────────────────────────────
-const HOTEL_LESSONS  := [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-const CAFE_LESSONS   := ["C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9", "C10"]
-const POLICE_LESSONS := ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "P9", "P10"]
-const LIBRARY_LESSONS:= ["L1", "L2", "L3", "L4", "L5", "L6", "L7", "L8", "L9", "L10"]
+const HOTEL_LESSONS  := [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+const CAFE_LESSONS   := ["C1","C2","C3","C4","C5","C6","C7","C8","C9","C10","C11","C12","C13","C14","C15"]
+const POLICE_LESSONS := ["P1","P2","P3","P4","P5","P6","P7","P8","P9","P10","P11","P12","P13","P14","P15"]
+const LIBRARY_LESSONS:= ["L1","L2","L3","L4","L5","L6","L7","L8","L9","L10","L11","L12","L13","L14","L15"]
 
 const HOTEL_NAMES: Dictionary = {
 	1:  "SELECT — Choose Your Response",
@@ -23,8 +23,13 @@ const HOTEL_NAMES: Dictionary = {
 	6:  "ORDER BY — Sort Guest Records",
 	7:  "GROUP BY — Generate a Report",
 	8:  "IS NULL — Find Missing Guest Emails",
-	9:  "PRIMARY KEY — What Makes a Record Unique",
-	10: "JOIN — Combine Guests and Bookings",
+	9:  "CREATE DATABASE — Set Up the Hotel Database",
+	10: "CREATE TABLE — Define the Guests Table",
+	11: "PRIMARY KEY — What Makes a Record Unique",
+	12: "JOIN — Combine Guests and Bookings",
+	13: "INT — Whole Number Data Type",
+	14: "TEXT — String / Word Data Type",
+	15: "REAL — Decimal Number Data Type",
 }
 const CAFE_NAMES: Dictionary = {
 	"C1":  "SELECT — Take the Order",
@@ -35,8 +40,13 @@ const CAFE_NAMES: Dictionary = {
 	"C6":  "DELETE — Cancel an Order",
 	"C7":  "ORDER BY — Sort the Menu Items",
 	"C8":  "IS NULL — Find Orders with No Notes",
-	"C9":  "PRIMARY KEY — What Makes a Record Unique",
-	"C10": "JOIN — Combine Customers and Orders",
+	"C9":  "CREATE DATABASE — Set Up the Café Database",
+	"C10": "CREATE TABLE — Define the Orders Table",
+	"C11": "PRIMARY KEY — What Makes a Record Unique",
+	"C12": "JOIN — Combine Customers and Orders",
+	"C13": "INT — Whole Number Data Type",
+	"C14": "TEXT — String / Word Data Type",
+	"C15": "REAL — Decimal Number Data Type",
 }
 const POLICE_NAMES: Dictionary = {
 	"P1":  "SELECT — Handle a Citizen Report",
@@ -47,8 +57,13 @@ const POLICE_NAMES: Dictionary = {
 	"P6":  "ORDER BY — Sort Cases by Priority",
 	"P7":  "GROUP BY — Crime Category Report",
 	"P8":  "IS NULL — Find Unassigned Suspects",
-	"P9":  "PRIMARY KEY — What Makes a Record Unique",
-	"P10": "JOIN — Combine Cases and Officers",
+	"P9":  "CREATE DATABASE — Set Up the Police Database",
+	"P10": "CREATE TABLE — Define the Cases Table",
+	"P11": "PRIMARY KEY — What Makes a Record Unique",
+	"P12": "JOIN — Combine Cases and Officers",
+	"P13": "INT — Whole Number Data Type",
+	"P14": "TEXT — String / Word Data Type",
+	"P15": "REAL — Decimal Number Data Type",
 }
 const LIBRARY_NAMES: Dictionary = {
 	"L1":  "SELECT — Help a Visitor",
@@ -59,8 +74,13 @@ const LIBRARY_NAMES: Dictionary = {
 	"L6":  "ORDER BY — Sort Books Alphabetically",
 	"L7":  "GROUP BY — Books by Genre Report",
 	"L8":  "IS NULL — Find Unreturned Books",
-	"L9":  "PRIMARY KEY — What Makes a Record Unique",
-	"L10": "JOIN — Combine Borrowers and Books",
+	"L9":  "CREATE DATABASE — Set Up the Library Database",
+	"L10": "CREATE TABLE — Define the Borrowers Table",
+	"L11": "PRIMARY KEY — What Makes a Record Unique",
+	"L12": "JOIN — Combine Borrowers and Books",
+	"L13": "INT — Whole Number Data Type",
+	"L14": "TEXT — String / Word Data Type",
+	"L15": "REAL — Decimal Number Data Type",
 }
 const WORLD_DISPLAY: Dictionary = {
 	"hotel":   "Hotel World",
@@ -68,6 +88,32 @@ const WORLD_DISPLAY: Dictionary = {
 	"police":  "Police Station",
 	"library": "Library",
 }
+
+# ── Folder groupings per world ────────────────────────────
+const HOTEL_FOLDERS := [
+	{ "name": "SQL Queries",       "ids": [1, 2, 3, 4, 5] },
+	{ "name": "Sorting & Reports", "ids": [6, 7] },
+	{ "name": "Database Concepts", "ids": [8, 9, 10, 11, 12] },
+	{ "name": "Data Types",        "ids": [13, 14, 15] },
+]
+const CAFE_FOLDERS := [
+	{ "name": "SQL Queries",       "ids": ["C1", "C2", "C4", "C5", "C6"] },
+	{ "name": "Sorting & Reports", "ids": ["C3", "C7"] },
+	{ "name": "Database Concepts", "ids": ["C8", "C9", "C10", "C11", "C12"] },
+	{ "name": "Data Types",        "ids": ["C13", "C14", "C15"] },
+]
+const POLICE_FOLDERS := [
+	{ "name": "SQL Queries",       "ids": ["P1", "P2", "P3", "P4", "P5"] },
+	{ "name": "Sorting & Reports", "ids": ["P6", "P7"] },
+	{ "name": "Database Concepts", "ids": ["P8", "P9", "P10", "P11", "P12"] },
+	{ "name": "Data Types",        "ids": ["P13", "P14", "P15"] },
+]
+const LIBRARY_FOLDERS := [
+	{ "name": "SQL Queries",       "ids": ["L1", "L2", "L3", "L4", "L5"] },
+	{ "name": "Sorting & Reports", "ids": ["L6", "L7"] },
+	{ "name": "Database Concepts", "ids": ["L8", "L9", "L10", "L11", "L12"] },
+	{ "name": "Data Types",        "ids": ["L13", "L14", "L15"] },
+]
 
 # ── Node refs ─────────────────────────────────────────────
 @onready var _screen_lbl    := $TopBar/ScreenLabel
@@ -135,47 +181,96 @@ func build_lessons() -> void:
 
 	var ids: Array
 	var names: Dictionary
+	var folders: Array
 	match GameManager.world:
-		"hotel":   ids = HOTEL_LESSONS;   names = HOTEL_NAMES
-		"cafe":    ids = CAFE_LESSONS;    names = CAFE_NAMES
-		"police":  ids = POLICE_LESSONS;  names = POLICE_NAMES
-		"library": ids = LIBRARY_LESSONS; names = LIBRARY_NAMES
-		_:         ids = [];              names = {}
+		"hotel":
+			ids = HOTEL_LESSONS;   names = HOTEL_NAMES;   folders = HOTEL_FOLDERS
+		"cafe":
+			ids = CAFE_LESSONS;    names = CAFE_NAMES;    folders = CAFE_FOLDERS
+		"police":
+			ids = POLICE_LESSONS;  names = POLICE_NAMES;  folders = POLICE_FOLDERS
+		"library":
+			ids = LIBRARY_LESSONS; names = LIBRARY_NAMES; folders = LIBRARY_FOLDERS
+		_:
+			ids = [];              names = {};             folders = []
 
-	var num: int = 0
-	for id in ids:
-		num += 1
-		var captured_id = id
+	# Build sequential number map: lesson_id → display number (01, 02…)
+	var num_map: Dictionary = {}
+	for i in range(ids.size()):
+		num_map[ids[i]] = i + 1
 
-		# Row wrapper so we can show star badge next to button
-		var row := HBoxContainer.new()
-		row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		row.add_theme_constant_override("separation", 6)
+	for folder in folders:
+		var folder_name: String  = folder["name"]
+		var folder_ids: Array    = folder["ids"]
 
-		var btn := Button.new()
-		btn.text = "%02d  " % num + names.get(id, "Lesson " + str(id))
-		btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		btn.text_overrun_behavior = TextServer.OVERRUN_NO_TRIMMING
-		btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		btn.pressed.connect(func():
-			GameManager.lesson_id = captured_id
-			get_tree().root.get_node("Main").show_screen("game")
+		# Count completions for the progress badge
+		var done: int = 0
+		for fid in folder_ids:
+			if GameManager.get_stars(GameManager.world, fid) > 0:
+				done += 1
+		var badge: String = "  (%d/%d)" % [done, folder_ids.size()]
+
+		# ── Folder header button ─────────────────────────
+		var hdr := Button.new()
+		hdr.text = "▼  " + folder_name + badge
+		hdr.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		hdr.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		_style_folder_btn(hdr)
+		_lesson_list.add_child(hdr)
+
+		# ── Lesson container (starts expanded) ───────────
+		var box := VBoxContainer.new()
+		box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		box.add_theme_constant_override("separation", 4)
+		_lesson_list.add_child(box)
+
+		# Toggle collapse on header press
+		var cap_hdr    = hdr
+		var cap_box    = box
+		var cap_fname  = folder_name
+		var cap_badge  = badge
+		hdr.pressed.connect(func():
+			cap_box.visible = not cap_box.visible
+			cap_hdr.text = ("▼  " if cap_box.visible else "▶  ") + cap_fname + cap_badge
 		)
-		btn.mouse_entered.connect(func(): _show_preview(captured_id))
-		_style_btn(btn, "secondary", 14)
-		row.add_child(btn)
 
-		# Star badge for completed lessons
-		var stars: int = GameManager.get_stars(GameManager.world, captured_id)
-		if stars > 0:
-			var star_lbl := Label.new()
-			star_lbl.text = "★".repeat(stars) + "☆".repeat(3 - stars)
-			star_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-			star_lbl.add_theme_font_size_override("font_size", 14)
-			star_lbl.add_theme_color_override("font_color", Color("#F59E0B"))
-			row.add_child(star_lbl)
+		# ── Lesson buttons inside the folder ─────────────
+		for fid in folder_ids:
+			var captured_id = fid
+			var num: int = num_map.get(fid, 0)
 
-		_lesson_list.add_child(row)
+			var row := HBoxContainer.new()
+			row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			row.add_theme_constant_override("separation", 6)
+
+			# Indent spacer
+			var spacer := Control.new()
+			spacer.custom_minimum_size = Vector2(18, 0)
+			row.add_child(spacer)
+
+			var btn := Button.new()
+			btn.text = "%02d  " % num + names.get(fid, "Lesson " + str(fid))
+			btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			btn.text_overrun_behavior = TextServer.OVERRUN_NO_TRIMMING
+			btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
+			btn.pressed.connect(func():
+				GameManager.lesson_id = captured_id
+				get_tree().root.get_node("Main").show_screen("game")
+			)
+			btn.mouse_entered.connect(func(): _show_preview(captured_id))
+			_style_btn(btn, "secondary", 14)
+			row.add_child(btn)
+
+			var stars: int = GameManager.get_stars(GameManager.world, captured_id)
+			if stars > 0:
+				var star_lbl := Label.new()
+				star_lbl.text = "★".repeat(stars) + "☆".repeat(3 - stars)
+				star_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+				star_lbl.add_theme_font_size_override("font_size", 14)
+				star_lbl.add_theme_color_override("font_color", Color("#F59E0B"))
+				row.add_child(star_lbl)
+
+			box.add_child(row)
 
 	# Show placeholder until hover
 	_reset_preview()
@@ -438,6 +533,27 @@ func _build_comic_panel(frame: Dictionary, stretch: float, full_width: bool = fa
 	cap_vbox.add_child(dial_lbl)
 
 	return outer
+
+# ── Folder header button style ───────────────────────────
+func _style_folder_btn(btn: Button) -> void:
+	btn.add_theme_font_size_override("font_size", 13)
+	btn.add_theme_color_override("font_color", Color("#F59E0B"))
+	var s := StyleBoxFlat.new()
+	s.bg_color     = Color(0.09, 0.11, 0.17, 0.90)
+	s.border_color = Color(0.28, 0.33, 0.46)
+	s.border_width_bottom = 2
+	s.set_corner_radius_all(6)
+	s.content_margin_left   = 12; s.content_margin_right  = 12
+	s.content_margin_top    = 9;  s.content_margin_bottom = 9
+	var h := s.duplicate() as StyleBoxFlat
+	h.bg_color     = Color(0.14, 0.17, 0.25, 0.95)
+	h.border_color = Color("#F59E0B")
+	h.border_width_bottom = 2
+	var p := s.duplicate() as StyleBoxFlat
+	p.bg_color = Color(0.07, 0.08, 0.13, 0.95)
+	btn.add_theme_stylebox_override("normal",  s)
+	btn.add_theme_stylebox_override("hover",   h)
+	btn.add_theme_stylebox_override("pressed", p)
 
 # ── 3-variant button style ────────────────────────────────
 func _style_btn(btn: Button, variant: String = "primary", font_size: int = 16) -> void:

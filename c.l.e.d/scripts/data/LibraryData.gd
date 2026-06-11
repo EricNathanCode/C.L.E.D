@@ -603,10 +603,134 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON L9 — PRIMARY KEY  |  NPC: adult_16 (Sofia returns)
-#  Topic: CREATE TABLE with PRIMARY KEY constraint
+#  LESSON L9 — CREATE DATABASE  |  NPC: adult_16 (Sofia)
+#  Topic: CREATE DATABASE — setting up the database container first
 # ─────────────────────────────────────────────
 "L9": [
+	{
+		"type": "dialogue",
+		"char": "scene",
+		"name": "SCENE",
+		"npc":  "adult_16/idle",
+		"text": "Sofia, the student you helped register, comes back to the library with a deeper question about how databases work."
+	},
+	{
+		"type": "dialogue",
+		"char": "visitor",
+		"name": "STUDENT",
+		"npc":  "adult_16/talk",
+		"text": "I've been practicing SELECT and INSERT at home. But I realized — how do I start from scratch? How do you create the database in the first place?"
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "adult_16/idle",
+		"text": "Great question! Before any tables exist, you run CREATE DATABASE. It reserves a named space — like building a room before filling it with shelves."
+	},
+	{
+		"type": "sql_fill",
+		"gamemode": "create_database",
+		"desc": "Create the library database. Type the missing keyword between CREATE and LibraryDB.",
+		"db_name": "LibraryDB",
+		"answer": "DATABASE",
+		"hint": "The keyword after CREATE for a new database container is: DATABASE",
+		"result_msg": "LibraryDB is now created! All library tables — books, borrowers, borrows — will be stored inside this database.",
+		"fail": [
+			{ "type": "dialogue", "char": "visitor", "name": "STUDENT", "npc": "adult_16/confuse", "text": "That is not the right keyword. We are creating a DATABASE container, not a table yet." },
+			{ "type": "dialogue", "char": "scene",   "name": "SCENE",   "npc": "adult_16/idle",   "text": "Sofia tilts her head, looking at the screen carefully." },
+			{ "type": "dialogue", "char": "you",     "name": "YOU",     "npc": "adult_16/idle",   "text": "The correct keyword is DATABASE — CREATE DATABASE LibraryDB." }
+		]
+	},
+	{
+		"type": "dialogue",
+		"char": "visitor",
+		"name": "STUDENT",
+		"npc":  "adult_16/talk",
+		"text": "So CREATE DATABASE comes first — before any tables! The database is like the library building, and the tables are the bookshelves inside."
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "adult_16/idle",
+		"text": "That is a perfect way to think about it. LibraryDB now exists. Next, we use CREATE TABLE to build the shelves inside it."
+	},
+	{
+		"type": "end"
+	}
+],
+
+# ─────────────────────────────────────────────
+#  LESSON L10 — CREATE TABLE  |  NPC: adult_16 (Sofia)
+#  Topic: CREATE TABLE — defining the table structure
+# ─────────────────────────────────────────────
+"L10": [
+	{
+		"type": "dialogue",
+		"char": "scene",
+		"name": "SCENE",
+		"npc":  "adult_16/idle",
+		"text": "Sofia comes back to the library again, this time asking about how the borrowers table was built inside the database."
+	},
+	{
+		"type": "dialogue",
+		"char": "visitor",
+		"name": "STUDENT",
+		"npc":  "adult_16/talk",
+		"text": "We created the database. Now how do we actually define a table inside it — the columns, the structure?"
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "adult_16/idle",
+		"text": "We use CREATE TABLE. You give it a name and list each column with its type. The database then enforces that structure for every row you insert."
+	},
+	{
+		"type": "sql_fill",
+		"gamemode": "create_table_keyword",
+		"desc": "Create the borrowers table inside LibraryDB. Type the missing keyword between CREATE and borrowers.",
+		"table": "borrowers",
+		"columns": [
+			["id",              "INT"],
+			["first_name",      "TEXT"],
+			["last_name",       "TEXT"],
+			["membership_type", "TEXT"]
+		],
+		"answer": "TABLE",
+		"hint": "The keyword after CREATE for a new table is: TABLE",
+		"result_msg": "borrowers table created! It has 4 columns: id (INT), first_name (TEXT), last_name (TEXT), membership_type (TEXT).",
+		"fail": [
+			{ "type": "dialogue", "char": "visitor", "name": "STUDENT", "npc": "adult_16/confuse", "text": "Not right. The database already exists — now we are creating a TABLE inside it." },
+			{ "type": "dialogue", "char": "scene",   "name": "SCENE",   "npc": "adult_16/idle",   "text": "Sofia checks her notebook." },
+			{ "type": "dialogue", "char": "you",     "name": "YOU",     "npc": "adult_16/idle",   "text": "The keyword is TABLE — CREATE TABLE borrowers." }
+		]
+	},
+	{
+		"type": "dialogue",
+		"char": "visitor",
+		"name": "STUDENT",
+		"npc":  "adult_16/talk",
+		"text": "CREATE TABLE — and inside the parentheses you list every column with its type. That is the blueprint for all the rows that follow."
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "adult_16/idle",
+		"text": "Perfect. Think of it like designing a form — CREATE TABLE defines the fields, and INSERT fills in the actual data."
+	},
+	{
+		"type": "end"
+	}
+],
+
+# ─────────────────────────────────────────────
+#  LESSON L11 — PRIMARY KEY  |  NPC: adult_16 (Sofia returns)
+#  Topic: CREATE TABLE with PRIMARY KEY constraint
+# ─────────────────────────────────────────────
+"L11": [
 	{
 		"type": "dialogue",
 		"char": "scene",
@@ -669,10 +793,10 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON L10 — JOIN  |  NPC: librarian
+#  LESSON L12 — JOIN  |  NPC: librarian
 #  Topic: FOREIGN KEY / JOIN — combining two tables
 # ─────────────────────────────────────────────
-"L10": [
+"L12": [
 	{
 		"type": "dialogue",
 		"char": "scene",
@@ -744,6 +868,207 @@ const LESSONS: Dictionary = {
 		"name": "LIBRARIAN",
 		"npc":  "NPC_occupations/librarian/think",
 		"text": "Excellent. JOIN is essential when your data is spread across multiple tables — it brings everything together in one view."
+	},
+	{
+		"type": "end"
+	}
+],
+
+# ─────────────────────────────────────────────
+#  LESSON L13 — INT  |  NPC: adult_16 (Sofia)
+#  Topic: Data Type INT — whole numbers
+# ─────────────────────────────────────────────
+"L13": [
+	{
+		"type": "dialogue",
+		"char": "scene",
+		"name": "SCENE",
+		"npc":  "adult_16/idle",
+		"text": "Sofia has one more question before she leaves — she wants to understand what INT and TEXT mean in the table definition."
+	},
+	{
+		"type": "dialogue",
+		"char": "visitor",
+		"name": "STUDENT",
+		"npc":  "adult_16/talk",
+		"text": "I see INT next to the id column. What does that mean? Why not use TEXT for everything?"
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "adult_16/idle",
+		"text": "INT stands for Integer — a whole number, no decimals. We use INT for IDs and counts because you can never have half a borrower."
+	},
+	{
+		"type": "sql_fill",
+		"gamemode": "data_type",
+		"desc": "Define the borrowers table. The 'id' column stores a whole number. Fill in the correct data type.",
+		"table": "borrowers",
+		"columns": [
+			["id",              ""],
+			["first_name",      "TEXT"],
+			["last_name",       "TEXT"],
+			["membership_type", "TEXT"]
+		],
+		"blank_col": "id",
+		"answer": "INT",
+		"type_hint": "Whole numbers (IDs, counts) use INT.",
+		"hint": "A whole number data type (no decimals) is: INT",
+		"result_msg": "Correct! INT stores whole numbers — 1, 2, 3. Borrower #5 will always be borrower #5, never #5.5.",
+		"fail": [
+			{ "type": "dialogue", "char": "visitor", "name": "STUDENT", "npc": "adult_16/confuse", "text": "That is not right. The id column stores whole numbers only — no letters or decimals." },
+			{ "type": "dialogue", "char": "scene",   "name": "SCENE",   "npc": "adult_16/idle",   "text": "Sofia looks at the column definition carefully." },
+			{ "type": "dialogue", "char": "you",     "name": "YOU",     "npc": "adult_16/idle",   "text": "Whole numbers use INT — integer." }
+		]
+	},
+	{
+		"type": "dialogue",
+		"char": "visitor",
+		"name": "STUDENT",
+		"npc":  "adult_16/talk",
+		"text": "INT = integer = whole number! So the database rejects 5.5 as an id because it can only store complete numbers."
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "adult_16/idle",
+		"text": "Exactly. The database enforces the type so your data stays clean and consistent."
+	},
+	{
+		"type": "end"
+	}
+],
+
+# ─────────────────────────────────────────────
+#  LESSON L14 — TEXT  |  NPC: adult_16 (Sofia)
+#  Topic: Data Type TEXT — strings / words
+# ─────────────────────────────────────────────
+"L14": [
+	{
+		"type": "dialogue",
+		"char": "scene",
+		"name": "SCENE",
+		"npc":  "adult_16/idle",
+		"text": "Sofia asks about the TEXT type she saw next to first_name in the borrowers table."
+	},
+	{
+		"type": "dialogue",
+		"char": "visitor",
+		"name": "STUDENT",
+		"npc":  "adult_16/talk",
+		"text": "And TEXT means it stores letters? Like a name or a book title — not a number?"
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "adult_16/idle",
+		"text": "Correct! TEXT stores any sequence of characters — letters, words, spaces, symbols. Names, titles, descriptions — all TEXT."
+	},
+	{
+		"type": "sql_fill",
+		"gamemode": "data_type",
+		"desc": "Define the books table. The 'title' column stores a book title (words). Fill in the correct data type.",
+		"table": "books",
+		"columns": [
+			["id",     "INT"],
+			["title",  ""],
+			["author", "TEXT"],
+			["genre",  "TEXT"]
+		],
+		"blank_col": "title",
+		"answer": "TEXT",
+		"type_hint": "Names and words use TEXT (also called STRING).",
+		"hint": "Letters and words use: TEXT  (also called STRING)",
+		"result_msg": "Correct! TEXT stores words and characters — 'SQL Basics', 'The Universe', 'Fiction'. You can also type STRING and it means the same thing.",
+		"fail": [
+			{ "type": "dialogue", "char": "visitor", "name": "STUDENT", "npc": "adult_16/confuse", "text": "Not quite. title stores a book title — words, not numbers." },
+			{ "type": "dialogue", "char": "scene",   "name": "SCENE",   "npc": "adult_16/idle",   "text": "Sofia looks at a book on the shelf." },
+			{ "type": "dialogue", "char": "you",     "name": "YOU",     "npc": "adult_16/idle",   "text": "Letters and words use TEXT — also called STRING in some databases." }
+		]
+	},
+	{
+		"type": "dialogue",
+		"char": "visitor",
+		"name": "STUDENT",
+		"npc":  "adult_16/talk",
+		"text": "TEXT for words, INT for numbers. Those two cover almost everything in a library catalog!"
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "adult_16/idle",
+		"text": "Most of the time, yes. There is one more type — for when you need decimal numbers like fees or measurements."
+	},
+	{
+		"type": "end"
+	}
+],
+
+# ─────────────────────────────────────────────
+#  LESSON L15 — REAL  |  NPC: librarian
+#  Topic: Data Type REAL — decimal / float numbers
+# ─────────────────────────────────────────────
+"L15": [
+	{
+		"type": "dialogue",
+		"char": "scene",
+		"name": "SCENE",
+		"npc":  "NPC_occupations/librarian/idle",
+		"text": "The librarian asks you to create a late_fees table to track overdue fines, which involve decimal amounts."
+	},
+	{
+		"type": "dialogue",
+		"char": "librarian",
+		"name": "LIBRARIAN",
+		"npc":  "NPC_occupations/librarian/talk",
+		"text": "The fee_amount column stores values like 1.50 and 4.25. Those are decimal numbers — INT would round them. What type handles decimals?"
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "NPC_occupations/librarian/idle",
+		"text": "REAL — it stores decimal numbers accurately. Perfect for fees, prices, or any measurement that can have a fractional part."
+	},
+	{
+		"type": "sql_fill",
+		"gamemode": "data_type",
+		"desc": "Define the late_fees table. The 'fee_amount' column stores a decimal value like 1.50. Fill in the correct data type.",
+		"table": "late_fees",
+		"columns": [
+			["id",         "INT"],
+			["borrower_id","INT"],
+			["book_title", "TEXT"],
+			["fee_amount", ""]
+		],
+		"blank_col": "fee_amount",
+		"answer": "REAL",
+		"type_hint": "Decimal numbers (prices, measurements) use REAL (also called FLOAT).",
+		"hint": "Decimal numbers use: REAL  (also called FLOAT)",
+		"result_msg": "Correct! REAL stores decimal numbers — 1.50, 4.25, 0.75. You can also type FLOAT and it means the same thing.",
+		"fail": [
+			{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "That is wrong! fee_amount stores decimal values — not whole numbers, not text." },
+			{ "type": "dialogue", "char": "scene",     "name": "SCENE",     "npc": "NPC_occupations/librarian/idle",  "text": "The librarian shows the overdue fine schedule." },
+			{ "type": "dialogue", "char": "you",       "name": "YOU",       "npc": "NPC_occupations/librarian/idle",  "text": "Decimal numbers use REAL — also called FLOAT." }
+		]
+	},
+	{
+		"type": "dialogue",
+		"char": "librarian",
+		"name": "LIBRARIAN",
+		"npc":  "NPC_occupations/librarian/think",
+		"text": "REAL for decimals. So INT for whole numbers, TEXT for words, REAL for decimals. Three types that cover nearly everything."
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "NPC_occupations/librarian/idle",
+		"text": "Exactly. Some systems call it FLOAT, DOUBLE, or NUMERIC — same idea, different names."
 	},
 	{
 		"type": "end"

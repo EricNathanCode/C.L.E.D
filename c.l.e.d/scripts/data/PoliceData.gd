@@ -593,10 +593,134 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON P9 — PRIMARY KEY  |  NPC: adult_6 (new officer)
-#  Topic: CREATE TABLE with PRIMARY KEY constraint
+#  LESSON P9 — CREATE DATABASE  |  NPC: adult_6 (new officer)
+#  Topic: CREATE DATABASE — setting up the database container first
 # ─────────────────────────────────────────────
 "P9": [
+	{
+		"type": "dialogue",
+		"char": "scene",
+		"name": "SCENE",
+		"npc":  "adult_6/idle",
+		"text": "A new officer is assigned to the data division. Before reviewing any records, they want to know how the entire police database was first created."
+	},
+	{
+		"type": "dialogue",
+		"char": "citizen",
+		"name": "OFFICER",
+		"npc":  "adult_6/talk",
+		"text": "I know how to SELECT and UPDATE records. But where did this database system come from? Who built it at the very start?"
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "adult_6/idle",
+		"text": "The first step is always CREATE DATABASE. You run it once to create a named container, and then all your tables go inside that container."
+	},
+	{
+		"type": "sql_fill",
+		"gamemode": "create_database",
+		"desc": "Create the police database. Type the missing keyword between CREATE and PoliceDB.",
+		"db_name": "PoliceDB",
+		"answer": "DATABASE",
+		"hint": "The keyword after CREATE for a new database container is: DATABASE",
+		"result_msg": "PoliceDB is now created! All police tables — suspects, cases, assignments — will be stored inside this database.",
+		"fail": [
+			{ "type": "dialogue", "char": "citizen", "name": "OFFICER", "npc": "adult_6/confuse", "text": "That keyword is incorrect. We are creating a DATABASE container, not a table." },
+			{ "type": "dialogue", "char": "scene",   "name": "SCENE",   "npc": "adult_6/idle",   "text": "The officer leans forward to check the screen." },
+			{ "type": "dialogue", "char": "you",     "name": "YOU",     "npc": "adult_6/idle",   "text": "The correct keyword is DATABASE — CREATE DATABASE PoliceDB." }
+		]
+	},
+	{
+		"type": "dialogue",
+		"char": "citizen",
+		"name": "OFFICER",
+		"npc":  "adult_6/talk",
+		"text": "So CREATE DATABASE is the first command — it sets up the container before anything else can be stored. Got it."
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "adult_6/idle",
+		"text": "Correct. PoliceDB now exists. From here, CREATE TABLE will add the individual tables — suspects, cases — inside it."
+	},
+	{
+		"type": "end"
+	}
+],
+
+# ─────────────────────────────────────────────
+#  LESSON P10 — CREATE TABLE  |  NPC: adult_6 (new officer)
+#  Topic: CREATE TABLE — defining the table structure
+# ─────────────────────────────────────────────
+"P10": [
+	{
+		"type": "dialogue",
+		"char": "scene",
+		"name": "SCENE",
+		"npc":  "adult_6/idle",
+		"text": "The new officer continues their training. After creating the database, they want to know how the cases table was built inside it."
+	},
+	{
+		"type": "dialogue",
+		"char": "citizen",
+		"name": "OFFICER",
+		"npc":  "adult_6/talk",
+		"text": "We have the database. But how do we actually define the cases table inside it — the columns, the structure?"
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "adult_6/idle",
+		"text": "We use CREATE TABLE. You name the table and list each column along with its data type. The database then knows exactly how to store each record."
+	},
+	{
+		"type": "sql_fill",
+		"gamemode": "create_table_keyword",
+		"desc": "Create the cases table inside PoliceDB. Type the missing keyword between CREATE and cases.",
+		"table": "cases",
+		"columns": [
+			["id",            "INT"],
+			["reporter_name", "TEXT"],
+			["case_type",     "TEXT"],
+			["status",        "TEXT"]
+		],
+		"answer": "TABLE",
+		"hint": "The keyword after CREATE for a new table is: TABLE",
+		"result_msg": "cases table created! It has 4 columns: id (INT), reporter_name (TEXT), case_type (TEXT), status (TEXT). Every case record will follow this structure.",
+		"fail": [
+			{ "type": "dialogue", "char": "citizen", "name": "OFFICER", "npc": "adult_6/confuse", "text": "That is not right. We already have the database — now we are creating a TABLE inside it." },
+			{ "type": "dialogue", "char": "scene",   "name": "SCENE",   "npc": "adult_6/idle",   "text": "The officer checks their notes." },
+			{ "type": "dialogue", "char": "you",     "name": "YOU",     "npc": "adult_6/idle",   "text": "The keyword is TABLE — CREATE TABLE cases." }
+		]
+	},
+	{
+		"type": "dialogue",
+		"char": "citizen",
+		"name": "OFFICER",
+		"npc":  "adult_6/talk",
+		"text": "CREATE TABLE — and the columns are listed inside the parentheses with their types. The database enforces that structure for every row."
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "adult_6/idle",
+		"text": "Exactly. First CREATE DATABASE, then CREATE TABLE. The structure is set — now you can INSERT cases into it."
+	},
+	{
+		"type": "end"
+	}
+],
+
+# ─────────────────────────────────────────────
+#  LESSON P11 — PRIMARY KEY  |  NPC: adult_6 (new officer)
+#  Topic: CREATE TABLE with PRIMARY KEY constraint
+# ─────────────────────────────────────────────
+"P11": [
 	{
 		"type": "dialogue",
 		"char": "scene",
@@ -659,10 +783,10 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON P10 — JOIN  |  NPC: chief
+#  LESSON P12 — JOIN  |  NPC: chief
 #  Topic: FOREIGN KEY / JOIN — combining two tables
 # ─────────────────────────────────────────────
-"P10": [
+"P12": [
 	{
 		"type": "dialogue",
 		"char": "scene",
@@ -734,6 +858,207 @@ const LESSONS: Dictionary = {
 		"name": "CHIEF",
 		"npc":  "NPC_occupations/police/think",
 		"text": "Good. JOIN lets us connect data across tables — that is exactly how a real police database works. Well done."
+	},
+	{
+		"type": "end"
+	}
+],
+
+# ─────────────────────────────────────────────
+#  LESSON P13 — INT  |  NPC: adult_6 (officer)
+#  Topic: Data Type INT — whole numbers
+# ─────────────────────────────────────────────
+"P13": [
+	{
+		"type": "dialogue",
+		"char": "scene",
+		"name": "SCENE",
+		"npc":  "adult_6/idle",
+		"text": "The officer reviews the cases table definition and asks about the id column's data type."
+	},
+	{
+		"type": "dialogue",
+		"char": "citizen",
+		"name": "OFFICER",
+		"npc":  "adult_6/talk",
+		"text": "The id column stores case numbers — 1, 2, 3. They are always whole numbers. What type handles that?"
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "adult_6/idle",
+		"text": "INT — Integer. It stores whole numbers only. No decimals, no letters. Perfect for IDs and sequential numbers."
+	},
+	{
+		"type": "sql_fill",
+		"gamemode": "data_type",
+		"desc": "Define the cases table. The 'id' column stores a whole number. Fill in the correct data type.",
+		"table": "cases",
+		"columns": [
+			["id",            ""],
+			["reporter_name", "TEXT"],
+			["case_type",     "TEXT"],
+			["status",        "TEXT"]
+		],
+		"blank_col": "id",
+		"answer": "INT",
+		"type_hint": "Whole numbers (IDs, counts) use INT.",
+		"hint": "A whole number data type (no decimals) is: INT",
+		"result_msg": "Correct! INT stores whole numbers — 1, 2, 100. Case #7 will always be case #7, never case #7.5.",
+		"fail": [
+			{ "type": "dialogue", "char": "citizen", "name": "OFFICER", "npc": "adult_6/confuse", "text": "That is not the right type. id stores whole numbers — no letters, no decimals." },
+			{ "type": "dialogue", "char": "scene",   "name": "SCENE",   "npc": "adult_6/idle",   "text": "The officer points at the id column." },
+			{ "type": "dialogue", "char": "you",     "name": "YOU",     "npc": "adult_6/idle",   "text": "Whole numbers use INT — Integer." }
+		]
+	},
+	{
+		"type": "dialogue",
+		"char": "citizen",
+		"name": "OFFICER",
+		"npc":  "adult_6/talk",
+		"text": "INT for integers — whole numbers! Case IDs, badge numbers, counts — anything that cannot be a fraction."
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "adult_6/idle",
+		"text": "Exactly. Using INT also makes comparisons and sorting faster for the database."
+	},
+	{
+		"type": "end"
+	}
+],
+
+# ─────────────────────────────────────────────
+#  LESSON P14 — TEXT  |  NPC: adult_6 (officer)
+#  Topic: Data Type TEXT — strings / words
+# ─────────────────────────────────────────────
+"P14": [
+	{
+		"type": "dialogue",
+		"char": "scene",
+		"name": "SCENE",
+		"npc":  "adult_6/idle",
+		"text": "The officer now looks at the other columns in the cases table."
+	},
+	{
+		"type": "dialogue",
+		"char": "citizen",
+		"name": "OFFICER",
+		"npc":  "adult_6/talk",
+		"text": "reporter_name holds a person's name like 'Maria Santos'. case_type holds words like 'Theft'. What type is used for those?"
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "adult_6/idle",
+		"text": "TEXT — it stores any sequence of characters. Names, descriptions, categories — anything made of letters."
+	},
+	{
+		"type": "sql_fill",
+		"gamemode": "data_type",
+		"desc": "Define the cases table. The 'reporter_name' column stores a person's name. Fill in the correct data type.",
+		"table": "cases",
+		"columns": [
+			["id",            "INT"],
+			["reporter_name", ""],
+			["case_type",     "TEXT"],
+			["status",        "TEXT"]
+		],
+		"blank_col": "reporter_name",
+		"answer": "TEXT",
+		"type_hint": "Names and words use TEXT (also called STRING).",
+		"hint": "Letters and words use: TEXT  (also called STRING)",
+		"result_msg": "Correct! TEXT stores words and characters — 'Maria Santos', 'Theft', 'Open'. You can also type STRING and it means the same thing.",
+		"fail": [
+			{ "type": "dialogue", "char": "citizen", "name": "OFFICER", "npc": "adult_6/confuse", "text": "Not right. reporter_name stores a name — letters, not a number." },
+			{ "type": "dialogue", "char": "scene",   "name": "SCENE",   "npc": "adult_6/idle",   "text": "The officer looks at a sample record." },
+			{ "type": "dialogue", "char": "you",     "name": "YOU",     "npc": "adult_6/idle",   "text": "Letters and words use TEXT — also called STRING." }
+		]
+	},
+	{
+		"type": "dialogue",
+		"char": "citizen",
+		"name": "OFFICER",
+		"npc":  "adult_6/talk",
+		"text": "TEXT for words — names, categories, descriptions. INT for numbers. Two types already cover most of what we store."
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "adult_6/idle",
+		"text": "Right. And there is one more type for when we need decimal numbers."
+	},
+	{
+		"type": "end"
+	}
+],
+
+# ─────────────────────────────────────────────
+#  LESSON P15 — REAL  |  NPC: chief
+#  Topic: Data Type REAL — decimal / float numbers
+# ─────────────────────────────────────────────
+"P15": [
+	{
+		"type": "dialogue",
+		"char": "scene",
+		"name": "SCENE",
+		"npc":  "NPC_occupations/police/idle",
+		"text": "The chief asks you to create a fines table to track penalty amounts for different offences."
+	},
+	{
+		"type": "dialogue",
+		"char": "chief",
+		"name": "CHIEF",
+		"npc":  "NPC_occupations/police/talk",
+		"text": "The fine_amount column needs to store values like 150.50 and 200.75. INT cannot store decimals — what type do we use?"
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "NPC_occupations/police/idle",
+		"text": "REAL — it stores decimal numbers accurately. Perfect for monetary values, measurements, or any number with a decimal point."
+	},
+	{
+		"type": "sql_fill",
+		"gamemode": "data_type",
+		"desc": "Define the fines table. The 'fine_amount' column stores a decimal value like 150.50. Fill in the correct data type.",
+		"table": "fines",
+		"columns": [
+			["id",          "INT"],
+			["case_id",     "INT"],
+			["offence",     "TEXT"],
+			["fine_amount", ""]
+		],
+		"blank_col": "fine_amount",
+		"answer": "REAL",
+		"type_hint": "Decimal numbers (prices, measurements) use REAL (also called FLOAT).",
+		"hint": "Decimal numbers use: REAL  (also called FLOAT)",
+		"result_msg": "Correct! REAL stores decimal numbers — 150.50, 200.75, 99.99. You can also type FLOAT and it means the same thing.",
+		"fail": [
+			{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/shock", "text": "Wrong type! fine_amount stores decimal values — not whole numbers and not text." },
+			{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",  "text": "The chief shows the fine schedule on the desk." },
+			{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "NPC_occupations/police/idle",  "text": "Decimal numbers use REAL — also called FLOAT." }
+		]
+	},
+	{
+		"type": "dialogue",
+		"char": "chief",
+		"name": "CHIEF",
+		"npc":  "NPC_occupations/police/think",
+		"text": "REAL for decimals. So the three types are: INT for whole numbers, TEXT for words, REAL for decimals. Simple and complete."
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "NPC_occupations/police/idle",
+		"text": "That covers most real-world data. FLOAT and DOUBLE are other names for the same idea in different database systems."
 	},
 	{
 		"type": "end"

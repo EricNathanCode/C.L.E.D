@@ -12,9 +12,11 @@ const BGM_MAP: Dictionary = {
 }
 
 var _current_bgm_key: String = ""
+var _dark_overlay: ColorRect = null
 
 func _ready() -> void:
 	_setup_bgm_player()
+	_build_dark_overlay()
 	_play_bgm("menu")
 	show_screen("world_select")
 
@@ -55,6 +57,21 @@ func resume_bgm() -> void:
 
 func pause_bgm() -> void:
 	$BGM.stop()
+
+func _build_dark_overlay() -> void:
+	_dark_overlay = ColorRect.new()
+	_dark_overlay.name         = "DarkOverlay"
+	_dark_overlay.color        = Color(0.0, 0.0, 0.0, 0.45)
+	_dark_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_dark_overlay.z_index      = 10
+	_dark_overlay.anchor_right  = 1.0
+	_dark_overlay.anchor_bottom = 1.0
+	_dark_overlay.visible = GameManager.dark_overlay_enabled
+	add_child(_dark_overlay)
+
+func apply_dark_overlay() -> void:
+	if _dark_overlay:
+		_dark_overlay.visible = GameManager.dark_overlay_enabled
 
 func show_screen(name: String) -> void:
 	$WorldSelectScreen.visible = (name == "world_select")

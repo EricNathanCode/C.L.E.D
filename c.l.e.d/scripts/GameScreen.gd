@@ -13,7 +13,10 @@ const GM_TO_SQL: Dictionary = {
 	"group_by":          "GROUP BY",
 	"select_where_null": "IS NULL / IS NOT NULL",
 	"join":              "JOIN",
-	"create_table":      "PRIMARY KEY",
+	"create_database":        "CREATE DATABASE",
+	"create_table_keyword":   "CREATE TABLE",
+	"data_type":              "Data Types",
+	"create_table":           "PRIMARY KEY",
 }
 
 const SQL_GLOSSARY: Array = [
@@ -31,6 +34,12 @@ const SQL_GLOSSARY: Array = [
 		"SELECT * FROM table_name\nORDER BY column ASC;"],
 	["GROUP BY",           "Groups rows that share the same column value.",
 		"SELECT column, COUNT(*)\nFROM table_name\nGROUP BY column;"],
+	["CREATE DATABASE", "Creates a new, empty database container to hold all your tables.",
+		"CREATE DATABASE database_name;"],
+	["CREATE TABLE",   "Creates a new table with named columns inside a database.",
+		"CREATE TABLE table_name (\n    column1 INT,\n    column2 TEXT\n);"],
+	["Data Types",     "INT = whole numbers, TEXT = letters/words, REAL = decimal numbers.",
+		"id     INT   -- whole number (1, 2, 42)\nname   TEXT  -- letters/words\nprice  REAL  -- decimal (9.99)"],
 	["PRIMARY KEY",           "A column constraint that makes each row's value unique and non-NULL.",
 		"CREATE TABLE table_name (\n    id INT PRIMARY KEY,\n    name TEXT\n);"],
 	["IS NULL / IS NOT NULL", "Checks whether a column's value is missing or present.",
@@ -49,7 +58,10 @@ const GM_SCENES: Dictionary = {
 	"group_by":          "res://gamemode/scene/GM_GroupBy.tscn",
 	"select_where_null": "res://gamemode/scene/GM_SelectWhereNull.tscn",
 	"join":              "res://gamemode/scene/GM_Join.tscn",
-	"create_table":      "res://gamemode/scene/GM_CreateTable.tscn",
+	"create_database":       "res://gamemode/scene/GM_CreateDatabase.tscn",
+	"create_table_keyword":  "res://gamemode/scene/GM_CreateTableKeyword.tscn",
+	"data_type":             "res://gamemode/scene/GM_DataType.tscn",
+	"create_table":          "res://gamemode/scene/GM_CreateTable.tscn",
 }
 
 const BG_HOTEL   := "res://images/backgrounds/BG_hotel.png"

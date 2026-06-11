@@ -398,10 +398,90 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C9 — PRIMARY KEY  |  NPC: coffee_owner
-#  Topic: CREATE TABLE with PRIMARY KEY constraint
+#  LESSON C9 — CREATE DATABASE  |  NPC: coffee_owner
+#  Topic: CREATE DATABASE — setting up the database container first
 # ─────────────────────────────────────────────
 "C9": [
+	{ "type": "dialogue", "char": "scene",           "name": "SCENE",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "A quiet morning at the café. The owner sits down with you and asks how the entire café system was built from scratch." },
+	{ "type": "dialogue", "char": "cafe_supervisor",  "name": "SUPERVISOR",
+	  "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "I use SELECT and INSERT every day. But how was this whole system started? Who made the database in the first place?" },
+	{ "type": "dialogue", "char": "you",              "name": "YOU",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "Before any tables or data, you run CREATE DATABASE. It creates the named container where all your tables will be stored." },
+	{
+		"type": "sql_fill",
+		"gamemode": "create_database",
+		"desc": "Create the café database. Type the missing keyword between CREATE and CafeDB.",
+		"db_name": "CafeDB",
+		"answer": "DATABASE",
+		"hint": "The keyword after CREATE for a new database container is: DATABASE",
+		"result_msg": "CafeDB is now created! All café tables — orders, customers, items — will live inside this database.",
+		"fail": [
+			{ "type": "dialogue", "char": "cafe_supervisor", "name": "SUPERVISOR", "npc": "NPC_occupations/coffee_owner/confuse", "text": "That is not right. We are creating a DATABASE, not a table yet." },
+			{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/coffee_owner/idle", "text": "The supervisor taps the screen." },
+			{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "NPC_occupations/coffee_owner/idle", "text": "The correct keyword is DATABASE — CREATE DATABASE CafeDB." }
+		]
+	},
+	{ "type": "dialogue", "char": "cafe_supervisor",  "name": "SUPERVISOR",
+	  "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "So you create the DATABASE first, and then all the tables go inside it. That makes sense — like naming your folder before filing anything in it!" },
+	{ "type": "dialogue", "char": "you",             "name": "YOU",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "Exactly. One database can hold many tables. CafeDB will hold orders, customers — everything for this café." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON C10 — CREATE TABLE  |  NPC: coffee_owner
+#  Topic: CREATE TABLE — defining the table structure
+# ─────────────────────────────────────────────
+"C10": [
+	{ "type": "dialogue", "char": "scene",           "name": "SCENE",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "After creating the database, the café owner asks how to actually define the orders table inside it." },
+	{ "type": "dialogue", "char": "cafe_supervisor",  "name": "SUPERVISOR",
+	  "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "The database is ready. Now how do I build the orders table with its columns? What command do I use?" },
+	{ "type": "dialogue", "char": "you",              "name": "YOU",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "Use CREATE TABLE. You give the table a name and list each column with its data type. The database then knows exactly what shape your data has." },
+	{
+		"type": "sql_fill",
+		"gamemode": "create_table_keyword",
+		"desc": "Create the orders table inside CafeDB. Type the missing keyword between CREATE and orders.",
+		"table": "orders",
+		"columns": [
+			["id",       "INT"],
+			["customer", "TEXT"],
+			["item",     "TEXT"],
+			["price",    "REAL"]
+		],
+		"answer": "TABLE",
+		"hint": "The keyword after CREATE for a new table is: TABLE",
+		"result_msg": "orders table created! It has 4 columns: id (INT), customer (TEXT), item (TEXT), price (REAL). Every order will follow this structure.",
+		"fail": [
+			{ "type": "dialogue", "char": "cafe_supervisor", "name": "SUPERVISOR", "npc": "NPC_occupations/coffee_owner/confuse", "text": "That is not correct. We already have the database — now we are creating a TABLE inside it." },
+			{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/coffee_owner/idle", "text": "The supervisor looks at the screen." },
+			{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "NPC_occupations/coffee_owner/idle", "text": "The keyword is TABLE — CREATE TABLE orders." }
+		]
+	},
+	{ "type": "dialogue", "char": "cafe_supervisor",  "name": "SUPERVISOR",
+	  "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "CREATE TABLE! And you list each column with its type right inside the parentheses. Now I understand the full setup." },
+	{ "type": "dialogue", "char": "you",             "name": "YOU",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "Exactly — first CREATE DATABASE, then CREATE TABLE. Now the structure is ready and you can INSERT orders into it." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON C11 — PRIMARY KEY  |  NPC: coffee_owner
+#  Topic: CREATE TABLE with PRIMARY KEY constraint
+# ─────────────────────────────────────────────
+"C11": [
 	{ "type": "dialogue", "char": "scene",           "name": "SCENE",
 	  "npc": "NPC_occupations/coffee_owner/idle",
 	  "text": "The café owner wants to understand how the orders table was built from the start." },
@@ -442,10 +522,10 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C10 — JOIN  |  NPC: coffee_owner
+#  LESSON C12 — JOIN  |  NPC: coffee_owner
 #  Topic: FOREIGN KEY / JOIN — combining two tables
 # ─────────────────────────────────────────────
-"C10": [
+"C12": [
 	{ "type": "dialogue", "char": "scene",           "name": "SCENE",
 	  "npc": "NPC_occupations/coffee_owner/idle",
 	  "text": "The owner wants a full report — customer names beside their ordered items — but the data is in two separate tables." },
@@ -498,6 +578,141 @@ const LESSONS: Dictionary = {
 	{ "type": "dialogue", "char": "cafe_supervisor",  "name": "SUPERVISOR",
 	  "npc": "NPC_occupations/coffee_owner/talk",
 	  "text": "That is exactly what I needed. JOIN is incredibly useful for pulling connected data together!" },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON C13 — INT  |  NPC: coffee_owner
+#  Topic: Data Type INT — whole numbers
+# ─────────────────────────────────────────────
+"C13": [
+	{ "type": "dialogue", "char": "scene",           "name": "SCENE",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "The supervisor reviews the orders table and asks about the data types used for each column." },
+	{ "type": "dialogue", "char": "cafe_supervisor",  "name": "SUPERVISOR",
+	  "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "What type should the id column be? Each order needs a number like 1, 2, 3 — no decimals." },
+	{ "type": "dialogue", "char": "you",              "name": "YOU",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "That is INT — Integer. It stores whole numbers only. Perfect for IDs and counts." },
+	{
+		"type": "sql_fill",
+		"gamemode": "data_type",
+		"desc": "Define the orders table. The 'id' column stores a whole number. Fill in the correct data type.",
+		"table": "orders",
+		"columns": [
+			["id",       ""],
+			["customer", "TEXT"],
+			["item",     "TEXT"],
+			["price",    "REAL"]
+		],
+		"blank_col": "id",
+		"answer": "INT",
+		"type_hint": "Whole numbers (IDs, counts) use INT.",
+		"hint": "A whole number data type (no decimals) is: INT",
+		"result_msg": "Correct! INT stores whole numbers — 1, 2, 3. Order #5 will always be order #5, never order #5.5.",
+		"fail": [
+			{ "type": "dialogue", "char": "cafe_supervisor", "name": "SUPERVISOR", "npc": "NPC_occupations/coffee_owner/confuse", "text": "That is not right. The id column is a whole number — no letters, no decimals." },
+			{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/coffee_owner/idle", "text": "The supervisor points at the id column." },
+			{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "NPC_occupations/coffee_owner/idle", "text": "Whole numbers use INT — Integer." }
+		]
+	},
+	{ "type": "dialogue", "char": "cafe_supervisor",  "name": "SUPERVISOR",
+	  "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "INT — integer — for whole numbers! Order 7 will never be order 7.3. That makes sense." },
+	{ "type": "dialogue", "char": "you",             "name": "YOU",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "Exactly. INT is the right type whenever the value must be a complete whole number." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON C14 — TEXT  |  NPC: coffee_owner
+#  Topic: Data Type TEXT — strings / words
+# ─────────────────────────────────────────────
+"C14": [
+	{ "type": "dialogue", "char": "scene",           "name": "SCENE",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "The supervisor looks at the customer and item columns and asks what type they should be." },
+	{ "type": "dialogue", "char": "cafe_supervisor",  "name": "SUPERVISOR",
+	  "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "The customer name and item name are words — 'Maria', 'Latte'. What data type stores letters?" },
+	{ "type": "dialogue", "char": "you",              "name": "YOU",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "TEXT — it stores any sequence of letters, words, or characters. Names, descriptions, emails — all TEXT." },
+	{
+		"type": "sql_fill",
+		"gamemode": "data_type",
+		"desc": "Define the orders table. The 'customer' column stores a person's name. Fill in the correct data type.",
+		"table": "orders",
+		"columns": [
+			["id",       "INT"],
+			["customer", ""],
+			["item",     "TEXT"],
+			["price",    "REAL"]
+		],
+		"blank_col": "customer",
+		"answer": "TEXT",
+		"type_hint": "Names and words use TEXT (also called STRING).",
+		"hint": "Letters and words use: TEXT  (also called STRING)",
+		"result_msg": "Correct! TEXT stores words and characters — 'Maria', 'Latte', 'no sugar please'. You can also type STRING and it means the same thing.",
+		"fail": [
+			{ "type": "dialogue", "char": "cafe_supervisor", "name": "SUPERVISOR", "npc": "NPC_occupations/coffee_owner/confuse", "text": "Not right. customer stores a name — letters, not a number." },
+			{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/coffee_owner/idle", "text": "The supervisor thinks." },
+			{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "NPC_occupations/coffee_owner/idle", "text": "Letters and words use TEXT — also called STRING." }
+		]
+	},
+	{ "type": "dialogue", "char": "cafe_supervisor",  "name": "SUPERVISOR",
+	  "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "TEXT for words! So customer names, item names, notes — all TEXT. INT for numbers only." },
+	{ "type": "dialogue", "char": "you",             "name": "YOU",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "Right. And some databases also call it VARCHAR or STRING — all the same idea." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON C15 — REAL  |  NPC: coffee_owner
+#  Topic: Data Type REAL — decimal / float numbers
+# ─────────────────────────────────────────────
+"C15": [
+	{ "type": "dialogue", "char": "scene",           "name": "SCENE",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "The supervisor looks at the price column and asks why it is different from the id column." },
+	{ "type": "dialogue", "char": "cafe_supervisor",  "name": "SUPERVISOR",
+	  "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "A latte costs 4.50, an iced tea 3.75. These are not whole numbers — so they cannot be INT, right?" },
+	{ "type": "dialogue", "char": "you",              "name": "YOU",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "Correct! For decimal numbers we use REAL. It stores values like 4.50 and 3.75 accurately." },
+	{
+		"type": "sql_fill",
+		"gamemode": "data_type",
+		"desc": "Define the orders table. The 'price' column stores a decimal price like 4.50. Fill in the correct data type.",
+		"table": "orders",
+		"columns": [
+			["id",       "INT"],
+			["customer", "TEXT"],
+			["item",     "TEXT"],
+			["price",    ""]
+		],
+		"blank_col": "price",
+		"answer": "REAL",
+		"type_hint": "Decimal numbers (prices, measurements) use REAL (also called FLOAT).",
+		"hint": "Decimal numbers use: REAL  (also called FLOAT)",
+		"result_msg": "Correct! REAL stores decimal numbers — 4.50, 3.75, 9.99. You can also type FLOAT and it means the same thing.",
+		"fail": [
+			{ "type": "dialogue", "char": "cafe_supervisor", "name": "SUPERVISOR", "npc": "NPC_occupations/coffee_owner/shock", "text": "Not right! price stores decimals like 4.50 — not whole numbers, not text." },
+			{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/coffee_owner/idle", "text": "The supervisor points at the price list on the counter." },
+			{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "NPC_occupations/coffee_owner/idle", "text": "Decimal numbers use REAL — also called FLOAT." }
+		]
+	},
+	{ "type": "dialogue", "char": "cafe_supervisor",  "name": "SUPERVISOR",
+	  "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "REAL for decimals! So the three basic types are: INT for whole numbers, TEXT for words, REAL for decimals." },
+	{ "type": "dialogue", "char": "you",             "name": "YOU",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "That is exactly it. Choose the right type and your database will store data accurately every time." },
 	{ "type": "end" }
 ]
 

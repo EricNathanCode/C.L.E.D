@@ -25,6 +25,7 @@ var _index: int = 0
 @onready var _panel      := $SettingsOverlay/SettingsPanel
 @onready var _music_btn  := $SettingsOverlay/SettingsPanel/VBox/MusicToggle
 @onready var _tts_btn    := $SettingsOverlay/SettingsPanel/VBox/TTSToggle
+var _dark_btn: Button = null
 
 func _ready() -> void:
 	$UpButton.pressed.connect(_on_up)
@@ -38,6 +39,14 @@ func _ready() -> void:
 	_music_btn.pressed.connect(_on_music_toggle)
 	_tts_btn.pressed.connect(_on_tts_toggle)
 
+	# Dark mode toggle — added programmatically so no tscn edit needed
+	_dark_btn = Button.new()
+	_dark_btn.pressed.connect(_on_dark_toggle)
+	$SettingsOverlay/SettingsPanel/VBox.add_child(_dark_btn)
+
+	# Raise the settings overlay above the dark overlay in Main (z=10)
+	$SettingsOverlay.z_index = 20
+
 	# Button hierarchy: primary CTA, secondary nav, ghost tertiary
 	_style_btn($UpButton,    "secondary", 20)
 	_style_btn($DownButton,  "secondary", 20)
@@ -46,6 +55,7 @@ func _ready() -> void:
 	_style_btn($SettingsOverlay/SettingsPanel/VBox/TitleRow/CloseButton, "ghost", 15)
 	_style_btn(_music_btn, "secondary", 15)
 	_style_btn(_tts_btn,   "secondary", 15)
+	_style_btn(_dark_btn,  "secondary", 15)
 	_style_settings_btn($SettingsButton)
 
 	# Title — small caps label
@@ -74,6 +84,7 @@ func _ready() -> void:
 	_update_display()
 	_update_tts_button()
 	_update_music_button()
+	_update_dark_button()
 
 func _style_settings_panel() -> void:
 	var s := StyleBoxFlat.new()
@@ -134,6 +145,11 @@ func _on_music_toggle() -> void:
 		main.pause_bgm()
 	_update_music_button()
 
+func _on_dark_toggle() -> void:
+	GameManager.dark_overlay_enabled = not GameManager.dark_overlay_enabled
+	get_tree().root.get_node("Main").apply_dark_overlay()
+	_update_dark_button()
+
 func _update_display() -> void:
 	var world: String = WORLDS[_index]
 	$WorldName.text = WORLD_NAMES[world]
@@ -144,6 +160,10 @@ func _update_tts_button() -> void:
 
 func _update_music_button() -> void:
 	_music_btn.text = "Music: ON" if GameManager.music_enabled else "Music: OFF"
+
+func _update_dark_button() -> void:
+	if _dark_btn:
+		_dark_btn.text = "🌙  Dark Mode: ON" if GameManager.dark_overlay_enabled else "🌙  Dark Mode: OFF"
 
 func _load_texture(res_path: String) -> Texture2D:
 	if ResourceLoader.exists(res_path):

@@ -439,10 +439,90 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON 9 — PRIMARY KEY  |  NPC: adult_13 (new trainee)
-#  Topic: CREATE TABLE with PRIMARY KEY constraint
+#  LESSON 9 — CREATE DATABASE  |  NPC: adult_13 (new trainee)
+#  Topic: CREATE DATABASE — setting up the database container first
 # ─────────────────────────────────────────────
 9: [
+	{ "type": "dialogue", "char": "scene",  "name": "SCENE",
+	  "npc": "adult_13/idle",
+	  "text": "A new hotel staff trainee arrives on their first day. Before touching any records, they want to understand where all the data actually lives." },
+	{ "type": "dialogue", "char": "guest",  "name": "TRAINEE",
+	  "npc": "adult_13/talk",
+	  "text": "I know commands like SELECT and INSERT. But how was this whole system set up in the first place? Where does the data actually come from?" },
+	{ "type": "dialogue", "char": "you",    "name": "YOU",
+	  "npc": "adult_13/idle",
+	  "text": "It all starts with a DATABASE. Before creating any tables, you run CREATE DATABASE to reserve a named space where all your tables will live." },
+	{
+		"type": "sql_fill",
+		"gamemode": "create_database",
+		"desc": "Create the hotel database. Type the missing keyword between CREATE and HotelDB.",
+		"db_name": "HotelDB",
+		"answer": "DATABASE",
+		"hint": "The keyword after CREATE for a new database container is: DATABASE",
+		"result_msg": "HotelDB is now created! This container will hold all hotel tables — guests, bookings, and more.",
+		"fail": [
+			{ "type": "dialogue", "char": "guest",  "name": "TRAINEE", "npc": "adult_13/confuse", "text": "That is not the right keyword. We are creating a DATABASE — not a table yet." },
+			{ "type": "dialogue", "char": "scene",  "name": "SCENE",   "npc": "adult_13/idle",    "text": "The trainee looks at the screen curiously." },
+			{ "type": "dialogue", "char": "you",    "name": "YOU",     "npc": "adult_13/idle",    "text": "The correct keyword is DATABASE — CREATE DATABASE HotelDB." }
+		]
+	},
+	{ "type": "dialogue", "char": "guest",  "name": "TRAINEE",
+	  "npc": "adult_13/talk",
+	  "text": "So CREATE DATABASE is the very first step! Everything else — the tables, the rows — all goes inside this database container." },
+	{ "type": "dialogue", "char": "you",    "name": "YOU",
+	  "npc": "adult_13/idle",
+	  "text": "Exactly. Think of a database as a filing cabinet. You create the cabinet first, then add the folders — the tables — inside it." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON 10 — CREATE TABLE  |  NPC: adult_13 (trainee)
+#  Topic: CREATE TABLE — defining the table structure
+# ─────────────────────────────────────────────
+10: [
+	{ "type": "dialogue", "char": "scene",  "name": "SCENE",
+	  "npc": "adult_13/idle",
+	  "text": "The trainee continues their onboarding. Now that the database exists, they want to see how the guest table itself was built." },
+	{ "type": "dialogue", "char": "guest",  "name": "TRAINEE",
+	  "npc": "adult_13/talk",
+	  "text": "We created the database. But where do the actual rows of guest data go? How are the columns defined?" },
+	{ "type": "dialogue", "char": "you",    "name": "YOU",
+	  "npc": "adult_13/idle",
+	  "text": "Inside the database, we use CREATE TABLE to define a table — giving it a name and listing its columns with their types. Let me show you." },
+	{
+		"type": "sql_fill",
+		"gamemode": "create_table_keyword",
+		"desc": "Create the guests table inside HotelDB. Type the missing keyword between CREATE and guests.",
+		"table": "guests",
+		"columns": [
+			["id",         "INT"],
+			["first_name", "TEXT"],
+			["last_name",  "TEXT"],
+			["email",      "TEXT"]
+		],
+		"answer": "TABLE",
+		"hint": "The keyword after CREATE for a new table is: TABLE",
+		"result_msg": "guests table created! The table has 4 columns: id, first_name, last_name, and email. Every guest record will follow this structure.",
+		"fail": [
+			{ "type": "dialogue", "char": "guest",  "name": "TRAINEE", "npc": "adult_13/confuse", "text": "That is not right. We are creating a TABLE inside the database — not a DATABASE again." },
+			{ "type": "dialogue", "char": "scene",  "name": "SCENE",   "npc": "adult_13/idle",    "text": "The trainee looks back at their notes." },
+			{ "type": "dialogue", "char": "you",    "name": "YOU",     "npc": "adult_13/idle",    "text": "The keyword is TABLE — CREATE TABLE guests." }
+		]
+	},
+	{ "type": "dialogue", "char": "guest",  "name": "TRAINEE",
+	  "npc": "adult_13/talk",
+	  "text": "So CREATE TABLE defines the columns! And each column has a name and a type — like id is INT and first_name is TEXT." },
+	{ "type": "dialogue", "char": "you",    "name": "YOU",
+	  "npc": "adult_13/idle",
+	  "text": "Exactly. Once you CREATE TABLE, the structure is fixed and you can INSERT rows into it." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON 11 — PRIMARY KEY  |  NPC: adult_13 (new trainee)
+#  Topic: CREATE TABLE with PRIMARY KEY constraint
+# ─────────────────────────────────────────────
+11: [
 	{ "type": "dialogue", "char": "scene",  "name": "SCENE",
 	  "npc": "adult_13/idle",
 	  "text": "A new trainee joins you at the front desk. They want to understand how the guest table was originally set up." },
@@ -483,10 +563,10 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON 10 — JOIN  |  NPC: hotel_manager
+#  LESSON 12 — JOIN  |  NPC: hotel_manager
 #  Topic: FOREIGN KEY / JOIN — combining two tables
 # ─────────────────────────────────────────────
-10: [
+12: [
 	{ "type": "dialogue", "char": "scene",  "name": "SCENE",
 	  "npc": "NPC_occupations/hotel_manager/idle",
 	  "text": "The manager needs a combined report of guest names and their room bookings — from two separate tables." },
@@ -539,6 +619,141 @@ const LESSONS: Dictionary = {
 	{ "type": "dialogue", "char": "mgr",   "name": "MANAGER",
 	  "npc": "NPC_occupations/hotel_manager/talk",
 	  "text": "Excellent. JOIN is one of the most important SQL tools — it lets us connect data spread across multiple tables." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON 13 — INT  |  NPC: adult_13 (trainee)
+#  Topic: Data Type INT — whole numbers
+# ─────────────────────────────────────────────
+13: [
+	{ "type": "dialogue", "char": "scene",  "name": "SCENE",
+	  "npc": "adult_13/idle",
+	  "text": "The trainee is still curious about the column definitions in the guests table." },
+	{ "type": "dialogue", "char": "guest",  "name": "TRAINEE",
+	  "npc": "adult_13/talk",
+	  "text": "What does INT mean next to the id column? Why not just call everything TEXT?" },
+	{ "type": "dialogue", "char": "you",    "name": "YOU",
+	  "npc": "adult_13/idle",
+	  "text": "INT stands for Integer — a whole number, no decimals. We use INT for things like IDs, room numbers, and counts because we never need 2.5 of a guest." },
+	{
+		"type": "sql_fill",
+		"gamemode": "data_type",
+		"desc": "Define the guests table. The 'id' column stores a whole number. Fill in the correct data type.",
+		"table": "guests",
+		"columns": [
+			["id",         ""],
+			["first_name", "TEXT"],
+			["last_name",  "TEXT"],
+			["email",      "TEXT"]
+		],
+		"blank_col": "id",
+		"answer": "INT",
+		"type_hint": "Whole numbers (IDs, counts) use INT.",
+		"hint": "A whole number data type (no decimals) is: INT",
+		"result_msg": "Correct! INT stores whole numbers — 1, 2, 42, 100. Perfect for IDs because a guest is always guest #3, never guest #3.5.",
+		"fail": [
+			{ "type": "dialogue", "char": "guest",  "name": "TRAINEE", "npc": "adult_13/confuse", "text": "That is not right. The id column holds a whole number — no letters, no decimals." },
+			{ "type": "dialogue", "char": "scene",  "name": "SCENE",   "npc": "adult_13/idle",    "text": "The trainee taps the id column header." },
+			{ "type": "dialogue", "char": "you",    "name": "YOU",     "npc": "adult_13/idle",    "text": "Whole numbers use INT — integer." }
+		]
+	},
+	{ "type": "dialogue", "char": "guest",  "name": "TRAINEE",
+	  "npc": "adult_13/talk",
+	  "text": "INT means integer — a whole number! So id = 7 is fine, but id = 7.5 would be rejected by the database." },
+	{ "type": "dialogue", "char": "you",    "name": "YOU",
+	  "npc": "adult_13/idle",
+	  "text": "Exactly. Choosing the right data type protects your data from mistakes." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON 14 — TEXT  |  NPC: adult_13 (trainee)
+#  Topic: Data Type TEXT — strings / words
+# ─────────────────────────────────────────────
+14: [
+	{ "type": "dialogue", "char": "scene",  "name": "SCENE",
+	  "npc": "adult_13/idle",
+	  "text": "The trainee asks about the other data type they saw in the guests table." },
+	{ "type": "dialogue", "char": "guest",  "name": "TRAINEE",
+	  "npc": "adult_13/talk",
+	  "text": "I see TEXT next to first_name and email. When do I use TEXT instead of INT?" },
+	{ "type": "dialogue", "char": "you",    "name": "YOU",
+	  "npc": "adult_13/idle",
+	  "text": "TEXT stores letters, words, or any mix of characters — names, emails, addresses. Anything that is not a pure number." },
+	{
+		"type": "sql_fill",
+		"gamemode": "data_type",
+		"desc": "Define the guests table. The 'first_name' column stores a person's name. Fill in the correct data type.",
+		"table": "guests",
+		"columns": [
+			["id",         "INT"],
+			["first_name", ""],
+			["last_name",  "TEXT"],
+			["email",      "TEXT"]
+		],
+		"blank_col": "first_name",
+		"answer": "TEXT",
+		"type_hint": "Names and words use TEXT (also called STRING).",
+		"hint": "Letters and words use: TEXT  (also called STRING)",
+		"result_msg": "Correct! TEXT stores any sequence of characters — 'Alex', 'Santos', 'alex@mail.com'. You can also type STRING and it means the same thing.",
+		"fail": [
+			{ "type": "dialogue", "char": "guest",  "name": "TRAINEE", "npc": "adult_13/confuse", "text": "That is not right. first_name stores letters — a person's name, not a number." },
+			{ "type": "dialogue", "char": "scene",  "name": "SCENE",   "npc": "adult_13/idle",    "text": "The trainee thinks for a moment." },
+			{ "type": "dialogue", "char": "you",    "name": "YOU",     "npc": "adult_13/idle",    "text": "Anything with letters uses TEXT — also called STRING in some databases." }
+		]
+	},
+	{ "type": "dialogue", "char": "guest",  "name": "TRAINEE",
+	  "npc": "adult_13/talk",
+	  "text": "TEXT for words, INT for whole numbers. So 'Alex' is TEXT and 42 is INT. Got it!" },
+	{ "type": "dialogue", "char": "you",    "name": "YOU",
+	  "npc": "adult_13/idle",
+	  "text": "Right. Some databases call it VARCHAR or STRING — they all mean the same thing as TEXT." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON 15 — REAL  |  NPC: hotel_manager
+#  Topic: Data Type REAL — decimal / float numbers
+# ─────────────────────────────────────────────
+15: [
+	{ "type": "dialogue", "char": "scene",  "name": "SCENE",
+	  "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "The manager asks you to create a bookings table that tracks nightly rates — prices with decimal values." },
+	{ "type": "dialogue", "char": "mgr",    "name": "MANAGER",
+	  "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "The price_per_night column needs to store values like 89.50 and 120.00. What data type handles decimals?" },
+	{ "type": "dialogue", "char": "you",    "name": "YOU",
+	  "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "REAL handles decimal numbers — prices, measurements, percentages. It stores values like 89.50 accurately, unlike INT which would round them." },
+	{
+		"type": "sql_fill",
+		"gamemode": "data_type",
+		"desc": "Define the bookings table. The 'price_per_night' column stores a price with decimals. Fill in the correct data type.",
+		"table": "bookings",
+		"columns": [
+			["id",              "INT"],
+			["guest_id",        "INT"],
+			["room_type",       "TEXT"],
+			["price_per_night", ""]
+		],
+		"blank_col": "price_per_night",
+		"answer": "REAL",
+		"type_hint": "Decimal numbers (prices, measurements) use REAL (also called FLOAT).",
+		"hint": "Decimal numbers use: REAL  (also called FLOAT)",
+		"result_msg": "Correct! REAL stores decimal numbers — 89.50, 120.00, 9.99. You can also type FLOAT and it means the same thing.",
+		"fail": [
+			{ "type": "dialogue", "char": "mgr",   "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/shock", "text": "That is wrong! price_per_night stores decimal values like 89.50 — not whole numbers, not text." },
+			{ "type": "dialogue", "char": "scene",  "name": "SCENE",  "npc": "NPC_occupations/hotel_manager/idle",  "text": "The manager points at a price list on the desk." },
+			{ "type": "dialogue", "char": "you",    "name": "YOU",    "npc": "NPC_occupations/hotel_manager/idle",  "text": "Decimal numbers use REAL — also called FLOAT in some databases." }
+		]
+	},
+	{ "type": "dialogue", "char": "mgr",   "name": "MANAGER",
+	  "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "REAL for decimals! So INT for room numbers, TEXT for names, REAL for prices. The right type for each kind of data." },
+	{ "type": "dialogue", "char": "you",   "name": "YOU",
+	  "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "Exactly. Some databases use FLOAT or DOUBLE — they all store decimal numbers. REAL is the most common in SQLite." },
 	{ "type": "end" }
 ]
 
