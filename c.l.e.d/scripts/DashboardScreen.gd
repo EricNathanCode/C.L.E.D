@@ -252,12 +252,19 @@ func build_lessons() -> void:
 	for child in _lesson_list.get_children():
 		child.queue_free()
 
-	var world_label: String = WORLD_DISPLAY.get(GameManager.world, GameManager.world.capitalize()).to_upper()
-	_screen_lbl.text = "  " + world_label + "   ·   LESSONS"
-
-	_world_title.text = WORLD_DISPLAY.get(GameManager.world, GameManager.world.capitalize())
 	_world_title.add_theme_font_size_override("font_size", 22)
 	_world_title.add_theme_color_override("font_color", Color("#F59E0B"))
+
+	if GameManager.merged_mode:
+		_screen_lbl.text  = "  MERGE WORLDS   ·   ALL LESSONS"
+		_world_title.text = "Merge Worlds"
+		_build_merged_lessons()
+		_reset_preview()
+		return
+
+	var world_label: String = WORLD_DISPLAY.get(GameManager.world, GameManager.world.capitalize()).to_upper()
+	_screen_lbl.text = "  " + world_label + "   ·   LESSONS"
+	_world_title.text = WORLD_DISPLAY.get(GameManager.world, GameManager.world.capitalize())
 
 	var ids: Array
 	var names: Dictionary
@@ -274,6 +281,9 @@ func build_lessons() -> void:
 		_:
 			ids = [];              names = {};             folders = []
 
+	# DEBUG: set true to bypass all locking for testing
+	const DEBUG_UNLOCK := true
+
 	# Build sequential number map: lesson_id → display number (01, 02…)
 	var num_map: Dictionary = {}
 	for i in range(ids.size()):
@@ -284,7 +294,8 @@ func build_lessons() -> void:
 		var folder_ids: Array    = folders[fi]["ids"]
 
 		# Folder locked if previous folder's challenge not yet passed
-		var folder_locked: bool = fi > 0 and not GameManager.is_folder_quiz_done(GameManager.world, fi - 1)
+		# DEBUG: folder locking disabled — re-enable by setting DEBUG_UNLOCK to false
+		var folder_locked: bool = (not DEBUG_UNLOCK) and fi > 0 and not GameManager.is_folder_quiz_done(GameManager.world, fi - 1)
 
 		# Count completions for the progress badge
 		var done: int = 0
@@ -332,7 +343,7 @@ func build_lessons() -> void:
 
 			# Lock if previous lesson in the full ordered list is not yet completed
 			var idx_in_all: int = ids.find(fid)
-			var is_locked: bool = idx_in_all > 0 and GameManager.get_stars(GameManager.world, ids[idx_in_all - 1]) == 0
+			var is_locked: bool = (not DEBUG_UNLOCK) and idx_in_all > 0 and GameManager.get_stars(GameManager.world, ids[idx_in_all - 1]) == 0
 
 			var row := HBoxContainer.new()
 			row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -376,11 +387,13 @@ func build_lessons() -> void:
 
 		# ── Folder challenge button (every folder except the last) ────
 		if fi < folders.size() - 1 and not folder_locked:
-			var all_lessons_done: bool = true
-			for fid in folder_ids:
-				if GameManager.get_stars(GameManager.world, fid) == 0:
-					all_lessons_done = false
-					break
+			var all_lessons_done: bool = DEBUG_UNLOCK or true
+			if not DEBUG_UNLOCK:
+				all_lessons_done = true
+				for fid in folder_ids:
+					if GameManager.get_stars(GameManager.world, fid) == 0:
+						all_lessons_done = false
+						break
 			var quiz_done: bool = GameManager.is_folder_quiz_done(GameManager.world, fi)
 
 			var sep := HSeparator.new()
@@ -399,9 +412,13 @@ func build_lessons() -> void:
 			qbtn.alignment = HORIZONTAL_ALIGNMENT_LEFT
 
 			if quiz_done:
-				qbtn.text = "✓  Folder Challenge — Completed"
-				qbtn.disabled = true
-				_style_btn(qbtn, "locked", 13)
+				var cap_fi2 := fi
+				qbtn.text = "✓  Folder Challenge — Redo"
+				qbtn.pressed.connect(func():
+					GameManager.current_quiz_folder_idx = cap_fi2
+					get_tree().root.get_node("Main").show_screen("folder_quiz")
+				)
+				_style_btn(qbtn, "ghost", 13)
 			elif all_lessons_done:
 				var cap_fi := fi
 				qbtn.text = "⚡  FOLDER CHALLENGE — Unlock Next Chapter"
@@ -420,6 +437,116 @@ func build_lessons() -> void:
 
 	# Show placeholder until hover
 	_reset_preview()
+
+# ── Merged-world lesson list ──────────────────────────────
+func _build_merged_lessons() -> void:
+	var all_worlds := [
+		{ "w": "hotel",   "ids": HOTEL_LESSONS,   "names": HOTEL_NAMES,   "folders": HOTEL_FOLDERS },
+		{ "w": "cafe",    "ids": CAFE_LESSONS,     "names": CAFE_NAMES,    "folders": CAFE_FOLDERS },
+		{ "w": "police",  "ids": POLICE_LESSONS,   "names": POLICE_NAMES,  "folders": POLICE_FOLDERS },
+		{ "w": "library", "ids": LIBRARY_LESSONS,  "names": LIBRARY_NAMES, "folders": LIBRARY_FOLDERS },
+	]
+
+	var global_num: int = 0
+
+	for wdata in all_worlds:
+		var w: String         = wdata["w"]
+		var names: Dictionary = wdata["names"]
+		var folders: Array    = wdata["folders"]
+
+		# World section header — uses same style as folder headers, starts collapsed
+		var world_hdr := Button.new()
+		world_hdr.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		world_hdr.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		var w_display: String = WORLD_DISPLAY[w]
+		world_hdr.text = "▶  " + w_display
+		_style_folder_btn(world_hdr)
+		_lesson_list.add_child(world_hdr)
+
+		# World container — starts hidden (collapsed)
+		var world_box := VBoxContainer.new()
+		world_box.visible = false
+		world_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		world_box.add_theme_constant_override("separation", 4)
+		_lesson_list.add_child(world_box)
+
+		var cap_whdr  = world_hdr
+		var cap_wbox  = world_box
+		var cap_wname = w_display
+		world_hdr.pressed.connect(func():
+			cap_wbox.visible = not cap_wbox.visible
+			cap_whdr.text = ("▼  " if cap_wbox.visible else "▶  ") + cap_wname
+		)
+
+		for folder in folders:
+			var folder_name: String = folder["name"]
+			var folder_ids: Array   = folder["ids"]
+
+			# Folder header (collapsible) — inside world_box
+			var hdr := Button.new()
+			hdr.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			hdr.alignment = HORIZONTAL_ALIGNMENT_LEFT
+			var done: int = 0
+			for fid in folder_ids:
+				if GameManager.get_stars(w, fid) > 0:
+					done += 1
+			hdr.text = "▶  " + folder_name + "  (%d/%d)" % [done, folder_ids.size()]
+			_style_folder_btn(hdr)
+			world_box.add_child(hdr)
+
+			var box := VBoxContainer.new()
+			box.visible = false
+			box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			box.add_theme_constant_override("separation", 4)
+			world_box.add_child(box)
+
+			var cap_hdr  = hdr
+			var cap_box  = box
+			var cap_fname = folder_name
+			var cap_badge = "  (%d/%d)" % [done, folder_ids.size()]
+			hdr.pressed.connect(func():
+				cap_box.visible = not cap_box.visible
+				cap_hdr.text = ("▼  " if cap_box.visible else "▶  ") + cap_fname + cap_badge
+			)
+
+			for fid in folder_ids:
+				global_num += 1
+				var captured_id  = fid
+				var captured_w   = w
+				var num          = global_num
+
+				var row := HBoxContainer.new()
+				row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+				row.add_theme_constant_override("separation", 6)
+				var sp := Control.new(); sp.custom_minimum_size = Vector2(18, 0)
+				row.add_child(sp)
+
+				var btn := Button.new()
+				btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+				btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
+				btn.text = "%02d  " % num + names.get(fid, "Lesson " + str(fid))
+				btn.pressed.connect(func():
+					GameManager.world     = captured_w
+					GameManager.lesson_id = captured_id
+					get_tree().root.get_node("Main").show_screen("game")
+				)
+				btn.mouse_entered.connect(func():
+					GameManager.world = captured_w
+					_show_preview(captured_id)
+				)
+				_style_btn(btn, "secondary", 14)
+				row.add_child(btn)
+
+				var stars: int = GameManager.get_stars(w, fid)
+				if stars > 0:
+					var star_lbl := Label.new()
+					star_lbl.text = "★".repeat(stars) + "☆".repeat(3 - stars)
+					star_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+					star_lbl.add_theme_font_size_override("font_size", 14)
+					star_lbl.add_theme_color_override("font_color", Color("#F59E0B"))
+					row.add_child(star_lbl)
+
+				box.add_child(row)
 
 # ── Comic panel preview ───────────────────────────────────
 func _reset_preview() -> void:

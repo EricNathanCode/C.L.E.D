@@ -21,6 +21,8 @@ const WORLD_BGS: Dictionary = {
 
 var _bg_cache: Dictionary = {}
 var _index: int = 0
+var _merged: bool = false
+var _merge_btn: Button = null
 
 @onready var _panel      := $SettingsOverlay/SettingsPanel
 @onready var _music_btn  := $SettingsOverlay/SettingsPanel/VBox/MusicToggle
@@ -80,11 +82,18 @@ func _ready() -> void:
 	title_lbl.add_theme_font_size_override("font_size", 17)
 	title_lbl.add_theme_color_override("font_color", Color.WHITE)
 
+	# Merge Worlds toggle — lives inside the Settings panel
+	_merge_btn = Button.new()
+	_merge_btn.pressed.connect(_on_merge_toggle)
+	$SettingsOverlay/SettingsPanel/VBox.add_child(_merge_btn)
+	_style_btn(_merge_btn, "secondary", 15)
+
 	_preload_backgrounds()
 	_update_display()
 	_update_tts_button()
 	_update_music_button()
 	_update_dark_button()
+	_update_merge_button()
 
 func _style_settings_panel() -> void:
 	var s := StyleBoxFlat.new()
@@ -112,8 +121,26 @@ func _on_down() -> void:
 	_index = (_index + 1) % WORLDS.size()
 	_update_display()
 
+func _on_merge_toggle() -> void:
+	_merged = not _merged
+	_update_merge_button()
+	_update_display()
+
+func _update_merge_button() -> void:
+	if not _merge_btn:
+		return
+	if _merged:
+		_merge_btn.text = "Merge Worlds: ON"
+	else:
+		_merge_btn.text = "Merge Worlds: OFF"
+	_style_btn(_merge_btn, "secondary", 15)
+
 func _on_enter() -> void:
-	GameManager.world = WORLDS[_index]
+	GameManager.merged_mode = _merged
+	if _merged:
+		GameManager.world = WORLDS[0]
+	else:
+		GameManager.world = WORLDS[_index]
 	get_tree().root.get_node("Main").show_screen("dashboard")
 
 func _on_exit() -> void:
@@ -151,9 +178,20 @@ func _on_dark_toggle() -> void:
 	_update_dark_button()
 
 func _update_display() -> void:
-	var world: String = WORLDS[_index]
-	$WorldName.text = WORLD_NAMES[world]
-	$SceneBG.texture = _bg_cache.get(world, null)
+	if _merged:
+		$UpButton.visible   = false
+		$DownButton.visible = false
+		$WorldName.text     = "Merge Worlds"
+		$WorldName.add_theme_color_override("font_color", Color.WHITE)
+		# Blend all 4 backgrounds by just showing the first
+		$SceneBG.texture = _bg_cache.get(WORLDS[0], null)
+	else:
+		$UpButton.visible   = true
+		$DownButton.visible = true
+		var world: String = WORLDS[_index]
+		$WorldName.text = WORLD_NAMES[world]
+		$WorldName.add_theme_color_override("font_color", Color.WHITE)
+		$SceneBG.texture = _bg_cache.get(world, null)
 
 func _update_tts_button() -> void:
 	_tts_btn.text = "TTS: ON" if GameManager.tts_enabled else "TTS: OFF"
@@ -163,7 +201,7 @@ func _update_music_button() -> void:
 
 func _update_dark_button() -> void:
 	if _dark_btn:
-		_dark_btn.text = "🌙  Dark Mode: ON" if GameManager.dark_overlay_enabled else "🌙  Dark Mode: OFF"
+		_dark_btn.text = "Dark Mode: ON" if GameManager.dark_overlay_enabled else "Dark Mode: OFF"
 
 func _load_texture(res_path: String) -> Texture2D:
 	if ResourceLoader.exists(res_path):

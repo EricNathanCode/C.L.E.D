@@ -3,8 +3,9 @@ extends Node
 #  GAME MANAGER  —  scripts/GameManager.gd  (Autoload)
 # ═══════════════════════════════════════════════════════
 
-var world:     String = ""
-var lesson_id         = null
+var world:       String = ""
+var lesson_id           = null
+var merged_mode: bool   = false   # true = all worlds shown as one path
 
 # ── Toggles — persist across scenes ──────────────────
 var tts_enabled:         bool = false
