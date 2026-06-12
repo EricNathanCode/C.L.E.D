@@ -12,7 +12,9 @@ var music_enabled:       bool = true
 var dark_overlay_enabled: bool = false
 
 # ── Progress & scoring ────────────────────────────────
-var completed_lessons: Dictionary = {}   # "world_lid" → star_count (1–3)
+var completed_lessons:       Dictionary = {}   # "world_lid"  → star_count (1–3)
+var completed_folder_quizzes: Dictionary = {}  # "world_fi"   → true
+var current_quiz_folder_idx: int = 0
 var last_stars:        int        = 0
 var _wrongs_this_lesson:      int   = 0
 var _sql_commands_this_lesson: Array = []
@@ -44,6 +46,12 @@ func finish_lesson() -> int:
 
 func get_stars(w: String, lid) -> int:
 	return completed_lessons.get(w + "_" + str(lid), 0)
+
+func is_folder_quiz_done(w: String, fi: int) -> bool:
+	return completed_folder_quizzes.get(w + "_" + str(fi), false)
+
+func complete_folder_quiz(w: String, fi: int) -> void:
+	completed_folder_quizzes[w + "_" + str(fi)] = true
 
 func get_sql_recap() -> Array:
 	return _sql_commands_this_lesson.duplicate()

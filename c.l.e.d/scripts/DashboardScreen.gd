@@ -279,9 +279,12 @@ func build_lessons() -> void:
 	for i in range(ids.size()):
 		num_map[ids[i]] = i + 1
 
-	for folder in folders:
-		var folder_name: String  = folder["name"]
-		var folder_ids: Array    = folder["ids"]
+	for fi in range(folders.size()):
+		var folder_name: String  = folders[fi]["name"]
+		var folder_ids: Array    = folders[fi]["ids"]
+
+		# Folder locked if previous folder's challenge not yet passed
+		var folder_locked: bool = fi > 0 and not GameManager.is_folder_quiz_done(GameManager.world, fi - 1)
 
 		# Count completions for the progress badge
 		var done: int = 0
@@ -292,10 +295,16 @@ func build_lessons() -> void:
 
 		# ── Folder header button ─────────────────────────
 		var hdr := Button.new()
-		hdr.text = "▶  " + folder_name + badge
 		hdr.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		hdr.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		_style_folder_btn(hdr)
+
+		if folder_locked:
+			hdr.text = "🔒  " + folder_name + badge
+			hdr.disabled = true
+			_style_folder_btn_locked(hdr)
+		else:
+			hdr.text = "▶  " + folder_name + badge
+			_style_folder_btn(hdr)
 		_lesson_list.add_child(hdr)
 
 		# ── Lesson container (starts collapsed) ──────────
@@ -305,15 +314,16 @@ func build_lessons() -> void:
 		box.add_theme_constant_override("separation", 4)
 		_lesson_list.add_child(box)
 
-		# Toggle collapse on header press
-		var cap_hdr    = hdr
-		var cap_box    = box
-		var cap_fname  = folder_name
-		var cap_badge  = badge
-		hdr.pressed.connect(func():
-			cap_box.visible = not cap_box.visible
-			cap_hdr.text = ("▼  " if cap_box.visible else "▶  ") + cap_fname + cap_badge
-		)
+		# Toggle collapse only for unlocked folders
+		if not folder_locked:
+			var cap_hdr    = hdr
+			var cap_box    = box
+			var cap_fname  = folder_name
+			var cap_badge  = badge
+			hdr.pressed.connect(func():
+				cap_box.visible = not cap_box.visible
+				cap_hdr.text = ("▼  " if cap_box.visible else "▶  ") + cap_fname + cap_badge
+			)
 
 		# ── Lesson buttons inside the folder ─────────────
 		for fid in folder_ids:
@@ -363,6 +373,50 @@ func build_lessons() -> void:
 				row.add_child(star_lbl)
 
 			box.add_child(row)
+
+		# ── Folder challenge button (every folder except the last) ────
+		if fi < folders.size() - 1 and not folder_locked:
+			var all_lessons_done: bool = true
+			for fid in folder_ids:
+				if GameManager.get_stars(GameManager.world, fid) == 0:
+					all_lessons_done = false
+					break
+			var quiz_done: bool = GameManager.is_folder_quiz_done(GameManager.world, fi)
+
+			var sep := HSeparator.new()
+			sep.add_theme_constant_override("separation", 4)
+			box.add_child(sep)
+
+			var quiz_row := HBoxContainer.new()
+			quiz_row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			quiz_row.add_theme_constant_override("separation", 6)
+			var qsp := Control.new()
+			qsp.custom_minimum_size = Vector2(18, 0)
+			quiz_row.add_child(qsp)
+
+			var qbtn := Button.new()
+			qbtn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			qbtn.alignment = HORIZONTAL_ALIGNMENT_LEFT
+
+			if quiz_done:
+				qbtn.text = "✓  Folder Challenge — Completed"
+				qbtn.disabled = true
+				_style_btn(qbtn, "locked", 13)
+			elif all_lessons_done:
+				var cap_fi := fi
+				qbtn.text = "⚡  FOLDER CHALLENGE — Unlock Next Chapter"
+				qbtn.pressed.connect(func():
+					GameManager.current_quiz_folder_idx = cap_fi
+					get_tree().root.get_node("Main").show_screen("folder_quiz")
+				)
+				_style_btn(qbtn, "quiz", 13)
+			else:
+				qbtn.text = "🔒  Folder Challenge — Complete all lessons first"
+				qbtn.disabled = true
+				_style_btn(qbtn, "locked", 13)
+
+			quiz_row.add_child(qbtn)
+			box.add_child(quiz_row)
 
 	# Show placeholder until hover
 	_reset_preview()
@@ -626,6 +680,22 @@ func _build_comic_panel(frame: Dictionary, stretch: float, full_width: bool = fa
 
 	return outer
 
+# ── Locked folder header style ──────────────────────────
+func _style_folder_btn_locked(btn: Button) -> void:
+	btn.add_theme_font_size_override("font_size", 13)
+	btn.add_theme_color_override("font_color", Color(0.28, 0.31, 0.38))
+	var s := StyleBoxFlat.new()
+	s.bg_color     = Color(0.07, 0.08, 0.12, 0.55)
+	s.border_color = Color(0.16, 0.19, 0.26)
+	s.border_width_bottom = 2
+	s.set_corner_radius_all(6)
+	s.content_margin_left   = 12; s.content_margin_right  = 12
+	s.content_margin_top    = 9;  s.content_margin_bottom = 9
+	btn.add_theme_stylebox_override("normal",   s)
+	btn.add_theme_stylebox_override("hover",    s)
+	btn.add_theme_stylebox_override("pressed",  s)
+	btn.add_theme_stylebox_override("disabled", s)
+
 # ── Folder header button style ───────────────────────────
 func _style_folder_btn(btn: Button) -> void:
 	btn.add_theme_font_size_override("font_size", 13)
@@ -682,6 +752,14 @@ func _style_btn(btn: Button, variant: String = "primary", font_size: int = 16) -
 			s.set_border_width_all(2)
 			s.content_margin_left   = 16; s.content_margin_right  = 16
 			s.content_margin_top    = 11; s.content_margin_bottom = 11
+		"quiz":
+			btn.add_theme_color_override("font_color", Color(0.08, 0.05, 0.00))
+			s.bg_color     = Color("#D97706")
+			s.border_color = Color("#F59E0B")
+			s.set_border_width_all(2)
+			s.set_corner_radius_all(8)
+			s.content_margin_left   = 16; s.content_margin_right  = 16
+			s.content_margin_top    = 10; s.content_margin_bottom = 10
 
 	var h := s.duplicate() as StyleBoxFlat
 	var p := s.duplicate() as StyleBoxFlat
@@ -701,6 +779,10 @@ func _style_btn(btn: Button, variant: String = "primary", font_size: int = 16) -
 		"locked":
 			h.bg_color = s.bg_color
 			p.bg_color = s.bg_color
+		"quiz":
+			h.bg_color = Color("#F59E0B")
+			h.border_color = Color("#FBBF24")
+			p.bg_color = Color("#B45309")
 
 	btn.add_theme_stylebox_override("normal",  s)
 	btn.add_theme_stylebox_override("hover",   h)

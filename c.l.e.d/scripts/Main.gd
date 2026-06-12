@@ -74,15 +74,16 @@ func apply_dark_overlay() -> void:
 		_dark_overlay.visible = GameManager.dark_overlay_enabled
 
 func show_screen(name: String) -> void:
-	$WorldSelectScreen.visible = (name == "world_select")
-	$DashboardScreen.visible   = (name == "dashboard")
-	$GameScreen.visible        = (name == "game")
-	$CompleteScreen.visible    = (name == "complete" or name == "failed")
+	$WorldSelectScreen.visible  = (name == "world_select")
+	$DashboardScreen.visible    = (name == "dashboard")
+	$GameScreen.visible         = (name == "game")
+	$CompleteScreen.visible     = (name == "complete" or name == "failed")
+	$FolderQuizScreen.visible   = (name == "folder_quiz")
 
 	match name:
 		"world_select":
 			_play_bgm("menu")
-		"game", "dashboard":
+		"game", "dashboard", "folder_quiz":
 			_play_bgm(GameManager.world)
 		"complete", "failed":
 			pass
@@ -93,3 +94,5 @@ func show_screen(name: String) -> void:
 		$GameScreen.load_lesson(GameManager.lesson_id)
 	if name == "complete" or name == "failed":
 		$CompleteScreen.set_mode(name)
+	if name == "folder_quiz":
+		$FolderQuizScreen.start_quiz()
