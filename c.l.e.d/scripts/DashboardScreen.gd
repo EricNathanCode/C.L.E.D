@@ -320,6 +320,10 @@ func build_lessons() -> void:
 			var captured_id = fid
 			var num: int = num_map.get(fid, 0)
 
+			# Lock if previous lesson in the full ordered list is not yet completed
+			var idx_in_all: int = ids.find(fid)
+			var is_locked: bool = idx_in_all > 0 and GameManager.get_stars(GameManager.world, ids[idx_in_all - 1]) == 0
+
 			var row := HBoxContainer.new()
 			row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			row.add_theme_constant_override("separation", 6)
@@ -330,16 +334,23 @@ func build_lessons() -> void:
 			row.add_child(spacer)
 
 			var btn := Button.new()
-			btn.text = "%02d  " % num + names.get(fid, "Lesson " + str(fid))
 			btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			btn.text_overrun_behavior = TextServer.OVERRUN_NO_TRIMMING
 			btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
-			btn.pressed.connect(func():
-				GameManager.lesson_id = captured_id
-				get_tree().root.get_node("Main").show_screen("game")
-			)
-			btn.mouse_entered.connect(func(): _show_preview(captured_id))
-			_style_btn(btn, "secondary", 14)
+
+			if is_locked:
+				btn.text = "🔒  %02d  " % num + names.get(fid, "Lesson " + str(fid))
+				btn.disabled = true
+				_style_btn(btn, "locked", 14)
+			else:
+				btn.text = "%02d  " % num + names.get(fid, "Lesson " + str(fid))
+				btn.pressed.connect(func():
+					GameManager.lesson_id = captured_id
+					get_tree().root.get_node("Main").show_screen("game")
+				)
+				btn.mouse_entered.connect(func(): _show_preview(captured_id))
+				_style_btn(btn, "secondary", 14)
+
 			row.add_child(btn)
 
 			var stars: int = GameManager.get_stars(GameManager.world, captured_id)
@@ -664,6 +675,13 @@ func _style_btn(btn: Button, variant: String = "primary", font_size: int = 16) -
 			s.set_border_width_all(2)
 			s.content_margin_left   = 14; s.content_margin_right  = 14
 			s.content_margin_top    = 8;  s.content_margin_bottom = 8
+		"locked":
+			btn.add_theme_color_override("font_color", Color(0.30, 0.33, 0.40))
+			s.bg_color     = Color(0.08, 0.09, 0.13, 0.50)
+			s.border_color = Color(0.16, 0.19, 0.26)
+			s.set_border_width_all(2)
+			s.content_margin_left   = 16; s.content_margin_right  = 16
+			s.content_margin_top    = 11; s.content_margin_bottom = 11
 
 	var h := s.duplicate() as StyleBoxFlat
 	var p := s.duplicate() as StyleBoxFlat
@@ -680,6 +698,9 @@ func _style_btn(btn: Button, variant: String = "primary", font_size: int = 16) -
 			h.bg_color     = Color(0.12, 0.15, 0.21, 0.50)
 			h.border_color = Color(0.52, 0.58, 0.70)
 			p.bg_color     = Color(0.08, 0.10, 0.14, 0.50)
+		"locked":
+			h.bg_color = s.bg_color
+			p.bg_color = s.bg_color
 
 	btn.add_theme_stylebox_override("normal",  s)
 	btn.add_theme_stylebox_override("hover",   h)
