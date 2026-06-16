@@ -454,13 +454,13 @@ func _build_merged_lessons() -> void:
 		var names: Dictionary = wdata["names"]
 		var folders: Array    = wdata["folders"]
 
-		# World section header — uses same style as folder headers, starts collapsed
+		# World section header — distinct style so it reads as a world, not a folder
 		var world_hdr := Button.new()
 		world_hdr.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		world_hdr.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		var w_display: String = WORLD_DISPLAY[w]
 		world_hdr.text = "▶  " + w_display
-		_style_folder_btn(world_hdr)
+		_style_world_btn(world_hdr)
 		_lesson_list.add_child(world_hdr)
 
 		# World container — starts hidden (collapsed)
@@ -806,6 +806,27 @@ func _build_comic_panel(frame: Dictionary, stretch: float, full_width: bool = fa
 	cap_vbox.add_child(dial_lbl)
 
 	return outer
+
+# ── World header button style (Merge Worlds — top-level) ──
+func _style_world_btn(btn: Button) -> void:
+	btn.add_theme_font_size_override("font_size", 15)
+	btn.add_theme_color_override("font_color", Color.WHITE)
+	var s := StyleBoxFlat.new()
+	s.bg_color          = Color(0.13, 0.10, 0.04, 0.95)
+	s.border_color      = Color("#F59E0B")
+	s.border_width_left = 4
+	s.border_width_bottom = 0
+	s.set_corner_radius_all(6)
+	s.content_margin_left   = 14; s.content_margin_right  = 12
+	s.content_margin_top    = 11; s.content_margin_bottom = 11
+	var h := s.duplicate() as StyleBoxFlat
+	h.bg_color     = Color(0.20, 0.16, 0.05, 0.95)
+	h.border_color = Color("#FBBF24")
+	var p := s.duplicate() as StyleBoxFlat
+	p.bg_color = Color(0.09, 0.07, 0.02, 0.95)
+	btn.add_theme_stylebox_override("normal",  s)
+	btn.add_theme_stylebox_override("hover",   h)
+	btn.add_theme_stylebox_override("pressed", p)
 
 # ── Locked folder header style ──────────────────────────
 func _style_folder_btn_locked(btn: Button) -> void:
