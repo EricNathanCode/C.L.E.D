@@ -1329,4 +1329,118 @@ const LESSONS: Dictionary = {
 	{ "type": "end" }
 ],
 
+
+# ─────────────────────────────────────────────
+#  LESSON C35 — SUBQUERY  |  NPC: coffee_owner
+# ─────────────────────────────────────────────
+# ─────────────────────────────────────────────
+#  LESSON C36 — CASE WHEN  |  NPC: coffee_owner
+# ─────────────────────────────────────────────
+"C36": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "The owner is setting up a new display board. She wants each order size labelled automatically based on its price." },
+	{ "type": "dialogue", "char": "owner", "name": "OWNER",
+	  "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "Orders above 150 are Large, 80 to 150 are Medium, below 80 are Small. Can we add a size label in the SELECT without a new column?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "Yes — CASE WHEN creates a derived column on the fly. It checks each row's price and returns the matching label." },
+	{ "type": "dialogue", "char": "owner", "name": "OWNER",
+	  "npc": "NPC_occupations/coffee_owner/think",
+	  "text": "CASE WHEN price > 150 THEN 'Large' — like that? And ELSE catches everything else?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "Exactly. CASE WHEN ... THEN ... WHEN ... THEN ... ELSE ... END AS size_label — evaluated row by row." },
+	{ "type": "sql_fill", "gamemode": "select_alias",
+	  "desc": "The CASE WHEN expression labels each order by size. Type the alias that names this derived column.",
+	  "hint": "Type 'size_label' — the alias after AS that names the computed column.",
+	  "table": "orders",
+	  "col_expr": "CASE WHEN price > 150 THEN 'Large' WHEN price >= 80 THEN 'Medium' ELSE 'Small' END",
+	  "answer": "size_label",
+	  "table_headers": ["item", "price"],
+	  "table_rows": [["Latte","160"],["Cappuccino","90"],["Espresso","60"]],
+	  "result_headers": ["item", "size_label"],
+	  "result_rows": [["Latte","Large"],["Cappuccino","Medium"],["Espresso","Small"]],
+	  "result_msg": "Each order gets its size label — CASE WHEN runs once per row without changing the orders table." },
+	{ "type": "dialogue", "char": "owner", "name": "OWNER",
+	  "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "So each order row gets evaluated independently and gets its own label. No changes to the table needed." },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "CASE WHEN also works inside ORDER BY and UPDATE SET — anywhere SQL expects a value expression." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON C37 — DATE FUNCTIONS  |  NPC: coffee_owner
+# ─────────────────────────────────────────────
+"C37": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "A health inspector is visiting tomorrow. The owner needs to pull all orders placed today for the records." },
+	{ "type": "dialogue", "char": "owner", "name": "OWNER",
+	  "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "The order_date column stores dates like '2025-06-16'. How do I filter only today's orders in SQL?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "In SQLite we use DATE('now') which returns today's date. WHERE order_date = DATE('now') matches only today's rows." },
+	{ "type": "dialogue", "char": "owner", "name": "OWNER",
+	  "npc": "NPC_occupations/coffee_owner/think",
+	  "text": "And if I wanted orders from this week? Or older than 30 days?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "DATE('now', '-7 days') gives seven days ago. Use BETWEEN or < / > for ranges. The database handles the arithmetic." },
+	{ "type": "sql_fill", "gamemode": "where_between",
+	  "desc": "Date strings in 'YYYY-MM-DD' format sort correctly with SQL range operators. Fill in the keyword to find orders within a date range.",
+	  "hint": "BETWEEN checks if a value falls between two bounds: column BETWEEN low AND high. Works on date strings too.",
+	  "table": "orders", "column": "order_date",
+	  "low": "'2025-01-01'", "high": "'2025-06-30'", "answer": "BETWEEN",
+	  "table_headers": ["id", "customer", "order_date"],
+	  "table_rows": [["1","Alice","2025-03-10"],["2","Bob","2025-09-05"],["3","Carol","2025-05-18"]],
+	  "result_headers": ["id", "customer", "order_date"],
+	  "result_rows": [["1","Alice","2025-03-10"],["3","Carol","2025-05-18"]],
+	  "result_msg": "BETWEEN filters to the date range. Use DATE('now') as the upper bound: WHERE order_date BETWEEN '2025-01-01' AND DATE('now') finds all past orders." },
+	{ "type": "dialogue", "char": "owner", "name": "OWNER",
+	  "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "MySQL calls it CURDATE(), PostgreSQL uses CURRENT_DATE — same idea, just different syntax per database engine." },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "strftime('%m', order_date) extracts just the month number if you want to group orders by month of the year." },
+	{ "type": "end" }
+],
+
+"C35": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "End of the week. The owner pulls you aside with a specific question about the menu data." },
+	{ "type": "dialogue", "char": "owner", "name": "OWNER",
+	  "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "I want to find the customer who placed the order with the single most expensive item. Not just sort by price — I want the exact match." },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "That needs a subquery — a SELECT inside another SELECT. The inner query finds the MAX price, then the outer query finds the order that matches it." },
+	{ "type": "dialogue", "char": "owner", "name": "OWNER",
+	  "npc": "NPC_occupations/coffee_owner/think",
+	  "text": "So the inner part runs first and feeds its result into the outer WHERE condition?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "Exactly. WHERE price = (SELECT MAX(price) FROM orders) — the database evaluates the inner SELECT first." },
+	{ "type": "sql_fill", "gamemode": "aggregate",
+	  "desc": "This inner query finds the highest order price. Fill in the aggregate function.",
+	  "hint": "MAX() returns the largest value. The outer query uses this result: WHERE price = (SELECT MAX(price) FROM orders).",
+	  "table": "orders", "column": "price", "answer": "MAX",
+	  "table_headers": ["id", "customer", "price"],
+	  "table_rows": [["1","Alice","180"],["2","Bob","95"],["3","Carol","180"]],
+	  "result_headers": ["MAX(price)"], "result_rows": [["180"]],
+	  "result_msg": "MAX(price) = 180. Full subquery: WHERE price = (SELECT MAX(price) FROM orders) returns every order that matches the maximum." },
+	{ "type": "dialogue", "char": "owner", "name": "OWNER",
+	  "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "So the inner SELECT MAX(price) runs first, returns the value, then the outer WHERE filters by it. Powerful!" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "Subqueries can also appear in SELECT columns or FROM clauses. They are queries inside queries — any depth you need." },
+	{ "type": "end" }
+],
+
 } # end LESSONS

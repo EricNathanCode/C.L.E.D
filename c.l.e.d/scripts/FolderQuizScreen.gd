@@ -53,7 +53,7 @@ const QUIZ_DATA: Dictionary = {
 			 "answer": "FROM",
 			 "hint": "DELETE ___ tablename WHERE condition"},
 		],
-		# Folder 1 — Filtering & Sorting (8 lessons × 2 = 16 questions)
+		# Folder 1 — Filtering & Sorting (9 lessons × 2 = 18 questions)
 		[
 			# — ORDER BY —
 			{"desc": "Sort the guest list by last name A to Z.",
@@ -127,8 +127,17 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "SELECT * FROM guests [BLANK] 10;",
 			 "answer": "LIMIT",
 			 "hint": "LIMIT N restricts how many rows are returned."},
+			# — DATE FUNCTIONS —
+			{"desc": "Find all bookings where the check_out date has already passed.",
+			 "code": "SELECT * FROM bookings\nWHERE check_out < [BLANK]('now');",
+			 "answer": "DATE",
+			 "hint": "DATE('now') returns today's date in SQLite."},
+			{"desc": "Get all bookings where check_out matches today.",
+			 "code": "SELECT * FROM bookings\nWHERE check_out = DATE([BLANK]);",
+			 "answer": "'now'",
+			 "hint": "DATE('now') returns today's date."},
 		],
-		# Folder 2 — Aggregates & Joins (6 lessons × 2 = 12 questions)
+		# Folder 2 — Aggregates & Joins (7 lessons × 2 = 14 questions)
 		[
 			# — GROUP BY —
 			{"desc": "Count how many bookings each room type has.",
@@ -184,6 +193,15 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "SELECT * FROM guests\nLEFT [BLANK] bookings ON guests.id = bookings.guest_id;",
 			 "answer": "JOIN",
 			 "hint": "LEFT ___ links tables but keeps all left-side rows."},
+			# — SUBQUERY —
+			{"desc": "Find the booking with the highest price using a subquery.",
+			 "code": "SELECT * FROM bookings\nWHERE price = (SELECT [BLANK](price) FROM bookings);",
+			 "answer": "MAX",
+			 "hint": "The inner query finds the highest price. MAX() returns the largest value."},
+			{"desc": "Complete the subquery to find the most expensive booking.",
+			 "code": "SELECT * FROM bookings\nWHERE price = ([BLANK] MAX(price) FROM bookings);",
+			 "answer": "SELECT",
+			 "hint": "A subquery starts with SELECT inside the parentheses."},
 		],
 		# Folder 3 — Database Design (9 lessons × 2 = 18 questions)
 		[
@@ -304,7 +322,7 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "DELETE [BLANK] orders WHERE status = 'Cancelled';",
 			 "answer": "FROM", "hint": "DELETE ___ tablename WHERE condition"},
 		],
-		# Folder 1 — Filtering & Sorting (8 lessons × 2 = 16 questions)
+		# Folder 1 — Filtering & Sorting (9 lessons × 2 = 18 questions)
 		[
 			{"desc": "Sort the menu by price from low to high.",
 			 "code": "SELECT * FROM menu ORDER [BLANK] price;",
@@ -354,8 +372,15 @@ const QUIZ_DATA: Dictionary = {
 			{"desc": "Retrieve only the first 10 menu items.",
 			 "code": "SELECT * FROM menu [BLANK] 10;",
 			 "answer": "LIMIT", "hint": "LIMIT N restricts how many rows are returned."},
+			# — DATE FUNCTIONS —
+			{"desc": "Find all orders placed before today.",
+			 "code": "SELECT * FROM orders\nWHERE order_date < [BLANK]('now');",
+			 "answer": "DATE", "hint": "DATE('now') returns today's date in SQLite."},
+			{"desc": "Get all orders placed exactly today.",
+			 "code": "SELECT * FROM orders\nWHERE order_date = DATE([BLANK]);",
+			 "answer": "'now'", "hint": "DATE('now') returns today's date."},
 		],
-		# Folder 2 — Aggregates & Joins (6 lessons × 2 = 12 questions)
+		# Folder 2 — Aggregates & Joins (7 lessons × 2 = 14 questions)
 		[
 			{"desc": "Count orders per category.",
 			 "code": "SELECT category, COUNT(*) FROM orders\nGROUP [BLANK] category;",
@@ -393,6 +418,13 @@ const QUIZ_DATA: Dictionary = {
 			{"desc": "List all menu items including those never ordered.",
 			 "code": "SELECT * FROM menu\nLEFT [BLANK] orders ON menu.name = orders.item;",
 			 "answer": "JOIN", "hint": "LEFT ___ keeps all left-side rows even with no match."},
+			# — SUBQUERY —
+			{"desc": "Find the order with the highest price using a subquery.",
+			 "code": "SELECT * FROM orders\nWHERE price = (SELECT [BLANK](price) FROM orders);",
+			 "answer": "MAX", "hint": "MAX() returns the highest value in the column."},
+			{"desc": "Complete the subquery to find the priciest order.",
+			 "code": "SELECT * FROM orders\nWHERE price = ([BLANK] MAX(price) FROM orders);",
+			 "answer": "SELECT", "hint": "A subquery is a SELECT inside parentheses."},
 		],
 		# Folder 3 — Database Design (9 lessons × 2 = 18 questions)
 		[
@@ -536,8 +568,15 @@ const QUIZ_DATA: Dictionary = {
 			{"desc": "Retrieve only the first 10 officer records.",
 			 "code": "SELECT * FROM officers [BLANK] 10;",
 			 "answer": "LIMIT", "hint": "LIMIT N restricts how many rows are returned."},
+			# — DATE FUNCTIONS —
+			{"desc": "Find all cases where the filed_date has already passed.",
+			 "code": "SELECT * FROM cases\nWHERE filed_date < [BLANK]('now');",
+			 "answer": "DATE", "hint": "DATE('now') returns today's date in SQLite."},
+			{"desc": "Get all cases filed exactly today.",
+			 "code": "SELECT * FROM cases\nWHERE filed_date = DATE([BLANK]);",
+			 "answer": "'now'", "hint": "DATE('now') returns today's date."},
 		],
-		# Folder 2 — Aggregates & Joins (6 lessons × 2 = 12 questions)
+		# Folder 2 — Aggregates & Joins (7 lessons × 2 = 14 questions)
 		[
 			{"desc": "Count how many cases belong to each crime type.",
 			 "code": "SELECT crime_type, COUNT(*) FROM cases\nGROUP [BLANK] crime_type;",
@@ -575,6 +614,13 @@ const QUIZ_DATA: Dictionary = {
 			{"desc": "List all suspects and their cases if any exist.",
 			 "code": "SELECT * FROM suspects\nLEFT [BLANK] cases ON suspects.id = cases.suspect_id;",
 			 "answer": "JOIN", "hint": "LEFT ___ keeps all left-side rows even with no match."},
+			# — SUBQUERY —
+			{"desc": "Find the case with the highest fine using a subquery.",
+			 "code": "SELECT * FROM cases\nWHERE fine = (SELECT [BLANK](fine) FROM cases);",
+			 "answer": "MAX", "hint": "MAX() returns the highest value in the column."},
+			{"desc": "Complete the subquery to find the costliest case.",
+			 "code": "SELECT * FROM cases\nWHERE fine = ([BLANK] MAX(fine) FROM cases);",
+			 "answer": "SELECT", "hint": "A subquery starts with SELECT inside parentheses."},
 		],
 		# Folder 3 — Database Design (9 lessons × 2 = 18 questions)
 		[
@@ -668,7 +714,7 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "DELETE [BLANK] loans WHERE status = 'Returned';",
 			 "answer": "FROM", "hint": "DELETE ___ tablename WHERE condition"},
 		],
-		# Folder 1 — Filtering & Sorting (8 lessons × 2 = 16 questions)
+		# Folder 1 — Filtering & Sorting (9 lessons × 2 = 18 questions)
 		[
 			{"desc": "Sort books alphabetically by title.",
 			 "code": "SELECT * FROM books ORDER [BLANK] title;",
@@ -718,8 +764,15 @@ const QUIZ_DATA: Dictionary = {
 			{"desc": "Retrieve only the first 10 borrower records.",
 			 "code": "SELECT * FROM borrowers [BLANK] 10;",
 			 "answer": "LIMIT", "hint": "LIMIT N restricts how many rows are returned."},
+			# — DATE FUNCTIONS —
+			{"desc": "Find all loans where the return_date has already passed.",
+			 "code": "SELECT * FROM loans\nWHERE return_date < [BLANK]('now');",
+			 "answer": "DATE", "hint": "DATE('now') returns today's date in SQLite."},
+			{"desc": "Get all loans that were due exactly today.",
+			 "code": "SELECT * FROM loans\nWHERE return_date = DATE([BLANK]);",
+			 "answer": "'now'", "hint": "DATE('now') returns today's date."},
 		],
-		# Folder 2 — Aggregates & Joins (6 lessons × 2 = 12 questions)
+		# Folder 2 — Aggregates & Joins (7 lessons × 2 = 14 questions)
 		[
 			{"desc": "Count how many books belong to each genre.",
 			 "code": "SELECT genre, COUNT(*) FROM books\nGROUP [BLANK] genre;",
@@ -757,6 +810,13 @@ const QUIZ_DATA: Dictionary = {
 			{"desc": "List all borrowers and their loans if any exist.",
 			 "code": "SELECT * FROM borrowers\nLEFT [BLANK] loans ON borrowers.id = loans.borrower_id;",
 			 "answer": "JOIN", "hint": "LEFT ___ keeps all left-side rows even with no match."},
+			# — SUBQUERY —
+			{"desc": "Find the most borrowed book using a subquery.",
+			 "code": "SELECT * FROM books\nWHERE borrow_count = (SELECT [BLANK](borrow_count) FROM books);",
+			 "answer": "MAX", "hint": "MAX() returns the highest value in the column."},
+			{"desc": "Complete the subquery to find the most popular book.",
+			 "code": "SELECT * FROM books\nWHERE borrow_count = ([BLANK] MAX(borrow_count) FROM books);",
+			 "answer": "SELECT", "hint": "A subquery starts with SELECT inside parentheses."},
 		],
 		# Folder 3 — Database Design (9 lessons × 2 = 18 questions)
 		[

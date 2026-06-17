@@ -1688,4 +1688,118 @@ const LESSONS: Dictionary = {
 	{ "type": "end" }
 ],
 
+
+# ─────────────────────────────────────────────
+#  LESSON L35 — SUBQUERY  |  NPC: librarian
+# ─────────────────────────────────────────────
+"L35": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE",
+	  "npc": "NPC_occupations/librarian/idle",
+	  "text": "The librarian is preparing an award for the most-borrowed book of the year. She needs the database to find the exact record." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN",
+	  "npc": "NPC_occupations/librarian/talk",
+	  "text": "I want the book with the single highest borrow_count — not just a sorted list. I need the exact match to the maximum value." },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/librarian/idle",
+	  "text": "That needs a subquery — a SELECT inside a SELECT. The inner query finds MAX(borrow_count), the outer WHERE matches it." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN",
+	  "npc": "NPC_occupations/librarian/think",
+	  "text": "The inner query runs first and feeds its result into the outer WHERE condition?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/librarian/idle",
+	  "text": "Exactly. WHERE borrow_count = (SELECT MAX(borrow_count) FROM books) — inner runs first, outer filters by the result." },
+	{ "type": "sql_fill", "gamemode": "aggregate",
+	  "desc": "This inner query finds the highest borrow count. Fill in the aggregate function.",
+	  "hint": "MAX() returns the largest value. The outer query uses this result: WHERE borrow_count = (SELECT MAX(borrow_count) FROM books).",
+	  "table": "books", "column": "borrow_count", "answer": "MAX",
+	  "table_headers": ["id", "title", "borrow_count"],
+	  "table_rows": [["1","Dune","42"],["2","1984","18"],["3","Neuromancer","42"]],
+	  "result_headers": ["MAX(borrow_count)"], "result_rows": [["42"]],
+	  "result_msg": "MAX(borrow_count) = 42. Full subquery: WHERE borrow_count = (SELECT MAX(borrow_count) FROM books) returns all books that match the maximum." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN",
+	  "npc": "NPC_occupations/librarian/talk",
+	  "text": "Inner query runs first, returns the max count, outer WHERE finds the exact matching book. Powerful and precise." },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/librarian/idle",
+	  "text": "Subqueries can also appear in SELECT columns or FROM clauses — any place a value or table is expected." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON L36 — CASE WHEN  |  NPC: librarian
+# ─────────────────────────────────────────────
+"L36": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE",
+	  "npc": "NPC_occupations/librarian/idle",
+	  "text": "The library is redesigning the catalog display. Each book needs a popularity label based on how many times it has been borrowed." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN",
+	  "npc": "NPC_occupations/librarian/talk",
+	  "text": "Books borrowed 10 or more times are Popular. Three to nine times are Normal. Fewer than 3 are Rare. Can we add this label in the query itself?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/librarian/idle",
+	  "text": "Yes — CASE WHEN creates a derived column per row. It evaluates each book's borrow_count and returns the matching label." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN",
+	  "npc": "NPC_occupations/librarian/think",
+	  "text": "So the label is generated fresh for each row without storing it as a real column?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/librarian/idle",
+	  "text": "Correct. CASE WHEN condition THEN value ... ELSE fallback END AS alias — evaluated row by row in the SELECT." },
+	{ "type": "sql_fill", "gamemode": "select_alias",
+	  "desc": "The CASE WHEN expression labels each book by popularity. Type the alias that names this derived column.",
+	  "hint": "Type 'popularity' — the alias after AS that gives the CASE WHEN column a readable name.",
+	  "table": "books",
+	  "col_expr": "CASE WHEN borrow_count >= 10 THEN 'Popular' WHEN borrow_count >= 3 THEN 'Normal' ELSE 'Rare' END",
+	  "answer": "popularity",
+	  "table_headers": ["title", "borrow_count"],
+	  "table_rows": [["Dune","42"],["1984","5"],["Dune Messiah","1"]],
+	  "result_headers": ["title", "popularity"],
+	  "result_rows": [["Dune","Popular"],["1984","Normal"],["Dune Messiah","Rare"]],
+	  "result_msg": "Each book gets its popularity label — CASE WHEN runs once per row without modifying the books table." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN",
+	  "npc": "NPC_occupations/librarian/talk",
+	  "text": "Each book row is evaluated independently — no table change needed. CASE WHEN runs fresh per row." },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/librarian/idle",
+	  "text": "CASE WHEN also works inside ORDER BY and UPDATE SET — anywhere SQL expects a value expression." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON L37 — DATE FUNCTIONS  |  NPC: librarian
+# ─────────────────────────────────────────────
+"L37": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE",
+	  "npc": "NPC_occupations/librarian/idle",
+	  "text": "A borrower rushes in looking worried. The librarian turns to you with a stack of overdue notices." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN",
+	  "npc": "NPC_occupations/librarian/talk",
+	  "text": "We need to find all borrowed books where the return_date has already passed. The column stores dates as text — like '2025-06-10'. How do we compare them to today?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/librarian/idle",
+	  "text": "SQL has built-in date functions. DATE('now') returns today's date. We can compare return_date directly against it in a WHERE clause." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN",
+	  "npc": "NPC_occupations/librarian/think",
+	  "text": "So WHERE return_date < DATE('now') gives us every book whose due date is before today?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/librarian/idle",
+	  "text": "Exactly. DATE('now') is SQLite syntax. Other databases use CURDATE() in MySQL or CURRENT_DATE in PostgreSQL — same concept." },
+	{ "type": "sql_fill", "gamemode": "where_between",
+	  "desc": "Date strings in 'YYYY-MM-DD' format sort correctly with SQL range operators. Fill in the keyword to find return_date values within a date range.",
+	  "hint": "BETWEEN checks if a value falls between two bounds: column BETWEEN low AND high. Works on date strings too.",
+	  "table": "borrow_records", "column": "return_date",
+	  "low": "'2025-01-01'", "high": "'2025-06-30'", "answer": "BETWEEN",
+	  "table_headers": ["id", "book_title", "return_date"],
+	  "table_rows": [["1","Dune","2025-03-20"],["2","1984","2025-09-01"],["3","Neuromancer","2025-05-30"]],
+	  "result_headers": ["id", "book_title", "return_date"],
+	  "result_rows": [["1","Dune","2025-03-20"],["3","Neuromancer","2025-05-30"]],
+	  "result_msg": "BETWEEN filters to the date range. Use DATE('now') as the upper bound: WHERE return_date BETWEEN '2025-01-01' AND DATE('now') finds all overdue loans." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN",
+	  "npc": "NPC_occupations/librarian/talk",
+	  "text": "You can also add days: DATE('now', '+7 days') gives next week's date. Very useful for sending advance reminders." },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/librarian/idle",
+	  "text": "And strftime('%Y', return_date) extracts just the year if you need to group or compare by year instead of the full date." },
+	{ "type": "end" }
+],
+
 } # end LESSONS

@@ -1678,4 +1678,119 @@ const LESSONS: Dictionary = {
 	{ "type": "end" }
 ],
 
+
+# ─────────────────────────────────────────────
+#  LESSON P35 — SUBQUERY  |  NPC: police chief
+# ─────────────────────────────────────────────
+"P35": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE",
+	  "npc": "NPC_occupations/police/idle",
+	  "text": "The chief is reviewing the fine ledger. She needs the case with the single highest fine — not just a sorted list." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
+	  "npc": "NPC_occupations/police/talk",
+	  "text": "I want the exact case record that matches the maximum fine amount. ORDER BY and LIMIT is close but I need the precise match." },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/police/idle",
+	  "text": "We use a subquery — a SELECT inside another SELECT. The inner query finds MAX(fine), the outer WHERE matches it exactly." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
+	  "npc": "NPC_occupations/police/think",
+	  "text": "The inner part runs first and the outer query uses the result as its filter value?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/police/idle",
+	  "text": "Correct. WHERE fine = (SELECT MAX(fine) FROM cases) — database evaluates the inner SELECT first." },
+	{ "type": "sql_fill", "gamemode": "aggregate",
+	  "desc": "This inner query finds the highest fine amount. Fill in the aggregate function.",
+	  "hint": "MAX() returns the largest value. The outer query uses this result: WHERE fine = (SELECT MAX(fine) FROM cases).",
+	  "table": "cases", "column": "fine", "answer": "MAX",
+	  "table_headers": ["id", "case_type", "fine"],
+	  "table_rows": [["1","Robbery","5000"],["2","Theft","1200"],["3","Assault","5000"]],
+	  "result_headers": ["MAX(fine)"], "result_rows": [["5000"]],
+	  "result_msg": "MAX(fine) = 5000. Full subquery: WHERE fine = (SELECT MAX(fine) FROM cases) returns every case that matches the maximum." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
+	  "npc": "NPC_occupations/police/talk",
+	  "text": "Inner query executes first, returns the max fine value, outer WHERE matches the exact record. Clean and precise." },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/police/idle",
+	  "text": "Subqueries also work in SELECT columns and FROM clauses — any place a value or table is expected in the query." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON P36 — CASE WHEN  |  NPC: police chief
+# ─────────────────────────────────────────────
+"P36": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE",
+	  "npc": "NPC_occupations/police/idle",
+	  "text": "The chief calls you over to the reporting screen. A new city directive requires a severity label on every case file." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
+	  "npc": "NPC_occupations/police/talk",
+	  "text": "Each case has a case_type column. Robbery and Assault should be Critical. Theft is Moderate. Everything else gets Minor. Can we label them automatically in a query?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/police/idle",
+	  "text": "Yes — CASE WHEN is SQL's conditional expression. It works like an if-else inside a SELECT, creating a new column based on conditions." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
+	  "npc": "NPC_occupations/police/think",
+	  "text": "So it reads each row and applies the matching label? No extra table needed?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/police/idle",
+	  "text": "Correct. CASE WHEN condition THEN value ... ELSE fallback END — evaluated row by row inside the SELECT." },
+	{ "type": "sql_fill", "gamemode": "select_alias",
+	  "desc": "The CASE WHEN expression assigns a severity label to each case. Type the alias that names this derived column.",
+	  "hint": "Type 'severity' — the alias after AS that gives the CASE WHEN column a readable name.",
+	  "table": "cases",
+	  "col_expr": "CASE WHEN case_type IN ('Robbery','Assault') THEN 'Critical' WHEN case_type = 'Theft' THEN 'Moderate' ELSE 'Minor' END",
+	  "answer": "severity",
+	  "table_headers": ["case_id", "case_type"],
+	  "table_rows": [["1","Robbery"],["2","Theft"],["3","Vandalism"]],
+	  "result_headers": ["case_id", "severity"],
+	  "result_rows": [["1","Critical"],["2","Moderate"],["3","Minor"]],
+	  "result_msg": "Each case gets its severity label — CASE WHEN evaluates conditions in order and returns the first match per row." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
+	  "npc": "NPC_occupations/police/talk",
+	  "text": "Every row gets evaluated independently. Robbery rows show Critical, Theft rows show Moderate. CASE WHEN runs once per row." },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/police/idle",
+	  "text": "CASE WHEN also works inside ORDER BY, WHERE, and UPDATE SET — anywhere a value is expected in SQL." },
+	{ "type": "end" }
+],
+
+
+# ─────────────────────────────────────────────
+#  LESSON P37 — DATE FUNCTIONS  |  NPC: police chief
+# ─────────────────────────────────────────────
+"P37": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE",
+	  "npc": "NPC_occupations/police/idle",
+	  "text": "A new directive requires the station to flag all cases filed more than 30 days ago that are still Open." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
+	  "npc": "NPC_occupations/police/talk",
+	  "text": "The filed_date column stores dates like '2025-05-01'. How do we find cases where that date is already in the past?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/police/idle",
+	  "text": "SQLite provides DATE('now') for today's date. We compare filed_date against it with a less-than operator to find past cases." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
+	  "npc": "NPC_occupations/police/think",
+	  "text": "And for 30 days ago — DATE('now', '-30 days')?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/police/idle",
+	  "text": "Exactly. WHERE filed_date < DATE('now', '-30 days') finds cases filed more than 30 days ago." },
+	{ "type": "sql_fill", "gamemode": "where_between",
+	  "desc": "Date strings in 'YYYY-MM-DD' format compare correctly. Fill in the keyword to find filed_date values within a date range.",
+	  "hint": "BETWEEN checks if a value falls between two bounds: column BETWEEN low AND high. Works on date strings too.",
+	  "table": "cases", "column": "filed_date",
+	  "low": "'2025-01-01'", "high": "'2025-06-30'", "answer": "BETWEEN",
+	  "table_headers": ["id", "case_type", "filed_date"],
+	  "table_rows": [["1","Robbery","2025-02-14"],["2","Theft","2025-08-03"],["3","Assault","2025-04-22"]],
+	  "result_headers": ["id", "case_type", "filed_date"],
+	  "result_rows": [["1","Robbery","2025-02-14"],["3","Assault","2025-04-22"]],
+	  "result_msg": "BETWEEN filters to the date range. Combine with DATE('now'): WHERE filed_date BETWEEN '2025-01-01' AND DATE('now') finds all past filed cases." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
+	  "npc": "NPC_occupations/police/talk",
+	  "text": "MySQL uses CURDATE(), PostgreSQL uses CURRENT_DATE — same purpose, different engine syntax." },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/police/idle",
+	  "text": "strftime('%Y', filed_date) extracts just the year if you need to group cases by year for annual reports." },
+	{ "type": "end" }
+],
+
 } # end LESSONS

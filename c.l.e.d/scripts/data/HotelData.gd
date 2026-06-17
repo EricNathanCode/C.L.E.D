@@ -1372,4 +1372,118 @@ const LESSONS: Dictionary = {
 	{ "type": "end" }
 ],
 
+
+# ─────────────────────────────────────────────
+#  LESSON 35 — SUBQUERY  |  NPC: hotel_manager
+# ─────────────────────────────────────────────
+35: [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE",
+	  "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "The manager pulls up the pricing dashboard. One room stands out but she needs the database to confirm it precisely." },
+	{ "type": "dialogue", "char": "mgr", "name": "MANAGER",
+	  "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "I need to find the exact booking record that has the highest price — not just sort by it. I want the exact match to the maximum value." },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "That is a subquery — a SELECT nested inside another SELECT. The inner query returns the MAX price, and the outer query uses it as a filter." },
+	{ "type": "dialogue", "char": "mgr", "name": "MANAGER",
+	  "npc": "NPC_occupations/hotel_manager/think",
+	  "text": "So the database runs the inner part first, gets the number, then uses it in the outer WHERE?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "Exactly. WHERE price = (SELECT MAX(price) FROM bookings) — inner runs first, outer filters by the result." },
+	{ "type": "sql_fill", "gamemode": "aggregate",
+	  "desc": "This inner query runs first and returns the highest price. Fill in the aggregate function.",
+	  "hint": "MAX() returns the largest value. The outer query uses this result: WHERE price = (SELECT MAX(price) FROM bookings).",
+	  "table": "bookings", "column": "price", "answer": "MAX",
+	  "table_headers": ["id", "guest_name", "price"],
+	  "table_rows": [["1","Alice","350"],["2","Bob","200"],["3","Carol","350"]],
+	  "result_headers": ["MAX(price)"], "result_rows": [["350"]],
+	  "result_msg": "MAX(price) = 350. Full subquery: WHERE price = (SELECT MAX(price) FROM bookings) returns every booking that matches the maximum." },
+	{ "type": "dialogue", "char": "mgr", "name": "MANAGER",
+	  "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "Inner query runs first, returns the max value, outer WHERE matches it. Precise and clean." },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "Subqueries can also go in the SELECT column list or the FROM clause — any place a value or table is expected." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON 36 — CASE WHEN  |  NPC: hotel_manager
+# ─────────────────────────────────────────────
+36: [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE",
+	  "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "The loyalty program needs a tier label on every guest — without adding a new column to the table." },
+	{ "type": "dialogue", "char": "mgr", "name": "MANAGER",
+	  "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "Guests with 5 or more stays are VIP. Two to four stays are Regular. One stay or less is New. Can we add a tier column in the SELECT itself?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "Yes — CASE WHEN is SQL's if-else inside a query. It creates a derived column row by row without changing the table." },
+	{ "type": "dialogue", "char": "mgr", "name": "MANAGER",
+	  "npc": "NPC_occupations/hotel_manager/think",
+	  "text": "So it evaluates each row's stay_count and assigns the matching label dynamically?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "Exactly. CASE WHEN condition THEN value WHEN ... ELSE fallback END AS alias — evaluated per row." },
+	{ "type": "sql_fill", "gamemode": "select_alias",
+	  "desc": "The CASE WHEN expression labels each guest row automatically. Type the alias that names this derived column.",
+	  "hint": "Type 'tier' — the alias after AS that gives the CASE WHEN column a readable name.",
+	  "table": "guests",
+	  "col_expr": "CASE WHEN stay_count >= 5 THEN 'VIP' WHEN stay_count >= 2 THEN 'Regular' ELSE 'New' END",
+	  "answer": "tier",
+	  "table_headers": ["guest_name", "stay_count"],
+	  "table_rows": [["Alice","6"],["Bob","3"],["Carol","1"]],
+	  "result_headers": ["guest_name", "tier"],
+	  "result_rows": [["Alice","VIP"],["Bob","Regular"],["Carol","New"]],
+	  "result_msg": "Each guest gets a tier label — CASE WHEN evaluates every row independently without changing the table." },
+	{ "type": "dialogue", "char": "mgr", "name": "MANAGER",
+	  "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "Each guest row gets its own tier label — no table change needed. CASE WHEN is evaluated fresh per row." },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "CASE WHEN also works inside ORDER BY and UPDATE SET — wherever a value expression is valid in SQL." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON 37 — DATE FUNCTIONS  |  NPC: hotel_manager
+# ─────────────────────────────────────────────
+37: [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE",
+	  "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "End of day. The manager needs a report of guests whose check-out date has already passed but who still have an active status." },
+	{ "type": "dialogue", "char": "mgr", "name": "MANAGER",
+	  "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "The check_out column stores dates like '2025-06-10'. How do we compare that against today's date in SQL?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "SQL has a built-in date function. In SQLite we use DATE('now') which returns today's date. We compare the column directly against it." },
+	{ "type": "dialogue", "char": "mgr", "name": "MANAGER",
+	  "npc": "NPC_occupations/hotel_manager/think",
+	  "text": "So WHERE check_out < DATE('now') finds every guest whose due date is in the past?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "Exactly. Dates stored as 'YYYY-MM-DD' text compare correctly with < and >. MySQL uses CURDATE(), PostgreSQL uses CURRENT_DATE — same concept." },
+	{ "type": "sql_fill", "gamemode": "where_between",
+	  "desc": "Date strings in 'YYYY-MM-DD' format compare correctly with SQL range operators. Fill in the keyword that finds check_out dates within a range.",
+	  "hint": "BETWEEN checks if a value falls between two bounds. Dates work too: column BETWEEN 'YYYY-MM-DD' AND 'YYYY-MM-DD'.",
+	  "table": "bookings", "column": "check_out",
+	  "low": "'2025-01-01'", "high": "'2025-06-30'", "answer": "BETWEEN",
+	  "table_headers": ["id", "guest_name", "check_out"],
+	  "table_rows": [["1","Alice","2025-03-15"],["2","Bob","2025-08-01"],["3","Carol","2025-05-22"]],
+	  "result_headers": ["id", "guest_name", "check_out"],
+	  "result_rows": [["1","Alice","2025-03-15"],["3","Carol","2025-05-22"]],
+	  "result_msg": "BETWEEN filters to dates in the range. Use DATE('now') as the upper bound: WHERE check_out BETWEEN '2025-01-01' AND DATE('now') finds all past check-outs." },
+	{ "type": "dialogue", "char": "mgr", "name": "MANAGER",
+	  "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "DATE('now', '+3 days') gives three days from now — useful for sending early check-out reminders automatically." },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "And strftime('%Y-%m', check_in) extracts the year-month if you need to group bookings by month." },
+	{ "type": "end" }
+],
+
 } # end LESSONS

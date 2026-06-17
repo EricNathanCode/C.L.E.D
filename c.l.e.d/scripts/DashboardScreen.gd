@@ -9,10 +9,10 @@ const _DATA_PATHS: Dictionary = {
 }
 
 # ── Lesson metadata ───────────────────────────────────────
-const HOTEL_LESSONS  := [1,2,3,4,5, 6,8,16,17,18,19,20,21, 7,12,22,23,24,28, 9,10,11,13,14,15,25,29,32, 26,27,30,31,33,34]
-const CAFE_LESSONS   := ["C1","C2","C4","C5","C6", "C7","C8","C16","C17","C18","C19","C20","C21", "C3","C12","C22","C23","C24","C28", "C9","C10","C11","C13","C14","C15","C25","C29","C32", "C26","C27","C30","C31","C33","C34"]
-const POLICE_LESSONS := ["P1","P2","P3","P4","P5", "P6","P8","P16","P17","P18","P19","P20","P21", "P7","P12","P22","P23","P24","P28", "P9","P10","P11","P13","P14","P15","P25","P29","P32", "P26","P27","P30","P31","P33","P34"]
-const LIBRARY_LESSONS:= ["L1","L2","L3","L4","L5", "L6","L8","L16","L17","L18","L19","L20","L21", "L7","L12","L22","L23","L24","L28", "L9","L10","L11","L13","L14","L15","L25","L29","L32", "L26","L27","L30","L31","L33","L34"]
+const HOTEL_LESSONS  := [1,2,3,4,5, 6,8,16,17,18,19,20,21,37, 7,12,22,23,24,28,35, 9,10,11,13,14,15,25,29,32, 26,27,30,31,33,34,36]
+const CAFE_LESSONS   := ["C1","C2","C4","C5","C6", "C7","C8","C16","C17","C18","C19","C20","C21","C37", "C3","C12","C22","C23","C24","C28","C35", "C9","C10","C11","C13","C14","C15","C25","C29","C32", "C26","C27","C30","C31","C33","C34","C36"]
+const POLICE_LESSONS := ["P1","P2","P3","P4","P5", "P6","P8","P16","P17","P18","P19","P20","P21","P37", "P7","P12","P22","P23","P24","P28","P35", "P9","P10","P11","P13","P14","P15","P25","P29","P32", "P26","P27","P30","P31","P33","P34","P36"]
+const LIBRARY_LESSONS:= ["L1","L2","L3","L4","L5", "L6","L8","L16","L17","L18","L19","L20","L21","L37", "L7","L12","L22","L23","L24","L28","L35", "L9","L10","L11","L13","L14","L15","L25","L29","L32", "L26","L27","L30","L31","L33","L34","L36"]
 
 const HOTEL_NAMES: Dictionary = {
 	1:  "SELECT — Choose Your Response",
@@ -49,6 +49,9 @@ const HOTEL_NAMES: Dictionary = {
 	32: "FOREIGN KEY — Link Tables Together",
 	33: "Indexes — Speed Up Queries",
 	34: "Views — Save a Query as a Table",
+	35: "SUBQUERY — Find the Priciest Booking",
+	36: "CASE WHEN — Label Guest Tiers",
+	37: "DATE Functions — Find Overdue Check-Outs",
 }
 const CAFE_NAMES: Dictionary = {
 	"C1":  "SELECT — Take the Order",
@@ -85,6 +88,9 @@ const CAFE_NAMES: Dictionary = {
 	"C32": "FOREIGN KEY — Link Tables Together",
 	"C33": "Indexes — Speed Up Queries",
 	"C34": "Views — Save a Query as a Table",
+	"C35": "SUBQUERY — Find the Priciest Order",
+	"C36": "CASE WHEN — Label Order Size",
+	"C37": "DATE Functions — Find Past Orders",
 }
 const POLICE_NAMES: Dictionary = {
 	"P1":  "SELECT — Handle a Citizen Report",
@@ -121,6 +127,9 @@ const POLICE_NAMES: Dictionary = {
 	"P32": "FOREIGN KEY — Link Tables Together",
 	"P33": "Indexes — Speed Up Queries",
 	"P34": "Views — Save a Query as a Table",
+	"P35": "SUBQUERY — Find the Highest Fine Case",
+	"P36": "CASE WHEN — Label Case Severity",
+	"P37": "DATE Functions — Find Past Filed Cases",
 }
 const LIBRARY_NAMES: Dictionary = {
 	"L1":  "SELECT — Help a Visitor",
@@ -157,6 +166,9 @@ const LIBRARY_NAMES: Dictionary = {
 	"L32": "FOREIGN KEY — Link Tables Together",
 	"L33": "Indexes — Speed Up Queries",
 	"L34": "Views — Save a Query as a Table",
+	"L35": "SUBQUERY — Find the Most Borrowed Book",
+	"L36": "CASE WHEN — Label Book Popularity",
+	"L37": "DATE Functions — Find Overdue Books",
 }
 const WORLD_DISPLAY: Dictionary = {
 	"hotel":   "Hotel World",
@@ -168,31 +180,31 @@ const WORLD_DISPLAY: Dictionary = {
 # ── Folder groupings per world ────────────────────────────
 const HOTEL_FOLDERS := [
 	{ "name": "Basic SQL",            "ids": [1,2,3,4,5] },
-	{ "name": "Filtering & Sorting",  "ids": [6,8,16,17,18,19,20,21] },
-	{ "name": "Aggregates & Joins",   "ids": [7,12,22,23,24,28] },
+	{ "name": "Filtering & Sorting",  "ids": [6,8,16,17,18,19,20,21,37] },
+	{ "name": "Aggregates & Joins",   "ids": [7,12,22,23,24,28,35] },
 	{ "name": "Database Design",      "ids": [9,10,11,13,14,15,25,29,32] },
-	{ "name": "Schema & Concepts",    "ids": [26,27,30,31,33,34] },
+	{ "name": "Schema & Concepts",    "ids": [26,27,30,31,33,34,36] },
 ]
 const CAFE_FOLDERS := [
 	{ "name": "Basic SQL",            "ids": ["C1","C2","C4","C5","C6"] },
-	{ "name": "Filtering & Sorting",  "ids": ["C7","C8","C16","C17","C18","C19","C20","C21"] },
-	{ "name": "Aggregates & Joins",   "ids": ["C3","C12","C22","C23","C24","C28"] },
+	{ "name": "Filtering & Sorting",  "ids": ["C7","C8","C16","C17","C18","C19","C20","C21","C37"] },
+	{ "name": "Aggregates & Joins",   "ids": ["C3","C12","C22","C23","C24","C28","C35"] },
 	{ "name": "Database Design",      "ids": ["C9","C10","C11","C13","C14","C15","C25","C29","C32"] },
-	{ "name": "Schema & Concepts",    "ids": ["C26","C27","C30","C31","C33","C34"] },
+	{ "name": "Schema & Concepts",    "ids": ["C26","C27","C30","C31","C33","C34","C36"] },
 ]
 const POLICE_FOLDERS := [
 	{ "name": "Basic SQL",            "ids": ["P1","P2","P3","P4","P5"] },
-	{ "name": "Filtering & Sorting",  "ids": ["P6","P8","P16","P17","P18","P19","P20","P21"] },
-	{ "name": "Aggregates & Joins",   "ids": ["P7","P12","P22","P23","P24","P28"] },
+	{ "name": "Filtering & Sorting",  "ids": ["P6","P8","P16","P17","P18","P19","P20","P21","P37"] },
+	{ "name": "Aggregates & Joins",   "ids": ["P7","P12","P22","P23","P24","P28","P35"] },
 	{ "name": "Database Design",      "ids": ["P9","P10","P11","P13","P14","P15","P25","P29","P32"] },
-	{ "name": "Schema & Concepts",    "ids": ["P26","P27","P30","P31","P33","P34"] },
+	{ "name": "Schema & Concepts",    "ids": ["P26","P27","P30","P31","P33","P34","P36"] },
 ]
 const LIBRARY_FOLDERS := [
 	{ "name": "Basic SQL",            "ids": ["L1","L2","L3","L4","L5"] },
-	{ "name": "Filtering & Sorting",  "ids": ["L6","L8","L16","L17","L18","L19","L20","L21"] },
-	{ "name": "Aggregates & Joins",   "ids": ["L7","L12","L22","L23","L24","L28"] },
+	{ "name": "Filtering & Sorting",  "ids": ["L6","L8","L16","L17","L18","L19","L20","L21","L37"] },
+	{ "name": "Aggregates & Joins",   "ids": ["L7","L12","L22","L23","L24","L28","L35"] },
 	{ "name": "Database Design",      "ids": ["L9","L10","L11","L13","L14","L15","L25","L29","L32"] },
-	{ "name": "Schema & Concepts",    "ids": ["L26","L27","L30","L31","L33","L34"] },
+	{ "name": "Schema & Concepts",    "ids": ["L26","L27","L30","L31","L33","L34","L36"] },
 ]
 
 # ── Node refs ─────────────────────────────────────────────
