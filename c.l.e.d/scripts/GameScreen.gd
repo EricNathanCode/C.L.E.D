@@ -84,6 +84,13 @@ const SQL_GLOSSARY: Array = [
 	["SUBQUERY",       "A SELECT nested inside another SELECT. The inner query runs first and its result is used by the outer query.", "SELECT * FROM bookings\nWHERE price = (SELECT MAX(price) FROM bookings);"],
 	["CASE WHEN",      "SQL's if-else inside a query. Evaluates each row against conditions and returns a matching value.", "SELECT name,\n  CASE WHEN stay_count >= 5 THEN 'VIP'\n       WHEN stay_count >= 2 THEN 'Regular'\n       ELSE 'New' END AS tier\nFROM guests;"],
 	["DATE Functions", "Built-in functions for working with date values. DATE('now') returns today's date in SQLite.", "SELECT * FROM bookings\nWHERE check_out < DATE('now');\n\n-- Date arithmetic:\nDATE('now', '+7 days')  -- next week\nDATE('now', '-30 days') -- 30 days ago"],
+	["GRANT / REVOKE", "DCL (Data Control Language). GRANT gives a user permission on a table; REVOKE takes it back.", "GRANT SELECT ON guests TO clerk;\nGRANT SELECT, INSERT ON bookings TO clerk;\n\nREVOKE INSERT ON bookings FROM clerk;"],
+	["UNION / UNION ALL", "Combines the result rows of two SELECTs into one list. UNION removes duplicates; UNION ALL keeps them.", "SELECT city FROM guests\nUNION\nSELECT city FROM staff;"],
+	["CHECK", "A column constraint that only allows values passing a condition. Rejects rows that fail the rule.", "CREATE TABLE staff (\n    age INT CHECK (age >= 18)\n);"],
+	["ER Diagram", "Entity-Relationship model. Boxes = entities (tables), ovals = attributes (columns), lines = relationships with cardinality (1:1, 1:M, M:N).", "GUEST (1) ---- (M) BOOKING\n\nA guest can have many bookings;\neach booking belongs to one guest."],
+	["TRUNCATE", "Removes ALL rows from a table fast, keeping its structure. Unlike DELETE it has no WHERE and is not row-by-row.", "TRUNCATE TABLE logs;\n\n-- DELETE removes rows (can use WHERE)\n-- TRUNCATE empties the whole table\n-- DROP removes the table entirely"],
+	["String Functions", "Built-in text functions: UPPER, LOWER (case), LENGTH (count chars), SUBSTR (extract part).", "SELECT UPPER(name) FROM guests;\nSELECT LENGTH(name) FROM guests;\nSELECT SUBSTR(name, 1, 3) FROM guests;"],
+	["COALESCE / IFNULL", "Returns the first non-NULL value. Used to replace missing values with a default.", "SELECT name,\n  COALESCE(email, 'No email') AS contact\nFROM guests;"],
 ]
 
 const GM_SCENES: Dictionary = {
@@ -115,6 +122,7 @@ const GM_SCENES: Dictionary = {
 	"foreign_key":      "res://gamemode/scene/GM_ForeignKey.tscn",
 	"create_index":     "res://gamemode/scene/GM_CreateIndex.tscn",
 	"create_view":      "res://gamemode/scene/GM_CreateView.tscn",
+	"sql_blank":        "res://gamemode/scene/GM_SqlBlank.tscn",
 }
 
 const BG_HOTEL   := "res://images/backgrounds/BG_hotel.png"
@@ -467,7 +475,10 @@ func _run_step() -> void:
 
 # ── SQL Terminal ──────────────────────────────────────
 func _show_challenge(step: Dictionary, gm_key: String) -> void:
-	if GM_TO_SQL.has(gm_key):
+	# Generic gamemodes (e.g. sql_blank) carry their own recap label per step
+	if step.has("recap"):
+		GameManager.record_sql(step["recap"])
+	elif GM_TO_SQL.has(gm_key):
 		GameManager.record_sql(GM_TO_SQL[gm_key])
 	GameManager.stop_speaking()
 	_stop_bob()

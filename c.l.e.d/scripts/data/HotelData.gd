@@ -1486,4 +1486,240 @@ const LESSONS: Dictionary = {
 	{ "type": "end" }
 ],
 
+# ─────────────────────────────────────────────
+#  LESSON 38 — GRANT / REVOKE (DCL)  |  NPC: hotel_manager
+# ─────────────────────────────────────────────
+38: [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE",
+	  "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "A new front-desk clerk starts today. The manager needs to give them limited access to the guest database." },
+	{ "type": "dialogue", "char": "mgr", "name": "MANAGER",
+	  "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "The clerk should be able to read the guests table — but I do not want them deleting records. How do we control that in SQL?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "That is DCL — Data Control Language. GRANT gives a user a specific permission; REVOKE takes it away. We grant only SELECT." },
+	{ "type": "dialogue", "char": "mgr", "name": "MANAGER",
+	  "npc": "NPC_occupations/hotel_manager/think",
+	  "text": "So GRANT SELECT lets them read only, and if they misuse it I can REVOKE it later?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "Exactly. Permissions are the security layer of a database — each user gets only what their job needs." },
+	{ "type": "sql_fill", "gamemode": "sql_blank", "recap": "GRANT / REVOKE",
+	  "desc": "Give the clerk permission to read the guests table. Fill in the DCL keyword that grants access.",
+	  "hint": "GRANT gives a privilege. REVOKE removes it. We are giving access here.",
+	  "prefix": "", "answer": "GRANT", "placeholder": "keyword", "max_length": 8,
+	  "suffix": "SELECT ON guests TO clerk;",
+	  "err_hint": "To give a permission, the keyword is GRANT.",
+	  "result_msg": "Permission granted. The clerk can now read guests. To remove it later: REVOKE SELECT ON guests FROM clerk;" },
+	{ "type": "dialogue", "char": "mgr", "name": "MANAGER",
+	  "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "DDL builds the tables, DML changes the data, and DCL controls who is allowed to touch it. Now I see the full picture." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON 39 — UNION  |  NPC: hotel_manager
+# ─────────────────────────────────────────────
+39: [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE",
+	  "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "The manager is planning a mailing list and wants every city the hotel touches — from both guests and staff." },
+	{ "type": "dialogue", "char": "mgr", "name": "MANAGER",
+	  "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "Guest cities are in one table, staff cities in another. Can I get a single combined list of all cities at once?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "Yes — UNION stacks the results of two SELECT queries into one list. It even removes duplicate cities automatically." },
+	{ "type": "dialogue", "char": "mgr", "name": "MANAGER",
+	  "npc": "NPC_occupations/hotel_manager/think",
+	  "text": "And if I wanted to keep duplicates to count overlap?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "Then you use UNION ALL. Both queries must return the same number of columns in the same order." },
+	{ "type": "sql_fill", "gamemode": "sql_blank", "recap": "UNION / UNION ALL",
+	  "desc": "Combine guest cities and staff cities into one list. Fill in the set operator.",
+	  "hint": "UNION merges two SELECT results and drops duplicates. UNION ALL keeps them.",
+	  "prefix": "SELECT city FROM guests\n", "answer": "UNION", "placeholder": "operator", "max_length": 9,
+	  "suffix": "SELECT city FROM staff;",
+	  "err_hint": "The operator that merges two result sets is UNION.",
+	  "result_headers": ["city"], "result_rows": [["Manila"],["Cebu"],["Davao"]],
+	  "result_msg": "UNION merged both lists and removed duplicate cities. Use UNION ALL if you want to keep duplicates." },
+	{ "type": "dialogue", "char": "mgr", "name": "MANAGER",
+	  "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "One clean list from two tables. UNION removes repeats, UNION ALL keeps them. Perfect for the mailing list." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON 40 — CHECK constraint  |  NPC: hotel_manager
+# ─────────────────────────────────────────────
+40: [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE",
+	  "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "Someone typed a guest age of -5 last week. The manager wants the database itself to reject impossible values." },
+	{ "type": "dialogue", "char": "mgr", "name": "MANAGER",
+	  "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "Can the table refuse to store an age below 18 — without us writing extra code every time?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "Yes — a CHECK constraint. It attaches a rule to a column, and the database rejects any row that breaks it." },
+	{ "type": "dialogue", "char": "mgr", "name": "MANAGER",
+	  "npc": "NPC_occupations/hotel_manager/think",
+	  "text": "So CHECK (age >= 18) means an INSERT with age 15 simply fails?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "Exactly. NOT NULL, UNIQUE, DEFAULT, and CHECK are all constraints — built-in guards that protect data quality." },
+	{ "type": "sql_fill", "gamemode": "sql_blank", "recap": "CHECK",
+	  "desc": "Add a rule so the age column only accepts 18 or older. Fill in the constraint keyword.",
+	  "hint": "The constraint that validates a value against a condition is CHECK.",
+	  "prefix": "CREATE TABLE staff (\n  age INT ", "answer": "CHECK", "placeholder": "constraint", "max_length": 6,
+	  "suffix": "(age >= 18)\n);",
+	  "err_hint": "The constraint that enforces a condition is CHECK.",
+	  "result_msg": "CHECK constraint added. Any INSERT with age < 18 is now rejected by the database itself." },
+	{ "type": "dialogue", "char": "mgr", "name": "MANAGER",
+	  "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "Now bad data is blocked at the door. CHECK keeps the table honest no matter who is typing." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON 41 — ER Diagram (theory)  |  NPC: hotel_manager
+# ─────────────────────────────────────────────
+41: [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE",
+	  "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "Before building any tables, the manager sketches the hotel's data on a whiteboard. She asks you to read the diagram." },
+	{ "type": "dialogue", "char": "mgr", "name": "MANAGER",
+	  "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "This is an ER Diagram — Entity-Relationship model. Boxes are entities, ovals are attributes, lines are relationships. What does it tell us?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "Each box becomes a table, each oval becomes a column, and the line between GUEST and BOOKING shows how they connect — its cardinality." },
+	{ "type": "sql_choice",
+	  "desc": "One GUEST can make many BOOKINGs, but each BOOKING belongs to exactly one GUEST. What cardinality does this relationship have?",
+	  "options": [
+		[1, "One-to-Many (1:M) — one guest, many bookings; implemented with a guest_id foreign key in bookings."],
+		[2, "Many-to-Many (M:N) — needs a junction table between guest and booking."],
+		[3, "One-to-One (1:1) — each guest can have only a single booking ever."]
+	  ],
+	  "correct_id": 1,
+	  "hint": "One on one side, many on the other = 1:M. Answer: id = 1",
+	  "fail": [
+		{ "type": "dialogue", "char": "mgr", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/shock",
+		  "text": "M:N would need a junction table; 1:1 would limit a guest to one booking. Neither fits 'one guest, many bookings'." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/hotel_manager/idle",
+		  "text": "One guest to many bookings is One-to-Many (1:M). Answer: id = 1" }
+	  ] },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "A 1:M relationship is built with a FOREIGN KEY on the 'many' side — bookings.guest_id points to guests.id." },
+	{ "type": "dialogue", "char": "mgr", "name": "MANAGER",
+	  "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "So the ER Diagram is the blueprint — we design relationships on paper first, then turn entities into tables and lines into foreign keys." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON 42 — TRUNCATE  |  NPC: hotel_manager
+# ─────────────────────────────────────────────
+42: [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE",
+	  "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "The check-in log table has thousands of old test rows. The manager wants it completely emptied — but kept for new data." },
+	{ "type": "dialogue", "char": "mgr", "name": "MANAGER",
+	  "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "I want every row gone, but I still need the table itself. What is the fastest way to wipe it clean?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "TRUNCATE TABLE removes all rows at once and keeps the structure. It is faster than DELETE and needs no WHERE." },
+	{ "type": "dialogue", "char": "mgr", "name": "MANAGER",
+	  "npc": "NPC_occupations/hotel_manager/think",
+	  "text": "So how is it different from DELETE and DROP?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "DELETE removes rows one by one (and can use WHERE). TRUNCATE empties the whole table fast. DROP deletes the table entirely." },
+	{ "type": "sql_fill", "gamemode": "sql_blank", "recap": "TRUNCATE",
+	  "desc": "Empty the entire checkin_logs table but keep its structure. Fill in the keyword.",
+	  "hint": "DELETE = row by row. DROP = remove the table. The fast 'empty everything' keyword is TRUNCATE.",
+	  "prefix": "", "answer": "TRUNCATE", "placeholder": "keyword", "max_length": 10,
+	  "suffix": "TABLE checkin_logs;",
+	  "err_hint": "To empty a whole table fast, the keyword is TRUNCATE.",
+	  "result_msg": "All rows removed. The empty checkin_logs table is ready for new data — its columns and structure stayed intact." },
+	{ "type": "dialogue", "char": "mgr", "name": "MANAGER",
+	  "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "DELETE for some rows, TRUNCATE to empty it, DROP to destroy it. Now I will never mix them up." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON 43 — String Functions  |  NPC: hotel_manager
+# ─────────────────────────────────────────────
+43: [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE",
+	  "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "The guest names were entered in mixed casing. The manager wants a clean report with every name in capitals." },
+	{ "type": "dialogue", "char": "mgr", "name": "MANAGER",
+	  "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "Some names are 'alice', some 'ALICE', some 'Alice'. Can SQL force them all to uppercase in the result?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "Yes — string functions. UPPER() capitalizes text, LOWER() makes it lowercase, LENGTH() counts characters, SUBSTR() extracts part of it." },
+	{ "type": "dialogue", "char": "mgr", "name": "MANAGER",
+	  "npc": "NPC_occupations/hotel_manager/think",
+	  "text": "So UPPER(name) gives me every name in capitals without changing the stored data?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "Exactly. The function transforms the value only in the output — the table itself stays untouched." },
+	{ "type": "sql_fill", "gamemode": "aggregate", "recap": "String Functions",
+	  "desc": "Show every guest name in capital letters. Fill in the string function.",
+	  "hint": "UPPER() converts text to capitals. LOWER() does the opposite.",
+	  "table": "guests", "column": "name", "answer": "UPPER",
+	  "table_headers": ["id", "name"],
+	  "table_rows": [["1","alice"],["2","Bob"],["3","CAROL"]],
+	  "result_headers": ["UPPER(name)"], "result_rows": [["ALICE"],["BOB"],["CAROL"]],
+	  "result_msg": "UPPER(name) returned every name in capitals. Try LOWER(), LENGTH(name), or SUBSTR(name, 1, 3) for other transforms." },
+	{ "type": "dialogue", "char": "mgr", "name": "MANAGER",
+	  "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "Clean, consistent names in one query. String functions tidy up messy text without editing the table." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON 44 — COALESCE / IFNULL  |  NPC: hotel_manager
+# ─────────────────────────────────────────────
+44: [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE",
+	  "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "Some guests never gave an email, so the contact report shows blank cells. The manager wants a friendlier placeholder." },
+	{ "type": "dialogue", "char": "mgr", "name": "MANAGER",
+	  "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "Where the email is missing, can the report show 'No email' instead of an empty NULL cell?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "Yes — COALESCE returns the first value that is not NULL. COALESCE(email, 'No email') uses the email if present, otherwise the fallback." },
+	{ "type": "dialogue", "char": "mgr", "name": "MANAGER",
+	  "npc": "NPC_occupations/hotel_manager/think",
+	  "text": "I have seen IFNULL too — is it the same thing?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/hotel_manager/idle",
+	  "text": "IFNULL does the same with two values. COALESCE is the standard one and can take many values, returning the first non-NULL." },
+	{ "type": "sql_fill", "gamemode": "sql_blank", "recap": "COALESCE / IFNULL",
+	  "desc": "Replace any missing email with 'No email'. Fill in the NULL-handling function.",
+	  "hint": "It returns the first non-NULL value. COALESCE(email, 'No email').",
+	  "prefix": "SELECT name,\n  ", "answer": "COALESCE", "placeholder": "function", "max_length": 10,
+	  "suffix": "(email, 'No email') FROM guests;",
+	  "err_hint": "The function that returns the first non-NULL value is COALESCE.",
+	  "table": "guests",
+	  "table_headers": ["name", "email"],
+	  "table_rows": [["Alice","alice@mail.com"],["Bob","NULL"],["Carol","NULL"]],
+	  "result_headers": ["name", "contact"],
+	  "result_rows": [["Alice","alice@mail.com"],["Bob","No email"],["Carol","No email"]],
+	  "result_msg": "COALESCE filled the blank emails with 'No email'. IFNULL(email, 'No email') would do the same for two values." },
+	{ "type": "dialogue", "char": "mgr", "name": "MANAGER",
+	  "npc": "NPC_occupations/hotel_manager/talk",
+	  "text": "No more empty cells — every row reads clearly. COALESCE turns missing data into something readable." },
+	{ "type": "end" }
+],
+
 } # end LESSONS

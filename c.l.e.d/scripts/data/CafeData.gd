@@ -1443,4 +1443,240 @@ const LESSONS: Dictionary = {
 	{ "type": "end" }
 ],
 
+# ─────────────────────────────────────────────
+#  LESSON C38 — GRANT / REVOKE (DCL)  |  NPC: coffee_owner
+# ─────────────────────────────────────────────
+"C38": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "A new barista joins the team. The owner wants them to view orders but never delete sales records." },
+	{ "type": "dialogue", "char": "owner", "name": "OWNER",
+	  "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "The barista should read the orders table only. How do I control who can do what in the database?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "That is DCL — Data Control Language. GRANT gives a user a permission; REVOKE removes it. We grant read-only SELECT." },
+	{ "type": "dialogue", "char": "owner", "name": "OWNER",
+	  "npc": "NPC_occupations/coffee_owner/think",
+	  "text": "So GRANT SELECT lets them look, and REVOKE pulls it back if needed?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "Exactly. Permissions are the database's security layer — each user gets only what their role requires." },
+	{ "type": "sql_fill", "gamemode": "sql_blank", "recap": "GRANT / REVOKE",
+	  "desc": "Give the barista permission to read the orders table. Fill in the DCL keyword that grants access.",
+	  "hint": "GRANT gives a privilege. REVOKE removes it. We are giving access here.",
+	  "prefix": "", "answer": "GRANT", "placeholder": "keyword", "max_length": 8,
+	  "suffix": "SELECT ON orders TO barista;",
+	  "err_hint": "To give a permission, the keyword is GRANT.",
+	  "result_msg": "Permission granted. The barista can now read orders. To remove it later: REVOKE SELECT ON orders FROM barista;" },
+	{ "type": "dialogue", "char": "owner", "name": "OWNER",
+	  "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "DDL builds the tables, DML changes the data, DCL controls who may touch it. The whole picture finally fits." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON C39 — UNION  |  NPC: coffee_owner
+# ─────────────────────────────────────────────
+"C39": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "The owner is building a city mailing list and wants every city from both customers and suppliers in one go." },
+	{ "type": "dialogue", "char": "owner", "name": "OWNER",
+	  "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "Customer cities are in one table, supplier cities in another. Can I get one combined list of all cities at once?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "Yes — UNION stacks the results of two SELECTs into a single list and removes duplicate cities automatically." },
+	{ "type": "dialogue", "char": "owner", "name": "OWNER",
+	  "npc": "NPC_occupations/coffee_owner/think",
+	  "text": "And if I wanted to keep duplicates?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "Then UNION ALL. Both queries must return the same number of columns in the same order." },
+	{ "type": "sql_fill", "gamemode": "sql_blank", "recap": "UNION / UNION ALL",
+	  "desc": "Combine customer cities and supplier cities into one list. Fill in the set operator.",
+	  "hint": "UNION merges two SELECT results and drops duplicates. UNION ALL keeps them.",
+	  "prefix": "SELECT city FROM customers\n", "answer": "UNION", "placeholder": "operator", "max_length": 9,
+	  "suffix": "SELECT city FROM suppliers;",
+	  "err_hint": "The operator that merges two result sets is UNION.",
+	  "result_headers": ["city"], "result_rows": [["Manila"],["Cebu"],["Baguio"]],
+	  "result_msg": "UNION merged both lists and removed duplicates. Use UNION ALL to keep duplicate cities." },
+	{ "type": "dialogue", "char": "owner", "name": "OWNER",
+	  "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "One clean list from two tables. UNION removes repeats, UNION ALL keeps them. Exactly what I needed." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON C40 — CHECK constraint  |  NPC: coffee_owner
+# ─────────────────────────────────────────────
+"C40": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "A typo once saved a drink price of -50. The owner wants the database to reject impossible prices on its own." },
+	{ "type": "dialogue", "char": "owner", "name": "OWNER",
+	  "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "Can the menu table refuse any price below zero — without us checking it manually every time?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "Yes — a CHECK constraint. It attaches a rule to a column, and the database rejects any row that breaks it." },
+	{ "type": "dialogue", "char": "owner", "name": "OWNER",
+	  "npc": "NPC_occupations/coffee_owner/think",
+	  "text": "So CHECK (price >= 0) means an INSERT with -50 just fails?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "Exactly. NOT NULL, UNIQUE, DEFAULT, and CHECK are all constraints — built-in guards that protect data quality." },
+	{ "type": "sql_fill", "gamemode": "sql_blank", "recap": "CHECK",
+	  "desc": "Add a rule so the price column only accepts values of 0 or more. Fill in the constraint keyword.",
+	  "hint": "The constraint that validates a value against a condition is CHECK.",
+	  "prefix": "CREATE TABLE menu (\n  price REAL ", "answer": "CHECK", "placeholder": "constraint", "max_length": 6,
+	  "suffix": "(price >= 0)\n);",
+	  "err_hint": "The constraint that enforces a condition is CHECK.",
+	  "result_msg": "CHECK constraint added. Any INSERT with a negative price is now rejected by the database itself." },
+	{ "type": "dialogue", "char": "owner", "name": "OWNER",
+	  "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "Now bad prices are blocked at the door. CHECK keeps the menu honest no matter who is typing." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON C41 — ER Diagram (theory)  |  NPC: coffee_owner
+# ─────────────────────────────────────────────
+"C41": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "Before building tables, the owner sketches the café's data on paper and asks you to read the diagram." },
+	{ "type": "dialogue", "char": "owner", "name": "OWNER",
+	  "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "This is an ER Diagram — Entity-Relationship model. Boxes are entities, ovals are attributes, lines are relationships. What does it tell us?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "Each box becomes a table, each oval a column, and the line between CUSTOMER and ORDER shows how they connect — its cardinality." },
+	{ "type": "sql_choice",
+	  "desc": "One CUSTOMER can place many ORDERs, but each ORDER belongs to exactly one CUSTOMER. What cardinality does this relationship have?",
+	  "options": [
+		[1, "One-to-Many (1:M) — one customer, many orders; implemented with a customer_id foreign key in orders."],
+		[2, "Many-to-Many (M:N) — needs a junction table between customer and order."],
+		[3, "One-to-One (1:1) — each customer can place only a single order ever."]
+	  ],
+	  "correct_id": 1,
+	  "hint": "One on one side, many on the other = 1:M. Answer: id = 1",
+	  "fail": [
+		{ "type": "dialogue", "char": "owner", "name": "OWNER", "npc": "NPC_occupations/coffee_owner/shock",
+		  "text": "M:N would need a junction table; 1:1 would limit a customer to one order. Neither fits 'one customer, many orders'." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/coffee_owner/idle",
+		  "text": "One customer to many orders is One-to-Many (1:M). Answer: id = 1" }
+	  ] },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "A 1:M relationship is built with a FOREIGN KEY on the 'many' side — orders.customer_id points to customers.id." },
+	{ "type": "dialogue", "char": "owner", "name": "OWNER",
+	  "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "So the ER Diagram is the blueprint — design relationships on paper first, then turn entities into tables and lines into foreign keys." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON C42 — TRUNCATE  |  NPC: coffee_owner
+# ─────────────────────────────────────────────
+"C42": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "The order log table is full of old test rows. The owner wants it completely emptied but kept for new data." },
+	{ "type": "dialogue", "char": "owner", "name": "OWNER",
+	  "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "I want every row gone, but I still need the table. What is the fastest way to wipe it clean?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "TRUNCATE TABLE removes all rows at once and keeps the structure. It is faster than DELETE and needs no WHERE." },
+	{ "type": "dialogue", "char": "owner", "name": "OWNER",
+	  "npc": "NPC_occupations/coffee_owner/think",
+	  "text": "How is it different from DELETE and DROP?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "DELETE removes rows one by one (and can use WHERE). TRUNCATE empties the whole table fast. DROP deletes the table entirely." },
+	{ "type": "sql_fill", "gamemode": "sql_blank", "recap": "TRUNCATE",
+	  "desc": "Empty the entire order_logs table but keep its structure. Fill in the keyword.",
+	  "hint": "DELETE = row by row. DROP = remove the table. The fast 'empty everything' keyword is TRUNCATE.",
+	  "prefix": "", "answer": "TRUNCATE", "placeholder": "keyword", "max_length": 10,
+	  "suffix": "TABLE order_logs;",
+	  "err_hint": "To empty a whole table fast, the keyword is TRUNCATE.",
+	  "result_msg": "All rows removed. The empty order_logs table is ready for new data — its columns and structure stayed intact." },
+	{ "type": "dialogue", "char": "owner", "name": "OWNER",
+	  "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "DELETE for some rows, TRUNCATE to empty it, DROP to destroy it. Now I will never mix them up." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON C43 — String Functions  |  NPC: coffee_owner
+# ─────────────────────────────────────────────
+"C43": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "The menu items were typed in mixed casing. The owner wants a clean board with every item in capitals." },
+	{ "type": "dialogue", "char": "owner", "name": "OWNER",
+	  "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "Some items are 'latte', some 'LATTE', some 'Latte'. Can SQL force them all to uppercase in the result?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "Yes — string functions. UPPER() capitalizes text, LOWER() makes it lowercase, LENGTH() counts characters, SUBSTR() extracts part of it." },
+	{ "type": "dialogue", "char": "owner", "name": "OWNER",
+	  "npc": "NPC_occupations/coffee_owner/think",
+	  "text": "So UPPER(item) gives me every item in capitals without changing the stored data?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "Exactly. The function transforms the value only in the output — the table itself stays untouched." },
+	{ "type": "sql_fill", "gamemode": "aggregate", "recap": "String Functions",
+	  "desc": "Show every menu item in capital letters. Fill in the string function.",
+	  "hint": "UPPER() converts text to capitals. LOWER() does the opposite.",
+	  "table": "orders", "column": "item", "answer": "UPPER",
+	  "table_headers": ["id", "item"],
+	  "table_rows": [["1","latte"],["2","Mocha"],["3","ESPRESSO"]],
+	  "result_headers": ["UPPER(item)"], "result_rows": [["LATTE"],["MOCHA"],["ESPRESSO"]],
+	  "result_msg": "UPPER(item) returned every item in capitals. Try LOWER(), LENGTH(item), or SUBSTR(item, 1, 3) for other transforms." },
+	{ "type": "dialogue", "char": "owner", "name": "OWNER",
+	  "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "Clean, consistent item names in one query. String functions tidy up messy text without editing the table." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON C44 — COALESCE / IFNULL  |  NPC: coffee_owner
+# ─────────────────────────────────────────────
+"C44": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "Many orders have no special notes, so the report shows blank cells. The owner wants a friendlier placeholder." },
+	{ "type": "dialogue", "char": "owner", "name": "OWNER",
+	  "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "Where the note is missing, can the report show 'No notes' instead of an empty NULL cell?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "Yes — COALESCE returns the first value that is not NULL. COALESCE(notes, 'No notes') uses the note if present, otherwise the fallback." },
+	{ "type": "dialogue", "char": "owner", "name": "OWNER",
+	  "npc": "NPC_occupations/coffee_owner/think",
+	  "text": "I have seen IFNULL too — is it the same thing?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "IFNULL does the same with two values. COALESCE is the standard one and can take many values, returning the first non-NULL." },
+	{ "type": "sql_fill", "gamemode": "sql_blank", "recap": "COALESCE / IFNULL",
+	  "desc": "Replace any missing note with 'No notes'. Fill in the NULL-handling function.",
+	  "hint": "It returns the first non-NULL value. COALESCE(notes, 'No notes').",
+	  "prefix": "SELECT item,\n  ", "answer": "COALESCE", "placeholder": "function", "max_length": 10,
+	  "suffix": "(notes, 'No notes') FROM orders;",
+	  "err_hint": "The function that returns the first non-NULL value is COALESCE.",
+	  "table": "orders",
+	  "table_headers": ["item", "notes"],
+	  "table_rows": [["Latte","Extra hot"],["Mocha","NULL"],["Tea","NULL"]],
+	  "result_headers": ["item", "note"],
+	  "result_rows": [["Latte","Extra hot"],["Mocha","No notes"],["Tea","No notes"]],
+	  "result_msg": "COALESCE filled the blank notes with 'No notes'. IFNULL(notes, 'No notes') would do the same for two values." },
+	{ "type": "dialogue", "char": "owner", "name": "OWNER",
+	  "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "No more empty cells — every row reads clearly. COALESCE turns missing data into something readable." },
+	{ "type": "end" }
+],
+
 } # end LESSONS

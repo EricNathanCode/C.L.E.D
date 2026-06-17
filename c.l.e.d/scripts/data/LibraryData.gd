@@ -1802,4 +1802,240 @@ const LESSONS: Dictionary = {
 	{ "type": "end" }
 ],
 
+# ─────────────────────────────────────────────
+#  LESSON L38 — GRANT / REVOKE (DCL)  |  NPC: librarian
+# ─────────────────────────────────────────────
+"L38": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE",
+	  "npc": "NPC_occupations/librarian/idle",
+	  "text": "A new library assistant starts today. The librarian wants them to view the catalog but never delete records." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN",
+	  "npc": "NPC_occupations/librarian/talk",
+	  "text": "The assistant should read the books table only. How do we control who can do what in the database?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/librarian/idle",
+	  "text": "That is DCL — Data Control Language. GRANT gives a user a permission; REVOKE removes it. We grant read-only SELECT." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN",
+	  "npc": "NPC_occupations/librarian/think",
+	  "text": "So GRANT SELECT lets them look, and REVOKE pulls it back if needed?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/librarian/idle",
+	  "text": "Exactly. Permissions are the database's security layer — each user gets only what their role requires." },
+	{ "type": "sql_fill", "gamemode": "sql_blank", "recap": "GRANT / REVOKE",
+	  "desc": "Give the assistant permission to read the books table. Fill in the DCL keyword that grants access.",
+	  "hint": "GRANT gives a privilege. REVOKE removes it. We are giving access here.",
+	  "prefix": "", "answer": "GRANT", "placeholder": "keyword", "max_length": 8,
+	  "suffix": "SELECT ON books TO assistant;",
+	  "err_hint": "To give a permission, the keyword is GRANT.",
+	  "result_msg": "Permission granted. The assistant can now read books. To remove it later: REVOKE SELECT ON books FROM assistant;" },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN",
+	  "npc": "NPC_occupations/librarian/talk",
+	  "text": "DDL builds the tables, DML changes the data, DCL controls who may touch it. The whole picture finally fits." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON L39 — UNION  |  NPC: librarian
+# ─────────────────────────────────────────────
+"L39": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE",
+	  "npc": "NPC_occupations/librarian/idle",
+	  "text": "The librarian is building a mailing list and wants every city from both members and authors in one list." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN",
+	  "npc": "NPC_occupations/librarian/talk",
+	  "text": "Member cities are in one table, author cities in another. Can I get one combined list of all cities at once?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/librarian/idle",
+	  "text": "Yes — UNION stacks the results of two SELECTs into a single list and removes duplicate cities automatically." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN",
+	  "npc": "NPC_occupations/librarian/think",
+	  "text": "And if I wanted to keep duplicates?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/librarian/idle",
+	  "text": "Then UNION ALL. Both queries must return the same number of columns in the same order." },
+	{ "type": "sql_fill", "gamemode": "sql_blank", "recap": "UNION / UNION ALL",
+	  "desc": "Combine member cities and author cities into one list. Fill in the set operator.",
+	  "hint": "UNION merges two SELECT results and drops duplicates. UNION ALL keeps them.",
+	  "prefix": "SELECT city FROM members\n", "answer": "UNION", "placeholder": "operator", "max_length": 9,
+	  "suffix": "SELECT city FROM authors;",
+	  "err_hint": "The operator that merges two result sets is UNION.",
+	  "result_headers": ["city"], "result_rows": [["Manila"],["Cebu"],["Iloilo"]],
+	  "result_msg": "UNION merged both lists and removed duplicates. Use UNION ALL to keep duplicate cities." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN",
+	  "npc": "NPC_occupations/librarian/talk",
+	  "text": "One clean list from two tables. UNION removes repeats, UNION ALL keeps them. Exactly what I needed." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON L40 — CHECK constraint  |  NPC: librarian
+# ─────────────────────────────────────────────
+"L40": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE",
+	  "npc": "NPC_occupations/librarian/idle",
+	  "text": "A typo once saved a copy count of -3. The librarian wants the database to reject impossible values on its own." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN",
+	  "npc": "NPC_occupations/librarian/talk",
+	  "text": "Can the books table refuse any copy count below zero — without us checking it manually every time?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/librarian/idle",
+	  "text": "Yes — a CHECK constraint. It attaches a rule to a column, and the database rejects any row that breaks it." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN",
+	  "npc": "NPC_occupations/librarian/think",
+	  "text": "So CHECK (copies >= 0) means an INSERT with -3 just fails?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/librarian/idle",
+	  "text": "Exactly. NOT NULL, UNIQUE, DEFAULT, and CHECK are all constraints — built-in guards that protect data quality." },
+	{ "type": "sql_fill", "gamemode": "sql_blank", "recap": "CHECK",
+	  "desc": "Add a rule so the copies column only accepts values of 0 or more. Fill in the constraint keyword.",
+	  "hint": "The constraint that validates a value against a condition is CHECK.",
+	  "prefix": "CREATE TABLE books (\n  copies INT ", "answer": "CHECK", "placeholder": "constraint", "max_length": 6,
+	  "suffix": "(copies >= 0)\n);",
+	  "err_hint": "The constraint that enforces a condition is CHECK.",
+	  "result_msg": "CHECK constraint added. Any INSERT with a negative copy count is now rejected by the database itself." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN",
+	  "npc": "NPC_occupations/librarian/talk",
+	  "text": "Now bad values are blocked at the door. CHECK keeps the catalog honest no matter who is typing." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON L41 — ER Diagram (theory)  |  NPC: librarian
+# ─────────────────────────────────────────────
+"L41": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE",
+	  "npc": "NPC_occupations/librarian/idle",
+	  "text": "Before building tables, the librarian sketches the library's data on paper and asks you to read the diagram." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN",
+	  "npc": "NPC_occupations/librarian/talk",
+	  "text": "This is an ER Diagram — Entity-Relationship model. Boxes are entities, ovals are attributes, lines are relationships. What does it tell us?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/librarian/idle",
+	  "text": "Each box becomes a table, each oval a column, and the line between MEMBER and LOAN shows how they connect — its cardinality." },
+	{ "type": "sql_choice",
+	  "desc": "One MEMBER can have many LOANs, but each LOAN belongs to exactly one MEMBER. What cardinality does this relationship have?",
+	  "options": [
+		[1, "One-to-Many (1:M) — one member, many loans; implemented with a member_id foreign key in loans."],
+		[2, "Many-to-Many (M:N) — needs a junction table between member and loan."],
+		[3, "One-to-One (1:1) — each member can have only a single loan ever."]
+	  ],
+	  "correct_id": 1,
+	  "hint": "One on one side, many on the other = 1:M. Answer: id = 1",
+	  "fail": [
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock",
+		  "text": "M:N would need a junction table; 1:1 would limit a member to one loan. Neither fits 'one member, many loans'." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
+		  "text": "One member to many loans is One-to-Many (1:M). Answer: id = 1" }
+	  ] },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/librarian/idle",
+	  "text": "A 1:M relationship is built with a FOREIGN KEY on the 'many' side — loans.member_id points to members.id." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN",
+	  "npc": "NPC_occupations/librarian/talk",
+	  "text": "So the ER Diagram is the blueprint — design relationships on paper first, then turn entities into tables and lines into foreign keys." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON L42 — TRUNCATE  |  NPC: librarian
+# ─────────────────────────────────────────────
+"L42": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE",
+	  "npc": "NPC_occupations/librarian/idle",
+	  "text": "The search log table is full of old test rows. The librarian wants it completely emptied but kept for new data." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN",
+	  "npc": "NPC_occupations/librarian/talk",
+	  "text": "I want every row gone, but I still need the table. What is the fastest way to wipe it clean?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/librarian/idle",
+	  "text": "TRUNCATE TABLE removes all rows at once and keeps the structure. It is faster than DELETE and needs no WHERE." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN",
+	  "npc": "NPC_occupations/librarian/think",
+	  "text": "How is it different from DELETE and DROP?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/librarian/idle",
+	  "text": "DELETE removes rows one by one (and can use WHERE). TRUNCATE empties the whole table fast. DROP deletes the table entirely." },
+	{ "type": "sql_fill", "gamemode": "sql_blank", "recap": "TRUNCATE",
+	  "desc": "Empty the entire search_logs table but keep its structure. Fill in the keyword.",
+	  "hint": "DELETE = row by row. DROP = remove the table. The fast 'empty everything' keyword is TRUNCATE.",
+	  "prefix": "", "answer": "TRUNCATE", "placeholder": "keyword", "max_length": 10,
+	  "suffix": "TABLE search_logs;",
+	  "err_hint": "To empty a whole table fast, the keyword is TRUNCATE.",
+	  "result_msg": "All rows removed. The empty search_logs table is ready for new data — its columns and structure stayed intact." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN",
+	  "npc": "NPC_occupations/librarian/talk",
+	  "text": "DELETE for some rows, TRUNCATE to empty it, DROP to destroy it. Now I will never mix them up." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON L43 — String Functions  |  NPC: librarian
+# ─────────────────────────────────────────────
+"L43": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE",
+	  "npc": "NPC_occupations/librarian/idle",
+	  "text": "The book titles were entered in mixed casing. The librarian wants a clean catalog with every title in capitals." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN",
+	  "npc": "NPC_occupations/librarian/talk",
+	  "text": "Some titles are 'dune', some 'DUNE', some 'Dune'. Can SQL force them all to uppercase in the result?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/librarian/idle",
+	  "text": "Yes — string functions. UPPER() capitalizes text, LOWER() makes it lowercase, LENGTH() counts characters, SUBSTR() extracts part of it." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN",
+	  "npc": "NPC_occupations/librarian/think",
+	  "text": "So UPPER(title) gives me every title in capitals without changing the stored data?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/librarian/idle",
+	  "text": "Exactly. The function transforms the value only in the output — the table itself stays untouched." },
+	{ "type": "sql_fill", "gamemode": "aggregate", "recap": "String Functions",
+	  "desc": "Show every book title in capital letters. Fill in the string function.",
+	  "hint": "UPPER() converts text to capitals. LOWER() does the opposite.",
+	  "table": "books", "column": "title", "answer": "UPPER",
+	  "table_headers": ["id", "title"],
+	  "table_rows": [["1","dune"],["2","1984"],["3","Neuromancer"]],
+	  "result_headers": ["UPPER(title)"], "result_rows": [["DUNE"],["1984"],["NEUROMANCER"]],
+	  "result_msg": "UPPER(title) returned every title in capitals. Try LOWER(), LENGTH(title), or SUBSTR(title, 1, 3) for other transforms." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN",
+	  "npc": "NPC_occupations/librarian/talk",
+	  "text": "Clean, consistent titles in one query. String functions tidy up messy text without editing the table." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON L44 — COALESCE / IFNULL  |  NPC: librarian
+# ─────────────────────────────────────────────
+"L44": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE",
+	  "npc": "NPC_occupations/librarian/idle",
+	  "text": "Many books have no summary yet, so the catalog shows blank cells. The librarian wants a friendlier placeholder." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN",
+	  "npc": "NPC_occupations/librarian/talk",
+	  "text": "Where the summary is missing, can the catalog show 'No summary' instead of an empty NULL cell?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/librarian/idle",
+	  "text": "Yes — COALESCE returns the first value that is not NULL. COALESCE(summary, 'No summary') uses the summary if present, otherwise the fallback." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN",
+	  "npc": "NPC_occupations/librarian/think",
+	  "text": "I have seen IFNULL too — is it the same thing?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/librarian/idle",
+	  "text": "IFNULL does the same with two values. COALESCE is the standard one and can take many values, returning the first non-NULL." },
+	{ "type": "sql_fill", "gamemode": "sql_blank", "recap": "COALESCE / IFNULL",
+	  "desc": "Replace any missing summary with 'No summary'. Fill in the NULL-handling function.",
+	  "hint": "It returns the first non-NULL value. COALESCE(summary, 'No summary').",
+	  "prefix": "SELECT title,\n  ", "answer": "COALESCE", "placeholder": "function", "max_length": 10,
+	  "suffix": "(summary, 'No summary') FROM books;",
+	  "err_hint": "The function that returns the first non-NULL value is COALESCE.",
+	  "table": "books",
+	  "table_headers": ["title", "summary"],
+	  "table_rows": [["Dune","Desert epic"],["1984","NULL"],["Sula","NULL"]],
+	  "result_headers": ["title", "summary"],
+	  "result_rows": [["Dune","Desert epic"],["1984","No summary"],["Sula","No summary"]],
+	  "result_msg": "COALESCE filled the blank summaries with 'No summary'. IFNULL(summary, 'No summary') would do the same for two values." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN",
+	  "npc": "NPC_occupations/librarian/talk",
+	  "text": "No more empty cells — every row reads clearly. COALESCE turns missing data into something readable." },
+	{ "type": "end" }
+],
+
 } # end LESSONS

@@ -1793,4 +1793,240 @@ const LESSONS: Dictionary = {
 	{ "type": "end" }
 ],
 
+# ─────────────────────────────────────────────
+#  LESSON P38 — GRANT / REVOKE (DCL)  |  NPC: police chief
+# ─────────────────────────────────────────────
+"P38": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE",
+	  "npc": "NPC_occupations/police/idle",
+	  "text": "A new officer joins the precinct. The chief wants them to view case files but never delete records." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
+	  "npc": "NPC_occupations/police/talk",
+	  "text": "The officer should read the cases table only. How do we control who can do what in the database?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/police/idle",
+	  "text": "That is DCL — Data Control Language. GRANT gives a user a permission; REVOKE removes it. We grant read-only SELECT." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
+	  "npc": "NPC_occupations/police/think",
+	  "text": "So GRANT SELECT lets them look, and REVOKE pulls it back if needed?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/police/idle",
+	  "text": "Exactly. Permissions are the database's security layer — each user gets only what their role requires." },
+	{ "type": "sql_fill", "gamemode": "sql_blank", "recap": "GRANT / REVOKE",
+	  "desc": "Give the officer permission to read the cases table. Fill in the DCL keyword that grants access.",
+	  "hint": "GRANT gives a privilege. REVOKE removes it. We are giving access here.",
+	  "prefix": "", "answer": "GRANT", "placeholder": "keyword", "max_length": 8,
+	  "suffix": "SELECT ON cases TO officer;",
+	  "err_hint": "To give a permission, the keyword is GRANT.",
+	  "result_msg": "Permission granted. The officer can now read cases. To remove it later: REVOKE SELECT ON cases FROM officer;" },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
+	  "npc": "NPC_occupations/police/talk",
+	  "text": "DDL builds the tables, DML changes the data, DCL controls who may touch it. The whole picture finally fits." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON P39 — UNION  |  NPC: police chief
+# ─────────────────────────────────────────────
+"P39": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE",
+	  "npc": "NPC_occupations/police/idle",
+	  "text": "The chief is compiling a watch list and wants every city from both suspects and witnesses in one list." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
+	  "npc": "NPC_occupations/police/talk",
+	  "text": "Suspect cities are in one table, witness cities in another. Can I get one combined list of all cities at once?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/police/idle",
+	  "text": "Yes — UNION stacks the results of two SELECTs into a single list and removes duplicate cities automatically." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
+	  "npc": "NPC_occupations/police/think",
+	  "text": "And if I wanted to keep duplicates?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/police/idle",
+	  "text": "Then UNION ALL. Both queries must return the same number of columns in the same order." },
+	{ "type": "sql_fill", "gamemode": "sql_blank", "recap": "UNION / UNION ALL",
+	  "desc": "Combine suspect cities and witness cities into one list. Fill in the set operator.",
+	  "hint": "UNION merges two SELECT results and drops duplicates. UNION ALL keeps them.",
+	  "prefix": "SELECT city FROM suspects\n", "answer": "UNION", "placeholder": "operator", "max_length": 9,
+	  "suffix": "SELECT city FROM witnesses;",
+	  "err_hint": "The operator that merges two result sets is UNION.",
+	  "result_headers": ["city"], "result_rows": [["Manila"],["Quezon"],["Cebu"]],
+	  "result_msg": "UNION merged both lists and removed duplicates. Use UNION ALL to keep duplicate cities." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
+	  "npc": "NPC_occupations/police/talk",
+	  "text": "One clean list from two tables. UNION removes repeats, UNION ALL keeps them. Exactly what I needed." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON P40 — CHECK constraint  |  NPC: police chief
+# ─────────────────────────────────────────────
+"P40": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE",
+	  "npc": "NPC_occupations/police/idle",
+	  "text": "A clerk once recorded a fine of -200. The chief wants the database to reject impossible amounts on its own." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
+	  "npc": "NPC_occupations/police/talk",
+	  "text": "Can the penalties table refuse any fine below zero — without us checking it manually every time?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/police/idle",
+	  "text": "Yes — a CHECK constraint. It attaches a rule to a column, and the database rejects any row that breaks it." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
+	  "npc": "NPC_occupations/police/think",
+	  "text": "So CHECK (fine >= 0) means an INSERT with -200 just fails?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/police/idle",
+	  "text": "Exactly. NOT NULL, UNIQUE, DEFAULT, and CHECK are all constraints — built-in guards that protect data quality." },
+	{ "type": "sql_fill", "gamemode": "sql_blank", "recap": "CHECK",
+	  "desc": "Add a rule so the fine column only accepts values of 0 or more. Fill in the constraint keyword.",
+	  "hint": "The constraint that validates a value against a condition is CHECK.",
+	  "prefix": "CREATE TABLE penalties (\n  fine REAL ", "answer": "CHECK", "placeholder": "constraint", "max_length": 6,
+	  "suffix": "(fine >= 0)\n);",
+	  "err_hint": "The constraint that enforces a condition is CHECK.",
+	  "result_msg": "CHECK constraint added. Any INSERT with a negative fine is now rejected by the database itself." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
+	  "npc": "NPC_occupations/police/talk",
+	  "text": "Now bad amounts are blocked at the door. CHECK keeps the records honest no matter who is typing." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON P41 — ER Diagram (theory)  |  NPC: police chief
+# ─────────────────────────────────────────────
+"P41": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE",
+	  "npc": "NPC_occupations/police/idle",
+	  "text": "Before building tables, the chief sketches the precinct's data on a board and asks you to read the diagram." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
+	  "npc": "NPC_occupations/police/talk",
+	  "text": "This is an ER Diagram — Entity-Relationship model. Boxes are entities, ovals are attributes, lines are relationships. What does it tell us?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/police/idle",
+	  "text": "Each box becomes a table, each oval a column, and the line between OFFICER and CASE shows how they connect — its cardinality." },
+	{ "type": "sql_choice",
+	  "desc": "One OFFICER can handle many CASEs, but each CASE is assigned to exactly one OFFICER. What cardinality does this relationship have?",
+	  "options": [
+		[1, "One-to-Many (1:M) — one officer, many cases; implemented with an officer_id foreign key in cases."],
+		[2, "Many-to-Many (M:N) — needs a junction table between officer and case."],
+		[3, "One-to-One (1:1) — each officer can handle only a single case ever."]
+	  ],
+	  "correct_id": 1,
+	  "hint": "One on one side, many on the other = 1:M. Answer: id = 1",
+	  "fail": [
+		{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/shock",
+		  "text": "M:N would need a junction table; 1:1 would limit an officer to one case. Neither fits 'one officer, many cases'." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
+		  "text": "One officer to many cases is One-to-Many (1:M). Answer: id = 1" }
+	  ] },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/police/idle",
+	  "text": "A 1:M relationship is built with a FOREIGN KEY on the 'many' side — cases.officer_id points to officers.id." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
+	  "npc": "NPC_occupations/police/talk",
+	  "text": "So the ER Diagram is the blueprint — design relationships on paper first, then turn entities into tables and lines into foreign keys." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON P42 — TRUNCATE  |  NPC: police chief
+# ─────────────────────────────────────────────
+"P42": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE",
+	  "npc": "NPC_occupations/police/idle",
+	  "text": "The patrol log table is full of old test rows. The chief wants it completely emptied but kept for new data." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
+	  "npc": "NPC_occupations/police/talk",
+	  "text": "I want every row gone, but I still need the table. What is the fastest way to wipe it clean?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/police/idle",
+	  "text": "TRUNCATE TABLE removes all rows at once and keeps the structure. It is faster than DELETE and needs no WHERE." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
+	  "npc": "NPC_occupations/police/think",
+	  "text": "How is it different from DELETE and DROP?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/police/idle",
+	  "text": "DELETE removes rows one by one (and can use WHERE). TRUNCATE empties the whole table fast. DROP deletes the table entirely." },
+	{ "type": "sql_fill", "gamemode": "sql_blank", "recap": "TRUNCATE",
+	  "desc": "Empty the entire patrol_logs table but keep its structure. Fill in the keyword.",
+	  "hint": "DELETE = row by row. DROP = remove the table. The fast 'empty everything' keyword is TRUNCATE.",
+	  "prefix": "", "answer": "TRUNCATE", "placeholder": "keyword", "max_length": 10,
+	  "suffix": "TABLE patrol_logs;",
+	  "err_hint": "To empty a whole table fast, the keyword is TRUNCATE.",
+	  "result_msg": "All rows removed. The empty patrol_logs table is ready for new data — its columns and structure stayed intact." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
+	  "npc": "NPC_occupations/police/talk",
+	  "text": "DELETE for some rows, TRUNCATE to empty it, DROP to destroy it. Now I will never mix them up." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON P43 — String Functions  |  NPC: police chief
+# ─────────────────────────────────────────────
+"P43": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE",
+	  "npc": "NPC_occupations/police/idle",
+	  "text": "The case types were typed in mixed casing. The chief wants a clean report with every type in capitals." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
+	  "npc": "NPC_occupations/police/talk",
+	  "text": "Some are 'robbery', some 'ROBBERY', some 'Robbery'. Can SQL force them all to uppercase in the result?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/police/idle",
+	  "text": "Yes — string functions. UPPER() capitalizes text, LOWER() makes it lowercase, LENGTH() counts characters, SUBSTR() extracts part of it." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
+	  "npc": "NPC_occupations/police/think",
+	  "text": "So UPPER(case_type) gives me every type in capitals without changing the stored data?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/police/idle",
+	  "text": "Exactly. The function transforms the value only in the output — the table itself stays untouched." },
+	{ "type": "sql_fill", "gamemode": "aggregate", "recap": "String Functions",
+	  "desc": "Show every case type in capital letters. Fill in the string function.",
+	  "hint": "UPPER() converts text to capitals. LOWER() does the opposite.",
+	  "table": "cases", "column": "case_type", "answer": "UPPER",
+	  "table_headers": ["id", "case_type"],
+	  "table_rows": [["1","robbery"],["2","Theft"],["3","ASSAULT"]],
+	  "result_headers": ["UPPER(case_type)"], "result_rows": [["ROBBERY"],["THEFT"],["ASSAULT"]],
+	  "result_msg": "UPPER(case_type) returned every type in capitals. Try LOWER(), LENGTH(case_type), or SUBSTR(case_type, 1, 3) for other transforms." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
+	  "npc": "NPC_occupations/police/talk",
+	  "text": "Clean, consistent case types in one query. String functions tidy up messy text without editing the table." },
+	{ "type": "end" }
+],
+
+# ─────────────────────────────────────────────
+#  LESSON P44 — COALESCE / IFNULL  |  NPC: police chief
+# ─────────────────────────────────────────────
+"P44": [
+	{ "type": "dialogue", "char": "scene", "name": "SCENE",
+	  "npc": "NPC_occupations/police/idle",
+	  "text": "Many cases have no remarks yet, so the report shows blank cells. The chief wants a friendlier placeholder." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
+	  "npc": "NPC_occupations/police/talk",
+	  "text": "Where the remark is missing, can the report show 'No remarks' instead of an empty NULL cell?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/police/idle",
+	  "text": "Yes — COALESCE returns the first value that is not NULL. COALESCE(remarks, 'No remarks') uses the remark if present, otherwise the fallback." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
+	  "npc": "NPC_occupations/police/think",
+	  "text": "I have seen IFNULL too — is it the same thing?" },
+	{ "type": "dialogue", "char": "you", "name": "YOU",
+	  "npc": "NPC_occupations/police/idle",
+	  "text": "IFNULL does the same with two values. COALESCE is the standard one and can take many values, returning the first non-NULL." },
+	{ "type": "sql_fill", "gamemode": "sql_blank", "recap": "COALESCE / IFNULL",
+	  "desc": "Replace any missing remark with 'No remarks'. Fill in the NULL-handling function.",
+	  "hint": "It returns the first non-NULL value. COALESCE(remarks, 'No remarks').",
+	  "prefix": "SELECT case_type,\n  ", "answer": "COALESCE", "placeholder": "function", "max_length": 10,
+	  "suffix": "(remarks, 'No remarks') FROM cases;",
+	  "err_hint": "The function that returns the first non-NULL value is COALESCE.",
+	  "table": "cases",
+	  "table_headers": ["case_type", "remarks"],
+	  "table_rows": [["Robbery","Suspect fled"],["Theft","NULL"],["Assault","NULL"]],
+	  "result_headers": ["case_type", "remark"],
+	  "result_rows": [["Robbery","Suspect fled"],["Theft","No remarks"],["Assault","No remarks"]],
+	  "result_msg": "COALESCE filled the blank remarks with 'No remarks'. IFNULL(remarks, 'No remarks') would do the same for two values." },
+	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
+	  "npc": "NPC_occupations/police/talk",
+	  "text": "No more empty cells — every row reads clearly. COALESCE turns missing data into something readable." },
+	{ "type": "end" }
+],
+
 } # end LESSONS
