@@ -53,7 +53,7 @@ const QUIZ_DATA: Dictionary = {
 			 "answer": "FROM",
 			 "hint": "DELETE ___ tablename WHERE condition"},
 		],
-		# Folder 1 — Filtering & Sorting (11 lessons × 2 = 22 questions)
+		# Folder 1 — Filtering & Sorting (13 topics × 2 = 26 questions; String & COALESCE count double)
 		[
 			# — ORDER BY —
 			{"desc": "Sort the guest list by last name A to Z.",
@@ -154,8 +154,26 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "SELECT name,\n  [BLANK](phone, 'N/A') FROM guests;",
 			 "answer": "COALESCE",
 			 "hint": "COALESCE(value, fallback) returns the first non-NULL value."},
+			# — STRING FUNCTIONS (cont.) —
+			{"desc": "Show every guest name in lowercase letters.",
+			 "code": "SELECT [BLANK](name) FROM guests;",
+			 "answer": "LOWER",
+			 "hint": "LOWER() converts text to lowercase."},
+			{"desc": "Get the first 3 characters of each guest name.",
+			 "code": "SELECT [BLANK](name, 1, 3) FROM guests;",
+			 "answer": "SUBSTR",
+			 "hint": "SUBSTR(text, start, length) extracts part of a string."},
+			# — IFNULL (two-argument NULL shortcut) —
+			{"desc": "Use the two-argument shortcut to replace a missing address with 'N/A'.",
+			 "code": "SELECT name,\n  [BLANK](address, 'N/A') FROM guests;",
+			 "answer": "IFNULL",
+			 "hint": "IFNULL(value, fallback) is the two-argument NULL replacement."},
+			{"desc": "Use the two-argument shortcut to default a missing nickname to 'None'.",
+			 "code": "SELECT name,\n  [BLANK](nickname, 'None') FROM guests;",
+			 "answer": "IFNULL",
+			 "hint": "IFNULL takes exactly two arguments: value and fallback."},
 		],
-		# Folder 2 — Aggregates & Joins (8 lessons × 2 = 16 questions)
+		# Folder 2 — Aggregates & Joins (9 topics × 2 = 18 questions; UNION counts double)
 		[
 			# — GROUP BY —
 			{"desc": "Count how many bookings each room type has.",
@@ -227,6 +245,14 @@ const QUIZ_DATA: Dictionary = {
 			 "hint": "UNION merges two SELECT results and removes duplicates."},
 			{"desc": "Combine both city lists but keep duplicate rows.",
 			 "code": "SELECT city FROM guests\nUNION [BLANK]\nSELECT city FROM staff;",
+			 "answer": "ALL",
+			 "hint": "UNION ALL keeps duplicates; the keyword after UNION is ALL."},
+			{"desc": "Merge guest cities and VIP cities into one list, removing duplicates.",
+			 "code": "SELECT city FROM guests\n[BLANK]\nSELECT city FROM vips;",
+			 "answer": "UNION",
+			 "hint": "UNION merges two SELECT results and removes duplicates."},
+			{"desc": "Merge guest and VIP cities keeping every duplicate row.",
+			 "code": "SELECT city FROM guests\nUNION [BLANK]\nSELECT city FROM vips;",
 			 "answer": "ALL",
 			 "hint": "UNION ALL keeps duplicates; the keyword after UNION is ALL."},
 		],
@@ -358,7 +384,7 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "DELETE [BLANK] orders WHERE status = 'Cancelled';",
 			 "answer": "FROM", "hint": "DELETE ___ tablename WHERE condition"},
 		],
-		# Folder 1 — Filtering & Sorting (11 lessons × 2 = 22 questions)
+		# Folder 1 — Filtering & Sorting (13 topics × 2 = 26 questions; String & COALESCE count double)
 		[
 			{"desc": "Sort the menu by price from low to high.",
 			 "code": "SELECT * FROM menu ORDER [BLANK] price;",
@@ -429,8 +455,22 @@ const QUIZ_DATA: Dictionary = {
 			{"desc": "Replace a missing coupon code with 'None'.",
 			 "code": "SELECT item,\n  [BLANK](coupon, 'None') FROM orders;",
 			 "answer": "COALESCE", "hint": "COALESCE(value, fallback) returns the first non-NULL value."},
+			# — STRING FUNCTIONS (cont.) —
+			{"desc": "Show every menu item in lowercase letters.",
+			 "code": "SELECT [BLANK](item) FROM orders;",
+			 "answer": "LOWER", "hint": "LOWER() converts text to lowercase."},
+			{"desc": "Get the first 3 characters of each item name.",
+			 "code": "SELECT [BLANK](item, 1, 3) FROM orders;",
+			 "answer": "SUBSTR", "hint": "SUBSTR(text, start, length) extracts part of a string."},
+			# — IFNULL (two-argument NULL shortcut) —
+			{"desc": "Use the two-argument shortcut to replace a missing size with 'Regular'.",
+			 "code": "SELECT item,\n  [BLANK](size, 'Regular') FROM orders;",
+			 "answer": "IFNULL", "hint": "IFNULL(value, fallback) is the two-argument NULL replacement."},
+			{"desc": "Use the two-argument shortcut to default a missing comment to 'None'.",
+			 "code": "SELECT item,\n  [BLANK](comment, 'None') FROM orders;",
+			 "answer": "IFNULL", "hint": "IFNULL takes exactly two arguments: value and fallback."},
 		],
-		# Folder 2 — Aggregates & Joins (8 lessons × 2 = 16 questions)
+		# Folder 2 — Aggregates & Joins (9 topics × 2 = 18 questions; UNION counts double)
 		[
 			{"desc": "Count orders per category.",
 			 "code": "SELECT category, COUNT(*) FROM orders\nGROUP [BLANK] category;",
@@ -481,6 +521,12 @@ const QUIZ_DATA: Dictionary = {
 			 "answer": "UNION", "hint": "UNION merges two SELECT results and removes duplicates."},
 			{"desc": "Combine both city lists but keep duplicate rows.",
 			 "code": "SELECT city FROM customers\nUNION [BLANK]\nSELECT city FROM suppliers;",
+			 "answer": "ALL", "hint": "UNION ALL keeps duplicates; the keyword after UNION is ALL."},
+			{"desc": "Merge customer cities and member cities into one list, removing duplicates.",
+			 "code": "SELECT city FROM customers\n[BLANK]\nSELECT city FROM members;",
+			 "answer": "UNION", "hint": "UNION merges two SELECT results and removes duplicates."},
+			{"desc": "Merge customer and member cities keeping every duplicate row.",
+			 "code": "SELECT city FROM customers\nUNION [BLANK]\nSELECT city FROM members;",
 			 "answer": "ALL", "hint": "UNION ALL keeps duplicates; the keyword after UNION is ALL."},
 		],
 		# Folder 3 — Database Design (10 lessons × 2 = 20 questions)
@@ -582,7 +628,7 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "DELETE [BLANK] cases WHERE status = 'Dismissed';",
 			 "answer": "FROM", "hint": "DELETE ___ tablename WHERE condition"},
 		],
-		# Folder 1 — Filtering & Sorting (11 lessons × 2 = 22 questions)
+		# Folder 1 — Filtering & Sorting (13 topics × 2 = 26 questions; String & COALESCE count double)
 		[
 			{"desc": "Sort cases by priority from highest to lowest.",
 			 "code": "SELECT * FROM cases ORDER [BLANK] priority DESC;",
@@ -653,8 +699,22 @@ const QUIZ_DATA: Dictionary = {
 			{"desc": "Replace a missing location with 'Unknown'.",
 			 "code": "SELECT case_type,\n  [BLANK](location, 'Unknown') FROM cases;",
 			 "answer": "COALESCE", "hint": "COALESCE(value, fallback) returns the first non-NULL value."},
+			# — STRING FUNCTIONS (cont.) —
+			{"desc": "Show every case type in lowercase letters.",
+			 "code": "SELECT [BLANK](case_type) FROM cases;",
+			 "answer": "LOWER", "hint": "LOWER() converts text to lowercase."},
+			{"desc": "Get the first 3 characters of each case type.",
+			 "code": "SELECT [BLANK](case_type, 1, 3) FROM cases;",
+			 "answer": "SUBSTR", "hint": "SUBSTR(text, start, length) extracts part of a string."},
+			# — IFNULL (two-argument NULL shortcut) —
+			{"desc": "Use the two-argument shortcut to replace a missing officer with 'Unassigned'.",
+			 "code": "SELECT case_type,\n  [BLANK](officer, 'Unassigned') FROM cases;",
+			 "answer": "IFNULL", "hint": "IFNULL(value, fallback) is the two-argument NULL replacement."},
+			{"desc": "Use the two-argument shortcut to default a missing district to 'N/A'.",
+			 "code": "SELECT case_type,\n  [BLANK](district, 'N/A') FROM cases;",
+			 "answer": "IFNULL", "hint": "IFNULL takes exactly two arguments: value and fallback."},
 		],
-		# Folder 2 — Aggregates & Joins (8 lessons × 2 = 16 questions)
+		# Folder 2 — Aggregates & Joins (9 topics × 2 = 18 questions; UNION counts double)
 		[
 			{"desc": "Count how many cases belong to each crime type.",
 			 "code": "SELECT crime_type, COUNT(*) FROM cases\nGROUP [BLANK] crime_type;",
@@ -705,6 +765,12 @@ const QUIZ_DATA: Dictionary = {
 			 "answer": "UNION", "hint": "UNION merges two SELECT results and removes duplicates."},
 			{"desc": "Combine both city lists but keep duplicate rows.",
 			 "code": "SELECT city FROM suspects\nUNION [BLANK]\nSELECT city FROM witnesses;",
+			 "answer": "ALL", "hint": "UNION ALL keeps duplicates; the keyword after UNION is ALL."},
+			{"desc": "Merge suspect cities and informant cities into one list, removing duplicates.",
+			 "code": "SELECT city FROM suspects\n[BLANK]\nSELECT city FROM informants;",
+			 "answer": "UNION", "hint": "UNION merges two SELECT results and removes duplicates."},
+			{"desc": "Merge suspect and informant cities keeping every duplicate row.",
+			 "code": "SELECT city FROM suspects\nUNION [BLANK]\nSELECT city FROM informants;",
 			 "answer": "ALL", "hint": "UNION ALL keeps duplicates; the keyword after UNION is ALL."},
 		],
 		# Folder 3 — Database Design (10 lessons × 2 = 20 questions)
@@ -806,7 +872,7 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "DELETE [BLANK] loans WHERE status = 'Returned';",
 			 "answer": "FROM", "hint": "DELETE ___ tablename WHERE condition"},
 		],
-		# Folder 1 — Filtering & Sorting (11 lessons × 2 = 22 questions)
+		# Folder 1 — Filtering & Sorting (13 topics × 2 = 26 questions; String & COALESCE count double)
 		[
 			{"desc": "Sort books alphabetically by title.",
 			 "code": "SELECT * FROM books ORDER [BLANK] title;",
@@ -877,8 +943,22 @@ const QUIZ_DATA: Dictionary = {
 			{"desc": "Replace a missing author with 'Unknown'.",
 			 "code": "SELECT title,\n  [BLANK](author, 'Unknown') FROM books;",
 			 "answer": "COALESCE", "hint": "COALESCE(value, fallback) returns the first non-NULL value."},
+			# — STRING FUNCTIONS (cont.) —
+			{"desc": "Show every book title in lowercase letters.",
+			 "code": "SELECT [BLANK](title) FROM books;",
+			 "answer": "LOWER", "hint": "LOWER() converts text to lowercase."},
+			{"desc": "Get the first 3 characters of each book title.",
+			 "code": "SELECT [BLANK](title, 1, 3) FROM books;",
+			 "answer": "SUBSTR", "hint": "SUBSTR(text, start, length) extracts part of a string."},
+			# — IFNULL (two-argument NULL shortcut) —
+			{"desc": "Use the two-argument shortcut to replace a missing edition with 'First'.",
+			 "code": "SELECT title,\n  [BLANK](edition, 'First') FROM books;",
+			 "answer": "IFNULL", "hint": "IFNULL(value, fallback) is the two-argument NULL replacement."},
+			{"desc": "Use the two-argument shortcut to default a missing ISBN to 'N/A'.",
+			 "code": "SELECT title,\n  [BLANK](isbn, 'N/A') FROM books;",
+			 "answer": "IFNULL", "hint": "IFNULL takes exactly two arguments: value and fallback."},
 		],
-		# Folder 2 — Aggregates & Joins (8 lessons × 2 = 16 questions)
+		# Folder 2 — Aggregates & Joins (9 topics × 2 = 18 questions; UNION counts double)
 		[
 			{"desc": "Count how many books belong to each genre.",
 			 "code": "SELECT genre, COUNT(*) FROM books\nGROUP [BLANK] genre;",
@@ -929,6 +1009,12 @@ const QUIZ_DATA: Dictionary = {
 			 "answer": "UNION", "hint": "UNION merges two SELECT results and removes duplicates."},
 			{"desc": "Combine both city lists but keep duplicate rows.",
 			 "code": "SELECT city FROM members\nUNION [BLANK]\nSELECT city FROM authors;",
+			 "answer": "ALL", "hint": "UNION ALL keeps duplicates; the keyword after UNION is ALL."},
+			{"desc": "Merge member cities and donor cities into one list, removing duplicates.",
+			 "code": "SELECT city FROM members\n[BLANK]\nSELECT city FROM donors;",
+			 "answer": "UNION", "hint": "UNION merges two SELECT results and removes duplicates."},
+			{"desc": "Merge member and donor cities keeping every duplicate row.",
+			 "code": "SELECT city FROM members\nUNION [BLANK]\nSELECT city FROM donors;",
 			 "answer": "ALL", "hint": "UNION ALL keeps duplicates; the keyword after UNION is ALL."},
 		],
 		# Folder 3 — Database Design (10 lessons × 2 = 20 questions)
