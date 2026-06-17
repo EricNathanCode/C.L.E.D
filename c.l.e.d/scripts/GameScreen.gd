@@ -81,6 +81,9 @@ const SQL_GLOSSARY: Array = [
 	["FOREIGN KEY",     "Links a column in one table to the primary key of another, enforcing referential integrity.", "CREATE TABLE orders (\n    customer_id INT,\n    FOREIGN KEY (customer_id) REFERENCES customers(id)\n);"],
 	["CREATE INDEX",    "Creates a lookup structure on a column to speed up SELECT queries on large tables.", "CREATE INDEX idx_last_name\nON guests(last_name);"],
 	["CREATE VIEW",     "Saves a SELECT query as a virtual table you can query like a real table.", "CREATE VIEW vw_active AS\nSELECT * FROM guests\nWHERE status = 'Active';"],
+	["SUBQUERY",       "A SELECT nested inside another SELECT. The inner query runs first and its result is used by the outer query.", "SELECT * FROM bookings\nWHERE price = (SELECT MAX(price) FROM bookings);"],
+	["CASE WHEN",      "SQL's if-else inside a query. Evaluates each row against conditions and returns a matching value.", "SELECT name,\n  CASE WHEN stay_count >= 5 THEN 'VIP'\n       WHEN stay_count >= 2 THEN 'Regular'\n       ELSE 'New' END AS tier\nFROM guests;"],
+	["DATE Functions", "Built-in functions for working with date values. DATE('now') returns today's date in SQLite.", "SELECT * FROM bookings\nWHERE check_out < DATE('now');\n\n-- Date arithmetic:\nDATE('now', '+7 days')  -- next week\nDATE('now', '-30 days') -- 30 days ago"],
 ]
 
 const GM_SCENES: Dictionary = {
