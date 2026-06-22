@@ -23,17 +23,17 @@ func _ready() -> void:
 	card.content_margin_bottom = 32
 	$CenterContainer/CardPanel.add_theme_stylebox_override("panel", card)
 
-	# Icon — large result symbol
+	# Icon | large result symbol
 	_icon_lbl.add_theme_font_size_override("font_size", 52)
 
 	# Title
 	_title_lbl.add_theme_font_size_override("font_size", 26)
 
-	# Sub label — muted
+	# Sub label | muted
 	_sub_lbl.add_theme_font_size_override("font_size", 15)
 	_sub_lbl.add_theme_color_override("font_color", Color(0.60, 0.65, 0.75))
 
-	# Buttons — primary CTA and ghost secondary
+	# Buttons | primary CTA and ghost secondary
 	_style_btn(_hub_btn,   "primary", 16)
 	_style_btn(_world_btn, "ghost",   15)
 

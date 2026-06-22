@@ -1,6 +1,6 @@
 extends Control
 # ═══════════════════════════════════════════════════════
-#  WORLD SELECT SCREEN  —  scripts/WorldSelectScreen.gd
+#  WORLD SELECT SCREEN  |  scripts/WorldSelectScreen.gd
 # ═══════════════════════════════════════════════════════
 
 const WORLDS: Array = ["hotel", "cafe", "police", "library"]
@@ -41,7 +41,7 @@ func _ready() -> void:
 	_music_btn.pressed.connect(_on_music_toggle)
 	_tts_btn.pressed.connect(_on_tts_toggle)
 
-	# Dark mode toggle — added programmatically so no tscn edit needed
+	# Dark mode toggle | added programmatically so no tscn edit needed
 	_dark_btn = Button.new()
 	_dark_btn.pressed.connect(_on_dark_toggle)
 	$SettingsOverlay/SettingsPanel/VBox.add_child(_dark_btn)
@@ -60,13 +60,13 @@ func _ready() -> void:
 	_style_btn(_dark_btn,  "secondary", 15)
 	_style_settings_btn($SettingsButton)
 
-	# Title — small caps label
+	# Title | small caps label
 	$Title.add_theme_font_size_override("font_size", 13)
 	$Title.add_theme_color_override("font_color", Color(0.65, 0.70, 0.80))
 	$Title.add_theme_constant_override("outline_size", 1)
 	$Title.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.7))
 
-	# World name — large hero text
+	# World name | large hero text
 	$WorldName.add_theme_font_size_override("font_size", 46)
 	$WorldName.add_theme_color_override("font_color", Color.WHITE)
 	$WorldName.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -82,7 +82,7 @@ func _ready() -> void:
 	title_lbl.add_theme_font_size_override("font_size", 17)
 	title_lbl.add_theme_color_override("font_color", Color.WHITE)
 
-	# Merge Worlds toggle — lives inside the Settings panel
+	# Merge Worlds toggle | lives inside the Settings panel
 	_merge_btn = Button.new()
 	_merge_btn.pressed.connect(_on_merge_toggle)
 	$SettingsOverlay/SettingsPanel/VBox.add_child(_merge_btn)
@@ -226,9 +226,9 @@ func _load_texture(res_path: String) -> Texture2D:
 	return null
 
 # ── 3-variant button style ────────────────────────────
-# primary   — amber fill, dark text  (main CTAs)
-# secondary — dark panel, light text (nav / toggles)
-# ghost     — transparent, dim border (exit / close)
+# primary   | amber fill, dark text  (main CTAs)
+# secondary | dark panel, light text (nav / toggles)
+# ghost     | transparent, dim border (exit / close)
 func _style_btn(btn: Button, variant: String = "primary", font_size: int = 18) -> void:
 	btn.add_theme_font_size_override("font_size", font_size)
 	var s := StyleBoxFlat.new()

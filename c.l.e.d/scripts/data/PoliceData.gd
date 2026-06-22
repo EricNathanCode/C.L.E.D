@@ -1,19 +1,19 @@
 extends Node
 # ═══════════════════════════════════════════════════════
-#  POLICE DATA  —  scripts/data/PoliceData.gd
+#  POLICE DATA  |  scripts/data/PoliceData.gd
 #
-#  NPC assignments (Police World — unique to this world):
+#  NPC assignments (Police World | unique to this world):
 #    adult_5 = Male citizen / reporter
 #    adult_6 = Female citizen / witness
 #    NPC_occupations/police = Officer / Chief (boss)
 #
-#  Rule: "you" and "scene" always idle — NPC looks at you.
+#  Rule: "you" and "scene" always idle | NPC looks at you.
 # ═══════════════════════════════════════════════════════
 
 const LESSONS: Dictionary = {
 
 # ─────────────────────────────────────────────
-#  LESSON P1 — SELECT (sql_choice)
+#  LESSON P1 | SELECT (sql_choice)
 #  Topic: Responding professionally to a citizen complaint
 # ─────────────────────────────────────────────
 "P1": [
@@ -74,7 +74,7 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON P2 — INSERT INTO
+#  LESSON P2 | INSERT INTO
 #  Topic: Logging a new case into the system
 # ─────────────────────────────────────────────
 "P2": [
@@ -108,7 +108,7 @@ const LESSONS: Dictionary = {
 		"table_headers": ["id", "reporter_name", "case_type", "status"],
 		"table_rows": [],
 		"answers": ["Marco Reyes", "Theft", "Open"],
-		"hint": "Reporter: Marco Reyes | Type: Theft | Status: Open",
+		"hint": "Reporter: Marco Reyes Type: Theft Status: Open",
 		"result_headers": ["id", "reporter_name", "case_type", "status"],
 		"result_rows": [["4", "Marco Reyes", "Theft", "Open"]],
 		"result_msg": "1 record inserted into cases.",
@@ -138,7 +138,7 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON P3 — SELECT WHERE
+#  LESSON P3 | SELECT WHERE
 #  Topic: Searching for a suspect record
 # ─────────────────────────────────────────────
 "P3": [
@@ -198,7 +198,7 @@ const LESSONS: Dictionary = {
 		"char": "you",
 		"name": "YOU",
 		"npc":  "NPC_occupations/police/idle",
-		"text": "Found 3 suspects with last name Santos — Luis (Vandalism), Maria (Theft), Sofia (Assault). Pulling full files now, Chief."
+		"text": "Found 3 suspects with last name Santos Luis (Vandalism), Maria (Theft), Sofia (Assault). Pulling full files now, Chief."
 	},
 	{
 		"type": "dialogue",
@@ -213,7 +213,7 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON P4 — UPDATE SET
+#  LESSON P4 | UPDATE SET
 #  Topic: Updating a case status after an arrest
 # ─────────────────────────────────────────────
 "P4": [
@@ -222,7 +222,7 @@ const LESSONS: Dictionary = {
 		"char": "scene",
 		"name": "SCENE",
 		"npc":  "NPC_occupations/police/idle",
-		"text": "An officer radios in — a suspect from case 2 has been apprehended."
+		"text": "An officer radios in a suspect from case 2 has been apprehended."
 	},
 	{
 		"type": "dialogue",
@@ -255,7 +255,7 @@ const LESSONS: Dictionary = {
 		],
 		"answer_value": "Closed",
 		"answer_id": "2",
-		"hint": "Change status to: Closed | Record id: 2",
+		"hint": "Change status to: Closed Record id: 2",
 		"result_headers": ["id", "reporter_name", "case_type", "status"],
 		"result_rows": [["2", "Ana Cruz", "Vandalism", "Closed"]],
 		"result_msg": "1 record updated.",
@@ -277,7 +277,7 @@ const LESSONS: Dictionary = {
 		"char": "chief",
 		"name": "CHIEF",
 		"npc":  "NPC_occupations/police/talk",
-		"text": "Good. Keep the database clean — accurate records save lives in this job."
+		"text": "Good. Keep the database clean accurate records save lives in this job."
 	},
 	{
 		"type": "end"
@@ -285,7 +285,7 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON P5 — DELETE
+#  LESSON P5 | DELETE
 #  Topic: Removing a cleared case from active records
 # ─────────────────────────────────────────────
 "P5": [
@@ -356,7 +356,7 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON P6 — ORDER BY
+#  LESSON P6 | ORDER BY
 #  Topic: Sorting cases by priority level
 # ─────────────────────────────────────────────
 "P6": [
@@ -372,7 +372,7 @@ const LESSONS: Dictionary = {
 		"char": "chief",
 		"name": "CHIEF",
 		"npc":  "NPC_occupations/police/talk",
-		"text": "Pull all open cases sorted by priority — highest first. We tackle the most critical first."
+		"text": "Pull all open cases sorted by priority highest first. We tackle the most critical first."
 	},
 	{
 		"type": "dialogue",
@@ -438,7 +438,7 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON P7 — GROUP BY
+#  LESSON P7 | GROUP BY
 #  Topic: Monthly crime category report
 # ─────────────────────────────────────────────
 "P7": [
@@ -518,7 +518,7 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON P8 — IS NULL  |  NPC: chief
+#  LESSON P8 | IS NULL  |  NPC: chief
 #  Topic: Find suspects with no assigned officer
 # ─────────────────────────────────────────────
 "P8": [
@@ -534,7 +534,7 @@ const LESSONS: Dictionary = {
 		"char": "chief",
 		"name": "CHIEF",
 		"npc":  "NPC_occupations/police/talk",
-		"text": "Some suspects have no assigned officer yet — those fields will show as NULL. Can you find which suspects are unassigned?"
+		"text": "Some suspects have no assigned officer yet those fields will show as NULL. Can you find which suspects are unassigned?"
 	},
 	{
 		"type": "dialogue",
@@ -568,9 +568,9 @@ const LESSONS: Dictionary = {
 		],
 		"result_msg": "3 suspects have no assigned officer.",
 		"fail": [
-			{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/shock", "text": "That is wrong! NULL means the officer field is empty — nobody is assigned yet." },
+			{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/shock", "text": "That is wrong! NULL means the officer field is empty nobody is assigned yet." },
 			{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",  "text": "The chief taps the blank cells in the assigned_officer column." },
-			{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "NPC_occupations/police/idle",  "text": "Right — IS NULL checks for missing values. Let me use it correctly." }
+			{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "NPC_occupations/police/idle",  "text": "Right IS NULL checks for missing values. Let me use it correctly." }
 		]
 	},
 	{
@@ -593,8 +593,8 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON P9 — CREATE DATABASE  |  NPC: adult_6 (new officer)
-#  Topic: CREATE DATABASE — setting up the database container first
+#  LESSON P9 | CREATE DATABASE  |  NPC: adult_6 (new officer)
+#  Topic: CREATE DATABASE | setting up the database container first
 # ─────────────────────────────────────────────
 "P9": [
 	{
@@ -625,11 +625,11 @@ const LESSONS: Dictionary = {
 		"db_name": "PoliceDB",
 		"answer": "DATABASE",
 		"hint": "The keyword after CREATE for a new database container is: DATABASE",
-		"result_msg": "PoliceDB is now created! All police tables — suspects, cases, assignments — will be stored inside this database.",
+		"result_msg": "PoliceDB is now created! All police tables suspects, cases, assignments will be stored inside this database.",
 		"fail": [
 			{ "type": "dialogue", "char": "citizen", "name": "OFFICER", "npc": "adult_6/confuse", "text": "That keyword is incorrect. We are creating a DATABASE container, not a table." },
 			{ "type": "dialogue", "char": "scene",   "name": "SCENE",   "npc": "adult_6/idle",   "text": "The officer leans forward to check the screen." },
-			{ "type": "dialogue", "char": "you",     "name": "YOU",     "npc": "adult_6/idle",   "text": "The correct keyword is DATABASE — CREATE DATABASE PoliceDB." }
+			{ "type": "dialogue", "char": "you",     "name": "YOU",     "npc": "adult_6/idle",   "text": "The correct keyword is DATABASE CREATE DATABASE PoliceDB." }
 		]
 	},
 	{
@@ -637,14 +637,14 @@ const LESSONS: Dictionary = {
 		"char": "citizen",
 		"name": "OFFICER",
 		"npc":  "adult_6/talk",
-		"text": "So CREATE DATABASE is the first command — it sets up the container before anything else can be stored. Got it."
+		"text": "So CREATE DATABASE is the first command it sets up the container before anything else can be stored. Got it."
 	},
 	{
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
 		"npc":  "adult_6/idle",
-		"text": "Correct. PoliceDB now exists. From here, CREATE TABLE will add the individual tables — suspects, cases — inside it."
+		"text": "Correct. PoliceDB now exists. From here, CREATE TABLE will add the individual tables suspects, cases inside it."
 	},
 	{
 		"type": "end"
@@ -652,8 +652,8 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON P10 — CREATE TABLE  |  NPC: adult_6 (new officer)
-#  Topic: CREATE TABLE — defining the table structure
+#  LESSON P10 | CREATE TABLE  |  NPC: adult_6 (new officer)
+#  Topic: CREATE TABLE | defining the table structure
 # ─────────────────────────────────────────────
 "P10": [
 	{
@@ -668,7 +668,7 @@ const LESSONS: Dictionary = {
 		"char": "citizen",
 		"name": "OFFICER",
 		"npc":  "adult_6/talk",
-		"text": "We have the database. But how do we actually define the cases table inside it — the columns, the structure?"
+		"text": "We have the database. But how do we actually define the cases table inside it the columns, the structure?"
 	},
 	{
 		"type": "dialogue",
@@ -692,9 +692,9 @@ const LESSONS: Dictionary = {
 		"hint": "The keyword after CREATE for a new table is: TABLE",
 		"result_msg": "cases table created! It has 4 columns: id (INT), reporter_name (TEXT), case_type (TEXT), status (TEXT). Every case record will follow this structure.",
 		"fail": [
-			{ "type": "dialogue", "char": "citizen", "name": "OFFICER", "npc": "adult_6/confuse", "text": "That is not right. We already have the database — now we are creating a TABLE inside it." },
+			{ "type": "dialogue", "char": "citizen", "name": "OFFICER", "npc": "adult_6/confuse", "text": "That is not right. We already have the database now we are creating a TABLE inside it." },
 			{ "type": "dialogue", "char": "scene",   "name": "SCENE",   "npc": "adult_6/idle",   "text": "The officer checks their notes." },
-			{ "type": "dialogue", "char": "you",     "name": "YOU",     "npc": "adult_6/idle",   "text": "The keyword is TABLE — CREATE TABLE cases." }
+			{ "type": "dialogue", "char": "you",     "name": "YOU",     "npc": "adult_6/idle",   "text": "The keyword is TABLE CREATE TABLE cases." }
 		]
 	},
 	{
@@ -702,14 +702,14 @@ const LESSONS: Dictionary = {
 		"char": "citizen",
 		"name": "OFFICER",
 		"npc":  "adult_6/talk",
-		"text": "CREATE TABLE — and the columns are listed inside the parentheses with their types. The database enforces that structure for every row."
+		"text": "CREATE TABLE and the columns are listed inside the parentheses with their types. The database enforces that structure for every row."
 	},
 	{
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
 		"npc":  "adult_6/idle",
-		"text": "Exactly. First CREATE DATABASE, then CREATE TABLE. The structure is set — now you can INSERT cases into it."
+		"text": "Exactly. First CREATE DATABASE, then CREATE TABLE. The structure is set now you can INSERT cases into it."
 	},
 	{
 		"type": "end"
@@ -717,7 +717,7 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON P11 — PRIMARY KEY  |  NPC: adult_6 (new officer)
+#  LESSON P11 | PRIMARY KEY  |  NPC: adult_6 (new officer)
 #  Topic: CREATE TABLE with PRIMARY KEY constraint
 # ─────────────────────────────────────────────
 "P11": [
@@ -745,7 +745,7 @@ const LESSONS: Dictionary = {
 	{
 		"type": "sql_fill",
 		"gamemode": "create_table",
-		"desc": "Complete the CREATE TABLE statement for the cases table. The 'id' column must be the PRIMARY KEY — type it in the blank.",
+		"desc": "Complete the CREATE TABLE statement for the cases table. The 'id' column must be the PRIMARY KEY type it in the blank.",
 		"table": "cases",
 		"pk_col": "id",
 		"columns": [
@@ -756,11 +756,11 @@ const LESSONS: Dictionary = {
 		],
 		"answer": "PRIMARY KEY",
 		"hint": "The constraint that makes a column unique for every row is: PRIMARY KEY",
-		"result_msg": "Table created! The PRIMARY KEY on 'id' means every case gets a permanent unique number — even if two cases involve the same suspect.",
+		"result_msg": "Table created! The PRIMARY KEY on 'id' means every case gets a permanent unique number even if two cases involve the same suspect.",
 		"fail": [
-			{ "type": "dialogue", "char": "citizen", "name": "OFFICER", "npc": "adult_6/confuse", "text": "That is not correct. The constraint is two words — PRIMARY and KEY together." },
+			{ "type": "dialogue", "char": "citizen", "name": "OFFICER", "npc": "adult_6/confuse", "text": "That is not correct. The constraint is two words PRIMARY and KEY together." },
 			{ "type": "dialogue", "char": "scene",   "name": "SCENE",   "npc": "adult_6/idle",   "text": "The officer waits, arms crossed." },
-			{ "type": "dialogue", "char": "you",     "name": "YOU",     "npc": "adult_6/idle",   "text": "Let me type the constraint correctly — PRIMARY KEY." }
+			{ "type": "dialogue", "char": "you",     "name": "YOU",     "npc": "adult_6/idle",   "text": "Let me type the constraint correctly PRIMARY KEY." }
 		]
 	},
 	{
@@ -768,7 +768,7 @@ const LESSONS: Dictionary = {
 		"char": "citizen",
 		"name": "OFFICER",
 		"npc":  "adult_6/talk",
-		"text": "So PRIMARY KEY goes right after INT! That means case id 4 will always be case id 4 — it can never be reused or duplicated."
+		"text": "So PRIMARY KEY goes right after INT! That means case id 4 will always be case id 4 it can never be reused or duplicated."
 	},
 	{
 		"type": "dialogue",
@@ -783,8 +783,8 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON P12 — JOIN  |  NPC: chief
-#  Topic: FOREIGN KEY / JOIN — combining two tables
+#  LESSON P12 | JOIN  |  NPC: chief
+#  Topic: FOREIGN KEY / JOIN | combining two tables
 # ─────────────────────────────────────────────
 "P12": [
 	{
@@ -792,7 +792,7 @@ const LESSONS: Dictionary = {
 		"char": "scene",
 		"name": "SCENE",
 		"npc":  "NPC_occupations/police/idle",
-		"text": "The chief wants a combined report — case details alongside assigned officer names — from two separate tables."
+		"text": "The chief wants a combined report case details alongside assigned officer names from two separate tables."
 	},
 	{
 		"type": "dialogue",
@@ -806,7 +806,7 @@ const LESSONS: Dictionary = {
 		"char": "you",
 		"name": "YOU",
 		"npc":  "NPC_occupations/police/idle",
-		"text": "Understood Chief. The cases.id links to assignments.case_id — that is the Foreign Key. I will JOIN on those two columns."
+		"text": "Understood Chief. The cases.id links to assignments.case_id that is the Foreign Key. I will JOIN on those two columns."
 	},
 	{
 		"type": "sql_fill",
@@ -830,7 +830,7 @@ const LESSONS: Dictionary = {
 		],
 		"join_col_a": "id",
 		"join_col_b": "case_id",
-		"hint": "Table A linking column: id | Table B linking column: case_id",
+		"hint": "Table A linking column: id Table B linking column: case_id",
 		"result_headers": ["case_type", "status", "officer_name", "badge"],
 		"result_rows": [
 			["Theft",     "Open",   "Officer Cruz",   "B-101"],
@@ -840,9 +840,9 @@ const LESSONS: Dictionary = {
 		],
 		"result_msg": "4 records joined successfully.",
 		"fail": [
-			{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/shock", "text": "The JOIN failed! You need the linking column from each table — check the headers carefully." },
+			{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/shock", "text": "The JOIN failed! You need the linking column from each table check the headers carefully." },
 			{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",  "text": "The chief taps the id column in cases and the case_id column in assignments." },
-			{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "NPC_occupations/police/idle",  "text": "I see — cases.id must equal assignments.case_id. Let me correct it." }
+			{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "NPC_occupations/police/idle",  "text": "I see cases.id must equal assignments.case_id. Let me correct it." }
 		]
 	},
 	{
@@ -857,7 +857,7 @@ const LESSONS: Dictionary = {
 		"char": "chief",
 		"name": "CHIEF",
 		"npc":  "NPC_occupations/police/think",
-		"text": "Good. JOIN lets us connect data across tables — that is exactly how a real police database works. Well done."
+		"text": "Good. JOIN lets us connect data across tables that is exactly how a real police database works. Well done."
 	},
 	{
 		"type": "end"
@@ -865,8 +865,8 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON P13 — INT  |  NPC: adult_6 (officer)
-#  Topic: Data Type INT — whole numbers
+#  LESSON P13 | INT  |  NPC: adult_6 (officer)
+#  Topic: Data Type INT | whole numbers
 # ─────────────────────────────────────────────
 "P13": [
 	{
@@ -881,14 +881,14 @@ const LESSONS: Dictionary = {
 		"char": "citizen",
 		"name": "OFFICER",
 		"npc":  "adult_6/talk",
-		"text": "The id column stores case numbers — 1, 2, 3. They are always whole numbers. What type handles that?"
+		"text": "The id column stores case numbers 1, 2, 3. They are always whole numbers. What type handles that?"
 	},
 	{
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
 		"npc":  "adult_6/idle",
-		"text": "INT — Integer. It stores whole numbers only. No decimals, no letters. Perfect for IDs and sequential numbers."
+		"text": "INT Integer. It stores whole numbers only. No decimals, no letters. Perfect for IDs and sequential numbers."
 	},
 	{
 		"type": "sql_fill",
@@ -905,11 +905,11 @@ const LESSONS: Dictionary = {
 		"answer": "INT",
 		"type_hint": "Whole numbers (IDs, counts) use INT.",
 		"hint": "A whole number data type (no decimals) is: INT",
-		"result_msg": "Correct! INT stores whole numbers — 1, 2, 100. Case #7 will always be case #7, never case #7.5.",
+		"result_msg": "Correct! INT stores whole numbers 1, 2, 100. Case #7 will always be case #7, never case #7.5.",
 		"fail": [
-			{ "type": "dialogue", "char": "citizen", "name": "OFFICER", "npc": "adult_6/confuse", "text": "That is not the right type. id stores whole numbers — no letters, no decimals." },
+			{ "type": "dialogue", "char": "citizen", "name": "OFFICER", "npc": "adult_6/confuse", "text": "That is not the right type. id stores whole numbers no letters, no decimals." },
 			{ "type": "dialogue", "char": "scene",   "name": "SCENE",   "npc": "adult_6/idle",   "text": "The officer points at the id column." },
-			{ "type": "dialogue", "char": "you",     "name": "YOU",     "npc": "adult_6/idle",   "text": "Whole numbers use INT — Integer." }
+			{ "type": "dialogue", "char": "you",     "name": "YOU",     "npc": "adult_6/idle",   "text": "Whole numbers use INT Integer." }
 		]
 	},
 	{
@@ -917,7 +917,7 @@ const LESSONS: Dictionary = {
 		"char": "citizen",
 		"name": "OFFICER",
 		"npc":  "adult_6/talk",
-		"text": "INT for integers — whole numbers! Case IDs, badge numbers, counts — anything that cannot be a fraction."
+		"text": "INT for integers whole numbers! Case IDs, badge numbers, counts anything that cannot be a fraction."
 	},
 	{
 		"type": "dialogue",
@@ -932,8 +932,8 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON P14 — TEXT  |  NPC: adult_6 (officer)
-#  Topic: Data Type TEXT — strings / words
+#  LESSON P14 | TEXT  |  NPC: adult_6 (officer)
+#  Topic: Data Type TEXT | strings / words
 # ─────────────────────────────────────────────
 "P14": [
 	{
@@ -955,7 +955,7 @@ const LESSONS: Dictionary = {
 		"char": "you",
 		"name": "YOU",
 		"npc":  "adult_6/idle",
-		"text": "TEXT — it stores any sequence of characters. Names, descriptions, categories — anything made of letters."
+		"text": "TEXT it stores any sequence of characters. Names, descriptions, categories anything made of letters."
 	},
 	{
 		"type": "sql_fill",
@@ -972,11 +972,11 @@ const LESSONS: Dictionary = {
 		"answer": "TEXT",
 		"type_hint": "Names and words use TEXT (also called STRING).",
 		"hint": "Letters and words use: TEXT  (also called STRING)",
-		"result_msg": "Correct! TEXT stores words and characters — 'Maria Santos', 'Theft', 'Open'. You can also type STRING and it means the same thing.",
+		"result_msg": "Correct! TEXT stores words and characters 'Maria Santos', 'Theft', 'Open'. You can also type STRING and it means the same thing.",
 		"fail": [
-			{ "type": "dialogue", "char": "citizen", "name": "OFFICER", "npc": "adult_6/confuse", "text": "Not right. reporter_name stores a name — letters, not a number." },
+			{ "type": "dialogue", "char": "citizen", "name": "OFFICER", "npc": "adult_6/confuse", "text": "Not right. reporter_name stores a name letters, not a number." },
 			{ "type": "dialogue", "char": "scene",   "name": "SCENE",   "npc": "adult_6/idle",   "text": "The officer looks at a sample record." },
-			{ "type": "dialogue", "char": "you",     "name": "YOU",     "npc": "adult_6/idle",   "text": "Letters and words use TEXT — also called STRING." }
+			{ "type": "dialogue", "char": "you",     "name": "YOU",     "npc": "adult_6/idle",   "text": "Letters and words use TEXT also called STRING." }
 		]
 	},
 	{
@@ -984,7 +984,7 @@ const LESSONS: Dictionary = {
 		"char": "citizen",
 		"name": "OFFICER",
 		"npc":  "adult_6/talk",
-		"text": "TEXT for words — names, categories, descriptions. INT for numbers. Two types already cover most of what we store."
+		"text": "TEXT for words names, categories, descriptions. INT for numbers. Two types already cover most of what we store."
 	},
 	{
 		"type": "dialogue",
@@ -999,8 +999,8 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON P15 — REAL  |  NPC: chief
-#  Topic: Data Type REAL — decimal / float numbers
+#  LESSON P15 | REAL  |  NPC: chief
+#  Topic: Data Type REAL | decimal / float numbers
 # ─────────────────────────────────────────────
 "P15": [
 	{
@@ -1015,14 +1015,14 @@ const LESSONS: Dictionary = {
 		"char": "chief",
 		"name": "CHIEF",
 		"npc":  "NPC_occupations/police/talk",
-		"text": "The fine_amount column needs to store values like 150.50 and 200.75. INT cannot store decimals — what type do we use?"
+		"text": "The fine_amount column needs to store values like 150.50 and 200.75. INT cannot store decimals what type do we use?"
 	},
 	{
 		"type": "dialogue",
 		"char": "you",
 		"name": "YOU",
 		"npc":  "NPC_occupations/police/idle",
-		"text": "REAL — it stores decimal numbers accurately. Perfect for monetary values, measurements, or any number with a decimal point."
+		"text": "REAL it stores decimal numbers accurately. Perfect for monetary values, measurements, or any number with a decimal point."
 	},
 	{
 		"type": "sql_fill",
@@ -1039,11 +1039,11 @@ const LESSONS: Dictionary = {
 		"answer": "REAL",
 		"type_hint": "Decimal numbers (prices, measurements) use REAL (also called FLOAT).",
 		"hint": "Decimal numbers use: REAL  (also called FLOAT)",
-		"result_msg": "Correct! REAL stores decimal numbers — 150.50, 200.75, 99.99. You can also type FLOAT and it means the same thing.",
+		"result_msg": "Correct! REAL stores decimal numbers 150.50, 200.75, 99.99. You can also type FLOAT and it means the same thing.",
 		"fail": [
-			{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/shock", "text": "Wrong type! fine_amount stores decimal values — not whole numbers and not text." },
+			{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/shock", "text": "Wrong type! fine_amount stores decimal values not whole numbers and not text." },
 			{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",  "text": "The chief shows the fine schedule on the desk." },
-			{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "NPC_occupations/police/idle",  "text": "Decimal numbers use REAL — also called FLOAT." }
+			{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "NPC_occupations/police/idle",  "text": "Decimal numbers use REAL also called FLOAT." }
 		]
 	},
 	{
@@ -1066,11 +1066,11 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON P16 — SELECT DISTINCT  |  NPC: police chief
+#  LESSON P16 | SELECT DISTINCT  |  NPC: police chief
 # ─────────────────────────────────────────────
 "P16": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",
-	  "text": "The chief wants a summary of what types of cases the station handles — without counting each case individually." },
+	  "text": "The chief wants a summary of what types of cases the station handles without counting each case individually." },
 	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
 	  "text": "I need a list of all distinct case types we have on record. Each type should appear only once." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
@@ -1098,11 +1098,11 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON P17 — AND/OR  |  NPC: police chief
+#  LESSON P17 | AND/OR  |  NPC: police chief
 # ─────────────────────────────────────────────
 "P17": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",
-	  "text": "The chief needs to find open theft cases specifically — not just any theft and not just any open case." },
+	  "text": "The chief needs to find open theft cases specifically not just any theft and not just any open case." },
 	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
 	  "text": "I need cases where type is 'Theft' AND status is 'Open'. Both conditions must apply at the same time." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
@@ -1118,21 +1118,21 @@ const LESSONS: Dictionary = {
 	  "hint": "Both conditions required: AND",
 	  "result_headers": ["id","suspect","case_type","status"],
 	  "result_rows": [["1","Santos","Theft","Open"],["4","Lim","Theft","Open"]],
-	  "result_msg": "2 open theft cases. AND is strict — both conditions must hold. OR would give 4 results.",
+	  "result_msg": "2 open theft cases. AND is strict both conditions must hold. OR would give 4 results.",
 	  "fail": [
-		{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/shock", "text": "Too many results. I need BOTH conditions true — not one or the other." },
+		{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/shock", "text": "Too many results. I need BOTH conditions true not one or the other." },
 		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle", "text": "Both conditions required: AND." }
 	  ]
 	},
 	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
-	  "text": "Only Santos and Lim — open theft cases. AND narrows the search precisely." },
+	  "text": "Only Santos and Lim open theft cases. AND narrows the search precisely." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
-	  "text": "OR would include Cruz (open but not theft) and Reyes (theft but closed) — too broad." },
+	  "text": "OR would include Cruz (open but not theft) and Reyes (theft but closed) too broad." },
 	{ "type": "end" }
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON P18 — BETWEEN  |  NPC: police chief
+#  LESSON P18 | BETWEEN  |  NPC: police chief
 # ─────────────────────────────────────────────
 "P18": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",
@@ -1140,7 +1140,7 @@ const LESSONS: Dictionary = {
 	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
 	  "text": "Show me cases where the fine is between 500 and 2000. Include those exact amounts too." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
-	  "text": "BETWEEN filters an inclusive range — 500 and 2000 are included in the results." },
+	  "text": "BETWEEN filters an inclusive range 500 and 2000 are included in the results." },
 	{ "type": "sql_fill", "gamemode": "where_between",
 	  "desc": "Find cases where fine_amount is between 500 and 2000. Fill in the range keyword.",
 	  "table": "cases",
@@ -1166,7 +1166,7 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON P19 — LIKE  |  NPC: police chief
+#  LESSON P19 | LIKE  |  NPC: police chief
 # ─────────────────────────────────────────────
 "P19": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",
@@ -1199,7 +1199,7 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON P20 — IN  |  NPC: police chief
+#  LESSON P20 | IN  |  NPC: police chief
 # ─────────────────────────────────────────────
 "P20": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",
@@ -1228,12 +1228,12 @@ const LESSONS: Dictionary = {
 	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
 	  "text": "4 cases for the report. IN is very useful when filtering against several known values." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
-	  "text": "NOT IN works too — WHERE case_type NOT IN ('Assault') would exclude assault cases." },
+	  "text": "NOT IN works too WHERE case_type NOT IN ('Assault') would exclude assault cases." },
 	{ "type": "end" }
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON P21 — LIMIT  |  NPC: police chief
+#  LESSON P21 | LIMIT  |  NPC: police chief
 # ─────────────────────────────────────────────
 "P21": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",
@@ -1248,7 +1248,7 @@ const LESSONS: Dictionary = {
 	  "answer": "5",
 	  "table_headers": ["id","suspect","case_type","status"],
 	  "table_rows": [["1","Santos","Theft","Open"],["2","Cruz","Vandalism","Closed"],["3","Reyes","Assault","Open"],["4","Lim","Theft","Open"],["5","Garcia","Vandalism","Closed"],["6","Torres","Theft","Open"],["7","Flores","Assault","Open"]],
-	  "hint": "Show only 5 rows — type: 5",
+	  "hint": "Show only 5 rows type: 5",
 	  "result_headers": ["id","suspect","case_type","status"],
 	  "result_rows": [["1","Santos","Theft","Open"],["2","Cruz","Vandalism","Closed"],["3","Reyes","Assault","Open"],["4","Lim","Theft","Open"],["5","Garcia","Vandalism","Closed"]],
 	  "result_msg": "5 cases shown. Torres and Flores were not fetched. LIMIT is essential for large databases.",
@@ -1258,14 +1258,14 @@ const LESSONS: Dictionary = {
 	  ]
 	},
 	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
-	  "text": "5 cases only — clean overview. LIMIT with ORDER BY id DESC would give the most recent cases first." },
+	  "text": "5 cases only clean overview. LIMIT with ORDER BY id DESC would give the most recent cases first." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
 	  "text": "Exactly. TOP 5 most urgent: ORDER BY priority DESC LIMIT 5." },
 	{ "type": "end" }
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON P22 — COUNT  |  NPC: police chief
+#  LESSON P22 | COUNT  |  NPC: police chief
 # ─────────────────────────────────────────────
 "P22": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",
@@ -1298,15 +1298,15 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON P23 — HAVING  |  NPC: police chief
+#  LESSON P23 | HAVING  |  NPC: police chief
 # ─────────────────────────────────────────────
 "P23": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",
-	  "text": "The chief wants to identify case types that have more than 2 reported incidents — a crime trend report." },
+	  "text": "The chief wants to identify case types that have more than 2 reported incidents a crime trend report." },
 	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
 	  "text": "I grouped by case_type but need to filter out types with only 1 or 2 cases. WHERE won't work here." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
-	  "text": "Use HAVING — it filters after GROUP BY. WHERE cannot reference aggregate results like COUNT." },
+	  "text": "Use HAVING it filters after GROUP BY. WHERE cannot reference aggregate results like COUNT." },
 	{ "type": "sql_fill", "gamemode": "having",
 	  "desc": "Show case types with more than 2 incidents. Fill in the aggregate function in HAVING.",
 	  "table": "cases",
@@ -1331,15 +1331,15 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON P24 — AS (Aliases)  |  NPC: police chief
+#  LESSON P24 | AS (Aliases)  |  NPC: police chief
 # ─────────────────────────────────────────────
 "P24": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",
-	  "text": "The chief needs a readable report showing fine discounts — but the expression name is messy." },
+	  "text": "The chief needs a readable report showing fine discounts but the expression name is messy." },
 	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
 	  "text": "The column shows 'fine_amount * 0.1' instead of a proper label. Can we rename it in the output?" },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
-	  "text": "AS gives a column a display alias. It only changes the label in output — the table is untouched." },
+	  "text": "AS gives a column a display alias. It only changes the label in output the table is untouched." },
 	{ "type": "sql_fill", "gamemode": "select_alias",
 	  "desc": "Rename the calculated column to 'discount_amount'. Fill in the alias name after AS.",
 	  "table": "cases",
@@ -1350,7 +1350,7 @@ const LESSONS: Dictionary = {
 	  "hint": "The alias for the discount column: discount_amount",
 	  "result_headers": ["discount_amount"],
 	  "result_rows": [["250.0"],["80.0"],["50.0"]],
-	  "result_msg": "Column displays as 'discount_amount'. AS is purely cosmetic — fine_amount is unchanged in the table.",
+	  "result_msg": "Column displays as 'discount_amount'. AS is purely cosmetic fine_amount is unchanged in the table.",
 	  "fail": [
 		{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/shock", "text": "Wrong alias. The alias should be: discount_amount" },
 		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle", "text": "Type the alias: discount_amount" }
@@ -1359,12 +1359,12 @@ const LESSONS: Dictionary = {
 	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
 	  "text": "Readable report! AS is useful for any calculated column that would otherwise have an ugly name." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
-	  "text": "You can also alias table names: FROM cases AS c — shortens long JOIN queries." },
+	  "text": "You can also alias table names: FROM cases AS c shortens long JOIN queries." },
 	{ "type": "end" }
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON P25 — NOT NULL + UNIQUE  |  NPC: adult_5 citizen
+#  LESSON P25 | NOT NULL + UNIQUE  |  NPC: adult_5 citizen
 # ─────────────────────────────────────────────
 "P25": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "adult_5/idle",
@@ -1391,7 +1391,7 @@ const LESSONS: Dictionary = {
 	{ "type": "dialogue", "char": "citizen", "name": "CITIZEN", "npc": "adult_5/talk",
 	  "text": "Good. And how do we stop two officers from having the same badge number?" },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_5/idle",
-	  "text": "UNIQUE constraint — no two rows can share the same value in that column." },
+	  "text": "UNIQUE constraint no two rows can share the same value in that column." },
 	{ "type": "sql_fill", "gamemode": "create_table",
 	  "desc": "The badge_number must be unique per officer. Add the UNIQUE constraint.",
 	  "table": "officers",
@@ -1410,12 +1410,12 @@ const LESSONS: Dictionary = {
 	{ "type": "dialogue", "char": "citizen", "name": "CITIZEN", "npc": "adult_5/talk",
 	  "text": "NOT NULL stops blanks, UNIQUE stops duplicates. The database enforces its own rules." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_5/idle",
-	  "text": "Combine them: badge_number TEXT NOT NULL UNIQUE — mandatory and always different." },
+	  "text": "Combine them: badge_number TEXT NOT NULL UNIQUE mandatory and always different." },
 	{ "type": "end" }
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON P26 — ALTER TABLE  |  NPC: police chief
+#  LESSON P26 | ALTER TABLE  |  NPC: police chief
 # ─────────────────────────────────────────────
 "P26": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",
@@ -1431,7 +1431,7 @@ const LESSONS: Dictionary = {
 	  "col_type": "TEXT",
 	  "answer": "ADD",
 	  "hint": "The keyword to add a column: ADD",
-	  "result_msg": "priority column added! Existing case records are preserved — ADD is non-destructive.",
+	  "result_msg": "priority column added! Existing case records are preserved ADD is non-destructive.",
 	  "fail": [
 		{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/shock", "text": "Wrong keyword. Use: ALTER TABLE cases ADD priority TEXT" },
 		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle", "text": "The keyword is ADD." }
@@ -1445,7 +1445,7 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON P27 — DROP TABLE  |  NPC: police chief
+#  LESSON P27 | DROP TABLE  |  NPC: police chief
 # ─────────────────────────────────────────────
 "P27": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",
@@ -1466,20 +1466,20 @@ const LESSONS: Dictionary = {
 	  ]
 	},
 	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
-	  "text": "Table removed. DROP TABLE is the most destructive SQL command — always double-check first." },
+	  "text": "Table removed. DROP TABLE is the most destructive SQL command always double-check first." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
 	  "text": "Safety tip: DROP TABLE IF EXISTS temp_evidence will not throw an error if the table is already gone." },
 	{ "type": "end" }
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON P28 — LEFT JOIN  |  NPC: police chief
+#  LESSON P28 | LEFT JOIN  |  NPC: police chief
 # ─────────────────────────────────────────────
 "P28": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",
-	  "text": "The chief wants a full roster of officers — including those not yet assigned to any case." },
+	  "text": "The chief wants a full roster of officers including those not yet assigned to any case." },
 	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
-	  "text": "A regular JOIN only shows officers WITH assignments. I need ALL officers — unassigned ones must appear too." },
+	  "text": "A regular JOIN only shows officers WITH assignments. I need ALL officers unassigned ones must appear too." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
 	  "text": "LEFT JOIN returns all rows from the left table plus matches from the right. No match becomes NULL." },
 	{ "type": "sql_fill", "gamemode": "join",
@@ -1491,24 +1491,24 @@ const LESSONS: Dictionary = {
 	  "table_b_headers": ["id","officer_id","case_id"],
 	  "table_b_rows": [["1","1","101"],["2","3","102"]],
 	  "join_col_a": "id", "join_col_b": "officer_id",
-	  "hint": "officers linking column: id | assignments linking column: officer_id",
+	  "hint": "officers linking column: id assignments linking column: officer_id",
 	  "result_headers": ["name","rank","case_id"],
 	  "result_rows": [["Santos","Sergeant","101"],["Cruz","Officer","NULL"],["Reyes","Detective","102"],["Lim","Officer","NULL"]],
-	  "result_msg": "All 4 officers shown. Cruz and Lim have no assignments — their case_id is NULL.",
+	  "result_msg": "All 4 officers shown. Cruz and Lim have no assignments their case_id is NULL.",
 	  "fail": [
 		{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/shock", "text": "Wrong linking columns! officers.id connects to assignments.officer_id." },
-		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle", "text": "Left: id | Right: officer_id" }
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle", "text": "Left: id Right: officer_id" }
 	  ]
 	},
 	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
-	  "text": "Full roster! Cruz and Lim are available — LEFT JOIN revealed officers with no current assignment." },
+	  "text": "Full roster! Cruz and Lim are available LEFT JOIN revealed officers with no current assignment." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
 	  "text": "INNER JOIN would hide Cruz and Lim. LEFT JOIN = all left rows, matching or not." },
 	{ "type": "end" }
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON P29 — DEFAULT  |  NPC: adult_5 citizen
+#  LESSON P29 | DEFAULT  |  NPC: adult_5 citizen
 # ─────────────────────────────────────────────
 "P29": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "adult_5/idle",
@@ -1540,7 +1540,7 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON P30 — Normalization  |  NPC: adult_5 citizen
+#  LESSON P30 | Normalization  |  NPC: adult_5 citizen
 # ─────────────────────────────────────────────
 "P30": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "adult_5/idle",
@@ -1552,7 +1552,7 @@ const LESSONS: Dictionary = {
 	{ "type": "sql_choice",
 	  "desc": "A cases table stores officer_name, officer_precinct_address, case_type in EVERY row. What is the main design problem?",
 	  "options": [
-		[1, "Data redundancy — officer precinct address repeats in every case, causing update anomalies."],
+		[1, "Data redundancy officer precinct address repeats in every case, causing update anomalies."],
 		[2, "The table has too many indexes. Remove some to fix it."],
 		[3, "A LIMIT clause is missing from the SELECT query on this table."]
 	  ],
@@ -1560,7 +1560,7 @@ const LESSONS: Dictionary = {
 	  "hint": "Repeated data across rows is called redundancy. Answer: id = 1",
 	  "fail": [
 		{ "type": "dialogue", "char": "citizen", "name": "CITIZEN", "npc": "adult_5/confuse", "text": "Not right. The repeated data problem is called redundancy." },
-		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_5/idle", "text": "Answer 1 — data redundancy is the issue." }
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_5/idle", "text": "Answer 1 data redundancy is the issue." }
 	  ]
 	},
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_5/idle",
@@ -1568,18 +1568,18 @@ const LESSONS: Dictionary = {
 	{ "type": "dialogue", "char": "citizen", "name": "CITIZEN", "npc": "adult_5/talk",
 	  "text": "One update to the officers table fixes the address across all cases. That is so much cleaner!" },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_5/idle",
-	  "text": "3NF — third normal form. Each fact is stored once and referenced by ID everywhere else." },
+	  "text": "3NF third normal form. Each fact is stored once and referenced by ID everywhere else." },
 	{ "type": "end" }
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON P31 — Transactions  |  NPC: police chief
+#  LESSON P31 | Transactions  |  NPC: police chief
 # ─────────────────────────────────────────────
 "P31": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",
-	  "text": "A system crash occurred during a case transfer — the case was removed from one officer but never assigned to the new one." },
+	  "text": "A system crash occurred during a case transfer the case was removed from one officer but never assigned to the new one." },
 	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
-	  "text": "The case is in limbo — nobody is handling it. How do we ensure the transfer is all-or-nothing next time?" },
+	  "text": "The case is in limbo nobody is handling it. How do we ensure the transfer is all-or-nothing next time?" },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
 	  "text": "Transactions! BEGIN wraps multiple statements. COMMIT saves all or ROLLBACK cancels all." },
 	{ "type": "sql_fill", "gamemode": "transaction",
@@ -1601,15 +1601,15 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON P32 — FOREIGN KEY  |  NPC: police chief
+#  LESSON P32 | FOREIGN KEY  |  NPC: police chief
 # ─────────────────────────────────────────────
 "P32": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",
-	  "text": "The station has two tables — officers and cases. The chief wants to enforce that every case is assigned to a real officer." },
+	  "text": "The station has two tables officers and cases. The chief wants to enforce that every case is assigned to a real officer." },
 	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
 	  "text": "A FOREIGN KEY ensures a column's values exist in another table. No case can reference an officer ID that doesn't exist." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
-	  "text": "So it's a data integrity constraint — the database itself enforces the relationship?" },
+	  "text": "So it's a data integrity constraint the database itself enforces the relationship?" },
 	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
 	  "text": "Exactly. The keyword linking to the other table is REFERENCES. Complete the statement." },
 	{ "type": "sql_fill", "gamemode": "foreign_key",
@@ -1627,7 +1627,7 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON P33 — Indexes  |  NPC: police chief
+#  LESSON P33 | Indexes  |  NPC: police chief
 # ─────────────────────────────────────────────
 "P33": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",
@@ -1635,7 +1635,7 @@ const LESSONS: Dictionary = {
 	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
 	  "text": "An INDEX is a behind-the-scenes lookup structure. The database uses it to find matching rows instantly instead of scanning every record." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
-	  "text": "Like a card catalog in a records room — you go straight to the drawer without checking every file?" },
+	  "text": "Like a card catalog in a records room you go straight to the drawer without checking every file?" },
 	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
 	  "text": "Perfect analogy. Create the index on suspect_name now." },
 	{ "type": "sql_fill", "gamemode": "create_index",
@@ -1653,7 +1653,7 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON P34 — Views  |  NPC: police chief
+#  LESSON P34 | Views  |  NPC: police chief
 # ─────────────────────────────────────────────
 "P34": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/police/idle",
@@ -1661,9 +1661,9 @@ const LESSONS: Dictionary = {
 	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
 	  "text": "A VIEW wraps a SELECT query into a named virtual table. Officers can query it directly without writing the full query each time." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/police/idle",
-	  "text": "And the view always reflects the current data — it's not a snapshot?" },
+	  "text": "And the view always reflects the current data it's not a snapshot?" },
 	{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
-	  "text": "Correct — live data every time. Create the open cases view." },
+	  "text": "Correct live data every time. Create the open cases view." },
 	{ "type": "sql_fill", "gamemode": "create_view",
 	  "desc": "Create a view called vw_open_cases that shows all cases with status 'Open'.",
 	  "view_name": "vw_open_cases", "select_cols": "*", "table": "cases", "condition": "status = 'Open'",
@@ -1680,24 +1680,24 @@ const LESSONS: Dictionary = {
 
 
 # ─────────────────────────────────────────────
-#  LESSON P35 — SUBQUERY  |  NPC: police chief
+#  LESSON P35 | SUBQUERY  |  NPC: police chief
 # ─────────────────────────────────────────────
 "P35": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE",
 	  "npc": "NPC_occupations/police/idle",
-	  "text": "The chief is reviewing the fine ledger. She needs the case with the single highest fine — not just a sorted list." },
+	  "text": "The chief is reviewing the fine ledger. She needs the case with the single highest fine not just a sorted list." },
 	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
 	  "npc": "NPC_occupations/police/talk",
 	  "text": "I want the exact case record that matches the maximum fine amount. ORDER BY and LIMIT is close but I need the precise match." },
 	{ "type": "dialogue", "char": "you", "name": "YOU",
 	  "npc": "NPC_occupations/police/idle",
-	  "text": "We use a subquery — a SELECT inside another SELECT. The inner query finds MAX(fine), the outer WHERE matches it exactly." },
+	  "text": "We use a subquery a SELECT inside another SELECT. The inner query finds MAX(fine), the outer WHERE matches it exactly." },
 	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
 	  "npc": "NPC_occupations/police/think",
 	  "text": "The inner part runs first and the outer query uses the result as its filter value?" },
 	{ "type": "dialogue", "char": "you", "name": "YOU",
 	  "npc": "NPC_occupations/police/idle",
-	  "text": "Correct. WHERE fine = (SELECT MAX(fine) FROM cases) — database evaluates the inner SELECT first." },
+	  "text": "Correct. WHERE fine = (SELECT MAX(fine) FROM cases) database evaluates the inner SELECT first." },
 	{ "type": "sql_fill", "gamemode": "aggregate",
 	  "desc": "This inner query finds the highest fine amount. Fill in the aggregate function.",
 	  "hint": "MAX() returns the largest value. The outer query uses this result: WHERE fine = (SELECT MAX(fine) FROM cases).",
@@ -1711,12 +1711,12 @@ const LESSONS: Dictionary = {
 	  "text": "Inner query executes first, returns the max fine value, outer WHERE matches the exact record. Clean and precise." },
 	{ "type": "dialogue", "char": "you", "name": "YOU",
 	  "npc": "NPC_occupations/police/idle",
-	  "text": "Subqueries also work in SELECT columns and FROM clauses — any place a value or table is expected in the query." },
+	  "text": "Subqueries also work in SELECT columns and FROM clauses any place a value or table is expected in the query." },
 	{ "type": "end" }
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON P36 — CASE WHEN  |  NPC: police chief
+#  LESSON P36 | CASE WHEN  |  NPC: police chief
 # ─────────────────────────────────────────────
 "P36": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE",
@@ -1727,16 +1727,16 @@ const LESSONS: Dictionary = {
 	  "text": "Each case has a case_type column. Robbery and Assault should be Critical. Theft is Moderate. Everything else gets Minor. Can we label them automatically in a query?" },
 	{ "type": "dialogue", "char": "you", "name": "YOU",
 	  "npc": "NPC_occupations/police/idle",
-	  "text": "Yes — CASE WHEN is SQL's conditional expression. It works like an if-else inside a SELECT, creating a new column based on conditions." },
+	  "text": "Yes CASE WHEN is SQL's conditional expression. It works like an if-else inside a SELECT, creating a new column based on conditions." },
 	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
 	  "npc": "NPC_occupations/police/think",
 	  "text": "So it reads each row and applies the matching label? No extra table needed?" },
 	{ "type": "dialogue", "char": "you", "name": "YOU",
 	  "npc": "NPC_occupations/police/idle",
-	  "text": "Correct. CASE WHEN condition THEN value ... ELSE fallback END — evaluated row by row inside the SELECT." },
+	  "text": "Correct. CASE WHEN condition THEN value ... ELSE fallback END evaluated row by row inside the SELECT." },
 	{ "type": "sql_fill", "gamemode": "select_alias",
 	  "desc": "The CASE WHEN expression assigns a severity label to each case. Type the alias that names this derived column.",
-	  "hint": "Type 'severity' — the alias after AS that gives the CASE WHEN column a readable name.",
+	  "hint": "Type 'severity' the alias after AS that gives the CASE WHEN column a readable name.",
 	  "table": "cases",
 	  "col_expr": "CASE WHEN case_type IN ('Robbery','Assault') THEN 'Critical' WHEN case_type = 'Theft' THEN 'Moderate' ELSE 'Minor' END",
 	  "answer": "severity",
@@ -1744,19 +1744,19 @@ const LESSONS: Dictionary = {
 	  "table_rows": [["1","Robbery"],["2","Theft"],["3","Vandalism"]],
 	  "result_headers": ["case_id", "severity"],
 	  "result_rows": [["1","Critical"],["2","Moderate"],["3","Minor"]],
-	  "result_msg": "Each case gets its severity label — CASE WHEN evaluates conditions in order and returns the first match per row." },
+	  "result_msg": "Each case gets its severity label CASE WHEN evaluates conditions in order and returns the first match per row." },
 	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
 	  "npc": "NPC_occupations/police/talk",
 	  "text": "Every row gets evaluated independently. Robbery rows show Critical, Theft rows show Moderate. CASE WHEN runs once per row." },
 	{ "type": "dialogue", "char": "you", "name": "YOU",
 	  "npc": "NPC_occupations/police/idle",
-	  "text": "CASE WHEN also works inside ORDER BY, WHERE, and UPDATE SET — anywhere a value is expected in SQL." },
+	  "text": "CASE WHEN also works inside ORDER BY, WHERE, and UPDATE SET anywhere a value is expected in SQL." },
 	{ "type": "end" }
 ],
 
 
 # ─────────────────────────────────────────────
-#  LESSON P37 — DATE FUNCTIONS  |  NPC: police chief
+#  LESSON P37 | DATE FUNCTIONS  |  NPC: police chief
 # ─────────────────────────────────────────────
 "P37": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE",
@@ -1770,7 +1770,7 @@ const LESSONS: Dictionary = {
 	  "text": "SQLite provides DATE('now') for today's date. We compare filed_date against it with a less-than operator to find past cases." },
 	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
 	  "npc": "NPC_occupations/police/think",
-	  "text": "And for 30 days ago — DATE('now', '-30 days')?" },
+	  "text": "And for 30 days ago DATE('now', '-30 days')?" },
 	{ "type": "dialogue", "char": "you", "name": "YOU",
 	  "npc": "NPC_occupations/police/idle",
 	  "text": "Exactly. WHERE filed_date < DATE('now', '-30 days') finds cases filed more than 30 days ago." },
@@ -1786,7 +1786,7 @@ const LESSONS: Dictionary = {
 	  "result_msg": "BETWEEN filters to the date range. Combine with DATE('now'): WHERE filed_date BETWEEN '2025-01-01' AND DATE('now') finds all past filed cases." },
 	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
 	  "npc": "NPC_occupations/police/talk",
-	  "text": "MySQL uses CURDATE(), PostgreSQL uses CURRENT_DATE — same purpose, different engine syntax." },
+	  "text": "MySQL uses CURDATE(), PostgreSQL uses CURRENT_DATE same purpose, different engine syntax." },
 	{ "type": "dialogue", "char": "you", "name": "YOU",
 	  "npc": "NPC_occupations/police/idle",
 	  "text": "strftime('%Y', filed_date) extracts just the year if you need to group cases by year for annual reports." },
@@ -1794,7 +1794,7 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON P38 — GRANT / REVOKE (DCL)  |  NPC: police chief
+#  LESSON P38 | GRANT / REVOKE (DCL)  |  NPC: police chief
 # ─────────────────────────────────────────────
 "P38": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE",
@@ -1805,13 +1805,13 @@ const LESSONS: Dictionary = {
 	  "text": "The officer should read the cases table only. How do we control who can do what in the database?" },
 	{ "type": "dialogue", "char": "you", "name": "YOU",
 	  "npc": "NPC_occupations/police/idle",
-	  "text": "That is DCL — Data Control Language. GRANT gives a user a permission; REVOKE removes it. We grant read-only SELECT." },
+	  "text": "That is DCL Data Control Language. GRANT gives a user a permission; REVOKE removes it. We grant read-only SELECT." },
 	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
 	  "npc": "NPC_occupations/police/think",
 	  "text": "So GRANT SELECT lets them look, and REVOKE pulls it back if needed?" },
 	{ "type": "dialogue", "char": "you", "name": "YOU",
 	  "npc": "NPC_occupations/police/idle",
-	  "text": "Exactly. Permissions are the database's security layer — each user gets only what their role requires." },
+	  "text": "Exactly. Permissions are the database's security layer each user gets only what their role requires." },
 	{ "type": "sql_fill", "gamemode": "sql_blank", "recap": "GRANT / REVOKE",
 	  "desc": "Give the officer permission to read the cases table. Fill in the DCL keyword that grants access.",
 	  "hint": "GRANT gives a privilege. REVOKE removes it. We are giving access here.",
@@ -1821,7 +1821,7 @@ const LESSONS: Dictionary = {
 	  "result_msg": "Permission granted. The officer can now read cases. To remove it later: REVOKE SELECT ON cases FROM officer;" },
 	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
 	  "npc": "NPC_occupations/police/think",
-	  "text": "That officer just transferred out. Now take that permission back — what is the opposite of GRANT?" },
+	  "text": "That officer just transferred out. Now take that permission back what is the opposite of GRANT?" },
 	{ "type": "sql_fill", "gamemode": "sql_blank", "recap": "GRANT / REVOKE",
 	  "desc": "The officer transferred. Remove their read access to the cases table. Fill in the DCL keyword.",
 	  "hint": "GRANT gives a permission; the keyword that takes it away is REVOKE.",
@@ -1836,7 +1836,7 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON P39 — UNION  |  NPC: police chief
+#  LESSON P39 | UNION  |  NPC: police chief
 # ─────────────────────────────────────────────
 "P39": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE",
@@ -1847,7 +1847,7 @@ const LESSONS: Dictionary = {
 	  "text": "Suspect cities are in one table, witness cities in another. Can I get one combined list of all cities at once?" },
 	{ "type": "dialogue", "char": "you", "name": "YOU",
 	  "npc": "NPC_occupations/police/idle",
-	  "text": "Yes — UNION stacks the results of two SELECTs into a single list and removes duplicate cities automatically." },
+	  "text": "Yes UNION stacks the results of two SELECTs into a single list and removes duplicate cities automatically." },
 	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
 	  "npc": "NPC_occupations/police/think",
 	  "text": "And if I wanted to keep duplicates?" },
@@ -1880,7 +1880,7 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON P40 — CHECK constraint  |  NPC: police chief
+#  LESSON P40 | CHECK constraint  |  NPC: police chief
 # ─────────────────────────────────────────────
 "P40": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE",
@@ -1888,16 +1888,16 @@ const LESSONS: Dictionary = {
 	  "text": "A clerk once recorded a fine of -200. The chief wants the database to reject impossible amounts on its own." },
 	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
 	  "npc": "NPC_occupations/police/talk",
-	  "text": "Can the penalties table refuse any fine below zero — without us checking it manually every time?" },
+	  "text": "Can the penalties table refuse any fine below zero without us checking it manually every time?" },
 	{ "type": "dialogue", "char": "you", "name": "YOU",
 	  "npc": "NPC_occupations/police/idle",
-	  "text": "Yes — a CHECK constraint. It attaches a rule to a column, and the database rejects any row that breaks it." },
+	  "text": "Yes a CHECK constraint. It attaches a rule to a column, and the database rejects any row that breaks it." },
 	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
 	  "npc": "NPC_occupations/police/think",
 	  "text": "So CHECK (fine >= 0) means an INSERT with -200 just fails?" },
 	{ "type": "dialogue", "char": "you", "name": "YOU",
 	  "npc": "NPC_occupations/police/idle",
-	  "text": "Exactly. NOT NULL, UNIQUE, DEFAULT, and CHECK are all constraints — built-in guards that protect data quality." },
+	  "text": "Exactly. NOT NULL, UNIQUE, DEFAULT, and CHECK are all constraints built-in guards that protect data quality." },
 	{ "type": "sql_fill", "gamemode": "sql_blank", "recap": "CHECK",
 	  "desc": "Add a rule so the fine column only accepts values of 0 or more. Fill in the constraint keyword.",
 	  "hint": "The constraint that validates a value against a condition is CHECK.",
@@ -1912,7 +1912,7 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON P41 — ER Diagram (theory)  |  NPC: police chief
+#  LESSON P41 | ER Diagram (theory)  |  NPC: police chief
 # ─────────────────────────────────────────────
 "P41": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE",
@@ -1920,16 +1920,16 @@ const LESSONS: Dictionary = {
 	  "text": "Before building tables, the chief sketches the precinct's data on a board and asks you to read the diagram." },
 	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
 	  "npc": "NPC_occupations/police/talk",
-	  "text": "This is an ER Diagram — Entity-Relationship model. Boxes are entities, ovals are attributes, lines are relationships. What does it tell us?" },
+	  "text": "This is an ER Diagram Entity-Relationship model. Boxes are entities, ovals are attributes, lines are relationships. What does it tell us?" },
 	{ "type": "dialogue", "char": "you", "name": "YOU",
 	  "npc": "NPC_occupations/police/idle",
-	  "text": "Each box becomes a table, each oval a column, and the line between OFFICER and CASE shows how they connect — its cardinality." },
+	  "text": "Each box becomes a table, each oval a column, and the line between OFFICER and CASE shows how they connect its cardinality." },
 	{ "type": "sql_choice",
 	  "desc": "One OFFICER can handle many CASEs, but each CASE is assigned to exactly one OFFICER. What cardinality does this relationship have?",
 	  "options": [
-		[1, "One-to-Many (1:M) — one officer, many cases; implemented with an officer_id foreign key in cases."],
-		[2, "Many-to-Many (M:N) — needs a junction table between officer and case."],
-		[3, "One-to-One (1:1) — each officer can handle only a single case ever."]
+		[1, "One-to-Many (1:M) one officer, many cases; implemented with an officer_id foreign key in cases."],
+		[2, "Many-to-Many (M:N) needs a junction table between officer and case."],
+		[3, "One-to-One (1:1) each officer can handle only a single case ever."]
 	  ],
 	  "correct_id": 1,
 	  "hint": "One on one side, many on the other = 1:M. Answer: id = 1",
@@ -1941,15 +1941,15 @@ const LESSONS: Dictionary = {
 	  ] },
 	{ "type": "dialogue", "char": "you", "name": "YOU",
 	  "npc": "NPC_occupations/police/idle",
-	  "text": "A 1:M relationship is built with a FOREIGN KEY on the 'many' side — cases.officer_id points to officers.id." },
+	  "text": "A 1:M relationship is built with a FOREIGN KEY on the 'many' side cases.officer_id points to officers.id." },
 	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
 	  "npc": "NPC_occupations/police/talk",
-	  "text": "So the ER Diagram is the blueprint — design relationships on paper first, then turn entities into tables and lines into foreign keys." },
+	  "text": "So the ER Diagram is the blueprint design relationships on paper first, then turn entities into tables and lines into foreign keys." },
 	{ "type": "end" }
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON P42 — TRUNCATE  |  NPC: police chief
+#  LESSON P42 | TRUNCATE  |  NPC: police chief
 # ─────────────────────────────────────────────
 "P42": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE",
@@ -1973,7 +1973,7 @@ const LESSONS: Dictionary = {
 	  "prefix": "", "answer": "TRUNCATE", "placeholder": "keyword", "max_length": 10,
 	  "suffix": "TABLE patrol_logs;",
 	  "err_hint": "To empty a whole table fast, the keyword is TRUNCATE.",
-	  "result_msg": "All rows removed. The empty patrol_logs table is ready for new data — its columns and structure stayed intact." },
+	  "result_msg": "All rows removed. The empty patrol_logs table is ready for new data its columns and structure stayed intact." },
 	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
 	  "npc": "NPC_occupations/police/talk",
 	  "text": "DELETE for some rows, TRUNCATE to empty it, DROP to destroy it. Now I will never mix them up." },
@@ -1981,7 +1981,7 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON P43 — String Functions  |  NPC: police chief
+#  LESSON P43 | String Functions  |  NPC: police chief
 # ─────────────────────────────────────────────
 "P43": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE",
@@ -1992,13 +1992,13 @@ const LESSONS: Dictionary = {
 	  "text": "Some are 'robbery', some 'ROBBERY', some 'Robbery'. Can SQL force them all to uppercase in the result?" },
 	{ "type": "dialogue", "char": "you", "name": "YOU",
 	  "npc": "NPC_occupations/police/idle",
-	  "text": "Yes — string functions. UPPER() capitalizes text, LOWER() makes it lowercase, LENGTH() counts characters, SUBSTR() extracts part of it." },
+	  "text": "Yes string functions. UPPER() capitalizes text, LOWER() makes it lowercase, LENGTH() counts characters, SUBSTR() extracts part of it." },
 	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
 	  "npc": "NPC_occupations/police/think",
 	  "text": "So UPPER(case_type) gives me every type in capitals without changing the stored data?" },
 	{ "type": "dialogue", "char": "you", "name": "YOU",
 	  "npc": "NPC_occupations/police/idle",
-	  "text": "Exactly. The function transforms the value only in the output — the table itself stays untouched." },
+	  "text": "Exactly. The function transforms the value only in the output the table itself stays untouched." },
 	{ "type": "sql_fill", "gamemode": "aggregate", "recap": "String Functions",
 	  "desc": "Show every case type in capital letters. Fill in the string function.",
 	  "hint": "UPPER() converts text to capitals. LOWER() does the opposite.",
@@ -2012,7 +2012,7 @@ const LESSONS: Dictionary = {
 	  "text": "Good. Now the public bulletin needs the types in lowercase instead. Same idea, opposite function?" },
 	{ "type": "sql_fill", "gamemode": "aggregate", "recap": "String Functions",
 	  "desc": "Now show every case type in lowercase. Fill in the string function.",
-	  "hint": "LOWER() converts text to lowercase — the opposite of UPPER().",
+	  "hint": "LOWER() converts text to lowercase the opposite of UPPER().",
 	  "table": "cases", "column": "case_type", "answer": "LOWER",
 	  "table_headers": ["id", "case_type"],
 	  "table_rows": [["1","ROBBERY"],["2","Theft"],["3","assault"]],
@@ -2025,7 +2025,7 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON P44 — COALESCE / IFNULL  |  NPC: police chief
+#  LESSON P44 | COALESCE / IFNULL  |  NPC: police chief
 # ─────────────────────────────────────────────
 "P44": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE",
@@ -2036,10 +2036,10 @@ const LESSONS: Dictionary = {
 	  "text": "Where the remark is missing, can the report show 'No remarks' instead of an empty NULL cell?" },
 	{ "type": "dialogue", "char": "you", "name": "YOU",
 	  "npc": "NPC_occupations/police/idle",
-	  "text": "Yes — COALESCE returns the first value that is not NULL. COALESCE(remarks, 'No remarks') uses the remark if present, otherwise the fallback." },
+	  "text": "Yes COALESCE returns the first value that is not NULL. COALESCE(remarks, 'No remarks') uses the remark if present, otherwise the fallback." },
 	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
 	  "npc": "NPC_occupations/police/think",
-	  "text": "I have seen IFNULL too — is it the same thing?" },
+	  "text": "I have seen IFNULL too is it the same thing?" },
 	{ "type": "dialogue", "char": "you", "name": "YOU",
 	  "npc": "NPC_occupations/police/idle",
 	  "text": "IFNULL does the same with two values. COALESCE is the standard one and can take many values, returning the first non-NULL." },
@@ -2060,7 +2060,7 @@ const LESSONS: Dictionary = {
 	  "text": "Some older reports use IFNULL instead. Show me the same fix on the location column with that two-argument version." },
 	{ "type": "sql_fill", "gamemode": "sql_blank", "recap": "COALESCE / IFNULL",
 	  "desc": "Replace a missing location with 'Unknown' using the two-argument function. Fill in the function.",
-	  "hint": "IFNULL(value, fallback) replaces NULL with the fallback — the simpler two-argument form.",
+	  "hint": "IFNULL(value, fallback) replaces NULL with the fallback the simpler two-argument form.",
 	  "prefix": "SELECT case_type,\n  ", "answer": "IFNULL", "placeholder": "function", "max_length": 10,
 	  "suffix": "(location, 'Unknown') FROM cases;",
 	  "err_hint": "The two-argument NULL replacement function is IFNULL.",
@@ -2072,7 +2072,7 @@ const LESSONS: Dictionary = {
 	  "result_msg": "IFNULL replaced the missing locations with 'Unknown'. COALESCE does the same and also accepts more than two values." },
 	{ "type": "dialogue", "char": "chief", "name": "CHIEF",
 	  "npc": "NPC_occupations/police/talk",
-	  "text": "No more empty cells — every row reads clearly. COALESCE turns missing data into something readable." },
+	  "text": "No more empty cells every row reads clearly. COALESCE turns missing data into something readable." },
 	{ "type": "end" }
 ],
 

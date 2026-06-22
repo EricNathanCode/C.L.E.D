@@ -15,188 +15,188 @@ const POLICE_LESSONS := ["P1","P2","P3","P4","P5", "P6","P8","P16","P17","P18","
 const LIBRARY_LESSONS:= ["L1","L2","L3","L4","L5", "L6","L8","L16","L17","L18","L19","L20","L21","L37","L43","L44", "L7","L12","L22","L23","L24","L28","L35","L39", "L9","L10","L11","L13","L14","L15","L25","L29","L32","L40", "L26","L27","L30","L31","L33","L34","L36","L38","L41","L42"]
 
 const HOTEL_NAMES: Dictionary = {
-	1:  "SELECT — Choose Your Response",
-	2:  "INSERT INTO — Book a New Guest",
-	3:  "SELECT WHERE — Search a Guest Record",
-	4:  "UPDATE SET — Fix a Wrong Record",
-	5:  "DELETE — Cancel a Booking",
-	6:  "ORDER BY — Sort Guest Records",
-	7:  "GROUP BY — Generate a Report",
-	8:  "IS NULL — Find Missing Guest Emails",
-	9:  "CREATE DATABASE — Set Up the Hotel Database",
-	10: "CREATE TABLE — Define the Guests Table",
-	11: "PRIMARY KEY — What Makes a Record Unique",
-	12: "JOIN — Combine Guests and Bookings",
-	13: "INT — Whole Number Data Type",
-	14: "TEXT — String / Word Data Type",
-	15: "REAL — Decimal Number Data Type",
-	16: "SELECT DISTINCT — Unique Guest Types",
-	17: "AND / OR — Filter Multiple Conditions",
-	18: "BETWEEN — Guests in a Price Range",
-	19: "LIKE — Search by Partial Name",
-	20: "IN — Guests from Specific Cities",
-	21: "LIMIT — Show Top 5 Bookings",
-	22: "COUNT / SUM / AVG — Booking Statistics",
-	23: "HAVING — Rooms with Many Bookings",
-	24: "AS — Rename a Calculated Column",
-	25: "NOT NULL + UNIQUE — Guest Record Integrity",
-	26: "ALTER TABLE — Add a Column",
-	27: "DROP TABLE — Remove an Old Table",
-	28: "LEFT JOIN — All Rooms Including Empty",
-	29: "DEFAULT — Auto-fill Check-in Status",
-	30: "Normalization — Remove Repeated Data",
-	31: "Transactions — Atomic Room Transfer",
-	32: "FOREIGN KEY — Link Tables Together",
-	33: "Indexes — Speed Up Queries",
-	34: "Views — Save a Query as a Table",
-	35: "SUBQUERY — Find the Priciest Booking",
-	36: "CASE WHEN — Label Guest Tiers",
-	37: "DATE Functions — Find Overdue Check-Outs",
-	38: "GRANT / REVOKE — Control User Access",
-	39: "UNION — Combine Guest & Staff Cities",
-	40: "CHECK — Reject Invalid Ages",
-	41: "ER Diagram — Model the Data First",
-	42: "TRUNCATE — Empty a Log Table Fast",
-	43: "String Functions — Clean Up Names",
-	44: "COALESCE — Replace Missing Emails",
+	1:  "SELECT | Choose Your Response",
+	2:  "INSERT INTO | Book a New Guest",
+	3:  "SELECT WHERE | Search a Guest Record",
+	4:  "UPDATE SET | Fix a Wrong Record",
+	5:  "DELETE | Cancel a Booking",
+	6:  "ORDER BY | Sort Guest Records",
+	7:  "GROUP BY | Generate a Report",
+	8:  "IS NULL | Find Missing Guest Emails",
+	9:  "CREATE DATABASE | Set Up the Hotel Database",
+	10: "CREATE TABLE | Define the Guests Table",
+	11: "PRIMARY KEY | What Makes a Record Unique",
+	12: "JOIN | Combine Guests and Bookings",
+	13: "INT | Whole Number Data Type",
+	14: "TEXT | String / Word Data Type",
+	15: "REAL | Decimal Number Data Type",
+	16: "SELECT DISTINCT | Unique Guest Types",
+	17: "AND / OR | Filter Multiple Conditions",
+	18: "BETWEEN | Guests in a Price Range",
+	19: "LIKE | Search by Partial Name",
+	20: "IN | Guests from Specific Cities",
+	21: "LIMIT | Show Top 5 Bookings",
+	22: "COUNT / SUM / AVG | Booking Statistics",
+	23: "HAVING | Rooms with Many Bookings",
+	24: "AS | Rename a Calculated Column",
+	25: "NOT NULL + UNIQUE | Guest Record Integrity",
+	26: "ALTER TABLE | Add a Column",
+	27: "DROP TABLE | Remove an Old Table",
+	28: "LEFT JOIN | All Rooms Including Empty",
+	29: "DEFAULT | Auto-fill Check-in Status",
+	30: "Normalization | Remove Repeated Data",
+	31: "Transactions | Atomic Room Transfer",
+	32: "FOREIGN KEY | Link Tables Together",
+	33: "Indexes | Speed Up Queries",
+	34: "Views | Save a Query as a Table",
+	35: "SUBQUERY | Find the Priciest Booking",
+	36: "CASE WHEN | Label Guest Tiers",
+	37: "DATE Functions | Find Overdue Check-Outs",
+	38: "GRANT / REVOKE | Control User Access",
+	39: "UNION | Combine Guest & Staff Cities",
+	40: "CHECK | Reject Invalid Ages",
+	41: "ER Diagram | Model the Data First",
+	42: "TRUNCATE | Empty a Log Table Fast",
+	43: "String Functions | Clean Up Names",
+	44: "COALESCE | Replace Missing Emails",
 }
 const CAFE_NAMES: Dictionary = {
-	"C1":  "SELECT — Take the Order",
-	"C2":  "INSERT INTO — Log a New Order",
-	"C3":  "GROUP BY — End-of-Day Report",
-	"C4":  "SELECT WHERE — Find an Order",
-	"C5":  "UPDATE SET — Fix a Wrong Order",
-	"C6":  "DELETE — Cancel an Order",
-	"C7":  "ORDER BY — Sort the Menu Items",
-	"C8":  "IS NULL — Find Orders with No Notes",
-	"C9":  "CREATE DATABASE — Set Up the Café Database",
-	"C10": "CREATE TABLE — Define the Orders Table",
-	"C11": "PRIMARY KEY — What Makes a Record Unique",
-	"C12": "JOIN — Combine Customers and Orders",
-	"C13": "INT — Whole Number Data Type",
-	"C14": "TEXT — String / Word Data Type",
-	"C15": "REAL — Decimal Number Data Type",
-	"C16": "SELECT DISTINCT — Unique Drink Types",
-	"C17": "AND / OR — Filter Multiple Conditions",
-	"C18": "BETWEEN — Orders in a Price Range",
-	"C19": "LIKE — Search by Partial Item Name",
-	"C20": "IN — Orders from Specific Categories",
-	"C21": "LIMIT — Show Top 5 Orders",
-	"C22": "COUNT / SUM / AVG — Sales Statistics",
-	"C23": "HAVING — Items Ordered Many Times",
-	"C24": "AS — Rename a Calculated Column",
-	"C25": "NOT NULL + UNIQUE — Order Record Integrity",
-	"C26": "ALTER TABLE — Add a Column",
-	"C27": "DROP TABLE — Remove an Old Table",
-	"C28": "LEFT JOIN — All Customers Including New",
-	"C29": "DEFAULT — Auto-fill Order Status",
-	"C30": "Normalization — Remove Repeated Data",
-	"C31": "Transactions — Atomic Order Processing",
-	"C32": "FOREIGN KEY — Link Tables Together",
-	"C33": "Indexes — Speed Up Queries",
-	"C34": "Views — Save a Query as a Table",
-	"C35": "SUBQUERY — Find the Priciest Order",
-	"C36": "CASE WHEN — Label Order Size",
-	"C37": "DATE Functions — Find Past Orders",
-	"C38": "GRANT / REVOKE — Control User Access",
-	"C39": "UNION — Combine Customer & Supplier Cities",
-	"C40": "CHECK — Reject Negative Prices",
-	"C41": "ER Diagram — Model the Data First",
-	"C42": "TRUNCATE — Empty a Log Table Fast",
-	"C43": "String Functions — Clean Up Item Names",
-	"C44": "COALESCE — Replace Missing Notes",
+	"C1":  "SELECT | Take the Order",
+	"C2":  "INSERT INTO | Log a New Order",
+	"C3":  "GROUP BY | End-of-Day Report",
+	"C4":  "SELECT WHERE | Find an Order",
+	"C5":  "UPDATE SET | Fix a Wrong Order",
+	"C6":  "DELETE | Cancel an Order",
+	"C7":  "ORDER BY | Sort the Menu Items",
+	"C8":  "IS NULL | Find Orders with No Notes",
+	"C9":  "CREATE DATABASE | Set Up the Café Database",
+	"C10": "CREATE TABLE | Define the Orders Table",
+	"C11": "PRIMARY KEY | What Makes a Record Unique",
+	"C12": "JOIN | Combine Customers and Orders",
+	"C13": "INT | Whole Number Data Type",
+	"C14": "TEXT | String / Word Data Type",
+	"C15": "REAL | Decimal Number Data Type",
+	"C16": "SELECT DISTINCT | Unique Drink Types",
+	"C17": "AND / OR | Filter Multiple Conditions",
+	"C18": "BETWEEN | Orders in a Price Range",
+	"C19": "LIKE | Search by Partial Item Name",
+	"C20": "IN | Orders from Specific Categories",
+	"C21": "LIMIT | Show Top 5 Orders",
+	"C22": "COUNT / SUM / AVG | Sales Statistics",
+	"C23": "HAVING | Items Ordered Many Times",
+	"C24": "AS | Rename a Calculated Column",
+	"C25": "NOT NULL + UNIQUE | Order Record Integrity",
+	"C26": "ALTER TABLE | Add a Column",
+	"C27": "DROP TABLE | Remove an Old Table",
+	"C28": "LEFT JOIN | All Customers Including New",
+	"C29": "DEFAULT | Auto-fill Order Status",
+	"C30": "Normalization | Remove Repeated Data",
+	"C31": "Transactions | Atomic Order Processing",
+	"C32": "FOREIGN KEY | Link Tables Together",
+	"C33": "Indexes | Speed Up Queries",
+	"C34": "Views | Save a Query as a Table",
+	"C35": "SUBQUERY | Find the Priciest Order",
+	"C36": "CASE WHEN | Label Order Size",
+	"C37": "DATE Functions | Find Past Orders",
+	"C38": "GRANT / REVOKE | Control User Access",
+	"C39": "UNION | Combine Customer & Supplier Cities",
+	"C40": "CHECK | Reject Negative Prices",
+	"C41": "ER Diagram | Model the Data First",
+	"C42": "TRUNCATE | Empty a Log Table Fast",
+	"C43": "String Functions | Clean Up Item Names",
+	"C44": "COALESCE | Replace Missing Notes",
 }
 const POLICE_NAMES: Dictionary = {
-	"P1":  "SELECT — Handle a Citizen Report",
-	"P2":  "INSERT INTO — Log a New Case",
-	"P3":  "SELECT WHERE — Search a Suspect",
-	"P4":  "UPDATE SET — Update Case Status",
-	"P5":  "DELETE — Close a Cleared Case",
-	"P6":  "ORDER BY — Sort Cases by Priority",
-	"P7":  "GROUP BY — Crime Category Report",
-	"P8":  "IS NULL — Find Unassigned Suspects",
-	"P9":  "CREATE DATABASE — Set Up the Police Database",
-	"P10": "CREATE TABLE — Define the Cases Table",
-	"P11": "PRIMARY KEY — What Makes a Record Unique",
-	"P12": "JOIN — Combine Cases and Officers",
-	"P13": "INT — Whole Number Data Type",
-	"P14": "TEXT — String / Word Data Type",
-	"P15": "REAL — Decimal Number Data Type",
-	"P16": "SELECT DISTINCT — Unique Case Types",
-	"P17": "AND / OR — Filter Multiple Conditions",
-	"P18": "BETWEEN — Fines in a Range",
-	"P19": "LIKE — Search by Partial Suspect Name",
-	"P20": "IN — Cases of Specific Types",
-	"P21": "LIMIT — Show Top 5 Open Cases",
-	"P22": "COUNT / SUM / AVG — Case Statistics",
-	"P23": "HAVING — Case Types with Many Incidents",
-	"P24": "AS — Rename a Calculated Column",
-	"P25": "NOT NULL + UNIQUE — Case Record Integrity",
-	"P26": "ALTER TABLE — Add a Column",
-	"P27": "DROP TABLE — Remove an Old Table",
-	"P28": "LEFT JOIN — All Officers Including Unassigned",
-	"P29": "DEFAULT — Auto-fill Suspect Status",
-	"P30": "Normalization — Remove Repeated Data",
-	"P31": "Transactions — Atomic Case Transfer",
-	"P32": "FOREIGN KEY — Link Tables Together",
-	"P33": "Indexes — Speed Up Queries",
-	"P34": "Views — Save a Query as a Table",
-	"P35": "SUBQUERY — Find the Highest Fine Case",
-	"P36": "CASE WHEN — Label Case Severity",
-	"P37": "DATE Functions — Find Past Filed Cases",
-	"P38": "GRANT / REVOKE — Control User Access",
-	"P39": "UNION — Combine Suspect & Witness Cities",
-	"P40": "CHECK — Reject Negative Fines",
-	"P41": "ER Diagram — Model the Data First",
-	"P42": "TRUNCATE — Empty a Log Table Fast",
-	"P43": "String Functions — Clean Up Case Types",
-	"P44": "COALESCE — Replace Missing Remarks",
+	"P1":  "SELECT | Handle a Citizen Report",
+	"P2":  "INSERT INTO | Log a New Case",
+	"P3":  "SELECT WHERE | Search a Suspect",
+	"P4":  "UPDATE SET | Update Case Status",
+	"P5":  "DELETE | Close a Cleared Case",
+	"P6":  "ORDER BY | Sort Cases by Priority",
+	"P7":  "GROUP BY | Crime Category Report",
+	"P8":  "IS NULL | Find Unassigned Suspects",
+	"P9":  "CREATE DATABASE | Set Up the Police Database",
+	"P10": "CREATE TABLE | Define the Cases Table",
+	"P11": "PRIMARY KEY | What Makes a Record Unique",
+	"P12": "JOIN | Combine Cases and Officers",
+	"P13": "INT | Whole Number Data Type",
+	"P14": "TEXT | String / Word Data Type",
+	"P15": "REAL | Decimal Number Data Type",
+	"P16": "SELECT DISTINCT | Unique Case Types",
+	"P17": "AND / OR | Filter Multiple Conditions",
+	"P18": "BETWEEN | Fines in a Range",
+	"P19": "LIKE | Search by Partial Suspect Name",
+	"P20": "IN | Cases of Specific Types",
+	"P21": "LIMIT | Show Top 5 Open Cases",
+	"P22": "COUNT / SUM / AVG | Case Statistics",
+	"P23": "HAVING | Case Types with Many Incidents",
+	"P24": "AS | Rename a Calculated Column",
+	"P25": "NOT NULL + UNIQUE | Case Record Integrity",
+	"P26": "ALTER TABLE | Add a Column",
+	"P27": "DROP TABLE | Remove an Old Table",
+	"P28": "LEFT JOIN | All Officers Including Unassigned",
+	"P29": "DEFAULT | Auto-fill Suspect Status",
+	"P30": "Normalization | Remove Repeated Data",
+	"P31": "Transactions | Atomic Case Transfer",
+	"P32": "FOREIGN KEY | Link Tables Together",
+	"P33": "Indexes | Speed Up Queries",
+	"P34": "Views | Save a Query as a Table",
+	"P35": "SUBQUERY | Find the Highest Fine Case",
+	"P36": "CASE WHEN | Label Case Severity",
+	"P37": "DATE Functions | Find Past Filed Cases",
+	"P38": "GRANT / REVOKE | Control User Access",
+	"P39": "UNION | Combine Suspect & Witness Cities",
+	"P40": "CHECK | Reject Negative Fines",
+	"P41": "ER Diagram | Model the Data First",
+	"P42": "TRUNCATE | Empty a Log Table Fast",
+	"P43": "String Functions | Clean Up Case Types",
+	"P44": "COALESCE | Replace Missing Remarks",
 }
 const LIBRARY_NAMES: Dictionary = {
-	"L1":  "SELECT — Help a Visitor",
-	"L2":  "INSERT INTO — Register a New Borrower",
-	"L3":  "SELECT WHERE — Find a Book Record",
-	"L4":  "UPDATE SET — Update a Return Date",
-	"L5":  "DELETE — Remove an Overdue Record",
-	"L6":  "ORDER BY — Sort Books Alphabetically",
-	"L7":  "GROUP BY — Books by Genre Report",
-	"L8":  "IS NULL — Find Unreturned Books",
-	"L9":  "CREATE DATABASE — Set Up the Library Database",
-	"L10": "CREATE TABLE — Define the Borrowers Table",
-	"L11": "PRIMARY KEY — What Makes a Record Unique",
-	"L12": "JOIN — Combine Borrowers and Books",
-	"L13": "INT — Whole Number Data Type",
-	"L14": "TEXT — String / Word Data Type",
-	"L15": "REAL — Decimal Number Data Type",
-	"L16": "SELECT DISTINCT — Unique Book Genres",
-	"L17": "AND / OR — Filter Multiple Conditions",
-	"L18": "BETWEEN — Books in a Publication Range",
-	"L19": "LIKE — Search by Partial Title",
-	"L20": "IN — Books of Specific Genres",
-	"L21": "LIMIT — Show Top 5 Books",
-	"L22": "COUNT / SUM / AVG — Collection Statistics",
-	"L23": "HAVING — Genres with Many Books",
-	"L24": "AS — Rename a Calculated Column",
-	"L25": "NOT NULL + UNIQUE — Borrower Record Integrity",
-	"L26": "ALTER TABLE — Add a Column",
-	"L27": "DROP TABLE — Remove an Old Table",
-	"L28": "LEFT JOIN — All Books Including Unborrowed",
-	"L29": "DEFAULT — Auto-fill Book Status",
-	"L30": "Normalization — Remove Repeated Data",
-	"L31": "Transactions — Atomic Borrow Processing",
-	"L32": "FOREIGN KEY — Link Tables Together",
-	"L33": "Indexes — Speed Up Queries",
-	"L34": "Views — Save a Query as a Table",
-	"L35": "SUBQUERY — Find the Most Borrowed Book",
-	"L36": "CASE WHEN — Label Book Popularity",
-	"L37": "DATE Functions — Find Overdue Books",
-	"L38": "GRANT / REVOKE — Control User Access",
-	"L39": "UNION — Combine Member & Author Cities",
-	"L40": "CHECK — Reject Negative Copy Counts",
-	"L41": "ER Diagram — Model the Data First",
-	"L42": "TRUNCATE — Empty a Log Table Fast",
-	"L43": "String Functions — Clean Up Titles",
-	"L44": "COALESCE — Replace Missing Summaries",
+	"L1":  "SELECT | Help a Visitor",
+	"L2":  "INSERT INTO | Register a New Borrower",
+	"L3":  "SELECT WHERE | Find a Book Record",
+	"L4":  "UPDATE SET | Update a Return Date",
+	"L5":  "DELETE | Remove an Overdue Record",
+	"L6":  "ORDER BY | Sort Books Alphabetically",
+	"L7":  "GROUP BY | Books by Genre Report",
+	"L8":  "IS NULL | Find Unreturned Books",
+	"L9":  "CREATE DATABASE | Set Up the Library Database",
+	"L10": "CREATE TABLE | Define the Borrowers Table",
+	"L11": "PRIMARY KEY | What Makes a Record Unique",
+	"L12": "JOIN | Combine Borrowers and Books",
+	"L13": "INT | Whole Number Data Type",
+	"L14": "TEXT | String / Word Data Type",
+	"L15": "REAL | Decimal Number Data Type",
+	"L16": "SELECT DISTINCT | Unique Book Genres",
+	"L17": "AND / OR | Filter Multiple Conditions",
+	"L18": "BETWEEN | Books in a Publication Range",
+	"L19": "LIKE | Search by Partial Title",
+	"L20": "IN | Books of Specific Genres",
+	"L21": "LIMIT | Show Top 5 Books",
+	"L22": "COUNT / SUM / AVG | Collection Statistics",
+	"L23": "HAVING | Genres with Many Books",
+	"L24": "AS | Rename a Calculated Column",
+	"L25": "NOT NULL + UNIQUE | Borrower Record Integrity",
+	"L26": "ALTER TABLE | Add a Column",
+	"L27": "DROP TABLE | Remove an Old Table",
+	"L28": "LEFT JOIN | All Books Including Unborrowed",
+	"L29": "DEFAULT | Auto-fill Book Status",
+	"L30": "Normalization | Remove Repeated Data",
+	"L31": "Transactions | Atomic Borrow Processing",
+	"L32": "FOREIGN KEY | Link Tables Together",
+	"L33": "Indexes | Speed Up Queries",
+	"L34": "Views | Save a Query as a Table",
+	"L35": "SUBQUERY | Find the Most Borrowed Book",
+	"L36": "CASE WHEN | Label Book Popularity",
+	"L37": "DATE Functions | Find Overdue Books",
+	"L38": "GRANT / REVOKE | Control User Access",
+	"L39": "UNION | Combine Member & Author Cities",
+	"L40": "CHECK | Reject Negative Copy Counts",
+	"L41": "ER Diagram | Model the Data First",
+	"L42": "TRUNCATE | Empty a Log Table Fast",
+	"L43": "String Functions | Clean Up Titles",
+	"L44": "COALESCE | Replace Missing Summaries",
 }
 const WORLD_DISPLAY: Dictionary = {
 	"hotel":   "Hotel World",
@@ -334,7 +334,7 @@ func build_lessons() -> void:
 		var folder_ids: Array    = folders[fi]["ids"]
 
 		# Folder locked if previous folder's challenge not yet passed
-		# DEBUG: folder locking disabled — re-enable by setting DEBUG_UNLOCK to false
+		# DEBUG: folder locking disabled | re-enable by setting DEBUG_UNLOCK to false
 		var folder_locked: bool = (not DEBUG_UNLOCK) and fi > 0 and not GameManager.is_folder_quiz_done(GameManager.world, fi - 1)
 
 		# Count completions for the progress badge
@@ -453,7 +453,7 @@ func build_lessons() -> void:
 
 			if quiz_done:
 				var cap_fi2 := fi
-				qbtn.text = "✓  Folder Challenge — Redo"
+				qbtn.text = "✓  Folder Challenge | Redo"
 				qbtn.pressed.connect(func():
 					GameManager.current_quiz_folder_idx = cap_fi2
 					get_tree().root.get_node("Main").show_screen("folder_quiz")
@@ -461,14 +461,14 @@ func build_lessons() -> void:
 				_style_btn(qbtn, "ghost", 13)
 			elif all_lessons_done:
 				var cap_fi := fi
-				qbtn.text = "⚡  FOLDER CHALLENGE — Unlock Next Chapter"
+				qbtn.text = "⚡  FOLDER CHALLENGE | Unlock Next Chapter"
 				qbtn.pressed.connect(func():
 					GameManager.current_quiz_folder_idx = cap_fi
 					get_tree().root.get_node("Main").show_screen("folder_quiz")
 				)
 				_style_btn(qbtn, "quiz", 13)
 			else:
-				qbtn.text = "🔒  Folder Challenge — Complete all lessons first"
+				qbtn.text = "🔒  Folder Challenge | Complete all lessons first"
 				qbtn.disabled = true
 				_style_btn(qbtn, "locked", 13)
 
@@ -494,7 +494,7 @@ func _build_merged_lessons() -> void:
 		var names: Dictionary = wdata["names"]
 		var folders: Array    = wdata["folders"]
 
-		# World section header — distinct style so it reads as a world, not a folder
+		# World section header | distinct style so it reads as a world, not a folder
 		var world_hdr := Button.new()
 		world_hdr.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		world_hdr.alignment = HORIZONTAL_ALIGNMENT_LEFT
@@ -503,7 +503,7 @@ func _build_merged_lessons() -> void:
 		_style_world_btn(world_hdr)
 		_lesson_list.add_child(world_hdr)
 
-		# World container — starts hidden (collapsed)
+		# World container | starts hidden (collapsed)
 		var world_box := VBoxContainer.new()
 		world_box.visible = false
 		world_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -522,7 +522,7 @@ func _build_merged_lessons() -> void:
 			var folder_name: String = folder["name"]
 			var folder_ids: Array   = folder["ids"]
 
-			# Folder header (collapsible) — inside world_box
+			# Folder header (collapsible) | inside world_box
 			var hdr := Button.new()
 			hdr.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			hdr.alignment = HORIZONTAL_ALIGNMENT_LEFT
@@ -592,7 +592,7 @@ func _build_merged_lessons() -> void:
 func _reset_preview() -> void:
 	for child in _comic_strip.get_children():
 		child.queue_free()
-	# Placeholder panel — styled like a blank comic page
+	# Placeholder panel | styled like a blank comic page
 	var wrap := PanelContainer.new()
 	wrap.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	wrap.size_flags_vertical   = Control.SIZE_EXPAND_FILL
@@ -682,7 +682,7 @@ func _show_preview(lesson_id) -> void:
 	rows.add_theme_constant_override("separation", 6)
 	page.add_child(rows)
 
-	# ── Row layouts — classic comic book grid ─────────────
+	# ── Row layouts | classic comic book grid ─────────────
 	# We have up to 4 frames. Layout:
 	#   Row 1: [panel0 wide (2/3)] [panel1 narrow (1/3)]
 	#   Row 2: [panel2 narrow(1/3)] [panel3 wide (2/3)]
@@ -717,7 +717,7 @@ func _show_preview(lesson_id) -> void:
 		# Row 2: full-width single panel
 		rows.add_child(_build_comic_panel(f[2], 1.0, true))
 	elif f.size() == 1:
-		# Only 1 frame — single wide panel
+		# Only 1 frame | single wide panel
 		rows.add_child(_build_comic_panel(f[0], 1.0, true))
 
 	# ── CTA strip at bottom ───────────────────────────────
@@ -781,11 +781,11 @@ func _build_comic_panel(frame: Dictionary, stretch: float, full_width: bool = fa
 	overlay.mouse_filter  = Control.MOUSE_FILTER_IGNORE
 	img_area.add_child(overlay)
 
-	# NPC sprite — fills width, extends below panel so only upper half is visible (close-up crop)
+	# NPC sprite | fills width, extends below panel so only upper half is visible (close-up crop)
 	if npc_raw != "":
 		var npc_tex := TextureRect.new()
 		# TextureRect spans 1.6× the panel height starting from top.
-		# CENTERED keeps aspect ratio and auto-pads — character scales to fit the width,
+		# CENTERED keeps aspect ratio and auto-pads | character scales to fit the width,
 		# extends below the panel boundary, clip_contents cuts the lower half so we see
 		# the upper body (head → waist) naturally without aggressive zoom.
 		npc_tex.anchor_left   = 0.05
@@ -847,7 +847,7 @@ func _build_comic_panel(frame: Dictionary, stretch: float, full_width: bool = fa
 
 	return outer
 
-# ── World header button style (Merge Worlds — top-level) ──
+# ── World header button style (Merge Worlds | top-level) ──
 func _style_world_btn(btn: Button) -> void:
 	btn.add_theme_font_size_override("font_size", 15)
 	btn.add_theme_color_override("font_color", Color.WHITE)

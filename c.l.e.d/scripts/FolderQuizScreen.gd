@@ -1,13 +1,13 @@
 extends Control
 # ═══════════════════════════════════════════════════════
-#  FOLDER QUIZ SCREEN  —  scripts/FolderQuizScreen.gd
+#  FOLDER QUIZ SCREEN  |  scripts/FolderQuizScreen.gd
 # ═══════════════════════════════════════════════════════
 
 const QUIZ_DATA: Dictionary = {
 	"hotel": [
-		# Folder 0 — Basic SQL (5 lessons × 2 = 10 questions)
+		# Folder 0 | Basic SQL (5 lessons × 2 = 10 questions)
 		[
-			# — SELECT —
+			# | SELECT |
 			{"desc": "Retrieve every column from the guests table.",
 			 "code": "SELECT [BLANK] FROM guests;",
 			 "answer": "*",
@@ -16,7 +16,7 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "[BLANK] name, status FROM guests;",
 			 "answer": "SELECT",
 			 "hint": "The keyword that starts a read query."},
-			# — INSERT INTO —
+			# | INSERT INTO |
 			{"desc": "Add a new guest named Alice with room type Deluxe.",
 			 "code": "INSERT [BLANK] guests (name, room_type)\nVALUES ('Alice', 'Deluxe');",
 			 "answer": "INTO",
@@ -25,7 +25,7 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "[BLANK] INTO bookings (guest_id, room_type)\nVALUES (5, 'Suite');",
 			 "answer": "INSERT",
 			 "hint": "The keyword that adds a new row to a table."},
-			# — SELECT WHERE —
+			# | SELECT WHERE |
 			{"desc": "Find guests whose room type is Suite.",
 			 "code": "SELECT * FROM guests\nWHERE room_type [BLANK] 'Suite';",
 			 "answer": "=",
@@ -34,7 +34,7 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "SELECT * FROM guests\n[BLANK] status = 'Active';",
 			 "answer": "WHERE",
 			 "hint": "WHERE filters rows by a condition."},
-			# — UPDATE SET —
+			# | UPDATE SET |
 			{"desc": "Mark guest id 3 as Checked Out.",
 			 "code": "UPDATE guests [BLANK] status = 'Checked Out'\nWHERE id = 3;",
 			 "answer": "SET",
@@ -43,7 +43,7 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "UPDATE guests SET room_type = 'Deluxe'\n[BLANK] id = 7;",
 			 "answer": "WHERE",
 			 "hint": "WHERE identifies which row to update."},
-			# — DELETE —
+			# | DELETE |
 			{"desc": "Remove the booking record where id equals 5.",
 			 "code": "[BLANK] FROM bookings WHERE id = 5;",
 			 "answer": "DELETE",
@@ -53,9 +53,9 @@ const QUIZ_DATA: Dictionary = {
 			 "answer": "FROM",
 			 "hint": "DELETE ___ tablename WHERE condition"},
 		],
-		# Folder 1 — Filtering & Sorting (13 topics × 2 = 26 questions; String & COALESCE count double)
+		# Folder 1 | Filtering & Sorting (13 topics × 2 = 26 questions; String & COALESCE count double)
 		[
-			# — ORDER BY —
+			# | ORDER BY |
 			{"desc": "Sort the guest list by last name A to Z.",
 			 "code": "SELECT * FROM guests ORDER [BLANK] last_name;",
 			 "answer": "BY",
@@ -64,7 +64,7 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "SELECT * FROM bookings\n[BLANK] BY price DESC;",
 			 "answer": "ORDER",
 			 "hint": "___ BY column DESC sorts descending."},
-			# — IS NULL —
+			# | IS NULL |
 			{"desc": "Find guests whose email address is missing.",
 			 "code": "SELECT * FROM guests WHERE email IS [BLANK];",
 			 "answer": "NULL",
@@ -72,8 +72,8 @@ const QUIZ_DATA: Dictionary = {
 			{"desc": "Find bookings that have no check-out date.",
 			 "code": "SELECT * FROM bookings WHERE check_out [BLANK] NULL;",
 			 "answer": "IS",
-			 "hint": "___ NULL detects missing values — never use = NULL."},
-			# — DISTINCT —
+			 "hint": "___ NULL detects missing values never use = NULL."},
+			# | DISTINCT |
 			{"desc": "Get only the unique room types from bookings.",
 			 "code": "SELECT [BLANK] room_type FROM bookings;",
 			 "answer": "DISTINCT",
@@ -82,7 +82,7 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "SELECT [BLANK] city FROM guests;",
 			 "answer": "DISTINCT",
 			 "hint": "Place this keyword right after SELECT."},
-			# — AND / OR —
+			# | AND / OR |
 			{"desc": "Find guests from Manila who are also Active.",
 			 "code": "SELECT * FROM guests\nWHERE city = 'Manila' [BLANK] status = 'Active';",
 			 "answer": "AND",
@@ -91,7 +91,7 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "SELECT * FROM guests\nWHERE tier = 'VIP' [BLANK] room_type = 'Suite';",
 			 "answer": "OR",
 			 "hint": "OR returns rows where at least one condition is true."},
-			# — BETWEEN —
+			# | BETWEEN |
 			{"desc": "Find bookings where price is between 100 and 500.",
 			 "code": "SELECT * FROM bookings\nWHERE price [BLANK] 100 AND 500;",
 			 "answer": "BETWEEN",
@@ -99,8 +99,8 @@ const QUIZ_DATA: Dictionary = {
 			{"desc": "Find guests who checked in between two dates.",
 			 "code": "SELECT * FROM guests\nWHERE check_in BETWEEN '2024-01-01' [BLANK] '2024-12-31';",
 			 "answer": "AND",
-			 "hint": "BETWEEN start ___ end — connects the range."},
-			# — LIKE —
+			 "hint": "BETWEEN start ___ end connects the range."},
+			# | LIKE |
 			{"desc": "Find guests whose name starts with the letter A.",
 			 "code": "SELECT * FROM guests WHERE name [BLANK] 'A%';",
 			 "answer": "LIKE",
@@ -109,7 +109,7 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "SELECT * FROM bookings WHERE notes [BLANK] '%Special%';",
 			 "answer": "LIKE",
 			 "hint": "LIKE '%word%' matches text containing a word."},
-			# — IN —
+			# | IN |
 			{"desc": "Get guests from Manila, Cebu, or Davao.",
 			 "code": "SELECT * FROM guests\nWHERE city [BLANK] ('Manila', 'Cebu', 'Davao');",
 			 "answer": "IN",
@@ -118,7 +118,7 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "SELECT * FROM bookings\nWHERE room_type [BLANK] ('Standard','Deluxe','Suite');",
 			 "answer": "IN",
 			 "hint": "IN (v1, v2, ...) matches any listed value."},
-			# — LIMIT —
+			# | LIMIT |
 			{"desc": "Show only the top 5 most expensive bookings.",
 			 "code": "SELECT * FROM bookings\nORDER BY price DESC [BLANK] 5;",
 			 "answer": "LIMIT",
@@ -127,7 +127,7 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "SELECT * FROM guests [BLANK] 10;",
 			 "answer": "LIMIT",
 			 "hint": "LIMIT N restricts how many rows are returned."},
-			# — DATE FUNCTIONS —
+			# | DATE FUNCTIONS |
 			{"desc": "Find all bookings where the check_out date has already passed.",
 			 "code": "SELECT * FROM bookings\nWHERE check_out < [BLANK]('now');",
 			 "answer": "DATE",
@@ -136,7 +136,7 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "SELECT * FROM bookings\nWHERE check_out = DATE([BLANK]);",
 			 "answer": "'now'",
 			 "hint": "DATE('now') returns today's date."},
-			# — STRING FUNCTIONS —
+			# | STRING FUNCTIONS |
 			{"desc": "Show every guest name in capital letters.",
 			 "code": "SELECT [BLANK](name) FROM guests;",
 			 "answer": "UPPER",
@@ -145,7 +145,7 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "SELECT [BLANK](name) FROM guests;",
 			 "answer": "LENGTH",
 			 "hint": "LENGTH() returns the number of characters in a string."},
-			# — COALESCE / IFNULL —
+			# | COALESCE / IFNULL |
 			{"desc": "Show the email, or 'No email' when it is missing.",
 			 "code": "SELECT name,\n  [BLANK](email, 'No email') FROM guests;",
 			 "answer": "COALESCE",
@@ -154,7 +154,7 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "SELECT name,\n  [BLANK](phone, 'N/A') FROM guests;",
 			 "answer": "COALESCE",
 			 "hint": "COALESCE(value, fallback) returns the first non-NULL value."},
-			# — STRING FUNCTIONS (cont.) —
+			# | STRING FUNCTIONS (cont.) |
 			{"desc": "Show every guest name in lowercase letters.",
 			 "code": "SELECT [BLANK](name) FROM guests;",
 			 "answer": "LOWER",
@@ -163,7 +163,7 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "SELECT [BLANK](name, 1, 3) FROM guests;",
 			 "answer": "SUBSTR",
 			 "hint": "SUBSTR(text, start, length) extracts part of a string."},
-			# — IFNULL (two-argument NULL shortcut) —
+			# | IFNULL (two-argument NULL shortcut) |
 			{"desc": "Use the two-argument shortcut to replace a missing address with 'N/A'.",
 			 "code": "SELECT name,\n  [BLANK](address, 'N/A') FROM guests;",
 			 "answer": "IFNULL",
@@ -173,9 +173,9 @@ const QUIZ_DATA: Dictionary = {
 			 "answer": "IFNULL",
 			 "hint": "IFNULL takes exactly two arguments: value and fallback."},
 		],
-		# Folder 2 — Aggregates & Joins (9 topics × 2 = 18 questions; UNION counts double)
+		# Folder 2 | Aggregates & Joins (9 topics × 2 = 18 questions; UNION counts double)
 		[
-			# — GROUP BY —
+			# | GROUP BY |
 			{"desc": "Count how many bookings each room type has.",
 			 "code": "SELECT room_type, COUNT(*) FROM bookings\nGROUP [BLANK] room_type;",
 			 "answer": "BY",
@@ -184,7 +184,7 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "SELECT room_type, SUM(price) FROM bookings\n[BLANK] BY room_type;",
 			 "answer": "GROUP",
 			 "hint": "___ BY column aggregates rows into groups."},
-			# — JOIN —
+			# | JOIN |
 			{"desc": "Combine guests with their booking records.",
 			 "code": "SELECT * FROM guests\nINNER [BLANK] bookings ON guests.id = bookings.guest_id;",
 			 "answer": "JOIN",
@@ -193,7 +193,7 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "SELECT * FROM rooms\n[BLANK] JOIN bookings ON rooms.id = bookings.room_id;",
 			 "answer": "INNER",
 			 "hint": "___ JOIN only returns rows that match in both tables."},
-			# — COUNT / SUM / AVG —
+			# | COUNT / SUM / AVG |
 			{"desc": "Calculate the average booking price.",
 			 "code": "SELECT [BLANK](price) FROM bookings;",
 			 "answer": "AVG",
@@ -202,16 +202,16 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "SELECT [BLANK](id) FROM guests;",
 			 "answer": "COUNT",
 			 "hint": "COUNT() counts the number of rows."},
-			# — HAVING —
+			# | HAVING |
 			{"desc": "Show room types booked more than 10 times.",
 			 "code": "SELECT room_type, COUNT(*) FROM bookings\nGROUP BY room_type [BLANK] COUNT(*) > 10;",
 			 "answer": "HAVING",
-			 "hint": "HAVING filters grouped results — like WHERE but after GROUP BY."},
+			 "hint": "HAVING filters grouped results like WHERE but after GROUP BY."},
 			{"desc": "Show cities where total guest count exceeds 50.",
 			 "code": "SELECT city, COUNT(*) FROM guests\nGROUP BY city [BLANK] COUNT(*) > 50;",
 			 "answer": "HAVING",
 			 "hint": "HAVING filters after GROUP BY."},
-			# — AS —
+			# | AS |
 			{"desc": "Rename the COUNT result column to total_bookings.",
 			 "code": "SELECT COUNT(*) [BLANK] total_bookings FROM bookings;",
 			 "answer": "AS",
@@ -220,7 +220,7 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "SELECT AVG(price) [BLANK] avg_price FROM bookings;",
 			 "answer": "AS",
 			 "hint": "AS renames a column in the result."},
-			# — LEFT JOIN —
+			# | LEFT JOIN |
 			{"desc": "Show all rooms including those with no bookings.",
 			 "code": "SELECT * FROM rooms\n[BLANK] JOIN bookings ON rooms.id = bookings.room_id;",
 			 "answer": "LEFT",
@@ -229,7 +229,7 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "SELECT * FROM guests\nLEFT [BLANK] bookings ON guests.id = bookings.guest_id;",
 			 "answer": "JOIN",
 			 "hint": "LEFT ___ links tables but keeps all left-side rows."},
-			# — SUBQUERY —
+			# | SUBQUERY |
 			{"desc": "Find the booking with the highest price using a subquery.",
 			 "code": "SELECT * FROM bookings\nWHERE price = (SELECT [BLANK](price) FROM bookings);",
 			 "answer": "MAX",
@@ -238,7 +238,7 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "SELECT * FROM bookings\nWHERE price = ([BLANK] MAX(price) FROM bookings);",
 			 "answer": "SELECT",
 			 "hint": "A subquery starts with SELECT inside the parentheses."},
-			# — UNION —
+			# | UNION |
 			{"desc": "Combine guest cities and staff cities into one list.",
 			 "code": "SELECT city FROM guests\n[BLANK]\nSELECT city FROM staff;",
 			 "answer": "UNION",
@@ -256,9 +256,9 @@ const QUIZ_DATA: Dictionary = {
 			 "answer": "ALL",
 			 "hint": "UNION ALL keeps duplicates; the keyword after UNION is ALL."},
 		],
-		# Folder 3 — Database Design (10 lessons × 2 = 20 questions)
+		# Folder 3 | Database Design (10 lessons × 2 = 20 questions)
 		[
-			# — CREATE DATABASE —
+			# | CREATE DATABASE |
 			{"desc": "Create a new database called hotel_db.",
 			 "code": "CREATE [BLANK] hotel_db;",
 			 "answer": "DATABASE",
@@ -266,8 +266,8 @@ const QUIZ_DATA: Dictionary = {
 			{"desc": "Set up a fresh database for the hotel system.",
 			 "code": "[BLANK] DATABASE hotel_system;",
 			 "answer": "CREATE",
-			 "hint": "___ DATABASE name — the first step in building a DB."},
-			# — CREATE TABLE —
+			 "hint": "___ DATABASE name the first step in building a DB."},
+			# | CREATE TABLE |
 			{"desc": "Create a new table called rooms.",
 			 "code": "CREATE [BLANK] rooms (\n    id INT PRIMARY KEY\n);",
 			 "answer": "TABLE",
@@ -276,7 +276,7 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "[BLANK] TABLE staff (\n    id INT PRIMARY KEY\n);",
 			 "answer": "CREATE",
 			 "hint": "___ TABLE name (...) defines a new table."},
-			# — PRIMARY KEY —
+			# | PRIMARY KEY |
 			{"desc": "Make the id column the primary key of guests.",
 			 "code": "CREATE TABLE guests (\n    id INT [BLANK] KEY\n);",
 			 "answer": "PRIMARY",
@@ -285,7 +285,7 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "CREATE TABLE rooms (\n    id INT PRIMARY [BLANK]\n);",
 			 "answer": "KEY",
 			 "hint": "PRIMARY ___ marks the unique identifier column."},
-			# — INT —
+			# | INT |
 			{"desc": "Set the capacity column to store whole numbers.",
 			 "code": "CREATE TABLE rooms (\n    capacity [BLANK]\n);",
 			 "answer": "INT",
@@ -294,7 +294,7 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "CREATE TABLE rooms (\n    floor_number [BLANK]\n);",
 			 "answer": "INT",
 			 "hint": "Use this type for counting numbers like 1, 2, 3."},
-			# — TEXT —
+			# | TEXT |
 			{"desc": "Set the name column to store text.",
 			 "code": "CREATE TABLE guests (\n    name [BLANK]\n);",
 			 "answer": "TEXT",
@@ -303,7 +303,7 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "CREATE TABLE rooms (\n    room_type [BLANK]\n);",
 			 "answer": "TEXT",
 			 "hint": "Use this type for words like 'Deluxe' or 'Suite'."},
-			# — REAL —
+			# | REAL |
 			{"desc": "Set the price column to store decimal numbers.",
 			 "code": "CREATE TABLE bookings (\n    price [BLANK]\n);",
 			 "answer": "REAL",
@@ -312,7 +312,7 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "CREATE TABLE bookings (\n    discount [BLANK]\n);",
 			 "answer": "REAL",
 			 "hint": "Use this type for values like 0.15 or 12.50."},
-			# — NOT NULL + UNIQUE —
+			# | NOT NULL + UNIQUE |
 			{"desc": "Make the email column required and unique.",
 			 "code": "CREATE TABLE guests (\n    email TEXT NOT NULL [BLANK]\n);",
 			 "answer": "UNIQUE",
@@ -321,7 +321,7 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "CREATE TABLE guests (\n    name TEXT [BLANK] NULL\n);",
 			 "answer": "NOT",
 			 "hint": "___ NULL forces every row to have a value in this column."},
-			# — DEFAULT —
+			# | DEFAULT |
 			{"desc": "Auto-fill the status column with Available.",
 			 "code": "CREATE TABLE rooms (\n    status TEXT [BLANK] 'Available'\n);",
 			 "answer": "DEFAULT",
@@ -330,7 +330,7 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "CREATE TABLE guests (\n    loyalty_points INT [BLANK] 0\n);",
 			 "answer": "DEFAULT",
 			 "hint": "___ value is used when no value is provided on INSERT."},
-			# — FOREIGN KEY —
+			# | FOREIGN KEY |
 			{"desc": "Link guest_id in bookings to the guests table.",
 			 "code": "FOREIGN KEY (guest_id)\n[BLANK] guests(id);",
 			 "answer": "REFERENCES",
@@ -339,7 +339,7 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "[BLANK] KEY (guest_id)\nREFERENCES guests(id);",
 			 "answer": "FOREIGN",
 			 "hint": "___ KEY links a column to a primary key in another table."},
-			# — CHECK —
+			# | CHECK |
 			{"desc": "Only allow staff ages of 18 or older.",
 			 "code": "age INT [BLANK] (age >= 18)",
 			 "answer": "CHECK",
@@ -351,7 +351,7 @@ const QUIZ_DATA: Dictionary = {
 		],
 	],
 	"cafe": [
-		# Folder 0 — Basic SQL (5 lessons × 2 = 10 questions)
+		# Folder 0 | Basic SQL (5 lessons × 2 = 10 questions)
 		[
 			{"desc": "Retrieve every column from the orders table.",
 			 "code": "SELECT [BLANK] FROM orders;",
@@ -384,7 +384,7 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "DELETE [BLANK] orders WHERE status = 'Cancelled';",
 			 "answer": "FROM", "hint": "DELETE ___ tablename WHERE condition"},
 		],
-		# Folder 1 — Filtering & Sorting (13 topics × 2 = 26 questions; String & COALESCE count double)
+		# Folder 1 | Filtering & Sorting (13 topics × 2 = 26 questions; String & COALESCE count double)
 		[
 			{"desc": "Sort the menu by price from low to high.",
 			 "code": "SELECT * FROM menu ORDER [BLANK] price;",
@@ -415,7 +415,7 @@ const QUIZ_DATA: Dictionary = {
 			 "answer": "BETWEEN", "hint": "BETWEEN low AND high"},
 			{"desc": "Find orders placed between two dates.",
 			 "code": "SELECT * FROM orders\nWHERE order_time BETWEEN '2024-01-01' [BLANK] '2024-12-31';",
-			 "answer": "AND", "hint": "BETWEEN start ___ end — connects the range."},
+			 "answer": "AND", "hint": "BETWEEN start ___ end connects the range."},
 			{"desc": "Find menu items whose name contains Coffee.",
 			 "code": "SELECT * FROM menu WHERE name [BLANK] '%Coffee%';",
 			 "answer": "LIKE", "hint": "LIKE '%word%' matches text containing a word."},
@@ -434,35 +434,35 @@ const QUIZ_DATA: Dictionary = {
 			{"desc": "Retrieve only the first 10 menu items.",
 			 "code": "SELECT * FROM menu [BLANK] 10;",
 			 "answer": "LIMIT", "hint": "LIMIT N restricts how many rows are returned."},
-			# — DATE FUNCTIONS —
+			# | DATE FUNCTIONS |
 			{"desc": "Find all orders placed before today.",
 			 "code": "SELECT * FROM orders\nWHERE order_date < [BLANK]('now');",
 			 "answer": "DATE", "hint": "DATE('now') returns today's date in SQLite."},
 			{"desc": "Get all orders placed exactly today.",
 			 "code": "SELECT * FROM orders\nWHERE order_date = DATE([BLANK]);",
 			 "answer": "'now'", "hint": "DATE('now') returns today's date."},
-			# — STRING FUNCTIONS —
+			# | STRING FUNCTIONS |
 			{"desc": "Show every menu item in capital letters.",
 			 "code": "SELECT [BLANK](item) FROM orders;",
 			 "answer": "UPPER", "hint": "UPPER() converts text to capitals; LOWER() to lowercase."},
 			{"desc": "Count how many characters are in each item name.",
 			 "code": "SELECT [BLANK](item) FROM orders;",
 			 "answer": "LENGTH", "hint": "LENGTH() returns the number of characters in a string."},
-			# — COALESCE / IFNULL —
+			# | COALESCE / IFNULL |
 			{"desc": "Show the note, or 'No notes' when it is missing.",
 			 "code": "SELECT item,\n  [BLANK](notes, 'No notes') FROM orders;",
 			 "answer": "COALESCE", "hint": "COALESCE returns the first non-NULL value."},
 			{"desc": "Replace a missing coupon code with 'None'.",
 			 "code": "SELECT item,\n  [BLANK](coupon, 'None') FROM orders;",
 			 "answer": "COALESCE", "hint": "COALESCE(value, fallback) returns the first non-NULL value."},
-			# — STRING FUNCTIONS (cont.) —
+			# | STRING FUNCTIONS (cont.) |
 			{"desc": "Show every menu item in lowercase letters.",
 			 "code": "SELECT [BLANK](item) FROM orders;",
 			 "answer": "LOWER", "hint": "LOWER() converts text to lowercase."},
 			{"desc": "Get the first 3 characters of each item name.",
 			 "code": "SELECT [BLANK](item, 1, 3) FROM orders;",
 			 "answer": "SUBSTR", "hint": "SUBSTR(text, start, length) extracts part of a string."},
-			# — IFNULL (two-argument NULL shortcut) —
+			# | IFNULL (two-argument NULL shortcut) |
 			{"desc": "Use the two-argument shortcut to replace a missing size with 'Regular'.",
 			 "code": "SELECT item,\n  [BLANK](size, 'Regular') FROM orders;",
 			 "answer": "IFNULL", "hint": "IFNULL(value, fallback) is the two-argument NULL replacement."},
@@ -470,7 +470,7 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "SELECT item,\n  [BLANK](comment, 'None') FROM orders;",
 			 "answer": "IFNULL", "hint": "IFNULL takes exactly two arguments: value and fallback."},
 		],
-		# Folder 2 — Aggregates & Joins (9 topics × 2 = 18 questions; UNION counts double)
+		# Folder 2 | Aggregates & Joins (9 topics × 2 = 18 questions; UNION counts double)
 		[
 			{"desc": "Count orders per category.",
 			 "code": "SELECT category, COUNT(*) FROM orders\nGROUP [BLANK] category;",
@@ -508,14 +508,14 @@ const QUIZ_DATA: Dictionary = {
 			{"desc": "List all menu items including those never ordered.",
 			 "code": "SELECT * FROM menu\nLEFT [BLANK] orders ON menu.name = orders.item;",
 			 "answer": "JOIN", "hint": "LEFT ___ keeps all left-side rows even with no match."},
-			# — SUBQUERY —
+			# | SUBQUERY |
 			{"desc": "Find the order with the highest price using a subquery.",
 			 "code": "SELECT * FROM orders\nWHERE price = (SELECT [BLANK](price) FROM orders);",
 			 "answer": "MAX", "hint": "MAX() returns the highest value in the column."},
 			{"desc": "Complete the subquery to find the priciest order.",
 			 "code": "SELECT * FROM orders\nWHERE price = ([BLANK] MAX(price) FROM orders);",
 			 "answer": "SELECT", "hint": "A subquery is a SELECT inside parentheses."},
-			# — UNION —
+			# | UNION |
 			{"desc": "Combine customer cities and supplier cities into one list.",
 			 "code": "SELECT city FROM customers\n[BLANK]\nSELECT city FROM suppliers;",
 			 "answer": "UNION", "hint": "UNION merges two SELECT results and removes duplicates."},
@@ -529,14 +529,14 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "SELECT city FROM customers\nUNION [BLANK]\nSELECT city FROM members;",
 			 "answer": "ALL", "hint": "UNION ALL keeps duplicates; the keyword after UNION is ALL."},
 		],
-		# Folder 3 — Database Design (10 lessons × 2 = 20 questions)
+		# Folder 3 | Database Design (10 lessons × 2 = 20 questions)
 		[
 			{"desc": "Create a new database called cafe_db.",
 			 "code": "CREATE [BLANK] cafe_db;",
 			 "answer": "DATABASE", "hint": "CREATE ___ database_name"},
 			{"desc": "Set up a fresh database for the cafe system.",
 			 "code": "[BLANK] DATABASE cafe_system;",
-			 "answer": "CREATE", "hint": "___ DATABASE name — starts the database creation."},
+			 "answer": "CREATE", "hint": "___ DATABASE name starts the database creation."},
 			{"desc": "Create a new table called orders.",
 			 "code": "CREATE [BLANK] orders (\n    id INT PRIMARY KEY\n);",
 			 "answer": "TABLE", "hint": "CREATE ___ tablename (columns...)"},
@@ -585,7 +585,7 @@ const QUIZ_DATA: Dictionary = {
 			{"desc": "Declare the link between orders and customers.",
 			 "code": "[BLANK] KEY (customer_id)\nREFERENCES customers(id);",
 			 "answer": "FOREIGN", "hint": "___ KEY links a column to another table's primary key."},
-			# — CHECK —
+			# | CHECK |
 			{"desc": "Only allow menu prices of 0 or more.",
 			 "code": "price REAL [BLANK] (price >= 0)",
 			 "answer": "CHECK", "hint": "CHECK (condition) rejects rows that fail the condition."},
@@ -595,7 +595,7 @@ const QUIZ_DATA: Dictionary = {
 		],
 	],
 	"police": [
-		# Folder 0 — Basic SQL (5 lessons × 2 = 10 questions)
+		# Folder 0 | Basic SQL (5 lessons × 2 = 10 questions)
 		[
 			{"desc": "Retrieve every column from the cases table.",
 			 "code": "SELECT [BLANK] FROM cases;",
@@ -628,7 +628,7 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "DELETE [BLANK] cases WHERE status = 'Dismissed';",
 			 "answer": "FROM", "hint": "DELETE ___ tablename WHERE condition"},
 		],
-		# Folder 1 — Filtering & Sorting (13 topics × 2 = 26 questions; String & COALESCE count double)
+		# Folder 1 | Filtering & Sorting (13 topics × 2 = 26 questions; String & COALESCE count double)
 		[
 			{"desc": "Sort cases by priority from highest to lowest.",
 			 "code": "SELECT * FROM cases ORDER [BLANK] priority DESC;",
@@ -659,7 +659,7 @@ const QUIZ_DATA: Dictionary = {
 			 "answer": "BETWEEN", "hint": "BETWEEN low AND high"},
 			{"desc": "Find cases filed between two specific dates.",
 			 "code": "SELECT * FROM cases\nWHERE filed_date BETWEEN '2024-01-01' [BLANK] '2024-12-31';",
-			 "answer": "AND", "hint": "BETWEEN start ___ end — connects the range."},
+			 "answer": "AND", "hint": "BETWEEN start ___ end connects the range."},
 			{"desc": "Find suspects whose name starts with R.",
 			 "code": "SELECT * FROM cases WHERE suspect [BLANK] 'R%';",
 			 "answer": "LIKE", "hint": "LIKE 'letter%' matches names starting with that letter."},
@@ -678,35 +678,35 @@ const QUIZ_DATA: Dictionary = {
 			{"desc": "Retrieve only the first 10 officer records.",
 			 "code": "SELECT * FROM officers [BLANK] 10;",
 			 "answer": "LIMIT", "hint": "LIMIT N restricts how many rows are returned."},
-			# — DATE FUNCTIONS —
+			# | DATE FUNCTIONS |
 			{"desc": "Find all cases where the filed_date has already passed.",
 			 "code": "SELECT * FROM cases\nWHERE filed_date < [BLANK]('now');",
 			 "answer": "DATE", "hint": "DATE('now') returns today's date in SQLite."},
 			{"desc": "Get all cases filed exactly today.",
 			 "code": "SELECT * FROM cases\nWHERE filed_date = DATE([BLANK]);",
 			 "answer": "'now'", "hint": "DATE('now') returns today's date."},
-			# — STRING FUNCTIONS —
+			# | STRING FUNCTIONS |
 			{"desc": "Show every case type in capital letters.",
 			 "code": "SELECT [BLANK](case_type) FROM cases;",
 			 "answer": "UPPER", "hint": "UPPER() converts text to capitals; LOWER() to lowercase."},
 			{"desc": "Count how many characters are in each case type.",
 			 "code": "SELECT [BLANK](case_type) FROM cases;",
 			 "answer": "LENGTH", "hint": "LENGTH() returns the number of characters in a string."},
-			# — COALESCE / IFNULL —
+			# | COALESCE / IFNULL |
 			{"desc": "Show the remark, or 'No remarks' when it is missing.",
 			 "code": "SELECT case_type,\n  [BLANK](remarks, 'No remarks') FROM cases;",
 			 "answer": "COALESCE", "hint": "COALESCE returns the first non-NULL value."},
 			{"desc": "Replace a missing location with 'Unknown'.",
 			 "code": "SELECT case_type,\n  [BLANK](location, 'Unknown') FROM cases;",
 			 "answer": "COALESCE", "hint": "COALESCE(value, fallback) returns the first non-NULL value."},
-			# — STRING FUNCTIONS (cont.) —
+			# | STRING FUNCTIONS (cont.) |
 			{"desc": "Show every case type in lowercase letters.",
 			 "code": "SELECT [BLANK](case_type) FROM cases;",
 			 "answer": "LOWER", "hint": "LOWER() converts text to lowercase."},
 			{"desc": "Get the first 3 characters of each case type.",
 			 "code": "SELECT [BLANK](case_type, 1, 3) FROM cases;",
 			 "answer": "SUBSTR", "hint": "SUBSTR(text, start, length) extracts part of a string."},
-			# — IFNULL (two-argument NULL shortcut) —
+			# | IFNULL (two-argument NULL shortcut) |
 			{"desc": "Use the two-argument shortcut to replace a missing officer with 'Unassigned'.",
 			 "code": "SELECT case_type,\n  [BLANK](officer, 'Unassigned') FROM cases;",
 			 "answer": "IFNULL", "hint": "IFNULL(value, fallback) is the two-argument NULL replacement."},
@@ -714,7 +714,7 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "SELECT case_type,\n  [BLANK](district, 'N/A') FROM cases;",
 			 "answer": "IFNULL", "hint": "IFNULL takes exactly two arguments: value and fallback."},
 		],
-		# Folder 2 — Aggregates & Joins (9 topics × 2 = 18 questions; UNION counts double)
+		# Folder 2 | Aggregates & Joins (9 topics × 2 = 18 questions; UNION counts double)
 		[
 			{"desc": "Count how many cases belong to each crime type.",
 			 "code": "SELECT crime_type, COUNT(*) FROM cases\nGROUP [BLANK] crime_type;",
@@ -752,14 +752,14 @@ const QUIZ_DATA: Dictionary = {
 			{"desc": "List all suspects and their cases if any exist.",
 			 "code": "SELECT * FROM suspects\nLEFT [BLANK] cases ON suspects.id = cases.suspect_id;",
 			 "answer": "JOIN", "hint": "LEFT ___ keeps all left-side rows even with no match."},
-			# — SUBQUERY —
+			# | SUBQUERY |
 			{"desc": "Find the case with the highest fine using a subquery.",
 			 "code": "SELECT * FROM cases\nWHERE fine = (SELECT [BLANK](fine) FROM cases);",
 			 "answer": "MAX", "hint": "MAX() returns the highest value in the column."},
 			{"desc": "Complete the subquery to find the costliest case.",
 			 "code": "SELECT * FROM cases\nWHERE fine = ([BLANK] MAX(fine) FROM cases);",
 			 "answer": "SELECT", "hint": "A subquery starts with SELECT inside parentheses."},
-			# — UNION —
+			# | UNION |
 			{"desc": "Combine suspect cities and witness cities into one list.",
 			 "code": "SELECT city FROM suspects\n[BLANK]\nSELECT city FROM witnesses;",
 			 "answer": "UNION", "hint": "UNION merges two SELECT results and removes duplicates."},
@@ -773,14 +773,14 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "SELECT city FROM suspects\nUNION [BLANK]\nSELECT city FROM informants;",
 			 "answer": "ALL", "hint": "UNION ALL keeps duplicates; the keyword after UNION is ALL."},
 		],
-		# Folder 3 — Database Design (10 lessons × 2 = 20 questions)
+		# Folder 3 | Database Design (10 lessons × 2 = 20 questions)
 		[
 			{"desc": "Create a new database called police_db.",
 			 "code": "CREATE [BLANK] police_db;",
 			 "answer": "DATABASE", "hint": "CREATE ___ database_name"},
 			{"desc": "Set up a fresh database for the station system.",
 			 "code": "[BLANK] DATABASE station_db;",
-			 "answer": "CREATE", "hint": "___ DATABASE name — starts the creation."},
+			 "answer": "CREATE", "hint": "___ DATABASE name starts the creation."},
 			{"desc": "Create a new table called suspects.",
 			 "code": "CREATE [BLANK] suspects (\n    id INT PRIMARY KEY\n);",
 			 "answer": "TABLE", "hint": "CREATE ___ tablename (columns...)"},
@@ -829,7 +829,7 @@ const QUIZ_DATA: Dictionary = {
 			{"desc": "Declare the link between cases and officers.",
 			 "code": "[BLANK] KEY (officer_id)\nREFERENCES officers(id);",
 			 "answer": "FOREIGN", "hint": "___ KEY links a column to another table's primary key."},
-			# — CHECK —
+			# | CHECK |
 			{"desc": "Only allow fines of 0 or more.",
 			 "code": "fine REAL [BLANK] (fine >= 0)",
 			 "answer": "CHECK", "hint": "CHECK (condition) rejects rows that fail the condition."},
@@ -839,7 +839,7 @@ const QUIZ_DATA: Dictionary = {
 		],
 	],
 	"library": [
-		# Folder 0 — Basic SQL (5 lessons × 2 = 10 questions)
+		# Folder 0 | Basic SQL (5 lessons × 2 = 10 questions)
 		[
 			{"desc": "Retrieve every column from the books table.",
 			 "code": "SELECT [BLANK] FROM books;",
@@ -872,7 +872,7 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "DELETE [BLANK] loans WHERE status = 'Returned';",
 			 "answer": "FROM", "hint": "DELETE ___ tablename WHERE condition"},
 		],
-		# Folder 1 — Filtering & Sorting (13 topics × 2 = 26 questions; String & COALESCE count double)
+		# Folder 1 | Filtering & Sorting (13 topics × 2 = 26 questions; String & COALESCE count double)
 		[
 			{"desc": "Sort books alphabetically by title.",
 			 "code": "SELECT * FROM books ORDER [BLANK] title;",
@@ -903,7 +903,7 @@ const QUIZ_DATA: Dictionary = {
 			 "answer": "BETWEEN", "hint": "BETWEEN low AND high"},
 			{"desc": "Find loans due between two specific dates.",
 			 "code": "SELECT * FROM loans\nWHERE due_date BETWEEN '2025-01-01' [BLANK] '2025-12-31';",
-			 "answer": "AND", "hint": "BETWEEN start ___ end — connects the range."},
+			 "answer": "AND", "hint": "BETWEEN start ___ end connects the range."},
 			{"desc": "Find books whose title contains the word Dragon.",
 			 "code": "SELECT * FROM books WHERE title [BLANK] '%Dragon%';",
 			 "answer": "LIKE", "hint": "LIKE '%word%' matches text containing a word."},
@@ -922,35 +922,35 @@ const QUIZ_DATA: Dictionary = {
 			{"desc": "Retrieve only the first 10 borrower records.",
 			 "code": "SELECT * FROM borrowers [BLANK] 10;",
 			 "answer": "LIMIT", "hint": "LIMIT N restricts how many rows are returned."},
-			# — DATE FUNCTIONS —
+			# | DATE FUNCTIONS |
 			{"desc": "Find all loans where the return_date has already passed.",
 			 "code": "SELECT * FROM loans\nWHERE return_date < [BLANK]('now');",
 			 "answer": "DATE", "hint": "DATE('now') returns today's date in SQLite."},
 			{"desc": "Get all loans that were due exactly today.",
 			 "code": "SELECT * FROM loans\nWHERE return_date = DATE([BLANK]);",
 			 "answer": "'now'", "hint": "DATE('now') returns today's date."},
-			# — STRING FUNCTIONS —
+			# | STRING FUNCTIONS |
 			{"desc": "Show every book title in capital letters.",
 			 "code": "SELECT [BLANK](title) FROM books;",
 			 "answer": "UPPER", "hint": "UPPER() converts text to capitals; LOWER() to lowercase."},
 			{"desc": "Count how many characters are in each book title.",
 			 "code": "SELECT [BLANK](title) FROM books;",
 			 "answer": "LENGTH", "hint": "LENGTH() returns the number of characters in a string."},
-			# — COALESCE / IFNULL —
+			# | COALESCE / IFNULL |
 			{"desc": "Show the summary, or 'No summary' when it is missing.",
 			 "code": "SELECT title,\n  [BLANK](summary, 'No summary') FROM books;",
 			 "answer": "COALESCE", "hint": "COALESCE returns the first non-NULL value."},
 			{"desc": "Replace a missing author with 'Unknown'.",
 			 "code": "SELECT title,\n  [BLANK](author, 'Unknown') FROM books;",
 			 "answer": "COALESCE", "hint": "COALESCE(value, fallback) returns the first non-NULL value."},
-			# — STRING FUNCTIONS (cont.) —
+			# | STRING FUNCTIONS (cont.) |
 			{"desc": "Show every book title in lowercase letters.",
 			 "code": "SELECT [BLANK](title) FROM books;",
 			 "answer": "LOWER", "hint": "LOWER() converts text to lowercase."},
 			{"desc": "Get the first 3 characters of each book title.",
 			 "code": "SELECT [BLANK](title, 1, 3) FROM books;",
 			 "answer": "SUBSTR", "hint": "SUBSTR(text, start, length) extracts part of a string."},
-			# — IFNULL (two-argument NULL shortcut) —
+			# | IFNULL (two-argument NULL shortcut) |
 			{"desc": "Use the two-argument shortcut to replace a missing edition with 'First'.",
 			 "code": "SELECT title,\n  [BLANK](edition, 'First') FROM books;",
 			 "answer": "IFNULL", "hint": "IFNULL(value, fallback) is the two-argument NULL replacement."},
@@ -958,7 +958,7 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "SELECT title,\n  [BLANK](isbn, 'N/A') FROM books;",
 			 "answer": "IFNULL", "hint": "IFNULL takes exactly two arguments: value and fallback."},
 		],
-		# Folder 2 — Aggregates & Joins (9 topics × 2 = 18 questions; UNION counts double)
+		# Folder 2 | Aggregates & Joins (9 topics × 2 = 18 questions; UNION counts double)
 		[
 			{"desc": "Count how many books belong to each genre.",
 			 "code": "SELECT genre, COUNT(*) FROM books\nGROUP [BLANK] genre;",
@@ -996,14 +996,14 @@ const QUIZ_DATA: Dictionary = {
 			{"desc": "List all borrowers and their loans if any exist.",
 			 "code": "SELECT * FROM borrowers\nLEFT [BLANK] loans ON borrowers.id = loans.borrower_id;",
 			 "answer": "JOIN", "hint": "LEFT ___ keeps all left-side rows even with no match."},
-			# — SUBQUERY —
+			# | SUBQUERY |
 			{"desc": "Find the most borrowed book using a subquery.",
 			 "code": "SELECT * FROM books\nWHERE borrow_count = (SELECT [BLANK](borrow_count) FROM books);",
 			 "answer": "MAX", "hint": "MAX() returns the highest value in the column."},
 			{"desc": "Complete the subquery to find the most popular book.",
 			 "code": "SELECT * FROM books\nWHERE borrow_count = ([BLANK] MAX(borrow_count) FROM books);",
 			 "answer": "SELECT", "hint": "A subquery starts with SELECT inside parentheses."},
-			# — UNION —
+			# | UNION |
 			{"desc": "Combine member cities and author cities into one list.",
 			 "code": "SELECT city FROM members\n[BLANK]\nSELECT city FROM authors;",
 			 "answer": "UNION", "hint": "UNION merges two SELECT results and removes duplicates."},
@@ -1017,14 +1017,14 @@ const QUIZ_DATA: Dictionary = {
 			 "code": "SELECT city FROM members\nUNION [BLANK]\nSELECT city FROM donors;",
 			 "answer": "ALL", "hint": "UNION ALL keeps duplicates; the keyword after UNION is ALL."},
 		],
-		# Folder 3 — Database Design (10 lessons × 2 = 20 questions)
+		# Folder 3 | Database Design (10 lessons × 2 = 20 questions)
 		[
 			{"desc": "Create a new database called library_db.",
 			 "code": "CREATE [BLANK] library_db;",
 			 "answer": "DATABASE", "hint": "CREATE ___ database_name"},
 			{"desc": "Set up a fresh database for the library system.",
 			 "code": "[BLANK] DATABASE library_system;",
-			 "answer": "CREATE", "hint": "___ DATABASE name — starts the creation."},
+			 "answer": "CREATE", "hint": "___ DATABASE name starts the creation."},
 			{"desc": "Create a new table called books.",
 			 "code": "CREATE [BLANK] books (\n    id INT PRIMARY KEY\n);",
 			 "answer": "TABLE", "hint": "CREATE ___ tablename (columns...)"},
@@ -1073,7 +1073,7 @@ const QUIZ_DATA: Dictionary = {
 			{"desc": "Declare the link between loans and borrowers.",
 			 "code": "[BLANK] KEY (borrower_id)\nREFERENCES borrowers(id);",
 			 "answer": "FOREIGN", "hint": "___ KEY links a column to another table's primary key."},
-			# — CHECK —
+			# | CHECK |
 			{"desc": "Only allow copy counts of 0 or more.",
 			 "code": "copies INT [BLANK] (copies >= 0)",
 			 "answer": "CHECK", "hint": "CHECK (condition) rejects rows that fail the condition."},
@@ -1148,7 +1148,7 @@ func _build_static_ui() -> void:
 	hdr_lbl.offset_bottom = 50
 	add_child(hdr_lbl)
 
-	# Back to Dashboard button — top right
+	# Back to Dashboard button | top right
 	var back_btn := Button.new()
 	back_btn.text = "← Dashboard"
 	back_btn.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
@@ -1326,7 +1326,7 @@ func _on_submit(text: String) -> void:
 	else:
 		sbox.bg_color = Color(0.28, 0.07, 0.07, 0.90)
 		_result_lbl.add_theme_color_override("font_color", Color(1.0, 0.45, 0.45))
-		_result_lbl.text = "✗  Wrong answer — check the hint and try again."
+		_result_lbl.text = "✗  Wrong answer check the hint and try again."
 		panel.visible    = true
 		_input.select_all()
 

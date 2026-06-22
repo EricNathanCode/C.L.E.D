@@ -1,6 +1,6 @@
 extends VBoxContainer
 # ═══════════════════════════════════════════════════════
-#  GENERIC SINGLE-BLANK SQL CHALLENGE  —  gamemode "sql_blank"
+#  GENERIC SINGLE-BLANK SQL CHALLENGE  |  gamemode "sql_blank"
 #  Renders:  [prefix]  [BLANK]  [suffix]
 #  Data keys: prefix, suffix, answer, placeholder, max_length,
 #             desc, hint, table, table_headers, table_rows,

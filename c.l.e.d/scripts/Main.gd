@@ -1,6 +1,6 @@
 extends Control
 # ═══════════════════════════════════════════════════════
-#  MAIN  —  scripts/Main.gd
+#  MAIN  |  scripts/Main.gd
 # ═══════════════════════════════════════════════════════
 
 const BGM_MAP: Dictionary = {

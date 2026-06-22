@@ -1,6 +1,6 @@
 extends Node
 # ═══════════════════════════════════════════════════════
-#  CAFE DATA  —  scripts/data/CafeData.gd
+#  CAFE DATA  |  scripts/data/CafeData.gd
 #
 #  Each lesson uses a DIFFERENT NPC (except boss).
 #  Format:  "npc": "adult_N/expr"  OR  "NPC_occupations/X/expr"
@@ -14,13 +14,13 @@ extends Node
 #    C6 → adult_10  (customer canceling)
 #    C7 → NPC_occupations/coffee_owner  (supervisor/boss)
 #
-#  Rule: "you" / "scene" always use idle — NPC looks at you.
+#  Rule: "you" / "scene" always use idle | NPC looks at you.
 # ═══════════════════════════════════════════════════════
 
 const LESSONS: Dictionary = {
 
 # ─────────────────────────────────────────────
-#  LESSON C1 — SELECT  |  NPC: adult_6
+#  LESSON C1 | SELECT  |  NPC: adult_6
 # ─────────────────────────────────────────────
 "C1": [
 	{ "type": "dialogue", "char": "scene",        "name": "SCENE",
@@ -35,7 +35,7 @@ const LESSONS: Dictionary = {
 	{ "type": "sql_choice",
 	  "desc": "A customer just placed a coffee order. Choose the most professional response for a cafe staff member.",
 	  "options": [
-	  	[1, "Of course! What size would you like — small, medium, or large?"],
+	  	[1, "Of course! What size would you like small, medium, or large?"],
 	  	[2, "We're out of lattes."],
 	  	[3, "Just stand over there and wait."]
 	  ],
@@ -43,7 +43,7 @@ const LESSONS: Dictionary = {
 	  "hint": "Confirm the order and ask a helpful follow-up. Answer: id = 1" },
 	{ "type": "dialogue", "char": "you",           "name": "YOU",
 	  "npc": "adult_6/idle",
-	  "text": "Of course! What size would you like — small, medium, or large?" },
+	  "text": "Of course! What size would you like small, medium, or large?" },
 	{ "type": "dialogue", "char": "cafe_customer", "name": "CUSTOMER",
 	  "npc": "adult_6/talk",
 	  "text": "Medium please! You're so helpful, thank you!" },
@@ -51,7 +51,7 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C2 — INSERT INTO  |  NPC: adult_7
+#  LESSON C2 | INSERT INTO  |  NPC: adult_7
 # ─────────────────────────────────────────────
 "C2": [
 	{ "type": "dialogue", "char": "scene",        "name": "SCENE",
@@ -71,7 +71,7 @@ const LESSONS: Dictionary = {
 	  "table_headers": ["id", "customer_name", "drink", "food"],
 	  "table_rows": [],
 	  "answers": ["Carlos", "Cappuccino", "Blueberry Muffin"],
-	  "hint": "Name: Carlos | Drink: Cappuccino | Food: Blueberry Muffin",
+	  "hint": "Name: Carlos Drink: Cappuccino Food: Blueberry Muffin",
 	  "result_headers": ["id", "customer_name", "drink", "food"],
 	  "result_rows": [["5", "Carlos", "Cappuccino", "Blueberry Muffin"]],
 	  "result_msg": "1 record inserted into orders.",
@@ -90,7 +90,7 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C3 — GROUP BY  |  NPC: coffee_owner (boss)
+#  LESSON C3 | GROUP BY  |  NPC: coffee_owner (boss)
 # ─────────────────────────────────────────────
 "C3": [
 	{ "type": "dialogue", "char": "scene",          "name": "SCENE",
@@ -126,7 +126,7 @@ const LESSONS: Dictionary = {
 	  "result_rows": [["Drinks", "6"], ["Pastries", "4"]],
 	  "result_msg": "Orders grouped by category.",
 					"fail": [
-						{ "type": "dialogue", "char": "cafe_supervisor", "name": "SUPERVISOR", "npc": "NPC_occupations/coffee_owner/shock", "text": "This report makes no sense! You grouped by item not category — this is useless!" },
+						{ "type": "dialogue", "char": "cafe_supervisor", "name": "SUPERVISOR", "npc": "NPC_occupations/coffee_owner/shock", "text": "This report makes no sense! You grouped by item not category this is useless!" },
 						{ "type": "dialogue", "char": "scene",          "name": "SCENE",      "npc": "NPC_occupations/coffee_owner/idle",  "text": "Your supervisor shakes their head. You feel the pressure of closing time." },
 						{ "type": "dialogue", "char": "you",            "name": "YOU",        "npc": "NPC_occupations/coffee_owner/idle",  "text": "Let me re-run this with the correct GROUP BY column." }
 					] },
@@ -135,12 +135,12 @@ const LESSONS: Dictionary = {
 	  "text": "Report done! Drinks: 3, Pastries: 2." },
 	{ "type": "dialogue", "char": "cafe_supervisor", "name": "SUPERVISOR",
 	  "npc": "NPC_occupations/coffee_owner/think",
-	  "text": "Great numbers today! Drinks always lead. Nice work — see you tomorrow." },
+	  "text": "Great numbers today! Drinks always lead. Nice work see you tomorrow." },
 	{ "type": "end" }
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C4 — SELECT WHERE  |  NPC: adult_8
+#  LESSON C4 | SELECT WHERE  |  NPC: adult_8
 # ─────────────────────────────────────────────
 "C4": [
 	{ "type": "dialogue", "char": "scene",        "name": "SCENE",
@@ -179,7 +179,7 @@ const LESSONS: Dictionary = {
 					] },
 	{ "type": "dialogue", "char": "you",           "name": "YOU",
 	  "npc": "adult_8/idle",
-	  "text": "Found it! Iced Tea and a Croissant — your order is still being prepared. Sorry for the wait!" },
+	  "text": "Found it! Iced Tea and a Croissant your order is still being prepared. Sorry for the wait!" },
 	{ "type": "dialogue", "char": "cafe_customer", "name": "CUSTOMER",
 	  "npc": "adult_8/talk",
 	  "text": "Oh thank goodness! No worries, thank you for checking!" },
@@ -187,7 +187,7 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C5 — UPDATE SET  |  NPC: adult_9
+#  LESSON C5 | UPDATE SET  |  NPC: adult_9
 # ─────────────────────────────────────────────
 "C5": [
 	{ "type": "dialogue", "char": "scene",        "name": "SCENE",
@@ -218,7 +218,7 @@ const LESSONS: Dictionary = {
 	  ],
 	  "answer_value": "Iced Latte",
 	  "answer_id": "3",
-	  "hint": "Change drink to: Iced Latte | Record id: 3",
+	  "hint": "Change drink to: Iced Latte Record id: 3",
 	  "result_headers": ["id", "customer_name", "drink", "food"],
 	  "result_rows": [["3", "Santos", "Iced Latte", "None"]],
 	  "result_msg": "1 record updated.",
@@ -229,7 +229,7 @@ const LESSONS: Dictionary = {
 					] },
 	{ "type": "dialogue", "char": "you",           "name": "YOU",
 	  "npc": "adult_9/idle",
-	  "text": "Done! Updated to Iced Latte. Your correct order will be out shortly — sorry again!" },
+	  "text": "Done! Updated to Iced Latte. Your correct order will be out shortly sorry again!" },
 	{ "type": "dialogue", "char": "cafe_customer", "name": "CUSTOMER",
 	  "npc": "adult_9/talk",
 	  "text": "Thank you! That's all I needed." },
@@ -237,7 +237,7 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C6 — DELETE  |  NPC: adult_10
+#  LESSON C6 | DELETE  |  NPC: adult_10
 # ─────────────────────────────────────────────
 "C6": [
 	{ "type": "dialogue", "char": "scene",        "name": "SCENE",
@@ -245,7 +245,7 @@ const LESSONS: Dictionary = {
 	  "text": "A customer hurries back through the door looking apologetic." },
 	{ "type": "dialogue", "char": "cafe_customer", "name": "CUSTOMER",
 	  "npc": "adult_10/confuse",
-	  "text": "Hi, I'm so sorry — I need to cancel my order. I just got a call and I have to leave immediately!" },
+	  "text": "Hi, I'm so sorry I need to cancel my order. I just got a call and I have to leave immediately!" },
 	{ "type": "dialogue", "char": "you",           "name": "YOU",
 	  "npc": "adult_10/idle",
 	  "text": "No problem at all! What's your order id?" },
@@ -272,13 +272,13 @@ const LESSONS: Dictionary = {
 	  "result_rows": [["Record with id = 2 has been removed."]],
 	  "result_msg": "1 record deleted.",
 					"fail": [
-						{ "type": "dialogue", "char": "cafe_customer", "name": "CUSTOMER",  "npc": "adult_10/confuse", "text": "Wait — you cancelled the wrong order! Now someone else's food is gone!" },
+						{ "type": "dialogue", "char": "cafe_customer", "name": "CUSTOMER",  "npc": "adult_10/confuse", "text": "Wait you cancelled the wrong order! Now someone else's food is gone!" },
 						{ "type": "dialogue", "char": "scene",        "name": "SCENE",     "npc": "adult_10/idle",   "text": "An awkward silence falls. A confused customer checks their phone for their order confirmation." },
 						{ "type": "dialogue", "char": "you",          "name": "YOU",       "npc": "adult_10/idle",   "text": "My apologies! I need to enter the correct order id." }
 					] },
 	{ "type": "dialogue", "char": "you",           "name": "YOU",
 	  "npc": "adult_10/idle",
-	  "text": "Done! Your order has been cancelled. Hope everything is okay — come back soon!" },
+	  "text": "Done! Your order has been cancelled. Hope everything is okay come back soon!" },
 	{ "type": "dialogue", "char": "cafe_customer", "name": "CUSTOMER",
 	  "npc": "adult_10/talk",
 	  "text": "Thank you so much! You're the best!" },
@@ -286,7 +286,7 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C7 — ORDER BY  |  NPC: coffee_owner (boss)
+#  LESSON C7 | ORDER BY  |  NPC: coffee_owner (boss)
 # ─────────────────────────────────────────────
 "C7": [
 	{ "type": "dialogue", "char": "scene",          "name": "SCENE",
@@ -294,7 +294,7 @@ const LESSONS: Dictionary = {
 	  "text": "Your supervisor walks over with a tablet, checking the digital menu board." },
 	{ "type": "dialogue", "char": "cafe_supervisor", "name": "SUPERVISOR",
 	  "npc": "NPC_occupations/coffee_owner/talk",
-	  "text": "Can you pull up all menu items sorted by price — cheapest to most expensive? We're updating the board." },
+	  "text": "Can you pull up all menu items sorted by price cheapest to most expensive? We're updating the board." },
 	{ "type": "dialogue", "char": "you",             "name": "YOU",
 	  "npc": "NPC_occupations/coffee_owner/idle",
 	  "text": "On it! I'll sort the menu by price right now." },
@@ -345,7 +345,7 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C8 — IS NULL  |  NPC: coffee_owner
+#  LESSON C8 | IS NULL  |  NPC: coffee_owner
 #  Topic: Find orders with no special notes
 # ─────────────────────────────────────────────
 "C8": [
@@ -383,14 +383,14 @@ const LESSONS: Dictionary = {
 		],
 		"result_msg": "3 orders have no special notes.",
 		"fail": [
-			{ "type": "dialogue", "char": "cafe_supervisor", "name": "SUPERVISOR", "npc": "NPC_occupations/coffee_owner/shock", "text": "That is not right! NULL is not a customer name — it means the field is empty." },
+			{ "type": "dialogue", "char": "cafe_supervisor", "name": "SUPERVISOR", "npc": "NPC_occupations/coffee_owner/shock", "text": "That is not right! NULL is not a customer name it means the field is empty." },
 			{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/coffee_owner/idle", "text": "A long line of customers forms at the counter. Time is short." },
 			{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "NPC_occupations/coffee_owner/idle", "text": "I need to use IS NULL to check for missing values." }
 		]
 	},
 	{ "type": "dialogue", "char": "you",             "name": "YOU",
 	  "npc": "NPC_occupations/coffee_owner/idle",
-	  "text": "Found them! Maria, Santos, and Carlos left no notes — standard recipes for all three." },
+	  "text": "Found them! Maria, Santos, and Carlos left no notes standard recipes for all three." },
 	{ "type": "dialogue", "char": "cafe_supervisor",  "name": "SUPERVISOR",
 	  "npc": "NPC_occupations/coffee_owner/talk",
 	  "text": "Perfect. IS NULL is great for catching incomplete data. Nice SQL work." },
@@ -398,8 +398,8 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C9 — CREATE DATABASE  |  NPC: coffee_owner
-#  Topic: CREATE DATABASE — setting up the database container first
+#  LESSON C9 | CREATE DATABASE  |  NPC: coffee_owner
+#  Topic: CREATE DATABASE | setting up the database container first
 # ─────────────────────────────────────────────
 "C9": [
 	{ "type": "dialogue", "char": "scene",           "name": "SCENE",
@@ -418,25 +418,25 @@ const LESSONS: Dictionary = {
 		"db_name": "CafeDB",
 		"answer": "DATABASE",
 		"hint": "The keyword after CREATE for a new database container is: DATABASE",
-		"result_msg": "CafeDB is now created! All café tables — orders, customers, items — will live inside this database.",
+		"result_msg": "CafeDB is now created! All café tables orders, customers, items will live inside this database.",
 		"fail": [
 			{ "type": "dialogue", "char": "cafe_supervisor", "name": "SUPERVISOR", "npc": "NPC_occupations/coffee_owner/confuse", "text": "That is not right. We are creating a DATABASE, not a table yet." },
 			{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/coffee_owner/idle", "text": "The supervisor taps the screen." },
-			{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "NPC_occupations/coffee_owner/idle", "text": "The correct keyword is DATABASE — CREATE DATABASE CafeDB." }
+			{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "NPC_occupations/coffee_owner/idle", "text": "The correct keyword is DATABASE CREATE DATABASE CafeDB." }
 		]
 	},
 	{ "type": "dialogue", "char": "cafe_supervisor",  "name": "SUPERVISOR",
 	  "npc": "NPC_occupations/coffee_owner/talk",
-	  "text": "So you create the DATABASE first, and then all the tables go inside it. That makes sense — like naming your folder before filing anything in it!" },
+	  "text": "So you create the DATABASE first, and then all the tables go inside it. That makes sense like naming your folder before filing anything in it!" },
 	{ "type": "dialogue", "char": "you",             "name": "YOU",
 	  "npc": "NPC_occupations/coffee_owner/idle",
-	  "text": "Exactly. One database can hold many tables. CafeDB will hold orders, customers — everything for this café." },
+	  "text": "Exactly. One database can hold many tables. CafeDB will hold orders, customers everything for this café." },
 	{ "type": "end" }
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C10 — CREATE TABLE  |  NPC: coffee_owner
-#  Topic: CREATE TABLE — defining the table structure
+#  LESSON C10 | CREATE TABLE  |  NPC: coffee_owner
+#  Topic: CREATE TABLE | defining the table structure
 # ─────────────────────────────────────────────
 "C10": [
 	{ "type": "dialogue", "char": "scene",           "name": "SCENE",
@@ -463,9 +463,9 @@ const LESSONS: Dictionary = {
 		"hint": "The keyword after CREATE for a new table is: TABLE",
 		"result_msg": "orders table created! It has 4 columns: id (INT), customer (TEXT), item (TEXT), price (REAL). Every order will follow this structure.",
 		"fail": [
-			{ "type": "dialogue", "char": "cafe_supervisor", "name": "SUPERVISOR", "npc": "NPC_occupations/coffee_owner/confuse", "text": "That is not correct. We already have the database — now we are creating a TABLE inside it." },
+			{ "type": "dialogue", "char": "cafe_supervisor", "name": "SUPERVISOR", "npc": "NPC_occupations/coffee_owner/confuse", "text": "That is not correct. We already have the database now we are creating a TABLE inside it." },
 			{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/coffee_owner/idle", "text": "The supervisor looks at the screen." },
-			{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "NPC_occupations/coffee_owner/idle", "text": "The keyword is TABLE — CREATE TABLE orders." }
+			{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "NPC_occupations/coffee_owner/idle", "text": "The keyword is TABLE CREATE TABLE orders." }
 		]
 	},
 	{ "type": "dialogue", "char": "cafe_supervisor",  "name": "SUPERVISOR",
@@ -473,12 +473,12 @@ const LESSONS: Dictionary = {
 	  "text": "CREATE TABLE! And you list each column with its type right inside the parentheses. Now I understand the full setup." },
 	{ "type": "dialogue", "char": "you",             "name": "YOU",
 	  "npc": "NPC_occupations/coffee_owner/idle",
-	  "text": "Exactly — first CREATE DATABASE, then CREATE TABLE. Now the structure is ready and you can INSERT orders into it." },
+	  "text": "Exactly first CREATE DATABASE, then CREATE TABLE. Now the structure is ready and you can INSERT orders into it." },
 	{ "type": "end" }
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C11 — PRIMARY KEY  |  NPC: coffee_owner
+#  LESSON C11 | PRIMARY KEY  |  NPC: coffee_owner
 #  Topic: CREATE TABLE with PRIMARY KEY constraint
 # ─────────────────────────────────────────────
 "C11": [
@@ -494,7 +494,7 @@ const LESSONS: Dictionary = {
 	{
 		"type": "sql_fill",
 		"gamemode": "create_table",
-		"desc": "Complete the CREATE TABLE statement for the orders table. The 'id' column must be the PRIMARY KEY — type it in the blank.",
+		"desc": "Complete the CREATE TABLE statement for the orders table. The 'id' column must be the PRIMARY KEY type it in the blank.",
 		"table": "orders",
 		"pk_col": "id",
 		"columns": [
@@ -505,11 +505,11 @@ const LESSONS: Dictionary = {
 		],
 		"answer": "PRIMARY KEY",
 		"hint": "The constraint that makes a column unique for every row is: PRIMARY KEY",
-		"result_msg": "Table created! The PRIMARY KEY on 'id' means every order gets a unique number — even if two customers order the same thing.",
+		"result_msg": "Table created! The PRIMARY KEY on 'id' means every order gets a unique number even if two customers order the same thing.",
 		"fail": [
-			{ "type": "dialogue", "char": "cafe_supervisor", "name": "SUPERVISOR", "npc": "NPC_occupations/coffee_owner/confuse", "text": "That is not it. The constraint is two words — PRIMARY and KEY together." },
+			{ "type": "dialogue", "char": "cafe_supervisor", "name": "SUPERVISOR", "npc": "NPC_occupations/coffee_owner/confuse", "text": "That is not it. The constraint is two words PRIMARY and KEY together." },
 			{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/coffee_owner/idle", "text": "The supervisor leans in to look at the screen." },
-			{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "NPC_occupations/coffee_owner/idle", "text": "Let me type it correctly — PRIMARY KEY." }
+			{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "NPC_occupations/coffee_owner/idle", "text": "Let me type it correctly PRIMARY KEY." }
 		]
 	},
 	{ "type": "dialogue", "char": "cafe_supervisor",  "name": "SUPERVISOR",
@@ -522,19 +522,19 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C12 — JOIN  |  NPC: coffee_owner
-#  Topic: FOREIGN KEY / JOIN — combining two tables
+#  LESSON C12 | JOIN  |  NPC: coffee_owner
+#  Topic: FOREIGN KEY / JOIN | combining two tables
 # ─────────────────────────────────────────────
 "C12": [
 	{ "type": "dialogue", "char": "scene",           "name": "SCENE",
 	  "npc": "NPC_occupations/coffee_owner/idle",
-	  "text": "The owner wants a full report — customer names beside their ordered items — but the data is in two separate tables." },
+	  "text": "The owner wants a full report customer names beside their ordered items but the data is in two separate tables." },
 	{ "type": "dialogue", "char": "cafe_supervisor",  "name": "SUPERVISOR",
 	  "npc": "NPC_occupations/coffee_owner/talk",
 	  "text": "Can you JOIN the customers and orders tables so I can see each customer with their order in one view?" },
 	{ "type": "dialogue", "char": "you",              "name": "YOU",
 	  "npc": "NPC_occupations/coffee_owner/idle",
-	  "text": "Of course! The customers.id links to orders.customer_id — that linking column is called a Foreign Key. I will JOIN on that." },
+	  "text": "Of course! The customers.id links to orders.customer_id that linking column is called a Foreign Key. I will JOIN on that." },
 	{
 		"type": "sql_fill",
 		"gamemode": "join",
@@ -557,7 +557,7 @@ const LESSONS: Dictionary = {
 		],
 		"join_col_a": "id",
 		"join_col_b": "customer_id",
-		"hint": "Table A linking column: id | Table B linking column: customer_id",
+		"hint": "Table A linking column: id Table B linking column: customer_id",
 		"result_headers": ["name", "loyalty_level", "item", "price"],
 		"result_rows": [
 			["Maria",  "Gold",   "Latte",     "4.00"],
@@ -569,7 +569,7 @@ const LESSONS: Dictionary = {
 		"fail": [
 			{ "type": "dialogue", "char": "cafe_supervisor", "name": "SUPERVISOR", "npc": "NPC_occupations/coffee_owner/shock", "text": "The JOIN failed! Match the right columns between the two tables." },
 			{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/coffee_owner/idle", "text": "The supervisor points at both table headers." },
-			{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "NPC_occupations/coffee_owner/idle", "text": "I see — customers.id must equal orders.customer_id. Let me correct it." }
+			{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "NPC_occupations/coffee_owner/idle", "text": "I see customers.id must equal orders.customer_id. Let me correct it." }
 		]
 	},
 	{ "type": "dialogue", "char": "you",             "name": "YOU",
@@ -582,8 +582,8 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C13 — INT  |  NPC: coffee_owner
-#  Topic: Data Type INT — whole numbers
+#  LESSON C13 | INT  |  NPC: coffee_owner
+#  Topic: Data Type INT | whole numbers
 # ─────────────────────────────────────────────
 "C13": [
 	{ "type": "dialogue", "char": "scene",           "name": "SCENE",
@@ -591,10 +591,10 @@ const LESSONS: Dictionary = {
 	  "text": "The supervisor reviews the orders table and asks about the data types used for each column." },
 	{ "type": "dialogue", "char": "cafe_supervisor",  "name": "SUPERVISOR",
 	  "npc": "NPC_occupations/coffee_owner/talk",
-	  "text": "What type should the id column be? Each order needs a number like 1, 2, 3 — no decimals." },
+	  "text": "What type should the id column be? Each order needs a number like 1, 2, 3 no decimals." },
 	{ "type": "dialogue", "char": "you",              "name": "YOU",
 	  "npc": "NPC_occupations/coffee_owner/idle",
-	  "text": "That is INT — Integer. It stores whole numbers only. Perfect for IDs and counts." },
+	  "text": "That is INT Integer. It stores whole numbers only. Perfect for IDs and counts." },
 	{
 		"type": "sql_fill",
 		"gamemode": "data_type",
@@ -610,16 +610,16 @@ const LESSONS: Dictionary = {
 		"answer": "INT",
 		"type_hint": "Whole numbers (IDs, counts) use INT.",
 		"hint": "A whole number data type (no decimals) is: INT",
-		"result_msg": "Correct! INT stores whole numbers — 1, 2, 3. Order #5 will always be order #5, never order #5.5.",
+		"result_msg": "Correct! INT stores whole numbers 1, 2, 3. Order #5 will always be order #5, never order #5.5.",
 		"fail": [
-			{ "type": "dialogue", "char": "cafe_supervisor", "name": "SUPERVISOR", "npc": "NPC_occupations/coffee_owner/confuse", "text": "That is not right. The id column is a whole number — no letters, no decimals." },
+			{ "type": "dialogue", "char": "cafe_supervisor", "name": "SUPERVISOR", "npc": "NPC_occupations/coffee_owner/confuse", "text": "That is not right. The id column is a whole number no letters, no decimals." },
 			{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/coffee_owner/idle", "text": "The supervisor points at the id column." },
-			{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "NPC_occupations/coffee_owner/idle", "text": "Whole numbers use INT — Integer." }
+			{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "NPC_occupations/coffee_owner/idle", "text": "Whole numbers use INT Integer." }
 		]
 	},
 	{ "type": "dialogue", "char": "cafe_supervisor",  "name": "SUPERVISOR",
 	  "npc": "NPC_occupations/coffee_owner/talk",
-	  "text": "INT — integer — for whole numbers! Order 7 will never be order 7.3. That makes sense." },
+	  "text": "INT integer for whole numbers! Order 7 will never be order 7.3. That makes sense." },
 	{ "type": "dialogue", "char": "you",             "name": "YOU",
 	  "npc": "NPC_occupations/coffee_owner/idle",
 	  "text": "Exactly. INT is the right type whenever the value must be a complete whole number." },
@@ -627,8 +627,8 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C14 — TEXT  |  NPC: coffee_owner
-#  Topic: Data Type TEXT — strings / words
+#  LESSON C14 | TEXT  |  NPC: coffee_owner
+#  Topic: Data Type TEXT | strings / words
 # ─────────────────────────────────────────────
 "C14": [
 	{ "type": "dialogue", "char": "scene",           "name": "SCENE",
@@ -636,10 +636,10 @@ const LESSONS: Dictionary = {
 	  "text": "The supervisor looks at the customer and item columns and asks what type they should be." },
 	{ "type": "dialogue", "char": "cafe_supervisor",  "name": "SUPERVISOR",
 	  "npc": "NPC_occupations/coffee_owner/talk",
-	  "text": "The customer name and item name are words — 'Maria', 'Latte'. What data type stores letters?" },
+	  "text": "The customer name and item name are words 'Maria', 'Latte'. What data type stores letters?" },
 	{ "type": "dialogue", "char": "you",              "name": "YOU",
 	  "npc": "NPC_occupations/coffee_owner/idle",
-	  "text": "TEXT — it stores any sequence of letters, words, or characters. Names, descriptions, emails — all TEXT." },
+	  "text": "TEXT it stores any sequence of letters, words, or characters. Names, descriptions, emails all TEXT." },
 	{
 		"type": "sql_fill",
 		"gamemode": "data_type",
@@ -655,25 +655,25 @@ const LESSONS: Dictionary = {
 		"answer": "TEXT",
 		"type_hint": "Names and words use TEXT (also called STRING).",
 		"hint": "Letters and words use: TEXT  (also called STRING)",
-		"result_msg": "Correct! TEXT stores words and characters — 'Maria', 'Latte', 'no sugar please'. You can also type STRING and it means the same thing.",
+		"result_msg": "Correct! TEXT stores words and characters 'Maria', 'Latte', 'no sugar please'. You can also type STRING and it means the same thing.",
 		"fail": [
-			{ "type": "dialogue", "char": "cafe_supervisor", "name": "SUPERVISOR", "npc": "NPC_occupations/coffee_owner/confuse", "text": "Not right. customer stores a name — letters, not a number." },
+			{ "type": "dialogue", "char": "cafe_supervisor", "name": "SUPERVISOR", "npc": "NPC_occupations/coffee_owner/confuse", "text": "Not right. customer stores a name letters, not a number." },
 			{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/coffee_owner/idle", "text": "The supervisor thinks." },
-			{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "NPC_occupations/coffee_owner/idle", "text": "Letters and words use TEXT — also called STRING." }
+			{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "NPC_occupations/coffee_owner/idle", "text": "Letters and words use TEXT also called STRING." }
 		]
 	},
 	{ "type": "dialogue", "char": "cafe_supervisor",  "name": "SUPERVISOR",
 	  "npc": "NPC_occupations/coffee_owner/talk",
-	  "text": "TEXT for words! So customer names, item names, notes — all TEXT. INT for numbers only." },
+	  "text": "TEXT for words! So customer names, item names, notes all TEXT. INT for numbers only." },
 	{ "type": "dialogue", "char": "you",             "name": "YOU",
 	  "npc": "NPC_occupations/coffee_owner/idle",
-	  "text": "Right. And some databases also call it VARCHAR or STRING — all the same idea." },
+	  "text": "Right. And some databases also call it VARCHAR or STRING all the same idea." },
 	{ "type": "end" }
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C15 — REAL  |  NPC: coffee_owner
-#  Topic: Data Type REAL — decimal / float numbers
+#  LESSON C15 | REAL  |  NPC: coffee_owner
+#  Topic: Data Type REAL | decimal / float numbers
 # ─────────────────────────────────────────────
 "C15": [
 	{ "type": "dialogue", "char": "scene",           "name": "SCENE",
@@ -681,7 +681,7 @@ const LESSONS: Dictionary = {
 	  "text": "The supervisor looks at the price column and asks why it is different from the id column." },
 	{ "type": "dialogue", "char": "cafe_supervisor",  "name": "SUPERVISOR",
 	  "npc": "NPC_occupations/coffee_owner/talk",
-	  "text": "A latte costs 4.50, an iced tea 3.75. These are not whole numbers — so they cannot be INT, right?" },
+	  "text": "A latte costs 4.50, an iced tea 3.75. These are not whole numbers so they cannot be INT, right?" },
 	{ "type": "dialogue", "char": "you",              "name": "YOU",
 	  "npc": "NPC_occupations/coffee_owner/idle",
 	  "text": "Correct! For decimal numbers we use REAL. It stores values like 4.50 and 3.75 accurately." },
@@ -700,11 +700,11 @@ const LESSONS: Dictionary = {
 		"answer": "REAL",
 		"type_hint": "Decimal numbers (prices, measurements) use REAL (also called FLOAT).",
 		"hint": "Decimal numbers use: REAL  (also called FLOAT)",
-		"result_msg": "Correct! REAL stores decimal numbers — 4.50, 3.75, 9.99. You can also type FLOAT and it means the same thing.",
+		"result_msg": "Correct! REAL stores decimal numbers 4.50, 3.75, 9.99. You can also type FLOAT and it means the same thing.",
 		"fail": [
-			{ "type": "dialogue", "char": "cafe_supervisor", "name": "SUPERVISOR", "npc": "NPC_occupations/coffee_owner/shock", "text": "Not right! price stores decimals like 4.50 — not whole numbers, not text." },
+			{ "type": "dialogue", "char": "cafe_supervisor", "name": "SUPERVISOR", "npc": "NPC_occupations/coffee_owner/shock", "text": "Not right! price stores decimals like 4.50 not whole numbers, not text." },
 			{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/coffee_owner/idle", "text": "The supervisor points at the price list on the counter." },
-			{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "NPC_occupations/coffee_owner/idle", "text": "Decimal numbers use REAL — also called FLOAT." }
+			{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "NPC_occupations/coffee_owner/idle", "text": "Decimal numbers use REAL also called FLOAT." }
 		]
 	},
 	{ "type": "dialogue", "char": "cafe_supervisor",  "name": "SUPERVISOR",
@@ -717,11 +717,11 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C16 — SELECT DISTINCT  |  NPC: coffee_owner
+#  LESSON C16 | SELECT DISTINCT  |  NPC: coffee_owner
 # ─────────────────────────────────────────────
 "C16": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/coffee_owner/idle",
-	  "text": "The cafe owner wants to know exactly which menu items have been ordered — without listing duplicates." },
+	  "text": "The cafe owner wants to know exactly which menu items have been ordered without listing duplicates." },
 	{ "type": "dialogue", "char": "cafe_owner", "name": "OWNER", "npc": "NPC_occupations/coffee_owner/talk",
 	  "text": "Our orders table has 200 rows but I only want to see each unique item name once. No repeats." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/coffee_owner/idle",
@@ -749,7 +749,7 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C17 — AND/OR  |  NPC: coffee_owner
+#  LESSON C17 | AND/OR  |  NPC: coffee_owner
 # ─────────────────────────────────────────────
 "C17": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/coffee_owner/idle",
@@ -776,14 +776,14 @@ const LESSONS: Dictionary = {
 	  ]
 	},
 	{ "type": "dialogue", "char": "cafe_owner", "name": "OWNER", "npc": "NPC_occupations/coffee_owner/talk",
-	  "text": "3 high-value Latte orders. AND is strict — both conditions must hold." },
+	  "text": "3 high-value Latte orders. AND is strict both conditions must hold." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/coffee_owner/idle",
-	  "text": "OR would also include cheap Lattes and expensive non-Lattes — too broad for this report." },
+	  "text": "OR would also include cheap Lattes and expensive non-Lattes too broad for this report." },
 	{ "type": "end" }
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C18 — BETWEEN  |  NPC: coffee_owner
+#  LESSON C18 | BETWEEN  |  NPC: coffee_owner
 # ─────────────────────────────────────────────
 "C18": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/coffee_owner/idle",
@@ -817,7 +817,7 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C19 — LIKE  |  NPC: coffee_owner
+#  LESSON C19 | LIKE  |  NPC: coffee_owner
 # ─────────────────────────────────────────────
 "C19": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/coffee_owner/idle",
@@ -825,7 +825,7 @@ const LESSONS: Dictionary = {
 	{ "type": "dialogue", "char": "cafe_owner", "name": "OWNER", "npc": "NPC_occupations/coffee_owner/talk",
 	  "text": "Items like 'Iced Latte' and 'Vanilla Latte' also need to show up. The word Latte can be anywhere in the name." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/coffee_owner/idle",
-	  "text": "LIKE with '%Latte%' matches any item that contains Latte anywhere — at the start, end, or middle." },
+	  "text": "LIKE with '%Latte%' matches any item that contains Latte anywhere at the start, end, or middle." },
 	{ "type": "sql_fill", "gamemode": "where_like",
 	  "desc": "Find all items containing 'Latte' anywhere in the name. Fill in the LIKE pattern.",
 	  "table": "orders",
@@ -850,7 +850,7 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C20 — IN  |  NPC: coffee_owner
+#  LESSON C20 | IN  |  NPC: coffee_owner
 # ─────────────────────────────────────────────
 "C20": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/coffee_owner/idle",
@@ -884,13 +884,13 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C21 — LIMIT  |  NPC: coffee_owner
+#  LESSON C21 | LIMIT  |  NPC: coffee_owner
 # ─────────────────────────────────────────────
 "C21": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/coffee_owner/idle",
 	  "text": "Morning rush is over. The owner quickly wants to check the first few orders of the day." },
 	{ "type": "dialogue", "char": "cafe_owner", "name": "OWNER", "npc": "NPC_occupations/coffee_owner/talk",
-	  "text": "Just show me the first 5 orders. I do not need the whole list — just a quick look." },
+	  "text": "Just show me the first 5 orders. I do not need the whole list just a quick look." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/coffee_owner/idle",
 	  "text": "LIMIT caps how many rows are returned. It is perfect for quick previews of large tables." },
 	{ "type": "sql_fill", "gamemode": "limit",
@@ -899,7 +899,7 @@ const LESSONS: Dictionary = {
 	  "answer": "5",
 	  "table_headers": ["id","customer","item","price"],
 	  "table_rows": [["1","Ana","Latte","4.50"],["2","Ben","Espresso","3.00"],["3","Cara","Cappuccino","4.00"],["4","Dan","Tea","2.00"],["5","Eve","Latte","4.50"],["6","Fay","Juice","5.00"],["7","Gil","Espresso","3.00"]],
-	  "hint": "Show only 5 rows — type the number: 5",
+	  "hint": "Show only 5 rows type the number: 5",
 	  "result_headers": ["id","customer","item","price"],
 	  "result_rows": [["1","Ana","Latte","4.50"],["2","Ben","Espresso","3.00"],["3","Cara","Cappuccino","4.00"],["4","Dan","Tea","2.00"],["5","Eve","Latte","4.50"]],
 	  "result_msg": "5 orders returned. Orders 6 and 7 were skipped. LIMIT is great for dashboards.",
@@ -909,14 +909,14 @@ const LESSONS: Dictionary = {
 	  ]
 	},
 	{ "type": "dialogue", "char": "cafe_owner", "name": "OWNER", "npc": "NPC_occupations/coffee_owner/talk",
-	  "text": "5 orders — quick and clean. LIMIT keeps big queries manageable." },
+	  "text": "5 orders quick and clean. LIMIT keeps big queries manageable." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/coffee_owner/idle",
 	  "text": "Combine with ORDER BY to get the top N results: ORDER BY price DESC LIMIT 3 finds the 3 priciest orders." },
 	{ "type": "end" }
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C22 — COUNT  |  NPC: coffee_owner
+#  LESSON C22 | COUNT  |  NPC: coffee_owner
 # ─────────────────────────────────────────────
 "C22": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/coffee_owner/idle",
@@ -944,20 +944,20 @@ const LESSONS: Dictionary = {
 	{ "type": "dialogue", "char": "cafe_owner", "name": "OWNER", "npc": "NPC_occupations/coffee_owner/talk",
 	  "text": "5 orders! And SELECT SUM(price) would give me today's total revenue." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/coffee_owner/idle",
-	  "text": "Exactly. AVG(price) gives the average order value — useful for pricing decisions." },
+	  "text": "Exactly. AVG(price) gives the average order value useful for pricing decisions." },
 	{ "type": "end" }
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C23 — HAVING  |  NPC: coffee_owner
+#  LESSON C23 | HAVING  |  NPC: coffee_owner
 # ─────────────────────────────────────────────
 "C23": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/coffee_owner/idle",
-	  "text": "The owner wants to spotlight popular items — those ordered more than once today." },
+	  "text": "The owner wants to spotlight popular items those ordered more than once today." },
 	{ "type": "dialogue", "char": "cafe_owner", "name": "OWNER", "npc": "NPC_occupations/coffee_owner/talk",
 	  "text": "I grouped by item already. But how do I filter out items that only appeared once? WHERE does not work after GROUP BY." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/coffee_owner/idle",
-	  "text": "Use HAVING — it filters groups after GROUP BY. WHERE filters rows before grouping." },
+	  "text": "Use HAVING it filters groups after GROUP BY. WHERE filters rows before grouping." },
 	{ "type": "sql_fill", "gamemode": "having",
 	  "desc": "Show only items ordered more than once. Fill in the aggregate function in HAVING.",
 	  "table": "orders",
@@ -982,7 +982,7 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C24 — AS (Aliases)  |  NPC: coffee_owner
+#  LESSON C24 | AS (Aliases)  |  NPC: coffee_owner
 # ─────────────────────────────────────────────
 "C24": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/coffee_owner/idle",
@@ -1001,7 +1001,7 @@ const LESSONS: Dictionary = {
 	  "hint": "The alias for the discounted price column: discounted_price",
 	  "result_headers": ["discounted_price"],
 	  "result_rows": [["4.05"],["2.70"],["3.60"]],
-	  "result_msg": "Column now shows as 'discounted_price'. AS only changes the display name — the table is unchanged.",
+	  "result_msg": "Column now shows as 'discounted_price'. AS only changes the display name the table is unchanged.",
 	  "fail": [
 		{ "type": "dialogue", "char": "cafe_owner", "name": "OWNER", "npc": "NPC_occupations/coffee_owner/shock", "text": "Wrong alias. The alias should be: discounted_price" },
 		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/coffee_owner/idle", "text": "Type the alias: discounted_price" }
@@ -1010,12 +1010,12 @@ const LESSONS: Dictionary = {
 	{ "type": "dialogue", "char": "cafe_owner", "name": "OWNER", "npc": "NPC_occupations/coffee_owner/talk",
 	  "text": "Much cleaner! AS makes reports readable without touching the actual table data." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/coffee_owner/idle",
-	  "text": "AS also works on table names: FROM orders AS o — very useful in JOIN queries." },
+	  "text": "AS also works on table names: FROM orders AS o very useful in JOIN queries." },
 	{ "type": "end" }
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C25 — NOT NULL + UNIQUE  |  NPC: adult_14 customer
+#  LESSON C25 | NOT NULL + UNIQUE  |  NPC: adult_14 customer
 # ─────────────────────────────────────────────
 "C25": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "adult_14/idle",
@@ -1023,7 +1023,7 @@ const LESSONS: Dictionary = {
 	{ "type": "dialogue", "char": "customer", "name": "CUSTOMER", "npc": "adult_14/talk",
 	  "text": "My friend tried to sign up twice with the same email. And another forgot to put their name. Are there rules that block that?" },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_14/idle",
-	  "text": "Yes — column constraints! NOT NULL prevents missing values. UNIQUE prevents duplicates." },
+	  "text": "Yes column constraints! NOT NULL prevents missing values. UNIQUE prevents duplicates." },
 	{ "type": "sql_fill", "gamemode": "create_table",
 	  "desc": "The notes column in orders must always have a value. Add the NOT NULL constraint.",
 	  "table": "orders",
@@ -1059,14 +1059,14 @@ const LESSONS: Dictionary = {
 	  ]
 	},
 	{ "type": "dialogue", "char": "customer", "name": "CUSTOMER", "npc": "adult_14/talk",
-	  "text": "NOT NULL and UNIQUE — two constraints that keep the loyalty database clean and reliable!" },
+	  "text": "NOT NULL and UNIQUE two constraints that keep the loyalty database clean and reliable!" },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_14/idle",
-	  "text": "Combine them: email TEXT NOT NULL UNIQUE — must be present AND must be different for every customer." },
+	  "text": "Combine them: email TEXT NOT NULL UNIQUE must be present AND must be different for every customer." },
 	{ "type": "end" }
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C26 — ALTER TABLE  |  NPC: coffee_owner
+#  LESSON C26 | ALTER TABLE  |  NPC: coffee_owner
 # ─────────────────────────────────────────────
 "C26": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/coffee_owner/idle",
@@ -1082,7 +1082,7 @@ const LESSONS: Dictionary = {
 	  "col_type": "REAL",
 	  "answer": "ADD",
 	  "hint": "The keyword to add a column: ADD",
-	  "result_msg": "discount column added! Existing orders are safe — ALTER TABLE is non-destructive.",
+	  "result_msg": "discount column added! Existing orders are safe ALTER TABLE is non-destructive.",
 	  "fail": [
 		{ "type": "dialogue", "char": "cafe_owner", "name": "OWNER", "npc": "NPC_occupations/coffee_owner/shock", "text": "Wrong keyword. To add a column: ALTER TABLE name ADD column type" },
 		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/coffee_owner/idle", "text": "The keyword is ADD." }
@@ -1096,7 +1096,7 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C27 — DROP TABLE  |  NPC: coffee_owner
+#  LESSON C27 | DROP TABLE  |  NPC: coffee_owner
 # ─────────────────────────────────────────────
 "C27": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/coffee_owner/idle",
@@ -1104,7 +1104,7 @@ const LESSONS: Dictionary = {
 	{ "type": "dialogue", "char": "cafe_owner", "name": "OWNER", "npc": "NPC_occupations/coffee_owner/talk",
 	  "text": "The seasonal_menu table was only for summer. Can we remove it completely? It is taking up space." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/coffee_owner/idle",
-	  "text": "DROP TABLE permanently removes a table — all its rows and structure. This cannot be undone." },
+	  "text": "DROP TABLE permanently removes a table all its rows and structure. This cannot be undone." },
 	{ "type": "sql_fill", "gamemode": "drop_table",
 	  "desc": "Remove the seasonal_menu table permanently. Fill in the keyword after DROP.",
 	  "table": "seasonal_menu",
@@ -1117,20 +1117,20 @@ const LESSONS: Dictionary = {
 	  ]
 	},
 	{ "type": "dialogue", "char": "cafe_owner", "name": "OWNER", "npc": "NPC_occupations/coffee_owner/talk",
-	  "text": "Table gone! DROP TABLE is the most destructive command — use it only when you are absolutely sure." },
+	  "text": "Table gone! DROP TABLE is the most destructive command use it only when you are absolutely sure." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/coffee_owner/idle",
 	  "text": "Use DROP TABLE IF EXISTS seasonal_menu to avoid errors if the table was already removed." },
 	{ "type": "end" }
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C28 — LEFT JOIN  |  NPC: coffee_owner
+#  LESSON C28 | LEFT JOIN  |  NPC: coffee_owner
 # ─────────────────────────────────────────────
 "C28": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/coffee_owner/idle",
-	  "text": "The owner wants to see all registered customers — including those who have not ordered yet." },
+	  "text": "The owner wants to see all registered customers including those who have not ordered yet." },
 	{ "type": "dialogue", "char": "cafe_owner", "name": "OWNER", "npc": "NPC_occupations/coffee_owner/talk",
-	  "text": "A regular JOIN only shows customers with orders. I need ALL customers — new ones with no orders should appear too." },
+	  "text": "A regular JOIN only shows customers with orders. I need ALL customers new ones with no orders should appear too." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/coffee_owner/idle",
 	  "text": "LEFT JOIN returns all rows from the left table and matching rows from the right. No match means NULL." },
 	{ "type": "sql_fill", "gamemode": "join",
@@ -1142,13 +1142,13 @@ const LESSONS: Dictionary = {
 	  "table_b_headers": ["id","customer_id","item"],
 	  "table_b_rows": [["1","1","Latte"],["2","3","Espresso"]],
 	  "join_col_a": "id", "join_col_b": "customer_id",
-	  "hint": "customers linking column: id | orders linking column: customer_id",
+	  "hint": "customers linking column: id orders linking column: customer_id",
 	  "result_headers": ["name","email","item"],
 	  "result_rows": [["Ana","ana@mail.com","Latte"],["Ben","ben@mail.com","NULL"],["Cara","cara@mail.com","Espresso"],["Dan","dan@mail.com","NULL"]],
-	  "result_msg": "All 4 customers shown. Ben and Dan have no orders — their item shows NULL. INNER JOIN would hide them.",
+	  "result_msg": "All 4 customers shown. Ben and Dan have no orders their item shows NULL. INNER JOIN would hide them.",
 	  "fail": [
 		{ "type": "dialogue", "char": "cafe_owner", "name": "OWNER", "npc": "NPC_occupations/coffee_owner/shock", "text": "Wrong linking columns! customers.id connects to orders.customer_id." },
-		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/coffee_owner/idle", "text": "Left: id | Right: customer_id" }
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/coffee_owner/idle", "text": "Left: id Right: customer_id" }
 	  ]
 	},
 	{ "type": "dialogue", "char": "cafe_owner", "name": "OWNER", "npc": "NPC_occupations/coffee_owner/talk",
@@ -1159,7 +1159,7 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C29 — DEFAULT  |  NPC: adult_14 customer
+#  LESSON C29 | DEFAULT  |  NPC: adult_14 customer
 # ─────────────────────────────────────────────
 "C29": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "adult_14/idle",
@@ -1179,19 +1179,19 @@ const LESSONS: Dictionary = {
 	  "result_msg": "DEFAULT 'Preparing' set! New orders will automatically have status = 'Preparing'.",
 	  "hint": "Auto-fill status: DEFAULT 'Preparing'",
 	  "fail": [
-		{ "type": "dialogue", "char": "customer", "name": "CUSTOMER", "npc": "adult_14/confuse", "text": "That is not right. DEFAULT sets the automatic value — like DEFAULT 'Preparing'." },
+		{ "type": "dialogue", "char": "customer", "name": "CUSTOMER", "npc": "adult_14/confuse", "text": "That is not right. DEFAULT sets the automatic value like DEFAULT 'Preparing'." },
 		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_14/idle", "text": "Type: DEFAULT 'Preparing'" }
 	  ]
 	},
 	{ "type": "dialogue", "char": "customer", "name": "CUSTOMER", "npc": "adult_14/talk",
-	  "text": "So DEFAULT is the fallback — only used when the INSERT skips that column?" },
+	  "text": "So DEFAULT is the fallback only used when the INSERT skips that column?" },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_14/idle",
 	  "text": "Exactly. Once served, staff updates it to 'Ready'. DEFAULT just sets the starting value." },
 	{ "type": "end" }
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C30 — Normalization  |  NPC: adult_14 customer
+#  LESSON C30 | Normalization  |  NPC: adult_14 customer
 # ─────────────────────────────────────────────
 "C30": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "adult_14/idle",
@@ -1199,19 +1199,19 @@ const LESSONS: Dictionary = {
 	{ "type": "dialogue", "char": "customer", "name": "CUSTOMER", "npc": "adult_14/talk",
 	  "text": "The old system stored the customer's full address in every single order row. If someone moves, you need to update hundreds of rows!" },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_14/idle",
-	  "text": "That is called data redundancy — the main problem normalization solves. Let me ask you about it." },
+	  "text": "That is called data redundancy the main problem normalization solves. Let me ask you about it." },
 	{ "type": "sql_choice",
 	  "desc": "An orders table stores customer_name, customer_address, and item in EVERY order row. What is the main problem?",
 	  "options": [
-		[1, "Data redundancy — customer address repeats in every order, causing update anomalies and wasted storage."],
+		[1, "Data redundancy customer address repeats in every order, causing update anomalies and wasted storage."],
 		[2, "The table needs more columns to store more data about each order."],
 		[3, "The SELECT query needs a LIMIT clause to avoid returning too many rows."]
 	  ],
 	  "correct_id": 1,
 	  "hint": "Repeating data in multiple rows is called redundancy. Answer: id = 1",
 	  "fail": [
-		{ "type": "dialogue", "char": "customer", "name": "CUSTOMER", "npc": "adult_14/confuse", "text": "Not quite. The problem is repeating the same data over and over — redundancy." },
-		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_14/idle", "text": "Answer 1 — data redundancy is the issue." }
+		{ "type": "dialogue", "char": "customer", "name": "CUSTOMER", "npc": "adult_14/confuse", "text": "Not quite. The problem is repeating the same data over and over redundancy." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_14/idle", "text": "Answer 1 data redundancy is the issue." }
 	  ]
 	},
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_14/idle",
@@ -1219,12 +1219,12 @@ const LESSONS: Dictionary = {
 	{ "type": "dialogue", "char": "customer", "name": "CUSTOMER", "npc": "adult_14/talk",
 	  "text": "One update to the customers table fixes the address for ALL their orders at once. So much better!" },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "adult_14/idle",
-	  "text": "That is 3NF — third normal form. Each piece of data lives in exactly one place." },
+	  "text": "That is 3NF third normal form. Each piece of data lives in exactly one place." },
 	{ "type": "end" }
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C31 — Transactions  |  NPC: coffee_owner
+#  LESSON C31 | Transactions  |  NPC: coffee_owner
 # ─────────────────────────────────────────────
 "C31": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/coffee_owner/idle",
@@ -1247,12 +1247,12 @@ const LESSONS: Dictionary = {
 	{ "type": "dialogue", "char": "cafe_owner", "name": "OWNER", "npc": "NPC_occupations/coffee_owner/talk",
 	  "text": "Both changes saved! If the system crashed before COMMIT, ROLLBACK would undo everything automatically." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/coffee_owner/idle",
-	  "text": "That is atomicity — the A in ACID. Transactions are all-or-nothing." },
+	  "text": "That is atomicity the A in ACID. Transactions are all-or-nothing." },
 	{ "type": "end" }
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C32 — FOREIGN KEY  |  NPC: coffee_owner
+#  LESSON C32 | FOREIGN KEY  |  NPC: coffee_owner
 # ─────────────────────────────────────────────
 "C32": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/coffee_owner/idle",
@@ -1262,7 +1262,7 @@ const LESSONS: Dictionary = {
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/coffee_owner/idle",
 	  "text": "So if a customer is deleted, any orders linked to them would be blocked unless we handle that too?" },
 	{ "type": "dialogue", "char": "owner", "name": "OWNER", "npc": "NPC_occupations/coffee_owner/talk",
-	  "text": "Correct — referential integrity at work. The keyword that points to the other table is REFERENCES." },
+	  "text": "Correct referential integrity at work. The keyword that points to the other table is REFERENCES." },
 	{ "type": "sql_fill", "gamemode": "foreign_key",
 	  "desc": "Complete the FOREIGN KEY constraint to link orders.customer_id to the customers table.",
 	  "table": "orders", "fk_col": "customer_id", "ref_table": "customers",
@@ -1278,17 +1278,17 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C33 — Indexes  |  NPC: coffee_owner
+#  LESSON C33 | Indexes  |  NPC: coffee_owner
 # ─────────────────────────────────────────────
 "C33": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/coffee_owner/idle",
 	  "text": "The menu table has grown large and searches by item name are slowing down during the morning rush." },
 	{ "type": "dialogue", "char": "owner", "name": "OWNER", "npc": "NPC_occupations/coffee_owner/talk",
-	  "text": "An INDEX speeds up queries by building a lookup structure — like tabs in a recipe binder. No change to the data, just faster searching." },
+	  "text": "An INDEX speeds up queries by building a lookup structure like tabs in a recipe binder. No change to the data, just faster searching." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/coffee_owner/idle",
 	  "text": "Can I add an index to any column?" },
 	{ "type": "dialogue", "char": "owner", "name": "OWNER", "npc": "NPC_occupations/coffee_owner/talk",
-	  "text": "Yes — focus on columns you search or filter often. Create an index on item_name now." },
+	  "text": "Yes focus on columns you search or filter often. Create an index on item_name now." },
 	{ "type": "sql_fill", "gamemode": "create_index",
 	  "desc": "Create an index on the menu table to speed up searches by item_name.",
 	  "index_name": "idx_item_name", "table": "menu", "column": "item_name",
@@ -1304,17 +1304,17 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C34 — Views  |  NPC: coffee_owner
+#  LESSON C34 | Views  |  NPC: coffee_owner
 # ─────────────────────────────────────────────
 "C34": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/coffee_owner/idle",
 	  "text": "Every shift the staff prints a list of today's pending orders. They run the same SELECT query each time." },
 	{ "type": "dialogue", "char": "owner", "name": "OWNER", "npc": "NPC_occupations/coffee_owner/talk",
-	  "text": "A VIEW saves that query under a name. Staff can just SELECT from the view — it always returns the freshest data." },
+	  "text": "A VIEW saves that query under a name. Staff can just SELECT from the view it always returns the freshest data." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/coffee_owner/idle",
 	  "text": "So a view is like a named window into the current data?" },
 	{ "type": "dialogue", "char": "owner", "name": "OWNER", "npc": "NPC_occupations/coffee_owner/talk",
-	  "text": "Exactly. CREATE VIEW name AS SELECT ... — create the pending orders view now." },
+	  "text": "Exactly. CREATE VIEW name AS SELECT ... create the pending orders view now." },
 	{ "type": "sql_fill", "gamemode": "create_view",
 	  "desc": "Create a view called vw_pending_orders that shows all orders with status 'Pending'.",
 	  "view_name": "vw_pending_orders", "select_cols": "*", "table": "orders", "condition": "status = 'Pending'",
@@ -1331,10 +1331,10 @@ const LESSONS: Dictionary = {
 
 
 # ─────────────────────────────────────────────
-#  LESSON C35 — SUBQUERY  |  NPC: coffee_owner
+#  LESSON C35 | SUBQUERY  |  NPC: coffee_owner
 # ─────────────────────────────────────────────
 # ─────────────────────────────────────────────
-#  LESSON C36 — CASE WHEN  |  NPC: coffee_owner
+#  LESSON C36 | CASE WHEN  |  NPC: coffee_owner
 # ─────────────────────────────────────────────
 "C36": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE",
@@ -1345,16 +1345,16 @@ const LESSONS: Dictionary = {
 	  "text": "Orders above 150 are Large, 80 to 150 are Medium, below 80 are Small. Can we add a size label in the SELECT without a new column?" },
 	{ "type": "dialogue", "char": "you", "name": "YOU",
 	  "npc": "NPC_occupations/coffee_owner/idle",
-	  "text": "Yes — CASE WHEN creates a derived column on the fly. It checks each row's price and returns the matching label." },
+	  "text": "Yes CASE WHEN creates a derived column on the fly. It checks each row's price and returns the matching label." },
 	{ "type": "dialogue", "char": "owner", "name": "OWNER",
 	  "npc": "NPC_occupations/coffee_owner/think",
-	  "text": "CASE WHEN price > 150 THEN 'Large' — like that? And ELSE catches everything else?" },
+	  "text": "CASE WHEN price > 150 THEN 'Large' like that? And ELSE catches everything else?" },
 	{ "type": "dialogue", "char": "you", "name": "YOU",
 	  "npc": "NPC_occupations/coffee_owner/idle",
-	  "text": "Exactly. CASE WHEN ... THEN ... WHEN ... THEN ... ELSE ... END AS size_label — evaluated row by row." },
+	  "text": "Exactly. CASE WHEN ... THEN ... WHEN ... THEN ... ELSE ... END AS size_label evaluated row by row." },
 	{ "type": "sql_fill", "gamemode": "select_alias",
 	  "desc": "The CASE WHEN expression labels each order by size. Type the alias that names this derived column.",
-	  "hint": "Type 'size_label' — the alias after AS that names the computed column.",
+	  "hint": "Type 'size_label' the alias after AS that names the computed column.",
 	  "table": "orders",
 	  "col_expr": "CASE WHEN price > 150 THEN 'Large' WHEN price >= 80 THEN 'Medium' ELSE 'Small' END",
 	  "answer": "size_label",
@@ -1362,18 +1362,18 @@ const LESSONS: Dictionary = {
 	  "table_rows": [["Latte","160"],["Cappuccino","90"],["Espresso","60"]],
 	  "result_headers": ["item", "size_label"],
 	  "result_rows": [["Latte","Large"],["Cappuccino","Medium"],["Espresso","Small"]],
-	  "result_msg": "Each order gets its size label — CASE WHEN runs once per row without changing the orders table." },
+	  "result_msg": "Each order gets its size label CASE WHEN runs once per row without changing the orders table." },
 	{ "type": "dialogue", "char": "owner", "name": "OWNER",
 	  "npc": "NPC_occupations/coffee_owner/talk",
 	  "text": "So each order row gets evaluated independently and gets its own label. No changes to the table needed." },
 	{ "type": "dialogue", "char": "you", "name": "YOU",
 	  "npc": "NPC_occupations/coffee_owner/idle",
-	  "text": "CASE WHEN also works inside ORDER BY and UPDATE SET — anywhere SQL expects a value expression." },
+	  "text": "CASE WHEN also works inside ORDER BY and UPDATE SET anywhere SQL expects a value expression." },
 	{ "type": "end" }
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C37 — DATE FUNCTIONS  |  NPC: coffee_owner
+#  LESSON C37 | DATE FUNCTIONS  |  NPC: coffee_owner
 # ─────────────────────────────────────────────
 "C37": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE",
@@ -1403,7 +1403,7 @@ const LESSONS: Dictionary = {
 	  "result_msg": "BETWEEN filters to the date range. Use DATE('now') as the upper bound: WHERE order_date BETWEEN '2025-01-01' AND DATE('now') finds all past orders." },
 	{ "type": "dialogue", "char": "owner", "name": "OWNER",
 	  "npc": "NPC_occupations/coffee_owner/talk",
-	  "text": "MySQL calls it CURDATE(), PostgreSQL uses CURRENT_DATE — same idea, just different syntax per database engine." },
+	  "text": "MySQL calls it CURDATE(), PostgreSQL uses CURRENT_DATE same idea, just different syntax per database engine." },
 	{ "type": "dialogue", "char": "you", "name": "YOU",
 	  "npc": "NPC_occupations/coffee_owner/idle",
 	  "text": "strftime('%m', order_date) extracts just the month number if you want to group orders by month of the year." },
@@ -1416,16 +1416,16 @@ const LESSONS: Dictionary = {
 	  "text": "End of the week. The owner pulls you aside with a specific question about the menu data." },
 	{ "type": "dialogue", "char": "owner", "name": "OWNER",
 	  "npc": "NPC_occupations/coffee_owner/talk",
-	  "text": "I want to find the customer who placed the order with the single most expensive item. Not just sort by price — I want the exact match." },
+	  "text": "I want to find the customer who placed the order with the single most expensive item. Not just sort by price I want the exact match." },
 	{ "type": "dialogue", "char": "you", "name": "YOU",
 	  "npc": "NPC_occupations/coffee_owner/idle",
-	  "text": "That needs a subquery — a SELECT inside another SELECT. The inner query finds the MAX price, then the outer query finds the order that matches it." },
+	  "text": "That needs a subquery a SELECT inside another SELECT. The inner query finds the MAX price, then the outer query finds the order that matches it." },
 	{ "type": "dialogue", "char": "owner", "name": "OWNER",
 	  "npc": "NPC_occupations/coffee_owner/think",
 	  "text": "So the inner part runs first and feeds its result into the outer WHERE condition?" },
 	{ "type": "dialogue", "char": "you", "name": "YOU",
 	  "npc": "NPC_occupations/coffee_owner/idle",
-	  "text": "Exactly. WHERE price = (SELECT MAX(price) FROM orders) — the database evaluates the inner SELECT first." },
+	  "text": "Exactly. WHERE price = (SELECT MAX(price) FROM orders) the database evaluates the inner SELECT first." },
 	{ "type": "sql_fill", "gamemode": "aggregate",
 	  "desc": "This inner query finds the highest order price. Fill in the aggregate function.",
 	  "hint": "MAX() returns the largest value. The outer query uses this result: WHERE price = (SELECT MAX(price) FROM orders).",
@@ -1439,12 +1439,12 @@ const LESSONS: Dictionary = {
 	  "text": "So the inner SELECT MAX(price) runs first, returns the value, then the outer WHERE filters by it. Powerful!" },
 	{ "type": "dialogue", "char": "you", "name": "YOU",
 	  "npc": "NPC_occupations/coffee_owner/idle",
-	  "text": "Subqueries can also appear in SELECT columns or FROM clauses. They are queries inside queries — any depth you need." },
+	  "text": "Subqueries can also appear in SELECT columns or FROM clauses. They are queries inside queries any depth you need." },
 	{ "type": "end" }
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C38 — GRANT / REVOKE (DCL)  |  NPC: coffee_owner
+#  LESSON C38 | GRANT / REVOKE (DCL)  |  NPC: coffee_owner
 # ─────────────────────────────────────────────
 "C38": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE",
@@ -1455,13 +1455,13 @@ const LESSONS: Dictionary = {
 	  "text": "The barista should read the orders table only. How do I control who can do what in the database?" },
 	{ "type": "dialogue", "char": "you", "name": "YOU",
 	  "npc": "NPC_occupations/coffee_owner/idle",
-	  "text": "That is DCL — Data Control Language. GRANT gives a user a permission; REVOKE removes it. We grant read-only SELECT." },
+	  "text": "That is DCL Data Control Language. GRANT gives a user a permission; REVOKE removes it. We grant read-only SELECT." },
 	{ "type": "dialogue", "char": "owner", "name": "OWNER",
 	  "npc": "NPC_occupations/coffee_owner/think",
 	  "text": "So GRANT SELECT lets them look, and REVOKE pulls it back if needed?" },
 	{ "type": "dialogue", "char": "you", "name": "YOU",
 	  "npc": "NPC_occupations/coffee_owner/idle",
-	  "text": "Exactly. Permissions are the database's security layer — each user gets only what their role requires." },
+	  "text": "Exactly. Permissions are the database's security layer each user gets only what their role requires." },
 	{ "type": "sql_fill", "gamemode": "sql_blank", "recap": "GRANT / REVOKE",
 	  "desc": "Give the barista permission to read the orders table. Fill in the DCL keyword that grants access.",
 	  "hint": "GRANT gives a privilege. REVOKE removes it. We are giving access here.",
@@ -1471,7 +1471,7 @@ const LESSONS: Dictionary = {
 	  "result_msg": "Permission granted. The barista can now read orders. To remove it later: REVOKE SELECT ON orders FROM barista;" },
 	{ "type": "dialogue", "char": "owner", "name": "OWNER",
 	  "npc": "NPC_occupations/coffee_owner/think",
-	  "text": "The barista just resigned. Now take that permission back — what is the opposite of GRANT?" },
+	  "text": "The barista just resigned. Now take that permission back what is the opposite of GRANT?" },
 	{ "type": "sql_fill", "gamemode": "sql_blank", "recap": "GRANT / REVOKE",
 	  "desc": "The barista left. Remove their read access to the orders table. Fill in the DCL keyword.",
 	  "hint": "GRANT gives a permission; the keyword that takes it away is REVOKE.",
@@ -1486,7 +1486,7 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C39 — UNION  |  NPC: coffee_owner
+#  LESSON C39 | UNION  |  NPC: coffee_owner
 # ─────────────────────────────────────────────
 "C39": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE",
@@ -1497,7 +1497,7 @@ const LESSONS: Dictionary = {
 	  "text": "Customer cities are in one table, supplier cities in another. Can I get one combined list of all cities at once?" },
 	{ "type": "dialogue", "char": "you", "name": "YOU",
 	  "npc": "NPC_occupations/coffee_owner/idle",
-	  "text": "Yes — UNION stacks the results of two SELECTs into a single list and removes duplicate cities automatically." },
+	  "text": "Yes UNION stacks the results of two SELECTs into a single list and removes duplicate cities automatically." },
 	{ "type": "dialogue", "char": "owner", "name": "OWNER",
 	  "npc": "NPC_occupations/coffee_owner/think",
 	  "text": "And if I wanted to keep duplicates?" },
@@ -1530,7 +1530,7 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C40 — CHECK constraint  |  NPC: coffee_owner
+#  LESSON C40 | CHECK constraint  |  NPC: coffee_owner
 # ─────────────────────────────────────────────
 "C40": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE",
@@ -1538,16 +1538,16 @@ const LESSONS: Dictionary = {
 	  "text": "A typo once saved a drink price of -50. The owner wants the database to reject impossible prices on its own." },
 	{ "type": "dialogue", "char": "owner", "name": "OWNER",
 	  "npc": "NPC_occupations/coffee_owner/talk",
-	  "text": "Can the menu table refuse any price below zero — without us checking it manually every time?" },
+	  "text": "Can the menu table refuse any price below zero without us checking it manually every time?" },
 	{ "type": "dialogue", "char": "you", "name": "YOU",
 	  "npc": "NPC_occupations/coffee_owner/idle",
-	  "text": "Yes — a CHECK constraint. It attaches a rule to a column, and the database rejects any row that breaks it." },
+	  "text": "Yes a CHECK constraint. It attaches a rule to a column, and the database rejects any row that breaks it." },
 	{ "type": "dialogue", "char": "owner", "name": "OWNER",
 	  "npc": "NPC_occupations/coffee_owner/think",
 	  "text": "So CHECK (price >= 0) means an INSERT with -50 just fails?" },
 	{ "type": "dialogue", "char": "you", "name": "YOU",
 	  "npc": "NPC_occupations/coffee_owner/idle",
-	  "text": "Exactly. NOT NULL, UNIQUE, DEFAULT, and CHECK are all constraints — built-in guards that protect data quality." },
+	  "text": "Exactly. NOT NULL, UNIQUE, DEFAULT, and CHECK are all constraints built-in guards that protect data quality." },
 	{ "type": "sql_fill", "gamemode": "sql_blank", "recap": "CHECK",
 	  "desc": "Add a rule so the price column only accepts values of 0 or more. Fill in the constraint keyword.",
 	  "hint": "The constraint that validates a value against a condition is CHECK.",
@@ -1562,7 +1562,7 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C41 — ER Diagram (theory)  |  NPC: coffee_owner
+#  LESSON C41 | ER Diagram (theory)  |  NPC: coffee_owner
 # ─────────────────────────────────────────────
 "C41": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE",
@@ -1570,16 +1570,16 @@ const LESSONS: Dictionary = {
 	  "text": "Before building tables, the owner sketches the café's data on paper and asks you to read the diagram." },
 	{ "type": "dialogue", "char": "owner", "name": "OWNER",
 	  "npc": "NPC_occupations/coffee_owner/talk",
-	  "text": "This is an ER Diagram — Entity-Relationship model. Boxes are entities, ovals are attributes, lines are relationships. What does it tell us?" },
+	  "text": "This is an ER Diagram Entity-Relationship model. Boxes are entities, ovals are attributes, lines are relationships. What does it tell us?" },
 	{ "type": "dialogue", "char": "you", "name": "YOU",
 	  "npc": "NPC_occupations/coffee_owner/idle",
-	  "text": "Each box becomes a table, each oval a column, and the line between CUSTOMER and ORDER shows how they connect — its cardinality." },
+	  "text": "Each box becomes a table, each oval a column, and the line between CUSTOMER and ORDER shows how they connect its cardinality." },
 	{ "type": "sql_choice",
 	  "desc": "One CUSTOMER can place many ORDERs, but each ORDER belongs to exactly one CUSTOMER. What cardinality does this relationship have?",
 	  "options": [
-		[1, "One-to-Many (1:M) — one customer, many orders; implemented with a customer_id foreign key in orders."],
-		[2, "Many-to-Many (M:N) — needs a junction table between customer and order."],
-		[3, "One-to-One (1:1) — each customer can place only a single order ever."]
+		[1, "One-to-Many (1:M) one customer, many orders; implemented with a customer_id foreign key in orders."],
+		[2, "Many-to-Many (M:N) needs a junction table between customer and order."],
+		[3, "One-to-One (1:1) each customer can place only a single order ever."]
 	  ],
 	  "correct_id": 1,
 	  "hint": "One on one side, many on the other = 1:M. Answer: id = 1",
@@ -1591,15 +1591,15 @@ const LESSONS: Dictionary = {
 	  ] },
 	{ "type": "dialogue", "char": "you", "name": "YOU",
 	  "npc": "NPC_occupations/coffee_owner/idle",
-	  "text": "A 1:M relationship is built with a FOREIGN KEY on the 'many' side — orders.customer_id points to customers.id." },
+	  "text": "A 1:M relationship is built with a FOREIGN KEY on the 'many' side orders.customer_id points to customers.id." },
 	{ "type": "dialogue", "char": "owner", "name": "OWNER",
 	  "npc": "NPC_occupations/coffee_owner/talk",
-	  "text": "So the ER Diagram is the blueprint — design relationships on paper first, then turn entities into tables and lines into foreign keys." },
+	  "text": "So the ER Diagram is the blueprint design relationships on paper first, then turn entities into tables and lines into foreign keys." },
 	{ "type": "end" }
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C42 — TRUNCATE  |  NPC: coffee_owner
+#  LESSON C42 | TRUNCATE  |  NPC: coffee_owner
 # ─────────────────────────────────────────────
 "C42": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE",
@@ -1623,7 +1623,7 @@ const LESSONS: Dictionary = {
 	  "prefix": "", "answer": "TRUNCATE", "placeholder": "keyword", "max_length": 10,
 	  "suffix": "TABLE order_logs;",
 	  "err_hint": "To empty a whole table fast, the keyword is TRUNCATE.",
-	  "result_msg": "All rows removed. The empty order_logs table is ready for new data — its columns and structure stayed intact." },
+	  "result_msg": "All rows removed. The empty order_logs table is ready for new data its columns and structure stayed intact." },
 	{ "type": "dialogue", "char": "owner", "name": "OWNER",
 	  "npc": "NPC_occupations/coffee_owner/talk",
 	  "text": "DELETE for some rows, TRUNCATE to empty it, DROP to destroy it. Now I will never mix them up." },
@@ -1631,7 +1631,7 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C43 — String Functions  |  NPC: coffee_owner
+#  LESSON C43 | String Functions  |  NPC: coffee_owner
 # ─────────────────────────────────────────────
 "C43": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE",
@@ -1642,13 +1642,13 @@ const LESSONS: Dictionary = {
 	  "text": "Some items are 'latte', some 'LATTE', some 'Latte'. Can SQL force them all to uppercase in the result?" },
 	{ "type": "dialogue", "char": "you", "name": "YOU",
 	  "npc": "NPC_occupations/coffee_owner/idle",
-	  "text": "Yes — string functions. UPPER() capitalizes text, LOWER() makes it lowercase, LENGTH() counts characters, SUBSTR() extracts part of it." },
+	  "text": "Yes string functions. UPPER() capitalizes text, LOWER() makes it lowercase, LENGTH() counts characters, SUBSTR() extracts part of it." },
 	{ "type": "dialogue", "char": "owner", "name": "OWNER",
 	  "npc": "NPC_occupations/coffee_owner/think",
 	  "text": "So UPPER(item) gives me every item in capitals without changing the stored data?" },
 	{ "type": "dialogue", "char": "you", "name": "YOU",
 	  "npc": "NPC_occupations/coffee_owner/idle",
-	  "text": "Exactly. The function transforms the value only in the output — the table itself stays untouched." },
+	  "text": "Exactly. The function transforms the value only in the output the table itself stays untouched." },
 	{ "type": "sql_fill", "gamemode": "aggregate", "recap": "String Functions",
 	  "desc": "Show every menu item in capital letters. Fill in the string function.",
 	  "hint": "UPPER() converts text to capitals. LOWER() does the opposite.",
@@ -1662,7 +1662,7 @@ const LESSONS: Dictionary = {
 	  "text": "Good. Now the receipt printer needs the items in lowercase instead. Same idea, opposite function?" },
 	{ "type": "sql_fill", "gamemode": "aggregate", "recap": "String Functions",
 	  "desc": "Now show every menu item in lowercase. Fill in the string function.",
-	  "hint": "LOWER() converts text to lowercase — the opposite of UPPER().",
+	  "hint": "LOWER() converts text to lowercase the opposite of UPPER().",
 	  "table": "orders", "column": "item", "answer": "LOWER",
 	  "table_headers": ["id", "item"],
 	  "table_rows": [["1","LATTE"],["2","Mocha"],["3","espresso"]],
@@ -1675,7 +1675,7 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C44 — COALESCE / IFNULL  |  NPC: coffee_owner
+#  LESSON C44 | COALESCE / IFNULL  |  NPC: coffee_owner
 # ─────────────────────────────────────────────
 "C44": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE",
@@ -1686,10 +1686,10 @@ const LESSONS: Dictionary = {
 	  "text": "Where the note is missing, can the report show 'No notes' instead of an empty NULL cell?" },
 	{ "type": "dialogue", "char": "you", "name": "YOU",
 	  "npc": "NPC_occupations/coffee_owner/idle",
-	  "text": "Yes — COALESCE returns the first value that is not NULL. COALESCE(notes, 'No notes') uses the note if present, otherwise the fallback." },
+	  "text": "Yes COALESCE returns the first value that is not NULL. COALESCE(notes, 'No notes') uses the note if present, otherwise the fallback." },
 	{ "type": "dialogue", "char": "owner", "name": "OWNER",
 	  "npc": "NPC_occupations/coffee_owner/think",
-	  "text": "I have seen IFNULL too — is it the same thing?" },
+	  "text": "I have seen IFNULL too is it the same thing?" },
 	{ "type": "dialogue", "char": "you", "name": "YOU",
 	  "npc": "NPC_occupations/coffee_owner/idle",
 	  "text": "IFNULL does the same with two values. COALESCE is the standard one and can take many values, returning the first non-NULL." },
@@ -1710,7 +1710,7 @@ const LESSONS: Dictionary = {
 	  "text": "Some older reports use IFNULL instead. Show me the same fix on the coupon column with that two-argument version." },
 	{ "type": "sql_fill", "gamemode": "sql_blank", "recap": "COALESCE / IFNULL",
 	  "desc": "Replace a missing coupon code with 'None' using the two-argument function. Fill in the function.",
-	  "hint": "IFNULL(value, fallback) replaces NULL with the fallback — the simpler two-argument form.",
+	  "hint": "IFNULL(value, fallback) replaces NULL with the fallback the simpler two-argument form.",
 	  "prefix": "SELECT item,\n  ", "answer": "IFNULL", "placeholder": "function", "max_length": 10,
 	  "suffix": "(coupon, 'None') FROM orders;",
 	  "err_hint": "The two-argument NULL replacement function is IFNULL.",
@@ -1722,7 +1722,7 @@ const LESSONS: Dictionary = {
 	  "result_msg": "IFNULL replaced the missing coupons with 'None'. COALESCE does the same and also accepts more than two values." },
 	{ "type": "dialogue", "char": "owner", "name": "OWNER",
 	  "npc": "NPC_occupations/coffee_owner/talk",
-	  "text": "No more empty cells — every row reads clearly. COALESCE turns missing data into something readable." },
+	  "text": "No more empty cells every row reads clearly. COALESCE turns missing data into something readable." },
 	{ "type": "end" }
 ],
 

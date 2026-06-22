@@ -1,13 +1,13 @@
 extends Node
 # ═══════════════════════════════════════════════════════
-#  GAME MANAGER  —  scripts/GameManager.gd  (Autoload)
+#  GAME MANAGER  |  scripts/GameManager.gd  (Autoload)
 # ═══════════════════════════════════════════════════════
 
 var world:       String = ""
 var lesson_id           = null
 var merged_mode: bool   = false   # true = all worlds shown as one path
 
-# ── Toggles — persist across scenes ──────────────────
+# ── Toggles | persist across scenes ──────────────────
 var tts_enabled:         bool = false
 var music_enabled:       bool = true
 var dark_overlay_enabled: bool = false

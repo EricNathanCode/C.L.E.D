@@ -1,6 +1,6 @@
 extends Control
 # ═══════════════════════════════════════════════════════
-#  GAME SCREEN  —  scripts/GameScreen.gd
+#  GAME SCREEN  |  scripts/GameScreen.gd
 # ═══════════════════════════════════════════════════════
 
 const GM_TO_SQL: Dictionary = {
@@ -68,16 +68,16 @@ const SQL_GLOSSARY: Array = [
 	["IN",              "Filters rows where a column value matches any item in a list.", "SELECT * FROM t\nWHERE city IN ('Manila','Cebu');"],
 	["LIMIT",           "Restricts how many rows are returned by a query.", "SELECT * FROM t\nLIMIT 10;"],
 	["COUNT / SUM / AVG","Aggregate functions: COUNT counts rows, SUM adds values, AVG averages them.", "SELECT COUNT(id) FROM t;\nSELECT SUM(price) FROM t;\nSELECT AVG(price) FROM t;"],
-	["HAVING",          "Filters groups after GROUP BY — like WHERE but for grouped data.", "SELECT col, COUNT(*) FROM t\nGROUP BY col\nHAVING COUNT(*) > 1;"],
+	["HAVING",          "Filters groups after GROUP BY like WHERE but for grouped data.", "SELECT col, COUNT(*) FROM t\nGROUP BY col\nHAVING COUNT(*) > 1;"],
 	["AS (Alias)",      "Renames a column or expression in the result. Does not change the table.", "SELECT price * 1.12 AS price_with_tax\nFROM orders;"],
 	["NOT NULL",        "Column constraint: prevents empty (NULL) values from being stored.", "CREATE TABLE t (\n    email TEXT NOT NULL\n);"],
 	["UNIQUE",          "Column constraint: prevents duplicate values in a column.", "CREATE TABLE t (\n    username TEXT UNIQUE\n);"],
 	["DEFAULT",         "Column constraint: sets an automatic value when none is provided.", "CREATE TABLE t (\n    status TEXT DEFAULT 'Pending'\n);"],
-	["ALTER TABLE",     "Modifies an existing table — adds, removes, or changes columns.", "ALTER TABLE table_name\nADD column_name TEXT;"],
+	["ALTER TABLE",     "Modifies an existing table adds, removes, or changes columns.", "ALTER TABLE table_name\nADD column_name TEXT;"],
 	["DROP TABLE",      "Permanently deletes a table and all its data.", "DROP TABLE table_name;"],
 	["LEFT JOIN",       "Returns ALL rows from the left table plus matching rows from the right. Unmatched = NULL.", "SELECT * FROM a\nLEFT JOIN b ON a.id = b.ref_id;"],
 	["Normalization",   "Organizing a database to reduce redundancy and improve data integrity.", "1NF: atomic values\n2NF: no partial dependencies\n3NF: no transitive dependencies"],
-	["Transactions",    "Groups SQL statements into one unit — all succeed (COMMIT) or all cancel (ROLLBACK).", "BEGIN;\n  UPDATE ...;\nCOMMIT;"],
+	["Transactions",    "Groups SQL statements into one unit all succeed (COMMIT) or all cancel (ROLLBACK).", "BEGIN;\n  UPDATE ...;\nCOMMIT;"],
 	["FOREIGN KEY",     "Links a column in one table to the primary key of another, enforcing referential integrity.", "CREATE TABLE orders (\n    customer_id INT,\n    FOREIGN KEY (customer_id) REFERENCES customers(id)\n);"],
 	["CREATE INDEX",    "Creates a lookup structure on a column to speed up SELECT queries on large tables.", "CREATE INDEX idx_last_name\nON guests(last_name);"],
 	["CREATE VIEW",     "Saves a SELECT query as a virtual table you can query like a real table.", "CREATE VIEW vw_active AS\nSELECT * FROM guests\nWHERE status = 'Active';"],
@@ -134,7 +134,7 @@ const CHAR_BASE := "res://images/characters/NPC_adults/"
 const CHAR_ROOT := "res://images/characters/"
 
 # ── NPC bob ──────────────────────────────────────────
-const BOB_AMP:    float = 7.0    # pixels — subtle speech movement
+const BOB_AMP:    float = 7.0    # pixels subtle speech movement
 const BOB_SPEED:  float = 10.0   # rad/s  ≈ 1.6 Hz, quick talking rhythm
 const BOB_SETTLE: float = 10.0   # lerp speed back to idle (rad/s feel)
 
@@ -213,13 +213,13 @@ func _ready() -> void:
 	_style_btn($SQLOverlay/CenterContainer/PanelContainer/OuterVBox/BackToDialogueButton, "secondary", 14)
 	$SQLOverlay/CenterContainer/PanelContainer/OuterVBox/BackToDialogueButton.text = "← Dialogue"
 
-	# Character name — amber, readable
+	# Character name | amber, readable
 	$DialogueArea/CharacterName.add_theme_font_size_override("font_size", 14)
 	$DialogueArea/CharacterName.add_theme_color_override("font_color", Color("#F59E0B"))
 	$DialogueArea/CharacterName.add_theme_constant_override("outline_size", 1)
 	$DialogueArea/CharacterName.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.7))
 
-	# Dialogue text — larger for legibility
+	# Dialogue text | larger for legibility
 	$DialogueArea/DialogueText.add_theme_font_size_override("font_size", 18)
 	$DialogueArea/DialogueText.add_theme_color_override("font_color", Color(0.93, 0.94, 0.97))
 
@@ -253,7 +253,7 @@ func _style_sql_panel() -> void:
 
 # ── Per-frame: bob + typewriter ───────────────────────
 func _process(delta: float) -> void:
-	# NPC bob — only while typewriter is actively revealing text
+	# NPC bob | only while typewriter is actively revealing text
 	if _is_bobbing and $NPCSprite.visible:
 		if _typing:
 			# Talking: fast up-down speech movement
@@ -448,7 +448,7 @@ func _run_step() -> void:
 			$DialogueArea/DialogueButtons/NextButton.visible  = true
 			_start_typewriter(s.get("text", ""))
 			# Bob only when a real NPC character is speaking.
-			# char "scene" = narration, char "you" = player — keep sprite still.
+			# char "scene" = narration, char "you" = player | keep sprite still.
 			if char_key != "scene" and char_key != "you":
 				_start_bob()
 			else:
@@ -588,7 +588,7 @@ func _build_glossary() -> void:
 	_style_btn(gloss_btn, "secondary", 13)
 	$TopBar.add_child(gloss_btn)
 
-	# Full-screen overlay — added last so it's on top of all scene children
+	# Full-screen overlay | added last so it's on top of all scene children
 	_glossary_overlay = Control.new()
 	_glossary_overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_glossary_overlay.visible = false
@@ -683,7 +683,7 @@ func _build_glossary() -> void:
 	entry_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scroll.add_child(entry_list)
 
-	# entries_meta filled below — lambda captures array reference so filtering works
+	# entries_meta filled below | lambda captures array reference so filtering works
 	var entries_meta: Array = []
 	filter_box.text_changed.connect(func(query: String):
 		var q := query.strip_edges().to_lower()
