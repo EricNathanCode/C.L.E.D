@@ -28,6 +28,12 @@ var _merge_btn: Button = null
 @onready var _music_btn  := $SettingsOverlay/SettingsPanel/VBox/MusicToggle
 @onready var _tts_btn    := $SettingsOverlay/SettingsPanel/VBox/TTSToggle
 var _dark_btn: Button = null
+var _reset_btn: Button = null
+var _reset_armed: bool = false
+var _completion_lbl: Label = null
+
+# Total lessons per world (used for completion %)
+const LESSONS_PER_WORLD: int = 44
 
 func _ready() -> void:
 	$UpButton.pressed.connect(_on_up)
@@ -87,6 +93,33 @@ func _ready() -> void:
 	_merge_btn.pressed.connect(_on_merge_toggle)
 	$SettingsOverlay/SettingsPanel/VBox.add_child(_merge_btn)
 	_style_btn(_merge_btn, "secondary", 15)
+
+	# Reset Progress button | danger action, lives at the bottom of Settings
+	$SettingsOverlay/SettingsPanel/VBox.add_child(HSeparator.new())
+	_reset_btn = Button.new()
+	_reset_btn.pressed.connect(_on_reset_pressed)
+	$SettingsOverlay/SettingsPanel/VBox.add_child(_reset_btn)
+	_style_btn(_reset_btn, "secondary", 15)
+	_reset_btn.text = "Reset Progress"
+
+	# Completion % label under the world name
+	_completion_lbl = Label.new()
+	_completion_lbl.anchor_left = 0.0
+	_completion_lbl.anchor_right = 1.0
+	_completion_lbl.offset_top = 453.0
+	_completion_lbl.offset_bottom = 485.0
+	_completion_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_completion_lbl.add_theme_font_size_override("font_size", 16)
+	_completion_lbl.add_theme_color_override("font_color", Color("#F59E0B"))
+	_completion_lbl.add_theme_constant_override("outline_size", 2)
+	_completion_lbl.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.85))
+	add_child(_completion_lbl)
+
+	# Refresh completion % whenever this screen becomes visible again
+	visibility_changed.connect(func():
+		if visible:
+			_update_display()
+	)
 
 	_preload_backgrounds()
 	_update_display()
@@ -149,9 +182,27 @@ func _on_exit() -> void:
 # ── Settings panel ────────────────────────────────────
 func _on_settings_open() -> void:
 	$SettingsOverlay.visible = true
+	_disarm_reset()
 
 func _on_settings_close() -> void:
 	$SettingsOverlay.visible = false
+	_disarm_reset()
+
+# ── Reset Progress (two-tap confirm) ──────────────────
+func _on_reset_pressed() -> void:
+	if not _reset_armed:
+		_reset_armed = true
+		_reset_btn.text = "Tap again to confirm"
+		return
+	GameManager.reset_progress()
+	_reset_armed = false
+	_reset_btn.text = "Progress reset"
+	_update_display()
+
+func _disarm_reset() -> void:
+	_reset_armed = false
+	if _reset_btn:
+		_reset_btn.text = "Reset Progress"
 
 func _on_dim_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed:
@@ -162,6 +213,7 @@ func _on_tts_toggle() -> void:
 	if not GameManager.tts_enabled:
 		GameManager.stop_speaking()
 	_update_tts_button()
+	GameManager.save_game()
 
 func _on_music_toggle() -> void:
 	GameManager.music_enabled = not GameManager.music_enabled
@@ -171,11 +223,13 @@ func _on_music_toggle() -> void:
 	else:
 		main.pause_bgm()
 	_update_music_button()
+	GameManager.save_game()
 
 func _on_dark_toggle() -> void:
 	GameManager.dark_overlay_enabled = not GameManager.dark_overlay_enabled
 	get_tree().root.get_node("Main").apply_dark_overlay()
 	_update_dark_button()
+	GameManager.save_game()
 
 func _update_display() -> void:
 	if _merged:
@@ -185,6 +239,8 @@ func _update_display() -> void:
 		$WorldName.add_theme_color_override("font_color", Color.WHITE)
 		# Blend all 4 backgrounds by just showing the first
 		$SceneBG.texture = _bg_cache.get(WORLDS[0], null)
+		if _completion_lbl:
+			_completion_lbl.text = _completion_text_all()
 	else:
 		$UpButton.visible   = true
 		$DownButton.visible = true
@@ -192,6 +248,27 @@ func _update_display() -> void:
 		$WorldName.text = WORLD_NAMES[world]
 		$WorldName.add_theme_color_override("font_color", Color.WHITE)
 		$SceneBG.texture = _bg_cache.get(world, null)
+		if _completion_lbl:
+			_completion_lbl.text = _completion_text(world)
+
+# ── Completion % ──────────────────────────────────────
+func _count_done(world: String) -> int:
+	var done: int = 0
+	for key in GameManager.completed_lessons.keys():
+		if str(key).begins_with(world + "_"):
+			done += 1
+	return done
+
+func _completion_text(world: String) -> String:
+	var done: int = _count_done(world)
+	var pct: int = int(round(float(done) / float(LESSONS_PER_WORLD) * 100.0))
+	return "★  %d / %d lessons  ·  %d%% complete" % [done, LESSONS_PER_WORLD, pct]
+
+func _completion_text_all() -> String:
+	var done: int = GameManager.completed_lessons.size()
+	var total: int = LESSONS_PER_WORLD * WORLDS.size()
+	var pct: int = int(round(float(done) / float(total) * 100.0))
+	return "★  %d / %d lessons  ·  %d%% complete" % [done, total, pct]
 
 func _update_tts_button() -> void:
 	_tts_btn.text = "TTS: ON" if GameManager.tts_enabled else "TTS: OFF"

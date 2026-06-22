@@ -20,6 +20,37 @@ var last_stars:        int        = 0
 var _wrongs_this_lesson:      int   = 0
 var _sql_commands_this_lesson: Array = []
 
+# ── Save / load ───────────────────────────────────────
+# Progress and settings persist between sessions in user://cled_save.cfg
+const SAVE_PATH := "user://cled_save.cfg"
+
+func _ready() -> void:
+	load_game()
+
+func save_game() -> void:
+	var cfg := ConfigFile.new()
+	cfg.set_value("progress", "completed_lessons",        completed_lessons)
+	cfg.set_value("progress", "completed_folder_quizzes", completed_folder_quizzes)
+	cfg.set_value("settings", "tts_enabled",          tts_enabled)
+	cfg.set_value("settings", "music_enabled",        music_enabled)
+	cfg.set_value("settings", "dark_overlay_enabled", dark_overlay_enabled)
+	cfg.save(SAVE_PATH)
+
+func load_game() -> void:
+	var cfg := ConfigFile.new()
+	if cfg.load(SAVE_PATH) != OK:
+		return  # no save yet — first launch
+	completed_lessons        = cfg.get_value("progress", "completed_lessons",        {})
+	completed_folder_quizzes = cfg.get_value("progress", "completed_folder_quizzes", {})
+	tts_enabled          = cfg.get_value("settings", "tts_enabled",          false)
+	music_enabled        = cfg.get_value("settings", "music_enabled",        true)
+	dark_overlay_enabled = cfg.get_value("settings", "dark_overlay_enabled", false)
+
+func reset_progress() -> void:
+	completed_lessons        = {}
+	completed_folder_quizzes = {}
+	save_game()
+
 func start_lesson() -> void:
 	_wrongs_this_lesson       = 0
 	_sql_commands_this_lesson = []
@@ -43,6 +74,7 @@ func finish_lesson() -> int:
 	var key: String = world + "_" + str(lesson_id)
 	if not completed_lessons.has(key) or completed_lessons[key] < stars:
 		completed_lessons[key] = stars
+	save_game()
 	return stars
 
 func get_stars(w: String, lid) -> int:
@@ -53,6 +85,7 @@ func is_folder_quiz_done(w: String, fi: int) -> bool:
 
 func complete_folder_quiz(w: String, fi: int) -> void:
 	completed_folder_quizzes[w + "_" + str(fi)] = true
+	save_game()
 
 func get_sql_recap() -> Array:
 	return _sql_commands_this_lesson.duplicate()
