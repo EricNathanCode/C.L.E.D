@@ -9,10 +9,10 @@ const _DATA_PATHS: Dictionary = {
 }
 
 # ── Lesson metadata ───────────────────────────────────────
-const HOTEL_LESSONS  := [1,2,3,4,5, 6,8,16,17,18,19,20,21,37,43,44, 7,12,22,23,24,28,35,39, 9,10,11,13,14,15,25,29,32,40, 26,27,30,31,33,34,36,38,41,42]
-const CAFE_LESSONS   := ["C1","C2","C4","C5","C6", "C7","C8","C16","C17","C18","C19","C20","C21","C37","C43","C44", "C3","C12","C22","C23","C24","C28","C35","C39", "C9","C10","C11","C13","C14","C15","C25","C29","C32","C40", "C26","C27","C30","C31","C33","C34","C36","C38","C41","C42"]
-const POLICE_LESSONS := ["P1","P2","P3","P4","P5", "P6","P8","P16","P17","P18","P19","P20","P21","P37","P43","P44", "P7","P12","P22","P23","P24","P28","P35","P39", "P9","P10","P11","P13","P14","P15","P25","P29","P32","P40", "P26","P27","P30","P31","P33","P34","P36","P38","P41","P42"]
-const LIBRARY_LESSONS:= ["L1","L2","L3","L4","L5", "L6","L8","L16","L17","L18","L19","L20","L21","L37","L43","L44", "L7","L12","L22","L23","L24","L28","L35","L39", "L9","L10","L11","L13","L14","L15","L25","L29","L32","L40", "L26","L27","L30","L31","L33","L34","L36","L38","L41","L42"]
+const HOTEL_LESSONS  := [1,2,3,4,5, 8,16,17,18,19,20, 6,21,7,22,23,24, 12,28,35,39, 37,43,44, 9,10,13,14,15, 11,25,29,32,40, 26,27,42,33,34, 30,31,36,38,41]
+const CAFE_LESSONS   := ["C1","C2","C4","C5","C6", "C8","C16","C17","C18","C19","C20", "C7","C21","C3","C22","C23","C24", "C12","C28","C35","C39", "C37","C43","C44", "C9","C10","C13","C14","C15", "C11","C25","C29","C32","C40", "C26","C27","C42","C33","C34", "C30","C31","C36","C38","C41"]
+const POLICE_LESSONS := ["P1","P2","P3","P4","P5", "P8","P16","P17","P18","P19","P20", "P6","P21","P7","P22","P23","P24", "P12","P28","P35","P39", "P37","P43","P44", "P9","P10","P13","P14","P15", "P11","P25","P29","P32","P40", "P26","P27","P42","P33","P34", "P30","P31","P36","P38","P41"]
+const LIBRARY_LESSONS:= ["L1","L2","L3","L4","L5", "L8","L16","L17","L18","L19","L20", "L6","L21","L7","L22","L23","L24", "L12","L28","L35","L39", "L37","L43","L44", "L9","L10","L13","L14","L15", "L11","L25","L29","L32","L40", "L26","L27","L42","L33","L34", "L30","L31","L36","L38","L41"]
 
 const HOTEL_NAMES: Dictionary = {
 	1:  "SELECT | Choose Your Response",
@@ -208,31 +208,47 @@ const WORLD_DISPLAY: Dictionary = {
 # ── Folder groupings per world ────────────────────────────
 const HOTEL_FOLDERS := [
 	{ "name": "Basic SQL",            "ids": [1,2,3,4,5] },
-	{ "name": "Filtering & Sorting",  "ids": [6,8,16,17,18,19,20,21,37,43,44] },
-	{ "name": "Aggregates & Joins",   "ids": [7,12,22,23,24,28,35,39] },
-	{ "name": "Database Design",      "ids": [9,10,11,13,14,15,25,29,32,40] },
-	{ "name": "Schema & Concepts",    "ids": [26,27,30,31,33,34,36,38,41,42] },
+	{ "name": "Filtering Rows",       "ids": [8,16,17,18,19,20] },
+	{ "name": "Sorting & Aggregates", "ids": [6,21,7,22,23,24] },
+	{ "name": "Joins & Subqueries",   "ids": [12,28,35,39] },
+	{ "name": "Functions",            "ids": [37,43,44] },
+	{ "name": "Creating Tables",      "ids": [9,10,13,14,15] },
+	{ "name": "Constraints & Keys",   "ids": [11,25,29,32,40] },
+	{ "name": "Schema Management",    "ids": [26,27,42,33,34] },
+	{ "name": "Advanced Concepts",    "ids": [30,31,36,38,41] },
 ]
 const CAFE_FOLDERS := [
 	{ "name": "Basic SQL",            "ids": ["C1","C2","C4","C5","C6"] },
-	{ "name": "Filtering & Sorting",  "ids": ["C7","C8","C16","C17","C18","C19","C20","C21","C37","C43","C44"] },
-	{ "name": "Aggregates & Joins",   "ids": ["C3","C12","C22","C23","C24","C28","C35","C39"] },
-	{ "name": "Database Design",      "ids": ["C9","C10","C11","C13","C14","C15","C25","C29","C32","C40"] },
-	{ "name": "Schema & Concepts",    "ids": ["C26","C27","C30","C31","C33","C34","C36","C38","C41","C42"] },
+	{ "name": "Filtering Rows",       "ids": ["C8","C16","C17","C18","C19","C20"] },
+	{ "name": "Sorting & Aggregates", "ids": ["C7","C21","C3","C22","C23","C24"] },
+	{ "name": "Joins & Subqueries",   "ids": ["C12","C28","C35","C39"] },
+	{ "name": "Functions",            "ids": ["C37","C43","C44"] },
+	{ "name": "Creating Tables",      "ids": ["C9","C10","C13","C14","C15"] },
+	{ "name": "Constraints & Keys",   "ids": ["C11","C25","C29","C32","C40"] },
+	{ "name": "Schema Management",    "ids": ["C26","C27","C42","C33","C34"] },
+	{ "name": "Advanced Concepts",    "ids": ["C30","C31","C36","C38","C41"] },
 ]
 const POLICE_FOLDERS := [
 	{ "name": "Basic SQL",            "ids": ["P1","P2","P3","P4","P5"] },
-	{ "name": "Filtering & Sorting",  "ids": ["P6","P8","P16","P17","P18","P19","P20","P21","P37","P43","P44"] },
-	{ "name": "Aggregates & Joins",   "ids": ["P7","P12","P22","P23","P24","P28","P35","P39"] },
-	{ "name": "Database Design",      "ids": ["P9","P10","P11","P13","P14","P15","P25","P29","P32","P40"] },
-	{ "name": "Schema & Concepts",    "ids": ["P26","P27","P30","P31","P33","P34","P36","P38","P41","P42"] },
+	{ "name": "Filtering Rows",       "ids": ["P8","P16","P17","P18","P19","P20"] },
+	{ "name": "Sorting & Aggregates", "ids": ["P6","P21","P7","P22","P23","P24"] },
+	{ "name": "Joins & Subqueries",   "ids": ["P12","P28","P35","P39"] },
+	{ "name": "Functions",            "ids": ["P37","P43","P44"] },
+	{ "name": "Creating Tables",      "ids": ["P9","P10","P13","P14","P15"] },
+	{ "name": "Constraints & Keys",   "ids": ["P11","P25","P29","P32","P40"] },
+	{ "name": "Schema Management",    "ids": ["P26","P27","P42","P33","P34"] },
+	{ "name": "Advanced Concepts",    "ids": ["P30","P31","P36","P38","P41"] },
 ]
 const LIBRARY_FOLDERS := [
 	{ "name": "Basic SQL",            "ids": ["L1","L2","L3","L4","L5"] },
-	{ "name": "Filtering & Sorting",  "ids": ["L6","L8","L16","L17","L18","L19","L20","L21","L37","L43","L44"] },
-	{ "name": "Aggregates & Joins",   "ids": ["L7","L12","L22","L23","L24","L28","L35","L39"] },
-	{ "name": "Database Design",      "ids": ["L9","L10","L11","L13","L14","L15","L25","L29","L32","L40"] },
-	{ "name": "Schema & Concepts",    "ids": ["L26","L27","L30","L31","L33","L34","L36","L38","L41","L42"] },
+	{ "name": "Filtering Rows",       "ids": ["L8","L16","L17","L18","L19","L20"] },
+	{ "name": "Sorting & Aggregates", "ids": ["L6","L21","L7","L22","L23","L24"] },
+	{ "name": "Joins & Subqueries",   "ids": ["L12","L28","L35","L39"] },
+	{ "name": "Functions",            "ids": ["L37","L43","L44"] },
+	{ "name": "Creating Tables",      "ids": ["L9","L10","L13","L14","L15"] },
+	{ "name": "Constraints & Keys",   "ids": ["L11","L25","L29","L32","L40"] },
+	{ "name": "Schema Management",    "ids": ["L26","L27","L42","L33","L34"] },
+	{ "name": "Advanced Concepts",    "ids": ["L30","L31","L36","L38","L41"] },
 ]
 
 # ── Node refs ─────────────────────────────────────────────
@@ -425,8 +441,9 @@ func build_lessons() -> void:
 
 			box.add_child(row)
 
-		# ── Folder challenge button (every folder except the last) ────
-		if fi < folders.size() - 1 and not folder_locked:
+		# ── Folder challenge button (every folder, including the last) ────
+		if not folder_locked:
+			var is_last_folder: bool = fi == folders.size() - 1
 			var all_lessons_done: bool = DEBUG_UNLOCK or true
 			if not DEBUG_UNLOCK:
 				all_lessons_done = true
@@ -453,7 +470,7 @@ func build_lessons() -> void:
 
 			if quiz_done:
 				var cap_fi2 := fi
-				qbtn.text = "✓  Folder Challenge | Redo"
+				qbtn.text = "✓  Folder Challenge - Redo"
 				qbtn.pressed.connect(func():
 					GameManager.current_quiz_folder_idx = cap_fi2
 					get_tree().root.get_node("Main").show_screen("folder_quiz")
@@ -461,14 +478,14 @@ func build_lessons() -> void:
 				_style_btn(qbtn, "ghost", 13)
 			elif all_lessons_done:
 				var cap_fi := fi
-				qbtn.text = "⚡  FOLDER CHALLENGE | Unlock Next Chapter"
+				qbtn.text = "⚡  FOLDER CHALLENGE - Final Test" if is_last_folder else "⚡  FOLDER CHALLENGE - Unlock Next Chapter"
 				qbtn.pressed.connect(func():
 					GameManager.current_quiz_folder_idx = cap_fi
 					get_tree().root.get_node("Main").show_screen("folder_quiz")
 				)
 				_style_btn(qbtn, "quiz", 13)
 			else:
-				qbtn.text = "🔒  Folder Challenge | Complete all lessons first"
+				qbtn.text = "🔒  Folder Challenge - Complete all lessons first"
 				qbtn.disabled = true
 				_style_btn(qbtn, "locked", 13)
 
