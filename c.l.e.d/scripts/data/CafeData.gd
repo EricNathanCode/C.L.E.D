@@ -1270,8 +1270,8 @@ const LESSONS: Dictionary = {
 	  "hint": "The keyword that points to another table is REFERENCES.",
 	  "result_msg": "FOREIGN KEY created! Every customer_id in orders must now exist in the customers table.",
 	  "fail": [
-	    { "type": "dialogue", "char": "owner", "name": "OWNER", "npc": "NPC_occupations/coffee_owner/talk",
-	      "text": "Not quite. After FOREIGN KEY (customer_id), type REFERENCES followed by the table and column." }
+		{ "type": "dialogue", "char": "owner", "name": "OWNER", "npc": "NPC_occupations/coffee_owner/talk",
+		  "text": "Not quite. After FOREIGN KEY (customer_id), type REFERENCES followed by the table and column." }
 	  ]
 	},
 	{ "type": "end" }
@@ -1296,8 +1296,8 @@ const LESSONS: Dictionary = {
 	  "hint": "The keyword after CREATE is INDEX.",
 	  "result_msg": "Index created! Searches on item_name will now run significantly faster.",
 	  "fail": [
-	    { "type": "dialogue", "char": "owner", "name": "OWNER", "npc": "NPC_occupations/coffee_owner/talk",
-	      "text": "Not quite. The syntax is CREATE INDEX name ON table(column)." }
+		{ "type": "dialogue", "char": "owner", "name": "OWNER", "npc": "NPC_occupations/coffee_owner/talk",
+		  "text": "Not quite. The syntax is CREATE INDEX name ON table(column)." }
 	  ]
 	},
 	{ "type": "end" }
@@ -1322,8 +1322,8 @@ const LESSONS: Dictionary = {
 	  "hint": "The keyword after CREATE is VIEW.",
 	  "result_msg": "View created! SELECT * FROM vw_pending_orders now always shows live pending orders.",
 	  "fail": [
-	    { "type": "dialogue", "char": "owner", "name": "OWNER", "npc": "NPC_occupations/coffee_owner/talk",
-	      "text": "Not quite. The syntax is CREATE VIEW name AS SELECT ... The keyword after CREATE is VIEW." }
+		{ "type": "dialogue", "char": "owner", "name": "OWNER", "npc": "NPC_occupations/coffee_owner/talk",
+		  "text": "Not quite. The syntax is CREATE VIEW name AS SELECT ... The keyword after CREATE is VIEW." }
 	  ]
 	},
 	{ "type": "end" }

@@ -338,7 +338,7 @@ func build_lessons() -> void:
 			ids = [];              names = {};             folders = []
 
 	# DEBUG: set true to bypass all locking for testing
-	const DEBUG_UNLOCK := true
+	const DEBUG_UNLOCK := false
 
 	# Build sequential number map: lesson_id → display number (01, 02…)
 	var num_map: Dictionary = {}

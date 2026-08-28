@@ -1,3 +1,8 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
+
+# Exported builds (regenerate via Project > Export, don't commit binaries)
+*.exe
+*.pck
+/build/

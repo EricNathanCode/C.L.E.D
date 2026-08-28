@@ -1619,8 +1619,8 @@ const LESSONS: Dictionary = {
 	  "hint": "The keyword that points to another table is REFERENCES.",
 	  "result_msg": "FOREIGN KEY created! Every officer_id in cases must now exist in the officers table.",
 	  "fail": [
-	    { "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
-	      "text": "Not quite. After FOREIGN KEY (officer_id), type REFERENCES followed by the table and column." }
+		{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
+		  "text": "Not quite. After FOREIGN KEY (officer_id), type REFERENCES followed by the table and column." }
 	  ]
 	},
 	{ "type": "end" }
@@ -1645,8 +1645,8 @@ const LESSONS: Dictionary = {
 	  "hint": "The keyword after CREATE is INDEX.",
 	  "result_msg": "Index created! Suspect searches will now skip a full table scan.",
 	  "fail": [
-	    { "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
-	      "text": "Not quite. The syntax is CREATE INDEX name ON table(column)." }
+		{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
+		  "text": "Not quite. The syntax is CREATE INDEX name ON table(column)." }
 	  ]
 	},
 	{ "type": "end" }
@@ -1671,8 +1671,8 @@ const LESSONS: Dictionary = {
 	  "hint": "The keyword after CREATE is VIEW.",
 	  "result_msg": "View created! Officers can now SELECT * FROM vw_open_cases for instant access.",
 	  "fail": [
-	    { "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
-	      "text": "Not quite. The syntax is CREATE VIEW name AS SELECT ... The keyword after CREATE is VIEW." }
+		{ "type": "dialogue", "char": "chief", "name": "CHIEF", "npc": "NPC_occupations/police/talk",
+		  "text": "Not quite. The syntax is CREATE VIEW name AS SELECT ... The keyword after CREATE is VIEW." }
 	  ]
 	},
 	{ "type": "end" }

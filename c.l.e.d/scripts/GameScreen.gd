@@ -157,6 +157,7 @@ var _bg_textures:     Dictionary = {}
 var _story:           Array      = []
 var _step:            int        = 0
 var _current_gm:      Node       = null
+var _dlg_line:        ColorRect  = null
 var _failed_step:     Dictionary = {}
 var _glossary_overlay: Control   = null
 
@@ -186,16 +187,16 @@ func _ready() -> void:
 	add_child(tb_line)
 
 	# Amber accent line at dialogue box top edge
-	var dlg_line := ColorRect.new()
-	dlg_line.color         = Color("#F59E0B")
-	dlg_line.anchor_top    = 1.0
-	dlg_line.anchor_right  = 1.0
-	dlg_line.anchor_bottom = 1.0
-	dlg_line.offset_top    = -222.0
-	dlg_line.offset_bottom = -218.0
-	dlg_line.mouse_filter  = Control.MOUSE_FILTER_IGNORE
-	dlg_line.z_index       = 3
-	add_child(dlg_line)
+	_dlg_line = ColorRect.new()
+	_dlg_line.color         = Color("#F59E0B")
+	_dlg_line.anchor_top    = 1.0
+	_dlg_line.anchor_right  = 1.0
+	_dlg_line.anchor_bottom = 1.0
+	_dlg_line.offset_top    = -222.0
+	_dlg_line.offset_bottom = -218.0
+	_dlg_line.mouse_filter  = Control.MOUSE_FILTER_IGNORE
+	_dlg_line.z_index       = 3
+	add_child(_dlg_line)
 
 	$TopBar.z_index    = 3
 	$ProgressBar.z_index = 3
@@ -501,6 +502,7 @@ func _show_challenge(step: Dictionary, gm_key: String) -> void:
 	$NPCSprite.visible    = false
 	$DialogueBG.visible   = false
 	$DialogueArea.visible = false
+	_dlg_line.visible     = false
 	$SQLOverlay.visible   = true
 
 func _on_gm_wrong() -> void:
@@ -567,6 +569,7 @@ func _close_overlay() -> void:
 	$NPCSprite.visible    = true
 	$DialogueBG.visible   = true
 	$DialogueArea.visible = true
+	_dlg_line.visible     = true
 	$SQLOverlay.visible   = false
 	_clear_gm()
 

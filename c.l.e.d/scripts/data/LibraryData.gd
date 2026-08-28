@@ -1629,8 +1629,8 @@ const LESSONS: Dictionary = {
 	  "hint": "The keyword that points to another table is REFERENCES.",
 	  "result_msg": "FOREIGN KEY created! Every borrower_id in loans must now exist in the borrowers table.",
 	  "fail": [
-	    { "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
-	      "text": "Not quite. After FOREIGN KEY (borrower_id), type REFERENCES followed by the table and column." }
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+		  "text": "Not quite. After FOREIGN KEY (borrower_id), type REFERENCES followed by the table and column." }
 	  ]
 	},
 	{ "type": "end" }
@@ -1655,8 +1655,8 @@ const LESSONS: Dictionary = {
 	  "hint": "The keyword after CREATE is INDEX.",
 	  "result_msg": "Index created! Book title searches will now be much faster.",
 	  "fail": [
-	    { "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
-	      "text": "Not quite. The syntax is CREATE INDEX name ON table(column)." }
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+		  "text": "Not quite. The syntax is CREATE INDEX name ON table(column)." }
 	  ]
 	},
 	{ "type": "end" }
@@ -1681,8 +1681,8 @@ const LESSONS: Dictionary = {
 	  "hint": "The keyword after CREATE is VIEW.",
 	  "result_msg": "View created! SELECT * FROM vw_overdue now shows all overdue loans instantly.",
 	  "fail": [
-	    { "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
-	      "text": "Not quite. The syntax is CREATE VIEW name AS SELECT ... The keyword after CREATE is VIEW." }
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+		  "text": "Not quite. The syntax is CREATE VIEW name AS SELECT ... The keyword after CREATE is VIEW." }
 	  ]
 	},
 	{ "type": "end" }

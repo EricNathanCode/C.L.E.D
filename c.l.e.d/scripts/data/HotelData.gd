@@ -1313,8 +1313,8 @@ const LESSONS: Dictionary = {
 	  "hint": "The keyword that points to another table is REFERENCES.",
 	  "result_msg": "FOREIGN KEY created! Every guest_id in bookings must now exist in the guests table.",
 	  "fail": [
-	    { "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/talk",
-	      "text": "Not quite. After FOREIGN KEY (guest_id), type REFERENCES followed by the table and column you're linking to." }
+		{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/talk",
+		  "text": "Not quite. After FOREIGN KEY (guest_id), type REFERENCES followed by the table and column you're linking to." }
 	  ]
 	},
 	{ "type": "end" }
@@ -1339,8 +1339,8 @@ const LESSONS: Dictionary = {
 	  "hint": "The keyword after CREATE is INDEX.",
 	  "result_msg": "Index created! Searches on last_name will now skip a full table scan.",
 	  "fail": [
-	    { "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/talk",
-	      "text": "Not quite. The syntax is CREATE INDEX name ON table(column). The keyword after CREATE is INDEX." }
+		{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/talk",
+		  "text": "Not quite. The syntax is CREATE INDEX name ON table(column). The keyword after CREATE is INDEX." }
 	  ]
 	},
 	{ "type": "end" }
@@ -1365,8 +1365,8 @@ const LESSONS: Dictionary = {
 	  "hint": "The keyword after CREATE is VIEW.",
 	  "result_msg": "View created! SELECT * FROM vw_active_guests now shows all active guests automatically.",
 	  "fail": [
-	    { "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/talk",
-	      "text": "Not quite. The syntax is CREATE VIEW name AS SELECT ... The keyword after CREATE is VIEW." }
+		{ "type": "dialogue", "char": "manager", "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/talk",
+		  "text": "Not quite. The syntax is CREATE VIEW name AS SELECT ... The keyword after CREATE is VIEW." }
 	  ]
 	},
 	{ "type": "end" }
