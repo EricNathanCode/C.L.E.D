@@ -18,16 +18,14 @@ script = ExtResource("1")
 
 [node name="WorldSelectScreen" parent="." unique_id=69881350 instance=ExtResource("2")]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="DashboardScreen" parent="." unique_id=1772925619 instance=ExtResource("3")]
 visible = false
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="GameScreen" parent="." unique_id=1340013830 instance=ExtResource("4")]
 visible = false
@@ -36,13 +34,11 @@ layout_mode = 1
 [node name="CompleteScreen" parent="." unique_id=839939246 instance=ExtResource("5")]
 visible = false
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="FolderQuizScreen" parent="." unique_id=1880369814 instance=ExtResource("6")]
 visible = false
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
