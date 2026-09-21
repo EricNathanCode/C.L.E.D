@@ -18,7 +18,7 @@ func _ready() -> void:
 	_setup_bgm_player()
 	_build_dark_overlay()
 	_play_bgm("menu")
-	show_screen("world_select")
+	show_screen("login")
 
 func _setup_bgm_player() -> void:
 	if has_node("BGM"):
@@ -74,6 +74,7 @@ func apply_dark_overlay() -> void:
 		_dark_overlay.visible = GameManager.dark_overlay_enabled
 
 func show_screen(name: String) -> void:
+	$LoginScreen.visible        = (name == "login")
 	$WorldSelectScreen.visible  = (name == "world_select")
 	$DashboardScreen.visible    = (name == "dashboard")
 	$GameScreen.visible         = (name == "game")
@@ -81,7 +82,7 @@ func show_screen(name: String) -> void:
 	$FolderQuizScreen.visible   = (name == "folder_quiz")
 
 	match name:
-		"world_select":
+		"login", "world_select":
 			_play_bgm("menu")
 		"game", "dashboard", "folder_quiz":
 			_play_bgm(GameManager.world)

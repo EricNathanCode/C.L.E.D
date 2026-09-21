@@ -30,6 +30,7 @@ var _merge_btn: Button = null
 var _dark_btn: Button = null
 var _reset_btn: Button = null
 var _reset_armed: bool = false
+var _logout_btn: Button = null
 var _completion_lbl: Label = null
 
 # Total lessons per world (used for completion %)
@@ -102,6 +103,15 @@ func _ready() -> void:
 	_style_btn(_reset_btn, "secondary", 15)
 	_reset_btn.text = "Reset Progress"
 
+	# Log Out | switches back to the Login Screen so another
+	# student can sign in on the same PC
+	$SettingsOverlay/SettingsPanel/VBox.add_child(HSeparator.new())
+	_logout_btn = Button.new()
+	_logout_btn.pressed.connect(_on_logout_pressed)
+	$SettingsOverlay/SettingsPanel/VBox.add_child(_logout_btn)
+	_style_btn(_logout_btn, "secondary", 15)
+	_update_logout_button()
+
 	# Completion % label under the world name
 	_completion_lbl = Label.new()
 	_completion_lbl.anchor_left = 0.0
@@ -119,6 +129,7 @@ func _ready() -> void:
 	visibility_changed.connect(func():
 		if visible:
 			_update_display()
+			_update_logout_button()
 	)
 
 	_preload_backgrounds()
@@ -204,6 +215,16 @@ func _disarm_reset() -> void:
 	if _reset_btn:
 		_reset_btn.text = "Reset Progress"
 
+# ── Log Out ────────────────────────────────────────────
+func _update_logout_button() -> void:
+	if _logout_btn:
+		_logout_btn.text = "Log Out (" + GameManager.current_user + ")"
+
+func _on_logout_pressed() -> void:
+	GameManager.logout()
+	_on_settings_close()
+	get_tree().root.get_node("Main").show_screen("login")
+
 func _on_dim_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed:
 		_on_settings_close()
@@ -213,7 +234,7 @@ func _on_tts_toggle() -> void:
 	if not GameManager.tts_enabled:
 		GameManager.stop_speaking()
 	_update_tts_button()
-	GameManager.save_game()
+	GameManager.save_settings()
 
 func _on_music_toggle() -> void:
 	GameManager.music_enabled = not GameManager.music_enabled
@@ -223,13 +244,13 @@ func _on_music_toggle() -> void:
 	else:
 		main.pause_bgm()
 	_update_music_button()
-	GameManager.save_game()
+	GameManager.save_settings()
 
 func _on_dark_toggle() -> void:
 	GameManager.dark_overlay_enabled = not GameManager.dark_overlay_enabled
 	get_tree().root.get_node("Main").apply_dark_overlay()
 	_update_dark_button()
-	GameManager.save_game()
+	GameManager.save_settings()
 
 func _update_display() -> void:
 	if _merged:

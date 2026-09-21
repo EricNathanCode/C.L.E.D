@@ -7,6 +7,12 @@ var world:       String = ""
 var lesson_id           = null
 var merged_mode: bool   = false   # true = all worlds shown as one path
 
+# ── Accounts ───────────────────────────────────────────
+const ACCOUNTS_PATH := "user://accounts.cfg"
+const SAVES_DIR      := "user://saves/"
+
+var current_user: String = ""
+
 # ── Toggles | persist across scenes ──────────────────
 var tts_enabled:         bool = false
 var music_enabled:       bool = true
@@ -20,31 +26,88 @@ var last_stars:        int        = 0
 var _wrongs_this_lesson:      int   = 0
 var _sql_commands_this_lesson: Array = []
 
-# ── Save / load ───────────────────────────────────────
-# Progress and settings persist between sessions in user://cled_save.cfg
-const SAVE_PATH := "user://cled_save.cfg"
+# ── Settings (global — shared by the whole PC, not per-user) ──
+# Audio/display preferences aren't tied to a login, since the
+# Login Screen itself needs to read/save them before anyone
+# is signed in.
+const SETTINGS_PATH := "user://settings.cfg"
 
 func _ready() -> void:
-	load_game()
+	load_settings()
 
-func save_game() -> void:
+func load_settings() -> void:
 	var cfg := ConfigFile.new()
-	cfg.set_value("progress", "completed_lessons",        completed_lessons)
-	cfg.set_value("progress", "completed_folder_quizzes", completed_folder_quizzes)
-	cfg.set_value("settings", "tts_enabled",          tts_enabled)
-	cfg.set_value("settings", "music_enabled",        music_enabled)
-	cfg.set_value("settings", "dark_overlay_enabled", dark_overlay_enabled)
-	cfg.save(SAVE_PATH)
-
-func load_game() -> void:
-	var cfg := ConfigFile.new()
-	if cfg.load(SAVE_PATH) != OK:
-		return  # no save yet — first launch
-	completed_lessons        = cfg.get_value("progress", "completed_lessons",        {})
-	completed_folder_quizzes = cfg.get_value("progress", "completed_folder_quizzes", {})
+	if cfg.load(SETTINGS_PATH) != OK:
+		return  # no settings file yet — first launch
 	tts_enabled          = cfg.get_value("settings", "tts_enabled",          false)
 	music_enabled        = cfg.get_value("settings", "music_enabled",        true)
 	dark_overlay_enabled = cfg.get_value("settings", "dark_overlay_enabled", false)
+
+func save_settings() -> void:
+	var cfg := ConfigFile.new()
+	cfg.set_value("settings", "tts_enabled",          tts_enabled)
+	cfg.set_value("settings", "music_enabled",        music_enabled)
+	cfg.set_value("settings", "dark_overlay_enabled", dark_overlay_enabled)
+	cfg.save(SETTINGS_PATH)
+
+# ── Save / load ───────────────────────────────────────
+# Progress persists between sessions, one file per user account
+# in user://saves/<username>.cfg
+
+func _save_path() -> String:
+	return SAVES_DIR + current_user + ".cfg"
+
+func save_game() -> void:
+	if current_user.is_empty():
+		return  # nobody logged in yet — nothing to save to
+	DirAccess.make_dir_recursive_absolute(SAVES_DIR)
+	var cfg := ConfigFile.new()
+	cfg.set_value("progress", "completed_lessons",        completed_lessons)
+	cfg.set_value("progress", "completed_folder_quizzes", completed_folder_quizzes)
+	cfg.save(_save_path())
+
+func load_game() -> void:
+	completed_lessons        = {}
+	completed_folder_quizzes = {}
+	if current_user.is_empty():
+		return
+	var cfg := ConfigFile.new()
+	if cfg.load(_save_path()) != OK:
+		return  # no save yet for this user — first login
+	completed_lessons        = cfg.get_value("progress", "completed_lessons",        {})
+	completed_folder_quizzes = cfg.get_value("progress", "completed_folder_quizzes", {})
+
+# ── Accounts ───────────────────────────────────────────
+# Plain local credential store — offline single-PC use only, no server.
+func account_exists(username: String) -> bool:
+	var cfg := ConfigFile.new()
+	if cfg.load(ACCOUNTS_PATH) != OK:
+		return false
+	return cfg.has_section_key("accounts", username)
+
+func check_password(username: String, password: String) -> bool:
+	var cfg := ConfigFile.new()
+	if cfg.load(ACCOUNTS_PATH) != OK:
+		return false
+	return cfg.get_value("accounts", username, null) == password
+
+func create_account(username: String, password: String) -> void:
+	var cfg := ConfigFile.new()
+	cfg.load(ACCOUNTS_PATH)  # ok if this fails — file may not exist yet
+	cfg.set_value("accounts", username, password)
+	cfg.save(ACCOUNTS_PATH)
+
+func login(username: String) -> void:
+	current_user = username
+	load_game()
+
+func logout() -> void:
+	current_user             = ""
+	world                    = ""
+	lesson_id                = null
+	merged_mode              = false
+	completed_lessons        = {}
+	completed_folder_quizzes = {}
 
 func reset_progress() -> void:
 	completed_lessons        = {}
