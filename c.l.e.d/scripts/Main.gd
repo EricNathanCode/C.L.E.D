@@ -7,7 +7,6 @@ const BGM_MAP: Dictionary = {
 	"menu":    "res://audio/bgm/Menu.mp3",
 	"hotel":   "res://audio/bgm/Hotel_Lobby.mp3",
 	"cafe":    "res://audio/bgm/Cafe.mp3",
-	"police":  "res://audio/bgm/Police_Station.mp3",
 	"library": "res://audio/bgm/Library.mp3",
 }
 

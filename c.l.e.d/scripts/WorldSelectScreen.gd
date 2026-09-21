@@ -3,19 +3,17 @@ extends Control
 #  WORLD SELECT SCREEN  |  scripts/WorldSelectScreen.gd
 # ═══════════════════════════════════════════════════════
 
-const WORLDS: Array = ["hotel", "cafe", "police", "library"]
+const WORLDS: Array = ["hotel", "cafe", "library"]
 
 const WORLD_NAMES: Dictionary = {
 	"hotel":   "Hotel World",
 	"cafe":    "Cafe World",
-	"police":  "Police Station",
 	"library": "Library",
 }
 
 const WORLD_BGS: Dictionary = {
 	"hotel":   "res://images/backgrounds/BG_hotel.png",
 	"cafe":    "res://images/backgrounds/BG_cafe.png",
-	"police":  "res://images/backgrounds/BG_police.png",
 	"library": "res://images/backgrounds/BG_library.png",
 }
 

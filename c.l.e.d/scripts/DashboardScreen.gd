@@ -4,14 +4,12 @@ extends Control
 const _DATA_PATHS: Dictionary = {
 	"hotel":   "res://scripts/data/HotelData.gd",
 	"cafe":    "res://scripts/data/CafeData.gd",
-	"police":  "res://scripts/data/PoliceData.gd",
 	"library": "res://scripts/data/LibraryData.gd",
 }
 
 # ── Lesson metadata ───────────────────────────────────────
 const HOTEL_LESSONS  := [1,2,3,4,5, 8,16,17,18,19,20, 6,21,7,22,23,24]
 const CAFE_LESSONS   := ["C1","C2","C4","C5","C6", "C8","C16","C17","C18","C19","C20", "C7","C21","C3","C22","C23","C24"]
-const POLICE_LESSONS := ["P1","P2","P3","P4","P5", "P8","P16","P17","P18","P19","P20", "P6","P21","P7","P22","P23","P24"]
 const LIBRARY_LESSONS:= ["L1","L2","L3","L4","L5", "L8","L16","L17","L18","L19","L20", "L6","L21","L7","L22","L23","L24"]
 
 const HOTEL_NAMES: Dictionary = {
@@ -52,25 +50,6 @@ const CAFE_NAMES: Dictionary = {
 	"C23": "HAVING | Items Ordered Many Times",
 	"C24": "AS | Rename a Calculated Column",
 }
-const POLICE_NAMES: Dictionary = {
-	"P1":  "SELECT | Handle a Citizen Report",
-	"P2":  "INSERT INTO | Log a New Case",
-	"P3":  "SELECT WHERE | Search a Suspect",
-	"P4":  "UPDATE SET | Update Case Status",
-	"P5":  "DELETE | Close a Cleared Case",
-	"P6":  "ORDER BY | Sort Cases by Priority",
-	"P7":  "GROUP BY | Crime Category Report",
-	"P8":  "IS NULL | Find Unassigned Suspects",
-	"P16": "SELECT DISTINCT | Unique Case Types",
-	"P17": "AND / OR | Filter Multiple Conditions",
-	"P18": "BETWEEN | Fines in a Range",
-	"P19": "LIKE | Search by Partial Suspect Name",
-	"P20": "IN | Cases of Specific Types",
-	"P21": "LIMIT | Show Top 5 Open Cases",
-	"P22": "COUNT / SUM / AVG | Case Statistics",
-	"P23": "HAVING | Case Types with Many Incidents",
-	"P24": "AS | Rename a Calculated Column",
-}
 const LIBRARY_NAMES: Dictionary = {
 	"L1":  "SELECT | Help a Visitor",
 	"L2":  "INSERT INTO | Register a New Borrower",
@@ -93,7 +72,6 @@ const LIBRARY_NAMES: Dictionary = {
 const WORLD_DISPLAY: Dictionary = {
 	"hotel":   "Hotel World",
 	"cafe":    "Cafe World",
-	"police":  "Police Station",
 	"library": "Library",
 }
 
@@ -107,11 +85,6 @@ const CAFE_FOLDERS := [
 	{ "name": "Basic SQL",            "ids": ["C1","C2","C4","C5","C6"] },
 	{ "name": "Filtering Rows",       "ids": ["C8","C16","C17","C18","C19","C20"] },
 	{ "name": "Sorting & Aggregates", "ids": ["C7","C21","C3","C22","C23","C24"] },
-]
-const POLICE_FOLDERS := [
-	{ "name": "Basic SQL",            "ids": ["P1","P2","P3","P4","P5"] },
-	{ "name": "Filtering Rows",       "ids": ["P8","P16","P17","P18","P19","P20"] },
-	{ "name": "Sorting & Aggregates", "ids": ["P6","P21","P7","P22","P23","P24"] },
 ]
 const LIBRARY_FOLDERS := [
 	{ "name": "Basic SQL",            "ids": ["L1","L2","L3","L4","L5"] },
@@ -198,8 +171,6 @@ func build_lessons() -> void:
 			ids = HOTEL_LESSONS;   names = HOTEL_NAMES;   folders = HOTEL_FOLDERS
 		"cafe":
 			ids = CAFE_LESSONS;    names = CAFE_NAMES;    folders = CAFE_FOLDERS
-		"police":
-			ids = POLICE_LESSONS;  names = POLICE_NAMES;  folders = POLICE_FOLDERS
 		"library":
 			ids = LIBRARY_LESSONS; names = LIBRARY_NAMES; folders = LIBRARY_FOLDERS
 		_:
@@ -368,7 +339,6 @@ func _build_merged_lessons() -> void:
 	var all_worlds := [
 		{ "w": "hotel",   "ids": HOTEL_LESSONS,   "names": HOTEL_NAMES,   "folders": HOTEL_FOLDERS },
 		{ "w": "cafe",    "ids": CAFE_LESSONS,     "names": CAFE_NAMES,    "folders": CAFE_FOLDERS },
-		{ "w": "police",  "ids": POLICE_LESSONS,   "names": POLICE_NAMES,  "folders": POLICE_FOLDERS },
 		{ "w": "library", "ids": LIBRARY_LESSONS,  "names": LIBRARY_NAMES, "folders": LIBRARY_FOLDERS },
 	]
 

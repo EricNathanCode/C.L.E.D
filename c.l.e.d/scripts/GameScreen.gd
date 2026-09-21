@@ -73,7 +73,6 @@ const GM_SCENES: Dictionary = {
 
 const BG_HOTEL   := "res://images/backgrounds/BG_hotel.png"
 const BG_CAFE    := "res://images/backgrounds/BG_cafe.png"
-const BG_POLICE  := "res://images/backgrounds/BG_police.png"
 const BG_LIBRARY := "res://images/backgrounds/BG_library.png"
 
 const CHAR_BASE := "res://images/characters/NPC_adults/"
@@ -292,7 +291,7 @@ func _unhandled_input(event: InputEvent) -> void:
 # ── Texture loading ───────────────────────────────────
 func _load_all_textures() -> void:
 	for pair in [["hotel", BG_HOTEL], ["cafe", BG_CAFE],
-				 ["police", BG_POLICE], ["library", BG_LIBRARY]]:
+				 ["library", BG_LIBRARY]]:
 		var tex := _load_texture(pair[1])
 		if tex:
 			_bg_textures[pair[0]] = tex
@@ -355,7 +354,6 @@ func _set_expression(char_key: String, npc_override: String = "") -> void:
 		match GameManager.world:
 			"hotel":   path = CHAR_BASE + "adult_1/idle.png"
 			"cafe":    path = CHAR_BASE + "adult_3/idle.png"
-			"police":  path = CHAR_BASE + "adult_5/idle.png"
 			"library": path = CHAR_BASE + "adult_7/idle.png"
 			_:         path = CHAR_BASE + "adult_1/idle.png"
 
@@ -710,7 +708,6 @@ func _get_story(id) -> Array:
 	match GameManager.world:
 		"hotel":   script = preload("res://scripts/data/HotelData.gd").new()
 		"cafe":    script = preload("res://scripts/data/CafeData.gd").new()
-		"police":  script = preload("res://scripts/data/PoliceData.gd").new()
 		"library": script = preload("res://scripts/data/LibraryData.gd").new()
 		_:         script = preload("res://scripts/data/HotelData.gd").new()
 	var result: Array = []

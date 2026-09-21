@@ -96,51 +96,6 @@ const QUIZ_DATA: Dictionary = {
 			{"desc": "Label the SUM result as sales.", "code": "SELECT SUM(price) [BLANK] sales FROM orders;", "answer": "AS", "hint": "AS renames a result column."},
 		],
 	],
-	"police": [
-		# F0 Basic SQL
-		[
-			{"desc": "Retrieve every column from the cases table.", "code": "[BLANK] * FROM cases;", "answer": "SELECT", "hint": "The keyword that starts a read query."},
-			{"desc": "Select all columns from cases.", "code": "SELECT [BLANK] FROM cases;", "answer": "*", "hint": "One character that means all columns."},
-			{"desc": "Log a new Robbery case.", "code": "[BLANK] INTO cases (case_type)\nVALUES ('Robbery');", "answer": "INSERT", "hint": "The keyword that adds a new row."},
-			{"desc": "Complete the insert statement.", "code": "INSERT [BLANK] cases (case_type)\nVALUES ('Theft');", "answer": "INTO", "hint": "INSERT ___ tablename (cols) VALUES ..."},
-			{"desc": "Find cases of type Robbery.", "code": "SELECT * FROM cases\n[BLANK] case_type = 'Robbery';", "answer": "WHERE", "hint": "Filters rows by a condition."},
-			{"desc": "Match the exact status value.", "code": "SELECT * FROM cases\nWHERE status [BLANK] 'Open';", "answer": "=", "hint": "Use = for an exact match."},
-			{"desc": "Mark case 3 as Closed.", "code": "[BLANK] cases SET status='Closed'\nWHERE id = 3;", "answer": "UPDATE", "hint": "The keyword that changes existing rows."},
-			{"desc": "Complete the update statement.", "code": "UPDATE cases [BLANK] status='Open'\nWHERE id = 1;", "answer": "SET", "hint": "UPDATE table ___ column = value."},
-			{"desc": "Remove the case with id 5.", "code": "[BLANK] FROM cases WHERE id = 5;", "answer": "DELETE", "hint": "The keyword that removes rows."},
-			{"desc": "Complete the delete statement.", "code": "DELETE [BLANK] cases WHERE id = 9;", "answer": "FROM", "hint": "DELETE ___ tablename WHERE ..."},
-		],
-		# F1 Filtering Rows
-		[
-			{"desc": "Find cases with no location recorded.", "code": "SELECT * FROM cases WHERE location [BLANK] NULL;", "answer": "IS", "hint": "___ NULL detects missing values."},
-			{"desc": "Find cases that DO have a location.", "code": "SELECT * FROM cases WHERE location IS [BLANK] NULL;", "answer": "NOT", "hint": "IS ___ NULL means the value is present."},
-			{"desc": "Get the unique crime types.", "code": "SELECT [BLANK] case_type FROM cases;", "answer": "DISTINCT", "hint": "Removes duplicate values."},
-			{"desc": "List each district only once.", "code": "SELECT [BLANK] district FROM cases;", "answer": "DISTINCT", "hint": "Placed right after SELECT."},
-			{"desc": "Cases that are Open and High priority.", "code": "SELECT * FROM cases\nWHERE status='Open' [BLANK] priority='High';", "answer": "AND", "hint": "Both conditions must be true."},
-			{"desc": "Cases that are Robbery or Fraud.", "code": "SELECT * FROM cases\nWHERE case_type='Robbery' [BLANK] case_type='Fraud';", "answer": "OR", "hint": "At least one condition is true."},
-			{"desc": "Cases with a fine from 500 to 5000.", "code": "SELECT * FROM cases\nWHERE fine [BLANK] 500 AND 5000;", "answer": "BETWEEN", "hint": "Inclusive range keyword."},
-			{"desc": "Complete the range filter.", "code": "SELECT * FROM cases\nWHERE fine BETWEEN 500 [BLANK] 5000;", "answer": "AND", "hint": "BETWEEN low ___ high."},
-			{"desc": "Suspects whose name starts with R.", "code": "SELECT * FROM cases WHERE suspect [BLANK] 'R%';", "answer": "LIKE", "hint": "Pattern-matching keyword."},
-			{"desc": "Fill the wildcard that matches any characters.", "code": "SELECT * FROM cases WHERE suspect LIKE 'R[BLANK]';", "answer": "%", "hint": "% matches any sequence of characters."},
-			{"desc": "Cases of type Robbery, Theft, or Fraud.", "code": "SELECT * FROM cases\nWHERE case_type [BLANK] ('Robbery','Theft','Fraud');", "answer": "IN", "hint": "Matches any value in a list."},
-			{"desc": "Officers in precinct 1, 2, or 3.", "code": "SELECT * FROM officers\nWHERE precinct [BLANK] (1,2,3);", "answer": "IN", "hint": "IN (v1, v2, ...)."},
-		],
-		# F2 Sorting & Aggregates
-		[
-			{"desc": "Sort cases by filed_date.", "code": "SELECT * FROM cases [BLANK] BY filed_date;", "answer": "ORDER", "hint": "___ BY column."},
-			{"desc": "Sort cases by fine high to low.", "code": "SELECT * FROM cases ORDER BY fine [BLANK];", "answer": "DESC", "hint": "Descending order keyword."},
-			{"desc": "Show only the first 5 open cases.", "code": "SELECT * FROM cases [BLANK] 5;", "answer": "LIMIT", "hint": "Restricts the number of rows."},
-			{"desc": "Return just the top 10 cases.", "code": "SELECT * FROM cases LIMIT [BLANK];", "answer": "10", "hint": "LIMIT N rows."},
-			{"desc": "Count cases per crime type.", "code": "SELECT case_type, COUNT(*) FROM cases\nGROUP [BLANK] case_type;", "answer": "BY", "hint": "GROUP ___ column."},
-			{"desc": "Group cases by district.", "code": "SELECT district, COUNT(*) FROM cases\n[BLANK] BY district;", "answer": "GROUP", "hint": "___ BY groups matching rows."},
-			{"desc": "Count the total number of cases.", "code": "SELECT [BLANK](id) FROM cases;", "answer": "COUNT", "hint": "Counts rows."},
-			{"desc": "Total of all fines collected.", "code": "SELECT [BLANK](fine) FROM cases;", "answer": "SUM", "hint": "Adds up all values."},
-			{"desc": "Crime types with more than 3 incidents.", "code": "SELECT case_type, COUNT(*) FROM cases\nGROUP BY case_type [BLANK] COUNT(*) > 3;", "answer": "HAVING", "hint": "Filters grouped results."},
-			{"desc": "Districts with over 5 cases.", "code": "SELECT district, COUNT(*) FROM cases\nGROUP BY district [BLANK] COUNT(*) > 5;", "answer": "HAVING", "hint": "Like WHERE, but for groups."},
-			{"desc": "Rename the COUNT column to total.", "code": "SELECT COUNT(*) [BLANK] total FROM cases;", "answer": "AS", "hint": "Gives a column an alias."},
-			{"desc": "Label the SUM result as total_fines.", "code": "SELECT SUM(fine) [BLANK] total_fines FROM cases;", "answer": "AS", "hint": "AS renames a result column."},
-		],
-	],
 	"library": [
 		# F0 Basic SQL
 		[
