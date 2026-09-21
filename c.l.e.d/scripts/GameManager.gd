@@ -100,8 +100,42 @@ func create_account(username: String, password: String) -> void:
 func login(username: String) -> void:
 	current_user = username
 	load_game()
+	_remember_session(username)
+
+# ── Session (remember the last signed-in user across launches) ──
+# Set automatically on every login. Only cleared on an explicit
+# logout, so quitting the app (without logging out) keeps the
+# player signed in for next time — no need to log in again.
+const SESSION_PATH := "user://session.cfg"
+
+func _remember_session(username: String) -> void:
+	var cfg := ConfigFile.new()
+	cfg.set_value("session", "username", username)
+	cfg.save(SESSION_PATH)
+
+func _forget_session() -> void:
+	var cfg := ConfigFile.new()
+	cfg.set_value("session", "username", "")
+	cfg.save(SESSION_PATH)
+
+func get_remembered_user() -> String:
+	var cfg := ConfigFile.new()
+	if cfg.load(SESSION_PATH) != OK:
+		return ""
+	return cfg.get_value("session", "username", "")
+
+# Called once at app startup. Returns true if a remembered user was
+# found and signed back in automatically (skipping the Login Screen).
+func try_auto_login() -> bool:
+	var username: String = get_remembered_user()
+	if username.is_empty() or not account_exists(username):
+		return false
+	current_user = username
+	load_game()
+	return true
 
 func logout() -> void:
+	_forget_session()
 	current_user             = ""
 	world                    = ""
 	lesson_id                = null
@@ -162,10 +196,10 @@ const VOICE_PROFILES: Dictionary = {
 	"mgr":             [88, 0.68, 0.80],
 	"cafe_customer":   [85, 1.30, 1.10],
 	"cafe_supervisor": [87, 0.75, 0.85],
-	"citizen":         [80, 1.10, 0.90],
-	"chief":           [93, 0.62, 0.78],
 	"visitor":         [78, 1.20, 0.93],
 	"librarian":       [74, 0.88, 0.80],
+	"passenger":       [82, 1.05, 0.95],
+	"pilot":           [90, 0.65, 0.82],
 	"you":             [82, 1.00, 1.00],
 	"scene":           [78, 0.90, 0.85],
 }

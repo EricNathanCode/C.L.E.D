@@ -17,7 +17,10 @@ func _ready() -> void:
 	_setup_bgm_player()
 	_build_dark_overlay()
 	_play_bgm("menu")
-	show_screen("login")
+	if GameManager.try_auto_login():
+		show_screen("world_select")
+	else:
+		show_screen("login")
 
 func _setup_bgm_player() -> void:
 	if has_node("BGM"):

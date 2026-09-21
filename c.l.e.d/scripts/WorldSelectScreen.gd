@@ -3,17 +3,19 @@ extends Control
 #  WORLD SELECT SCREEN  |  scripts/WorldSelectScreen.gd
 # ═══════════════════════════════════════════════════════
 
-const WORLDS: Array = ["hotel", "cafe", "library"]
+const WORLDS: Array = ["hotel", "cafe", "airport", "library"]
 
 const WORLD_NAMES: Dictionary = {
 	"hotel":   "Hotel World",
 	"cafe":    "Cafe World",
+	"airport": "Airport World",
 	"library": "Library",
 }
 
 const WORLD_BGS: Dictionary = {
 	"hotel":   "res://images/backgrounds/BG_hotel.png",
 	"cafe":    "res://images/backgrounds/BG_cafe.png",
+	"airport": "res://images/backgrounds/BG_airport.png",
 	"library": "res://images/backgrounds/BG_library.png",
 }
 
@@ -45,6 +47,12 @@ func _ready() -> void:
 	$SettingsOverlay/SettingsPanel/VBox/TitleRow/CloseButton.pressed.connect(_on_settings_close)
 	_music_btn.pressed.connect(_on_music_toggle)
 	_tts_btn.pressed.connect(_on_tts_toggle)
+
+	$ExitConfirmOverlay/DimBG.gui_input.connect(_on_exit_dim_input)
+	$ExitConfirmOverlay/ConfirmPanel/VBox/LogoutExitButton.pressed.connect(_on_exit_logout)
+	$ExitConfirmOverlay/ConfirmPanel/VBox/StaySignedInButton.pressed.connect(_on_exit_stay)
+	$ExitConfirmOverlay/ConfirmPanel/VBox/CancelButton.pressed.connect(_on_exit_cancel)
+	$ExitConfirmOverlay.z_index = 20
 
 	# Dark mode toggle | added programmatically so no tscn edit needed
 	_dark_btn = Button.new()
@@ -81,6 +89,7 @@ func _ready() -> void:
 
 	# Settings panel dark card
 	_style_settings_panel()
+	_style_exit_confirm_panel()
 
 	var title_lbl := $SettingsOverlay/SettingsPanel/VBox/TitleRow/TitleLabel
 	title_lbl.text = "Settings"
@@ -149,6 +158,30 @@ func _style_settings_panel() -> void:
 	s.content_margin_bottom = 20
 	_panel.add_theme_stylebox_override("panel", s)
 
+func _style_exit_confirm_panel() -> void:
+	var s := StyleBoxFlat.new()
+	s.bg_color = Color(0.10, 0.12, 0.17, 0.98)
+	s.border_color = Color(0.28, 0.33, 0.46)
+	s.set_border_width_all(2)
+	s.set_corner_radius_all(14)
+	s.content_margin_left   = 22
+	s.content_margin_right  = 22
+	s.content_margin_top    = 20
+	s.content_margin_bottom = 20
+	$ExitConfirmOverlay/ConfirmPanel.add_theme_stylebox_override("panel", s)
+
+	var title_lbl := $ExitConfirmOverlay/ConfirmPanel/VBox/TitleLabel
+	title_lbl.add_theme_font_size_override("font_size", 18)
+	title_lbl.add_theme_color_override("font_color", Color.WHITE)
+
+	var msg_lbl := $ExitConfirmOverlay/ConfirmPanel/VBox/MessageLabel
+	msg_lbl.add_theme_font_size_override("font_size", 14)
+	msg_lbl.add_theme_color_override("font_color", Color(0.70, 0.74, 0.82))
+
+	_style_btn($ExitConfirmOverlay/ConfirmPanel/VBox/LogoutExitButton,    "secondary", 15)
+	_style_btn($ExitConfirmOverlay/ConfirmPanel/VBox/StaySignedInButton, "primary",   15)
+	_style_btn($ExitConfirmOverlay/ConfirmPanel/VBox/CancelButton,       "ghost",     14)
+
 func _preload_backgrounds() -> void:
 	for world in WORLDS:
 		var tex := _load_texture(WORLD_BGS[world])
@@ -186,7 +219,24 @@ func _on_enter() -> void:
 	get_tree().root.get_node("Main").show_screen("dashboard")
 
 func _on_exit() -> void:
+	$ExitConfirmOverlay.visible = true
+
+# ── Exit confirmation (log out or stay signed in) ─────
+func _on_exit_logout() -> void:
+	GameManager.logout()
 	get_tree().quit()
+
+func _on_exit_stay() -> void:
+	# Session was already remembered on login — just quit, no
+	# need to log in again next launch.
+	get_tree().quit()
+
+func _on_exit_cancel() -> void:
+	$ExitConfirmOverlay.visible = false
+
+func _on_exit_dim_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.pressed:
+		_on_exit_cancel()
 
 # ── Settings panel ────────────────────────────────────
 func _on_settings_open() -> void:

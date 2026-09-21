@@ -4,12 +4,14 @@ extends Control
 const _DATA_PATHS: Dictionary = {
 	"hotel":   "res://scripts/data/HotelData.gd",
 	"cafe":    "res://scripts/data/CafeData.gd",
+	"airport": "res://scripts/data/AirportData.gd",
 	"library": "res://scripts/data/LibraryData.gd",
 }
 
 # ── Lesson metadata ───────────────────────────────────────
 const HOTEL_LESSONS  := [1,2,3,4,5, 8,16,17,18,19,20, 6,21,7,22,23,24]
 const CAFE_LESSONS   := ["C1","C2","C4","C5","C6", "C8","C16","C17","C18","C19","C20", "C7","C21","C3","C22","C23","C24"]
+const AIRPORT_LESSONS:= ["A1","A2","A3","A4","A5", "A8","A16","A17","A18","A19","A20", "A6","A21","A7","A22","A23","A24"]
 const LIBRARY_LESSONS:= ["L1","L2","L3","L4","L5", "L8","L16","L17","L18","L19","L20", "L6","L21","L7","L22","L23","L24"]
 
 const HOTEL_NAMES: Dictionary = {
@@ -50,6 +52,25 @@ const CAFE_NAMES: Dictionary = {
 	"C23": "HAVING | Items Ordered Many Times",
 	"C24": "AS | Rename a Calculated Column",
 }
+const AIRPORT_NAMES: Dictionary = {
+	"A1":  "SELECT | Assist a Passenger",
+	"A2":  "INSERT INTO | Check In a New Passenger",
+	"A3":  "SELECT WHERE | Find a Lost Boarding Pass",
+	"A4":  "UPDATE SET | Fix a Misspelled Name",
+	"A5":  "DELETE | Cancel a Booking",
+	"A6":  "ORDER BY | Sort the Passenger Manifest",
+	"A7":  "GROUP BY | Seat Class Load Report",
+	"A8":  "IS NULL | Find Missing Meal Preferences",
+	"A16": "SELECT DISTINCT | Unique Destinations",
+	"A17": "AND / OR | Filter Multiple Conditions",
+	"A18": "BETWEEN | Fares in a Price Range",
+	"A19": "LIKE | Search by Partial Name",
+	"A20": "IN | Bookings to Specific Destinations",
+	"A21": "LIMIT | Show Top 5 Passengers",
+	"A22": "COUNT / SUM / AVG | Passenger Statistics",
+	"A23": "HAVING | Destinations with Many Bookings",
+	"A24": "AS | Rename a Calculated Column",
+}
 const LIBRARY_NAMES: Dictionary = {
 	"L1":  "SELECT | Help a Visitor",
 	"L2":  "INSERT INTO | Register a New Borrower",
@@ -72,6 +93,7 @@ const LIBRARY_NAMES: Dictionary = {
 const WORLD_DISPLAY: Dictionary = {
 	"hotel":   "Hotel World",
 	"cafe":    "Cafe World",
+	"airport": "Airport World",
 	"library": "Library",
 }
 
@@ -86,6 +108,11 @@ const CAFE_FOLDERS := [
 	{ "name": "Filtering Rows",       "ids": ["C8","C16","C17","C18","C19","C20"] },
 	{ "name": "Sorting & Aggregates", "ids": ["C7","C21","C3","C22","C23","C24"] },
 ]
+const AIRPORT_FOLDERS := [
+	{ "name": "Basic SQL",            "ids": ["A1","A2","A3","A4","A5"] },
+	{ "name": "Filtering Rows",       "ids": ["A8","A16","A17","A18","A19","A20"] },
+	{ "name": "Sorting & Aggregates", "ids": ["A6","A21","A7","A22","A23","A24"] },
+]
 const LIBRARY_FOLDERS := [
 	{ "name": "Basic SQL",            "ids": ["L1","L2","L3","L4","L5"] },
 	{ "name": "Filtering Rows",       "ids": ["L8","L16","L17","L18","L19","L20"] },
@@ -99,6 +126,12 @@ const LIBRARY_FOLDERS := [
 @onready var _lesson_list   := $ContentRow/LeftPanel/ListPad/ScrollContainer/LessonList
 @onready var _preview_title := $ContentRow/RightPanel/RightPad/PreviewArea/PreviewTitle
 @onready var _comic_strip   := $ContentRow/RightPanel/RightPad/PreviewArea/ComicStrip
+
+# Hovering lesson buttons rebuilds the comic-strip preview on every
+# mouse_entered event, so textures must be cached — without this,
+# any background/sprite not yet Godot-imported gets fully re-decoded
+# from disk on every single hover.
+var _preview_tex_cache: Dictionary = {}
 
 func _ready() -> void:
 	# Full dark background
@@ -171,6 +204,8 @@ func build_lessons() -> void:
 			ids = HOTEL_LESSONS;   names = HOTEL_NAMES;   folders = HOTEL_FOLDERS
 		"cafe":
 			ids = CAFE_LESSONS;    names = CAFE_NAMES;    folders = CAFE_FOLDERS
+		"airport":
+			ids = AIRPORT_LESSONS; names = AIRPORT_NAMES; folders = AIRPORT_FOLDERS
 		"library":
 			ids = LIBRARY_LESSONS; names = LIBRARY_NAMES; folders = LIBRARY_FOLDERS
 		_:
@@ -339,6 +374,7 @@ func _build_merged_lessons() -> void:
 	var all_worlds := [
 		{ "w": "hotel",   "ids": HOTEL_LESSONS,   "names": HOTEL_NAMES,   "folders": HOTEL_FOLDERS },
 		{ "w": "cafe",    "ids": CAFE_LESSONS,     "names": CAFE_NAMES,    "folders": CAFE_FOLDERS },
+		{ "w": "airport", "ids": AIRPORT_LESSONS,  "names": AIRPORT_NAMES, "folders": AIRPORT_FOLDERS },
 		{ "w": "library", "ids": LIBRARY_LESSONS,  "names": LIBRARY_NAMES, "folders": LIBRARY_FOLDERS },
 	]
 
@@ -499,11 +535,45 @@ func _collect_frames(lesson_id) -> Array:
 	return frames
 
 func _load_preview_texture(res_path: String) -> Texture2D:
+	if _preview_tex_cache.has(res_path):
+		return _preview_tex_cache[res_path]
+
+	var tex: Texture2D = null
+
 	if ResourceLoader.exists(res_path):
-		var tex := ResourceLoader.load(res_path) as Texture2D
-		if tex:
-			return tex
-	return null
+		tex = ResourceLoader.load(res_path) as Texture2D
+
+	# Fallback for assets Godot hasn't generated an .import cache entry
+	# for yet (e.g. a background just added to the project) — read the
+	# raw file bytes directly instead of relying on the resource cache.
+	if tex == null:
+		var abs_path: String = ProjectSettings.globalize_path(res_path)
+		var fa := FileAccess.open(abs_path, FileAccess.READ)
+		if fa:
+			var data: PackedByteArray = fa.get_buffer(fa.get_length())
+			fa.close()
+			var img := Image.new()
+			var loaded := false
+			if res_path.ends_with(".jpg") or res_path.ends_with(".jpeg"):
+				loaded = img.load_jpg_from_buffer(data) == OK
+			else:
+				loaded = img.load_png_from_buffer(data) == OK
+			if loaded:
+				if img.get_format() != Image.FORMAT_RGBA8:
+					img.convert(Image.FORMAT_RGBA8)
+				tex = ImageTexture.create_from_image(img)
+
+	if tex == null:
+		var img2 := Image.new()
+		var abs_path2: String = ProjectSettings.globalize_path(res_path)
+		if img2.load(abs_path2) == OK:
+			if img2.get_format() != Image.FORMAT_RGBA8:
+				img2.convert(Image.FORMAT_RGBA8)
+			tex = ImageTexture.create_from_image(img2)
+
+	if tex != null:
+		_preview_tex_cache[res_path] = tex
+	return tex
 
 func _show_preview(lesson_id) -> void:
 	for child in _comic_strip.get_children():

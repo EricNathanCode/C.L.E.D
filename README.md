@@ -1,6 +1,6 @@
 ﻿# C.L.E.D.
 
-**C.L.E.D.** (Capstone) is a 2D story-driven learning game built in **Godot 4.6** that teaches SQL through role-play scenarios. Instead of memorizing syntax from a slide deck, players step into everyday jobs — hotel receptionist, café barista, librarian — and write real SQL queries to solve the problems each character brings them.
+**C.L.E.D.** (Capstone) is a 2D story-driven learning game built in **Godot 4.6** that teaches SQL through role-play scenarios. Instead of memorizing syntax from a slide deck, players step into everyday jobs — hotel receptionist, café barista, airport check-in agent, librarian — and write real SQL queries to solve the problems each character brings them.
 
 ## Concept
 
@@ -8,15 +8,18 @@ Every lesson opens with a short dialogue scene: an NPC walks up with a request (
 
 ## Worlds
 
-The same 17-lesson SQL curriculum is retold across three settings, so the player practices the same concepts in different narrative contexts:
+The same 17-lesson SQL curriculum is retold across four settings, so the player practices the same concepts in different narrative contexts:
 
 | World | Setting | Records the player manages |
 |---|---|---|
 | 🏨 Hotel World | Front desk | Guests, bookings, rooms |
 | ☕ Cafe World | Order counter | Customers, orders, menu items |
+| ✈️ Airport World | Check-in counter | Passengers, bookings, seat classes |
 | 📚 Library | Front desk | Borrowers, books, genres |
 
-A **Merge Worlds** mode is also available, which threads all three worlds' lessons into a single continuous path.
+Airport World's boss character is the **Captain** (pilot), who stops by the check-in counter before departure to review the passenger manifest — mirroring the manager/supervisor role each other world has for its report-style lessons (Hotel's manager, Cafe's supervisor, the Library's head librarian).
+
+A **Merge Worlds** mode is also available, which threads all four worlds' lessons into a single continuous path.
 
 ## Curriculum structure
 
@@ -36,7 +39,7 @@ Each chapter ends with a **Folder Challenge** — a quiz that must be passed to 
 - **Hint system** — an on-demand hint for players who get stuck
 - **Folder Challenges** — gated quizzes that lock the next chapter until passed
 - **World Select & Dashboard** — browse worlds, preview a lesson's story as a mini comic strip before starting it, and track completion %
-- **Merge Worlds mode** — play all three worlds' lessons as one combined path
+- **Merge Worlds mode** — play all four worlds' lessons as one combined path
 - **SQL glossary / recap** — every command learned in a lesson is logged and can be reviewed as a cheat-sheet
 - **Accessibility & settings** — text-to-speech narration with per-character voice profiles, toggleable background music, and a dark-mode overlay
 - **Persistent save file** — progress and settings are stored locally in `user://cled_save.cfg` via Godot's `ConfigFile`, so play resumes across sessions
@@ -46,7 +49,7 @@ Each chapter ends with a **Folder Challenge** — a quiz that must be passed to 
 
 - **Engine:** Godot 4.6 (GL Compatibility renderer, for broad hardware support)
 - **Language:** GDScript
-- **Audio:** Original/licensed BGM tracks per world (Hotel Lobby, Cafe, Library) plus a menu theme
+- **Audio:** Original/licensed BGM tracks per world (Hotel Lobby, Cafe, Library) plus a menu theme — Airport World does not have a dedicated track yet and falls back to the menu theme
 
 ## Project layout
 
@@ -65,6 +68,7 @@ c.l.e.d/
 │   └── data/                   # Per-world lesson content
 │       ├── HotelData.gd
 │       ├── CafeData.gd
+│       ├── AirportData.gd
 │       └── LibraryData.gd
 ├── gamemode/                   # One reusable mini-scene per SQL concept
 │   ├── scene/GM_Select.tscn, GM_Join.tscn, GM_CreateTable.tscn, ...

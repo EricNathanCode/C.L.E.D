@@ -96,6 +96,51 @@ const QUIZ_DATA: Dictionary = {
 			{"desc": "Label the SUM result as sales.", "code": "SELECT SUM(price) [BLANK] sales FROM orders;", "answer": "AS", "hint": "AS renames a result column."},
 		],
 	],
+	"airport": [
+		# F0 Basic SQL
+		[
+			{"desc": "Retrieve every column from the passengers table.", "code": "[BLANK] * FROM passengers;", "answer": "SELECT", "hint": "The keyword that starts a read query."},
+			{"desc": "Select all columns from passengers.", "code": "SELECT [BLANK] FROM passengers;", "answer": "*", "hint": "One character that means all columns."},
+			{"desc": "Check in a new passenger named Elena.", "code": "[BLANK] INTO passengers (first_name)\nVALUES ('Elena');", "answer": "INSERT", "hint": "The keyword that adds a new row."},
+			{"desc": "Complete the insert statement.", "code": "INSERT [BLANK] passengers (first_name)\nVALUES ('Marco');", "answer": "INTO", "hint": "INSERT ___ tablename (cols) VALUES ..."},
+			{"desc": "Find passengers seated in Business class.", "code": "SELECT * FROM passengers\n[BLANK] seat_class = 'Business';", "answer": "WHERE", "hint": "Filters rows by a condition."},
+			{"desc": "Match the exact status value.", "code": "SELECT * FROM passengers\nWHERE checked_in [BLANK] 'Yes';", "answer": "=", "hint": "Use = for an exact match."},
+			{"desc": "Mark passenger 3 as checked in.", "code": "[BLANK] passengers SET checked_in='Yes'\nWHERE id = 3;", "answer": "UPDATE", "hint": "The keyword that changes existing rows."},
+			{"desc": "Complete the update statement.", "code": "UPDATE passengers [BLANK] checked_in='Yes'\nWHERE id = 1;", "answer": "SET", "hint": "UPDATE table ___ column = value."},
+			{"desc": "Remove the booking with id 5.", "code": "[BLANK] FROM bookings WHERE id = 5;", "answer": "DELETE", "hint": "The keyword that removes rows."},
+			{"desc": "Complete the delete statement.", "code": "DELETE [BLANK] bookings WHERE id = 9;", "answer": "FROM", "hint": "DELETE ___ tablename WHERE ..."},
+		],
+		# F1 Filtering Rows
+		[
+			{"desc": "Find passengers with no meal preference recorded.", "code": "SELECT * FROM passengers WHERE meal_pref [BLANK] NULL;", "answer": "IS", "hint": "___ NULL detects missing values."},
+			{"desc": "Find passengers that DO have a meal preference.", "code": "SELECT * FROM passengers WHERE meal_pref IS [BLANK] NULL;", "answer": "NOT", "hint": "IS ___ NULL means the value is present."},
+			{"desc": "Get the unique seat classes.", "code": "SELECT [BLANK] seat_class FROM passengers;", "answer": "DISTINCT", "hint": "Removes duplicate values."},
+			{"desc": "List each destination only once.", "code": "SELECT [BLANK] destination FROM bookings;", "answer": "DISTINCT", "hint": "Placed right after SELECT."},
+			{"desc": "Business class passengers who also checked in.", "code": "SELECT * FROM passengers\nWHERE seat_class='Business' [BLANK] checked_in='Yes';", "answer": "AND", "hint": "Both conditions must be true."},
+			{"desc": "Passengers who are Business or First class.", "code": "SELECT * FROM passengers\nWHERE seat_class='Business' [BLANK] seat_class='First';", "answer": "OR", "hint": "At least one condition is true."},
+			{"desc": "Bookings priced from 200 to 500.", "code": "SELECT * FROM bookings\nWHERE ticket_price [BLANK] 200 AND 500;", "answer": "BETWEEN", "hint": "Inclusive range keyword."},
+			{"desc": "Complete the range filter.", "code": "SELECT * FROM bookings\nWHERE ticket_price BETWEEN 200 [BLANK] 500;", "answer": "AND", "hint": "BETWEEN low ___ high."},
+			{"desc": "Passengers whose name starts with D.", "code": "SELECT * FROM passengers WHERE last_name [BLANK] 'D%';", "answer": "LIKE", "hint": "Pattern-matching keyword."},
+			{"desc": "Fill the wildcard that matches any characters.", "code": "SELECT * FROM passengers WHERE last_name LIKE 'D[BLANK]';", "answer": "%", "hint": "% matches any sequence of characters."},
+			{"desc": "Bookings to Manila, Cebu, or Davao.", "code": "SELECT * FROM bookings\nWHERE destination [BLANK] ('Manila','Cebu','Davao');", "answer": "IN", "hint": "Matches any value in a list."},
+			{"desc": "Passengers seated in Business or First class.", "code": "SELECT * FROM passengers\nWHERE seat_class [BLANK] ('Business','First');", "answer": "IN", "hint": "IN (v1, v2, ...)."},
+		],
+		# F2 Sorting & Aggregates
+		[
+			{"desc": "Sort passengers by last name A to Z.", "code": "SELECT * FROM passengers [BLANK] BY last_name;", "answer": "ORDER", "hint": "___ BY column."},
+			{"desc": "Sort bookings by ticket price high to low.", "code": "SELECT * FROM bookings ORDER BY ticket_price [BLANK];", "answer": "DESC", "hint": "Descending order keyword."},
+			{"desc": "Show only the first 5 passengers.", "code": "SELECT * FROM passengers [BLANK] 5;", "answer": "LIMIT", "hint": "Restricts the number of rows."},
+			{"desc": "Return just the top 10 passengers.", "code": "SELECT * FROM passengers LIMIT [BLANK];", "answer": "10", "hint": "LIMIT N rows."},
+			{"desc": "Count passengers per seat class.", "code": "SELECT seat_class, COUNT(*) FROM passengers\nGROUP [BLANK] seat_class;", "answer": "BY", "hint": "GROUP ___ column."},
+			{"desc": "Group bookings by destination.", "code": "SELECT destination, COUNT(*) FROM bookings\n[BLANK] BY destination;", "answer": "GROUP", "hint": "___ BY groups matching rows."},
+			{"desc": "Count the total number of passengers.", "code": "SELECT [BLANK](id) FROM passengers;", "answer": "COUNT", "hint": "Counts rows."},
+			{"desc": "Total revenue from all bookings.", "code": "SELECT [BLANK](ticket_price) FROM bookings;", "answer": "SUM", "hint": "Adds up all values."},
+			{"desc": "Destinations with more than 1 booking.", "code": "SELECT destination, COUNT(*) FROM bookings\nGROUP BY destination [BLANK] COUNT(*) > 1;", "answer": "HAVING", "hint": "Filters grouped results."},
+			{"desc": "Seat classes with over 3 passengers.", "code": "SELECT seat_class, COUNT(*) FROM passengers\nGROUP BY seat_class [BLANK] COUNT(*) > 3;", "answer": "HAVING", "hint": "Like WHERE, but for groups."},
+			{"desc": "Rename the COUNT column to total.", "code": "SELECT COUNT(*) [BLANK] total FROM passengers;", "answer": "AS", "hint": "Gives a column an alias."},
+			{"desc": "Label the SUM result as revenue.", "code": "SELECT SUM(ticket_price) [BLANK] revenue FROM bookings;", "answer": "AS", "hint": "AS renames a result column."},
+		],
+	],
 	"library": [
 		# F0 Basic SQL
 		[
