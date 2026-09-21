@@ -8,7 +8,7 @@ Every lesson opens with a short dialogue scene: an NPC walks up with a request (
 
 ## Worlds
 
-The same 44-lesson SQL curriculum is retold across four settings, so the player practices the same concepts in different narrative contexts:
+The same 17-lesson SQL curriculum is retold across four settings, so the player practices the same concepts in different narrative contexts:
 
 | World | Setting | Records the player manages |
 |---|---|---|
@@ -21,17 +21,11 @@ A **Merge Worlds** mode is also available, which threads all four worlds' lesson
 
 ## Curriculum structure
 
-Each world's 44 lessons are grouped into 9 unlockable chapters ("folders"), moving from fundamentals to advanced database design:
+Each world's 17 lessons are grouped into 3 unlockable chapters ("folders"), focused on core SQL querying (scope trimmed from an earlier, larger curriculum per panel feedback):
 
 1. **Basic SQL** — `SELECT`, `INSERT INTO`, `SELECT WHERE`, `UPDATE SET`, `DELETE`
 2. **Filtering Rows** — `IS NULL`, `SELECT DISTINCT`, `AND`/`OR`, `BETWEEN`, `LIKE`, `IN`
 3. **Sorting & Aggregates** — `ORDER BY`, `LIMIT`, `GROUP BY`, `COUNT`/`SUM`/`AVG`, `HAVING`, `AS`
-4. **Joins & Subqueries** — `JOIN`, `LEFT JOIN`, `SUBQUERY`, `UNION`
-5. **Functions** — `DATE` functions, string functions, `COALESCE`
-6. **Creating Tables** — `CREATE DATABASE`, `CREATE TABLE`, `INT`/`TEXT`/`REAL` data types
-7. **Constraints & Keys** — `PRIMARY KEY`, `NOT NULL`, `UNIQUE`, `DEFAULT`, `FOREIGN KEY`, `CHECK`
-8. **Schema Management** — `ALTER TABLE`, `DROP TABLE`, `TRUNCATE`, indexes, views
-9. **Advanced Concepts** — normalization, transactions, `CASE WHEN`, `GRANT`/`REVOKE`, ER diagrams
 
 Each chapter ends with a **Folder Challenge** — a quiz that must be passed to unlock the next chapter. Lessons within a chapter also unlock sequentially as prior lessons are completed.
 

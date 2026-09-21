@@ -1,10 +1,11 @@
-extends Control
+﻿extends Control
 # ═══════════════════════════════════════════════════════
 #  FOLDER QUIZ SCREEN  |  scripts/FolderQuizScreen.gd
 # ═══════════════════════════════════════════════════════
 
 const QUIZ_DATA: Dictionary = {
-	# Each world has 9 genre folders. Questions = lessons in folder x 2.
+	# Each world now has 3 genre folders (Basic SQL, Filtering Rows,
+	# Sorting & Aggregates). Questions = lessons in folder x 2.
 	"hotel": [
 		# F0 Basic SQL (5 x 2 = 10)
 		[
@@ -48,78 +49,6 @@ const QUIZ_DATA: Dictionary = {
 			{"desc": "Statuses with over 5 guests.", "code": "SELECT status, COUNT(*) FROM guests\nGROUP BY status [BLANK] COUNT(*) > 5;", "answer": "HAVING", "hint": "Like WHERE, but for groups."},
 			{"desc": "Rename the COUNT column to total.", "code": "SELECT COUNT(*) [BLANK] total FROM guests;", "answer": "AS", "hint": "Gives a column an alias."},
 			{"desc": "Label the SUM result as revenue.", "code": "SELECT SUM(price) [BLANK] revenue FROM bookings;", "answer": "AS", "hint": "AS renames a result column."},
-		],
-		# F3 Joins & Subqueries (4 x 2 = 8)
-		[
-			{"desc": "Combine guests and bookings on guest id.", "code": "SELECT * FROM guests\n[BLANK] bookings ON guests.id = bookings.guest_id;", "answer": "JOIN", "hint": "Combines rows from two tables."},
-			{"desc": "Complete the join's matching keyword.", "code": "SELECT * FROM guests\nJOIN bookings [BLANK] guests.id = bookings.guest_id;", "answer": "ON", "hint": "JOIN ... ___ matching columns."},
-			{"desc": "All rooms, including empty ones.", "code": "SELECT * FROM rooms\n[BLANK] JOIN bookings ON rooms.id = bookings.room_id;", "answer": "LEFT", "hint": "Keeps all left-table rows."},
-			{"desc": "Complete the left join keyword.", "code": "SELECT * FROM rooms\nLEFT [BLANK] bookings ON rooms.id = bookings.room_id;", "answer": "JOIN", "hint": "LEFT ___ keeps unmatched left rows."},
-			{"desc": "Find the booking with the highest price.", "code": "SELECT * FROM bookings\nWHERE price = (SELECT [BLANK](price) FROM bookings);", "answer": "MAX", "hint": "The inner query returns the largest value."},
-			{"desc": "Complete the subquery start.", "code": "SELECT * FROM bookings\nWHERE price = ([BLANK] MAX(price) FROM bookings);", "answer": "SELECT", "hint": "A subquery starts with SELECT."},
-			{"desc": "Combine guest and staff cities (no duplicates).", "code": "SELECT city FROM guests\n[BLANK]\nSELECT city FROM staff;", "answer": "UNION", "hint": "Merges results, removes duplicates."},
-			{"desc": "Keep duplicate cities when combining.", "code": "SELECT city FROM guests\nUNION [BLANK]\nSELECT city FROM staff;", "answer": "ALL", "hint": "UNION ALL keeps duplicates."},
-		],
-		# F4 Functions (3 x 2 = 6)
-		[
-			{"desc": "Find bookings whose check_out already passed.", "code": "SELECT * FROM bookings\nWHERE check_out < [BLANK]('now');", "answer": "DATE", "hint": "DATE('now') is today in SQLite."},
-			{"desc": "Get bookings due exactly today.", "code": "SELECT * FROM bookings\nWHERE check_out = DATE([BLANK]);", "answer": "'now'", "hint": "DATE('now') returns today's date."},
-			{"desc": "Show guest names in capital letters.", "code": "SELECT [BLANK](name) FROM guests;", "answer": "UPPER", "hint": "Converts text to capitals."},
-			{"desc": "Show guest names in lowercase.", "code": "SELECT [BLANK](name) FROM guests;", "answer": "LOWER", "hint": "Converts text to lowercase."},
-			{"desc": "Show email, or 'No email' if missing.", "code": "SELECT name,\n  [BLANK](email, 'No email') FROM guests;", "answer": "COALESCE", "hint": "Returns the first non-NULL value."},
-			{"desc": "Two-argument shortcut to default phone to 'N/A'.", "code": "SELECT name,\n  [BLANK](phone, 'N/A') FROM guests;", "answer": "IFNULL", "hint": "IFNULL(value, fallback)."},
-		],
-		# F5 Creating Tables (5 x 2 = 10)
-		[
-			{"desc": "Create a database called hotel_db.", "code": "CREATE [BLANK] hotel_db;", "answer": "DATABASE", "hint": "CREATE ___ name."},
-			{"desc": "Start creating the database.", "code": "[BLANK] DATABASE hotel_db;", "answer": "CREATE", "hint": "___ DATABASE name."},
-			{"desc": "Create a table called guests.", "code": "CREATE [BLANK] guests (\n    id INT PRIMARY KEY\n);", "answer": "TABLE", "hint": "CREATE ___ name (columns)."},
-			{"desc": "Start creating a table.", "code": "[BLANK] TABLE guests (\n    id INT\n);", "answer": "CREATE", "hint": "___ TABLE name (...)."},
-			{"desc": "Make stay_count store whole numbers.", "code": "CREATE TABLE guests (\n    stay_count [BLANK]\n);", "answer": "INT", "hint": "Whole-number type."},
-			{"desc": "Make room_number a whole number.", "code": "CREATE TABLE rooms (\n    room_number [BLANK]\n);", "answer": "INT", "hint": "Use for counting numbers."},
-			{"desc": "Make the name column store words.", "code": "CREATE TABLE guests (\n    name [BLANK]\n);", "answer": "TEXT", "hint": "Type for strings/words."},
-			{"desc": "Make the email column store text.", "code": "CREATE TABLE guests (\n    email [BLANK]\n);", "answer": "TEXT", "hint": "Words and strings."},
-			{"desc": "Make the price column store decimals.", "code": "CREATE TABLE bookings (\n    price [BLANK]\n);", "answer": "REAL", "hint": "Decimal-number type."},
-			{"desc": "Make the rate column a decimal.", "code": "CREATE TABLE rooms (\n    rate [BLANK]\n);", "answer": "REAL", "hint": "Values like 9.99."},
-		],
-		# F6 Constraints & Keys (5 x 2 = 10)
-		[
-			{"desc": "Make id the primary key.", "code": "CREATE TABLE guests (\n    id INT [BLANK] KEY\n);", "answer": "PRIMARY", "hint": "___ KEY uniquely identifies a row."},
-			{"desc": "Complete the primary key.", "code": "CREATE TABLE guests (\n    id INT PRIMARY [BLANK]\n);", "answer": "KEY", "hint": "PRIMARY ___."},
-			{"desc": "Keep the email unique.", "code": "CREATE TABLE guests (\n    email TEXT NOT NULL [BLANK]\n);", "answer": "UNIQUE", "hint": "Prevents duplicate values."},
-			{"desc": "Prevent the name from being empty.", "code": "CREATE TABLE guests (\n    name TEXT [BLANK] NULL\n);", "answer": "NOT", "hint": "___ NULL forces a value."},
-			{"desc": "Auto-fill status with 'Active'.", "code": "CREATE TABLE guests (\n    status TEXT [BLANK] 'Active'\n);", "answer": "DEFAULT", "hint": "Fallback value when none is given."},
-			{"desc": "Default stay_count to 0.", "code": "CREATE TABLE guests (\n    stay_count INT [BLANK] 0\n);", "answer": "DEFAULT", "hint": "___ value used on INSERT."},
-			{"desc": "Link guest_id to the guests table.", "code": "FOREIGN KEY (guest_id)\n[BLANK] guests(id);", "answer": "REFERENCES", "hint": "FOREIGN KEY (col) ___ table(col)."},
-			{"desc": "Declare the relationship keyword.", "code": "[BLANK] KEY (guest_id)\nREFERENCES guests(id);", "answer": "FOREIGN", "hint": "___ KEY links to another table."},
-			{"desc": "Only allow ages of 18 or older.", "code": "age INT [BLANK] (age >= 18)", "answer": "CHECK", "hint": "Rejects rows that fail the condition."},
-			{"desc": "Reject negative prices.", "code": "price REAL [BLANK] (price >= 0)", "answer": "CHECK", "hint": "Validates each value before storing."},
-		],
-		# F7 Schema Management (5 x 2 = 10)
-		[
-			{"desc": "Add a phone column to guests.", "code": "[BLANK] TABLE guests ADD phone TEXT;", "answer": "ALTER", "hint": "Modifies an existing table."},
-			{"desc": "Complete the column addition.", "code": "ALTER TABLE guests [BLANK] phone TEXT;", "answer": "ADD", "hint": "ALTER TABLE t ___ column type."},
-			{"desc": "Delete the old_logs table entirely.", "code": "[BLANK] TABLE old_logs;", "answer": "DROP", "hint": "Removes a table and all its data."},
-			{"desc": "Complete the drop statement.", "code": "DROP [BLANK] old_logs;", "answer": "TABLE", "hint": "DROP ___ name."},
-			{"desc": "Empty all rows from checkin_logs fast.", "code": "[BLANK] TABLE checkin_logs;", "answer": "TRUNCATE", "hint": "Empties a table but keeps its structure."},
-			{"desc": "Complete the truncate statement.", "code": "TRUNCATE [BLANK] checkin_logs;", "answer": "TABLE", "hint": "TRUNCATE ___ name."},
-			{"desc": "Create an index on last_name.", "code": "CREATE [BLANK] idx_name ON guests(last_name);", "answer": "INDEX", "hint": "Speeds up lookups on a column."},
-			{"desc": "Complete the index target.", "code": "CREATE INDEX idx_name [BLANK] guests(last_name);", "answer": "ON", "hint": "CREATE INDEX name ___ table(col)."},
-			{"desc": "Save a query as a virtual table.", "code": "CREATE [BLANK] vw_active AS\nSELECT * FROM guests WHERE status='Active';", "answer": "VIEW", "hint": "A saved SELECT you can query."},
-			{"desc": "Complete the view definition.", "code": "CREATE VIEW vw_active [BLANK]\nSELECT * FROM guests;", "answer": "AS", "hint": "CREATE VIEW name ___ SELECT ..."},
-		],
-		# F8 Advanced Concepts (5 x 2 = 10)
-		[
-			{"desc": "1NF requires each cell to hold a single ___ value.", "code": "1NF = [BLANK] values (no lists in one cell)", "answer": "atomic", "hint": "One indivisible value per cell."},
-			{"desc": "Repeating a guest's address in every row is data ___.", "code": "Normalization removes data [BLANK]", "answer": "redundancy", "hint": "The same data stored over and over."},
-			{"desc": "Start a transaction block.", "code": "[BLANK];\n  UPDATE rooms SET status='Taken';\nCOMMIT;", "answer": "BEGIN", "hint": "Starts a transaction."},
-			{"desc": "Save all changes permanently.", "code": "BEGIN;\n  UPDATE rooms SET status='Taken';\n[BLANK];", "answer": "COMMIT", "hint": "Makes changes permanent (opposite of ROLLBACK)."},
-			{"desc": "Label guests by tier (SQL's if-else).", "code": "SELECT name,\n  [BLANK] WHEN stay_count>=5 THEN 'VIP' ELSE 'New' END\nFROM guests;", "answer": "CASE", "hint": "___ WHEN ... THEN ... END."},
-			{"desc": "Complete the conditional expression.", "code": "SELECT name,\n  CASE [BLANK] stay_count>=5 THEN 'VIP' ELSE 'New' END\nFROM guests;", "answer": "WHEN", "hint": "CASE ___ condition THEN value."},
-			{"desc": "Give a clerk read access to guests.", "code": "[BLANK] SELECT ON guests TO clerk;", "answer": "GRANT", "hint": "Gives a permission (DCL)."},
-			{"desc": "Take back the clerk's access.", "code": "[BLANK] SELECT ON guests FROM clerk;", "answer": "REVOKE", "hint": "Removes a permission (opposite of GRANT)."},
-			{"desc": "One guest, many bookings is One-to-___.", "code": "GUEST (1) ---- (M) BOOKING = One-to-[BLANK]", "answer": "Many", "hint": "1:M cardinality."},
-			{"desc": "A 1:M link uses a ___ KEY on the many side.", "code": "bookings.guest_id is a [BLANK] KEY", "answer": "FOREIGN", "hint": "Links the many side to the one side."},
 		],
 	],
 	"cafe": [
@@ -166,78 +95,6 @@ const QUIZ_DATA: Dictionary = {
 			{"desc": "Rename the COUNT column to total.", "code": "SELECT COUNT(*) [BLANK] total FROM orders;", "answer": "AS", "hint": "Gives a column an alias."},
 			{"desc": "Label the SUM result as sales.", "code": "SELECT SUM(price) [BLANK] sales FROM orders;", "answer": "AS", "hint": "AS renames a result column."},
 		],
-		# F3 Joins & Subqueries
-		[
-			{"desc": "Combine customers and orders on customer id.", "code": "SELECT * FROM customers\n[BLANK] orders ON customers.id = orders.customer_id;", "answer": "JOIN", "hint": "Combines rows from two tables."},
-			{"desc": "Complete the join's matching keyword.", "code": "SELECT * FROM customers\nJOIN orders [BLANK] customers.id = orders.customer_id;", "answer": "ON", "hint": "JOIN ... ___ matching columns."},
-			{"desc": "All customers, including new ones with no orders.", "code": "SELECT * FROM customers\n[BLANK] JOIN orders ON customers.id = orders.customer_id;", "answer": "LEFT", "hint": "Keeps all left-table rows."},
-			{"desc": "Complete the left join keyword.", "code": "SELECT * FROM customers\nLEFT [BLANK] orders ON customers.id = orders.customer_id;", "answer": "JOIN", "hint": "LEFT ___ keeps unmatched left rows."},
-			{"desc": "Find the order with the highest price.", "code": "SELECT * FROM orders\nWHERE price = (SELECT [BLANK](price) FROM orders);", "answer": "MAX", "hint": "The inner query returns the largest value."},
-			{"desc": "Complete the subquery start.", "code": "SELECT * FROM orders\nWHERE price = ([BLANK] MAX(price) FROM orders);", "answer": "SELECT", "hint": "A subquery starts with SELECT."},
-			{"desc": "Combine customer and supplier cities (no duplicates).", "code": "SELECT city FROM customers\n[BLANK]\nSELECT city FROM suppliers;", "answer": "UNION", "hint": "Merges results, removes duplicates."},
-			{"desc": "Keep duplicate cities when combining.", "code": "SELECT city FROM customers\nUNION [BLANK]\nSELECT city FROM suppliers;", "answer": "ALL", "hint": "UNION ALL keeps duplicates."},
-		],
-		# F4 Functions
-		[
-			{"desc": "Find orders placed before today.", "code": "SELECT * FROM orders\nWHERE order_date < [BLANK]('now');", "answer": "DATE", "hint": "DATE('now') is today in SQLite."},
-			{"desc": "Get orders placed exactly today.", "code": "SELECT * FROM orders\nWHERE order_date = DATE([BLANK]);", "answer": "'now'", "hint": "DATE('now') returns today's date."},
-			{"desc": "Show item names in capital letters.", "code": "SELECT [BLANK](item) FROM orders;", "answer": "UPPER", "hint": "Converts text to capitals."},
-			{"desc": "Show item names in lowercase.", "code": "SELECT [BLANK](item) FROM orders;", "answer": "LOWER", "hint": "Converts text to lowercase."},
-			{"desc": "Show note, or 'No notes' if missing.", "code": "SELECT item,\n  [BLANK](notes, 'No notes') FROM orders;", "answer": "COALESCE", "hint": "Returns the first non-NULL value."},
-			{"desc": "Two-argument shortcut to default coupon to 'None'.", "code": "SELECT item,\n  [BLANK](coupon, 'None') FROM orders;", "answer": "IFNULL", "hint": "IFNULL(value, fallback)."},
-		],
-		# F5 Creating Tables
-		[
-			{"desc": "Create a database called cafe_db.", "code": "CREATE [BLANK] cafe_db;", "answer": "DATABASE", "hint": "CREATE ___ name."},
-			{"desc": "Start creating the database.", "code": "[BLANK] DATABASE cafe_db;", "answer": "CREATE", "hint": "___ DATABASE name."},
-			{"desc": "Create a table called orders.", "code": "CREATE [BLANK] orders (\n    id INT PRIMARY KEY\n);", "answer": "TABLE", "hint": "CREATE ___ name (columns)."},
-			{"desc": "Start creating a table.", "code": "[BLANK] TABLE orders (\n    id INT\n);", "answer": "CREATE", "hint": "___ TABLE name (...)."},
-			{"desc": "Make quantity store whole numbers.", "code": "CREATE TABLE orders (\n    quantity [BLANK]\n);", "answer": "INT", "hint": "Whole-number type."},
-			{"desc": "Make table_no a whole number.", "code": "CREATE TABLE orders (\n    table_no [BLANK]\n);", "answer": "INT", "hint": "Use for counting numbers."},
-			{"desc": "Make the item column store words.", "code": "CREATE TABLE orders (\n    item [BLANK]\n);", "answer": "TEXT", "hint": "Type for strings/words."},
-			{"desc": "Make the notes column store text.", "code": "CREATE TABLE orders (\n    notes [BLANK]\n);", "answer": "TEXT", "hint": "Words and strings."},
-			{"desc": "Make the price column store decimals.", "code": "CREATE TABLE orders (\n    price [BLANK]\n);", "answer": "REAL", "hint": "Decimal-number type."},
-			{"desc": "Make the discount column a decimal.", "code": "CREATE TABLE orders (\n    discount [BLANK]\n);", "answer": "REAL", "hint": "Values like 0.50."},
-		],
-		# F6 Constraints & Keys
-		[
-			{"desc": "Make id the primary key.", "code": "CREATE TABLE orders (\n    id INT [BLANK] KEY\n);", "answer": "PRIMARY", "hint": "___ KEY uniquely identifies a row."},
-			{"desc": "Complete the primary key.", "code": "CREATE TABLE orders (\n    id INT PRIMARY [BLANK]\n);", "answer": "KEY", "hint": "PRIMARY ___."},
-			{"desc": "Keep the receipt_no unique.", "code": "CREATE TABLE orders (\n    receipt_no TEXT NOT NULL [BLANK]\n);", "answer": "UNIQUE", "hint": "Prevents duplicate values."},
-			{"desc": "Prevent the item from being empty.", "code": "CREATE TABLE orders (\n    item TEXT [BLANK] NULL\n);", "answer": "NOT", "hint": "___ NULL forces a value."},
-			{"desc": "Auto-fill status with 'Pending'.", "code": "CREATE TABLE orders (\n    status TEXT [BLANK] 'Pending'\n);", "answer": "DEFAULT", "hint": "Fallback value when none is given."},
-			{"desc": "Default quantity to 1.", "code": "CREATE TABLE orders (\n    quantity INT [BLANK] 1\n);", "answer": "DEFAULT", "hint": "___ value used on INSERT."},
-			{"desc": "Link customer_id to the customers table.", "code": "FOREIGN KEY (customer_id)\n[BLANK] customers(id);", "answer": "REFERENCES", "hint": "FOREIGN KEY (col) ___ table(col)."},
-			{"desc": "Declare the relationship keyword.", "code": "[BLANK] KEY (customer_id)\nREFERENCES customers(id);", "answer": "FOREIGN", "hint": "___ KEY links to another table."},
-			{"desc": "Only allow prices of 0 or more.", "code": "price REAL [BLANK] (price >= 0)", "answer": "CHECK", "hint": "Rejects rows that fail the condition."},
-			{"desc": "Reject a quantity below 1.", "code": "quantity INT [BLANK] (quantity >= 1)", "answer": "CHECK", "hint": "Validates each value before storing."},
-		],
-		# F7 Schema Management
-		[
-			{"desc": "Add a size column to orders.", "code": "[BLANK] TABLE orders ADD size TEXT;", "answer": "ALTER", "hint": "Modifies an existing table."},
-			{"desc": "Complete the column addition.", "code": "ALTER TABLE orders [BLANK] size TEXT;", "answer": "ADD", "hint": "ALTER TABLE t ___ column type."},
-			{"desc": "Delete the old_orders table entirely.", "code": "[BLANK] TABLE old_orders;", "answer": "DROP", "hint": "Removes a table and all its data."},
-			{"desc": "Complete the drop statement.", "code": "DROP [BLANK] old_orders;", "answer": "TABLE", "hint": "DROP ___ name."},
-			{"desc": "Empty all rows from order_logs fast.", "code": "[BLANK] TABLE order_logs;", "answer": "TRUNCATE", "hint": "Empties a table but keeps its structure."},
-			{"desc": "Complete the truncate statement.", "code": "TRUNCATE [BLANK] order_logs;", "answer": "TABLE", "hint": "TRUNCATE ___ name."},
-			{"desc": "Create an index on item.", "code": "CREATE [BLANK] idx_item ON orders(item);", "answer": "INDEX", "hint": "Speeds up lookups on a column."},
-			{"desc": "Complete the index target.", "code": "CREATE INDEX idx_item [BLANK] orders(item);", "answer": "ON", "hint": "CREATE INDEX name ___ table(col)."},
-			{"desc": "Save a query as a virtual table.", "code": "CREATE [BLANK] vw_paid AS\nSELECT * FROM orders WHERE status='Paid';", "answer": "VIEW", "hint": "A saved SELECT you can query."},
-			{"desc": "Complete the view definition.", "code": "CREATE VIEW vw_paid [BLANK]\nSELECT * FROM orders;", "answer": "AS", "hint": "CREATE VIEW name ___ SELECT ..."},
-		],
-		# F8 Advanced Concepts
-		[
-			{"desc": "1NF requires each cell to hold a single ___ value.", "code": "1NF = [BLANK] values (no lists in one cell)", "answer": "atomic", "hint": "One indivisible value per cell."},
-			{"desc": "Repeating a customer's address in every order is data ___.", "code": "Normalization removes data [BLANK]", "answer": "redundancy", "hint": "The same data stored over and over."},
-			{"desc": "Start a transaction block.", "code": "[BLANK];\n  UPDATE orders SET status='Paid';\nCOMMIT;", "answer": "BEGIN", "hint": "Starts a transaction."},
-			{"desc": "Save all changes permanently.", "code": "BEGIN;\n  UPDATE orders SET status='Paid';\n[BLANK];", "answer": "COMMIT", "hint": "Makes changes permanent (opposite of ROLLBACK)."},
-			{"desc": "Label orders by size (SQL's if-else).", "code": "SELECT item,\n  [BLANK] WHEN price>150 THEN 'Large' ELSE 'Small' END\nFROM orders;", "answer": "CASE", "hint": "___ WHEN ... THEN ... END."},
-			{"desc": "Complete the conditional expression.", "code": "SELECT item,\n  CASE [BLANK] price>150 THEN 'Large' ELSE 'Small' END\nFROM orders;", "answer": "WHEN", "hint": "CASE ___ condition THEN value."},
-			{"desc": "Give a barista read access to orders.", "code": "[BLANK] SELECT ON orders TO barista;", "answer": "GRANT", "hint": "Gives a permission (DCL)."},
-			{"desc": "Take back the barista's access.", "code": "[BLANK] SELECT ON orders FROM barista;", "answer": "REVOKE", "hint": "Removes a permission (opposite of GRANT)."},
-			{"desc": "One customer, many orders is One-to-___.", "code": "CUSTOMER (1) ---- (M) ORDER = One-to-[BLANK]", "answer": "Many", "hint": "1:M cardinality."},
-			{"desc": "A 1:M link uses a ___ KEY on the many side.", "code": "orders.customer_id is a [BLANK] KEY", "answer": "FOREIGN", "hint": "Links the many side to the one side."},
-		],
 	],
 	"police": [
 		# F0 Basic SQL
@@ -283,78 +140,6 @@ const QUIZ_DATA: Dictionary = {
 			{"desc": "Rename the COUNT column to total.", "code": "SELECT COUNT(*) [BLANK] total FROM cases;", "answer": "AS", "hint": "Gives a column an alias."},
 			{"desc": "Label the SUM result as total_fines.", "code": "SELECT SUM(fine) [BLANK] total_fines FROM cases;", "answer": "AS", "hint": "AS renames a result column."},
 		],
-		# F3 Joins & Subqueries
-		[
-			{"desc": "Combine cases and officers on officer id.", "code": "SELECT * FROM cases\n[BLANK] officers ON cases.officer_id = officers.id;", "answer": "JOIN", "hint": "Combines rows from two tables."},
-			{"desc": "Complete the join's matching keyword.", "code": "SELECT * FROM cases\nJOIN officers [BLANK] cases.officer_id = officers.id;", "answer": "ON", "hint": "JOIN ... ___ matching columns."},
-			{"desc": "All officers, including those with no cases.", "code": "SELECT * FROM officers\n[BLANK] JOIN cases ON officers.id = cases.officer_id;", "answer": "LEFT", "hint": "Keeps all left-table rows."},
-			{"desc": "Complete the left join keyword.", "code": "SELECT * FROM officers\nLEFT [BLANK] cases ON officers.id = cases.officer_id;", "answer": "JOIN", "hint": "LEFT ___ keeps unmatched left rows."},
-			{"desc": "Find the case with the highest fine.", "code": "SELECT * FROM cases\nWHERE fine = (SELECT [BLANK](fine) FROM cases);", "answer": "MAX", "hint": "The inner query returns the largest value."},
-			{"desc": "Complete the subquery start.", "code": "SELECT * FROM cases\nWHERE fine = ([BLANK] MAX(fine) FROM cases);", "answer": "SELECT", "hint": "A subquery starts with SELECT."},
-			{"desc": "Combine suspect and witness cities (no duplicates).", "code": "SELECT city FROM suspects\n[BLANK]\nSELECT city FROM witnesses;", "answer": "UNION", "hint": "Merges results, removes duplicates."},
-			{"desc": "Keep duplicate cities when combining.", "code": "SELECT city FROM suspects\nUNION [BLANK]\nSELECT city FROM witnesses;", "answer": "ALL", "hint": "UNION ALL keeps duplicates."},
-		],
-		# F4 Functions
-		[
-			{"desc": "Find cases filed before today.", "code": "SELECT * FROM cases\nWHERE filed_date < [BLANK]('now');", "answer": "DATE", "hint": "DATE('now') is today in SQLite."},
-			{"desc": "Get cases filed exactly today.", "code": "SELECT * FROM cases\nWHERE filed_date = DATE([BLANK]);", "answer": "'now'", "hint": "DATE('now') returns today's date."},
-			{"desc": "Show case types in capital letters.", "code": "SELECT [BLANK](case_type) FROM cases;", "answer": "UPPER", "hint": "Converts text to capitals."},
-			{"desc": "Show case types in lowercase.", "code": "SELECT [BLANK](case_type) FROM cases;", "answer": "LOWER", "hint": "Converts text to lowercase."},
-			{"desc": "Show remark, or 'No remarks' if missing.", "code": "SELECT case_type,\n  [BLANK](remarks, 'No remarks') FROM cases;", "answer": "COALESCE", "hint": "Returns the first non-NULL value."},
-			{"desc": "Two-argument shortcut to default location to 'Unknown'.", "code": "SELECT case_type,\n  [BLANK](location, 'Unknown') FROM cases;", "answer": "IFNULL", "hint": "IFNULL(value, fallback)."},
-		],
-		# F5 Creating Tables
-		[
-			{"desc": "Create a database called police_db.", "code": "CREATE [BLANK] police_db;", "answer": "DATABASE", "hint": "CREATE ___ name."},
-			{"desc": "Start creating the database.", "code": "[BLANK] DATABASE police_db;", "answer": "CREATE", "hint": "___ DATABASE name."},
-			{"desc": "Create a table called cases.", "code": "CREATE [BLANK] cases (\n    id INT PRIMARY KEY\n);", "answer": "TABLE", "hint": "CREATE ___ name (columns)."},
-			{"desc": "Start creating a table.", "code": "[BLANK] TABLE cases (\n    id INT\n);", "answer": "CREATE", "hint": "___ TABLE name (...)."},
-			{"desc": "Make badge_no store whole numbers.", "code": "CREATE TABLE officers (\n    badge_no [BLANK]\n);", "answer": "INT", "hint": "Whole-number type."},
-			{"desc": "Make precinct a whole number.", "code": "CREATE TABLE officers (\n    precinct [BLANK]\n);", "answer": "INT", "hint": "Use for counting numbers."},
-			{"desc": "Make the case_type column store words.", "code": "CREATE TABLE cases (\n    case_type [BLANK]\n);", "answer": "TEXT", "hint": "Type for strings/words."},
-			{"desc": "Make the remarks column store text.", "code": "CREATE TABLE cases (\n    remarks [BLANK]\n);", "answer": "TEXT", "hint": "Words and strings."},
-			{"desc": "Make the fine column store decimals.", "code": "CREATE TABLE cases (\n    fine [BLANK]\n);", "answer": "REAL", "hint": "Decimal-number type."},
-			{"desc": "Make the bail column a decimal.", "code": "CREATE TABLE suspects (\n    bail [BLANK]\n);", "answer": "REAL", "hint": "Values like 2500.75."},
-		],
-		# F6 Constraints & Keys
-		[
-			{"desc": "Make id the primary key.", "code": "CREATE TABLE cases (\n    id INT [BLANK] KEY\n);", "answer": "PRIMARY", "hint": "___ KEY uniquely identifies a row."},
-			{"desc": "Complete the primary key.", "code": "CREATE TABLE cases (\n    id INT PRIMARY [BLANK]\n);", "answer": "KEY", "hint": "PRIMARY ___."},
-			{"desc": "Keep the badge_no unique.", "code": "CREATE TABLE officers (\n    badge_no TEXT NOT NULL [BLANK]\n);", "answer": "UNIQUE", "hint": "Prevents duplicate values."},
-			{"desc": "Prevent the case_type from being empty.", "code": "CREATE TABLE cases (\n    case_type TEXT [BLANK] NULL\n);", "answer": "NOT", "hint": "___ NULL forces a value."},
-			{"desc": "Auto-fill status with 'Open'.", "code": "CREATE TABLE cases (\n    status TEXT [BLANK] 'Open'\n);", "answer": "DEFAULT", "hint": "Fallback value when none is given."},
-			{"desc": "Default is_solved to 0.", "code": "CREATE TABLE cases (\n    is_solved INT [BLANK] 0\n);", "answer": "DEFAULT", "hint": "___ value used on INSERT."},
-			{"desc": "Link officer_id to the officers table.", "code": "FOREIGN KEY (officer_id)\n[BLANK] officers(id);", "answer": "REFERENCES", "hint": "FOREIGN KEY (col) ___ table(col)."},
-			{"desc": "Declare the relationship keyword.", "code": "[BLANK] KEY (officer_id)\nREFERENCES officers(id);", "answer": "FOREIGN", "hint": "___ KEY links to another table."},
-			{"desc": "Only allow fines of 0 or more.", "code": "fine REAL [BLANK] (fine >= 0)", "answer": "CHECK", "hint": "Rejects rows that fail the condition."},
-			{"desc": "Reject a negative age.", "code": "age INT [BLANK] (age >= 0)", "answer": "CHECK", "hint": "Validates each value before storing."},
-		],
-		# F7 Schema Management
-		[
-			{"desc": "Add a notes column to cases.", "code": "[BLANK] TABLE cases ADD notes TEXT;", "answer": "ALTER", "hint": "Modifies an existing table."},
-			{"desc": "Complete the column addition.", "code": "ALTER TABLE cases [BLANK] notes TEXT;", "answer": "ADD", "hint": "ALTER TABLE t ___ column type."},
-			{"desc": "Delete the old_cases table entirely.", "code": "[BLANK] TABLE old_cases;", "answer": "DROP", "hint": "Removes a table and all its data."},
-			{"desc": "Complete the drop statement.", "code": "DROP [BLANK] old_cases;", "answer": "TABLE", "hint": "DROP ___ name."},
-			{"desc": "Empty all rows from patrol_logs fast.", "code": "[BLANK] TABLE patrol_logs;", "answer": "TRUNCATE", "hint": "Empties a table but keeps its structure."},
-			{"desc": "Complete the truncate statement.", "code": "TRUNCATE [BLANK] patrol_logs;", "answer": "TABLE", "hint": "TRUNCATE ___ name."},
-			{"desc": "Create an index on case_type.", "code": "CREATE [BLANK] idx_type ON cases(case_type);", "answer": "INDEX", "hint": "Speeds up lookups on a column."},
-			{"desc": "Complete the index target.", "code": "CREATE INDEX idx_type [BLANK] cases(case_type);", "answer": "ON", "hint": "CREATE INDEX name ___ table(col)."},
-			{"desc": "Save a query as a virtual table.", "code": "CREATE [BLANK] vw_open AS\nSELECT * FROM cases WHERE status='Open';", "answer": "VIEW", "hint": "A saved SELECT you can query."},
-			{"desc": "Complete the view definition.", "code": "CREATE VIEW vw_open [BLANK]\nSELECT * FROM cases;", "answer": "AS", "hint": "CREATE VIEW name ___ SELECT ..."},
-		],
-		# F8 Advanced Concepts
-		[
-			{"desc": "1NF requires each cell to hold a single ___ value.", "code": "1NF = [BLANK] values (no lists in one cell)", "answer": "atomic", "hint": "One indivisible value per cell."},
-			{"desc": "Repeating an officer's details in every case is data ___.", "code": "Normalization removes data [BLANK]", "answer": "redundancy", "hint": "The same data stored over and over."},
-			{"desc": "Start a transaction block.", "code": "[BLANK];\n  UPDATE cases SET status='Closed';\nCOMMIT;", "answer": "BEGIN", "hint": "Starts a transaction."},
-			{"desc": "Save all changes permanently.", "code": "BEGIN;\n  UPDATE cases SET status='Closed';\n[BLANK];", "answer": "COMMIT", "hint": "Makes changes permanent (opposite of ROLLBACK)."},
-			{"desc": "Label cases by severity (SQL's if-else).", "code": "SELECT case_type,\n  [BLANK] WHEN fine>5000 THEN 'Severe' ELSE 'Minor' END\nFROM cases;", "answer": "CASE", "hint": "___ WHEN ... THEN ... END."},
-			{"desc": "Complete the conditional expression.", "code": "SELECT case_type,\n  CASE [BLANK] fine>5000 THEN 'Severe' ELSE 'Minor' END\nFROM cases;", "answer": "WHEN", "hint": "CASE ___ condition THEN value."},
-			{"desc": "Give an officer read access to cases.", "code": "[BLANK] SELECT ON cases TO officer;", "answer": "GRANT", "hint": "Gives a permission (DCL)."},
-			{"desc": "Take back the officer's access.", "code": "[BLANK] SELECT ON cases FROM officer;", "answer": "REVOKE", "hint": "Removes a permission (opposite of GRANT)."},
-			{"desc": "One officer, many cases is One-to-___.", "code": "OFFICER (1) ---- (M) CASE = One-to-[BLANK]", "answer": "Many", "hint": "1:M cardinality."},
-			{"desc": "A 1:M link uses a ___ KEY on the many side.", "code": "cases.officer_id is a [BLANK] KEY", "answer": "FOREIGN", "hint": "Links the many side to the one side."},
-		],
 	],
 	"library": [
 		# F0 Basic SQL
@@ -399,78 +184,6 @@ const QUIZ_DATA: Dictionary = {
 			{"desc": "Members with more than 3 loans.", "code": "SELECT member_id, COUNT(*) FROM loans\nGROUP BY member_id [BLANK] COUNT(*) > 3;", "answer": "HAVING", "hint": "Like WHERE, but for groups."},
 			{"desc": "Rename the COUNT column to total.", "code": "SELECT COUNT(*) [BLANK] total FROM books;", "answer": "AS", "hint": "Gives a column an alias."},
 			{"desc": "Label the AVG result as avg_fee.", "code": "SELECT AVG(late_fee) [BLANK] avg_fee FROM loans;", "answer": "AS", "hint": "AS renames a result column."},
-		],
-		# F3 Joins & Subqueries
-		[
-			{"desc": "Combine books and loans on book id.", "code": "SELECT * FROM books\n[BLANK] loans ON books.id = loans.book_id;", "answer": "JOIN", "hint": "Combines rows from two tables."},
-			{"desc": "Complete the join's matching keyword.", "code": "SELECT * FROM books\nJOIN loans [BLANK] books.id = loans.book_id;", "answer": "ON", "hint": "JOIN ... ___ matching columns."},
-			{"desc": "All books, including those never borrowed.", "code": "SELECT * FROM books\n[BLANK] JOIN loans ON books.id = loans.book_id;", "answer": "LEFT", "hint": "Keeps all left-table rows."},
-			{"desc": "Complete the left join keyword.", "code": "SELECT * FROM books\nLEFT [BLANK] loans ON books.id = loans.book_id;", "answer": "JOIN", "hint": "LEFT ___ keeps unmatched left rows."},
-			{"desc": "Find the most borrowed book.", "code": "SELECT * FROM books\nWHERE borrow_count = (SELECT [BLANK](borrow_count) FROM books);", "answer": "MAX", "hint": "The inner query returns the largest value."},
-			{"desc": "Complete the subquery start.", "code": "SELECT * FROM books\nWHERE borrow_count = ([BLANK] MAX(borrow_count) FROM books);", "answer": "SELECT", "hint": "A subquery starts with SELECT."},
-			{"desc": "Combine member and author cities (no duplicates).", "code": "SELECT city FROM members\n[BLANK]\nSELECT city FROM authors;", "answer": "UNION", "hint": "Merges results, removes duplicates."},
-			{"desc": "Keep duplicate cities when combining.", "code": "SELECT city FROM members\nUNION [BLANK]\nSELECT city FROM authors;", "answer": "ALL", "hint": "UNION ALL keeps duplicates."},
-		],
-		# F4 Functions
-		[
-			{"desc": "Find loans whose return_date already passed.", "code": "SELECT * FROM loans\nWHERE return_date < [BLANK]('now');", "answer": "DATE", "hint": "DATE('now') is today in SQLite."},
-			{"desc": "Get loans due exactly today.", "code": "SELECT * FROM loans\nWHERE return_date = DATE([BLANK]);", "answer": "'now'", "hint": "DATE('now') returns today's date."},
-			{"desc": "Show book titles in capital letters.", "code": "SELECT [BLANK](title) FROM books;", "answer": "UPPER", "hint": "Converts text to capitals."},
-			{"desc": "Show book titles in lowercase.", "code": "SELECT [BLANK](title) FROM books;", "answer": "LOWER", "hint": "Converts text to lowercase."},
-			{"desc": "Show summary, or 'No summary' if missing.", "code": "SELECT title,\n  [BLANK](summary, 'No summary') FROM books;", "answer": "COALESCE", "hint": "Returns the first non-NULL value."},
-			{"desc": "Two-argument shortcut to default author to 'Unknown'.", "code": "SELECT title,\n  [BLANK](author, 'Unknown') FROM books;", "answer": "IFNULL", "hint": "IFNULL(value, fallback)."},
-		],
-		# F5 Creating Tables
-		[
-			{"desc": "Create a database called library_db.", "code": "CREATE [BLANK] library_db;", "answer": "DATABASE", "hint": "CREATE ___ name."},
-			{"desc": "Start creating the database.", "code": "[BLANK] DATABASE library_db;", "answer": "CREATE", "hint": "___ DATABASE name."},
-			{"desc": "Create a table called books.", "code": "CREATE [BLANK] books (\n    id INT PRIMARY KEY\n);", "answer": "TABLE", "hint": "CREATE ___ name (columns)."},
-			{"desc": "Start creating a table.", "code": "[BLANK] TABLE books (\n    id INT\n);", "answer": "CREATE", "hint": "___ TABLE name (...)."},
-			{"desc": "Make the year column store whole numbers.", "code": "CREATE TABLE books (\n    year [BLANK]\n);", "answer": "INT", "hint": "Whole-number type."},
-			{"desc": "Make copies a whole number.", "code": "CREATE TABLE books (\n    copies [BLANK]\n);", "answer": "INT", "hint": "Use for counting numbers."},
-			{"desc": "Make the title column store words.", "code": "CREATE TABLE books (\n    title [BLANK]\n);", "answer": "TEXT", "hint": "Type for strings/words."},
-			{"desc": "Make the genre column store text.", "code": "CREATE TABLE books (\n    genre [BLANK]\n);", "answer": "TEXT", "hint": "Words and strings."},
-			{"desc": "Make the late_fee column store decimals.", "code": "CREATE TABLE loans (\n    late_fee [BLANK]\n);", "answer": "REAL", "hint": "Decimal-number type."},
-			{"desc": "Make the fine_rate column a decimal.", "code": "CREATE TABLE loans (\n    fine_rate [BLANK]\n);", "answer": "REAL", "hint": "Values like 0.50."},
-		],
-		# F6 Constraints & Keys
-		[
-			{"desc": "Make id the primary key.", "code": "CREATE TABLE books (\n    id INT [BLANK] KEY\n);", "answer": "PRIMARY", "hint": "___ KEY uniquely identifies a row."},
-			{"desc": "Complete the primary key.", "code": "CREATE TABLE books (\n    id INT PRIMARY [BLANK]\n);", "answer": "KEY", "hint": "PRIMARY ___."},
-			{"desc": "Keep the isbn unique.", "code": "CREATE TABLE books (\n    isbn TEXT NOT NULL [BLANK]\n);", "answer": "UNIQUE", "hint": "Prevents duplicate values."},
-			{"desc": "Prevent the title from being empty.", "code": "CREATE TABLE books (\n    title TEXT [BLANK] NULL\n);", "answer": "NOT", "hint": "___ NULL forces a value."},
-			{"desc": "Auto-fill status with 'Available'.", "code": "CREATE TABLE books (\n    status TEXT [BLANK] 'Available'\n);", "answer": "DEFAULT", "hint": "Fallback value when none is given."},
-			{"desc": "Default loan_count to 0.", "code": "CREATE TABLE books (\n    loan_count INT [BLANK] 0\n);", "answer": "DEFAULT", "hint": "___ value used on INSERT."},
-			{"desc": "Link member_id to the members table.", "code": "FOREIGN KEY (member_id)\n[BLANK] members(id);", "answer": "REFERENCES", "hint": "FOREIGN KEY (col) ___ table(col)."},
-			{"desc": "Declare the relationship keyword.", "code": "[BLANK] KEY (member_id)\nREFERENCES members(id);", "answer": "FOREIGN", "hint": "___ KEY links to another table."},
-			{"desc": "Only allow copy counts of 0 or more.", "code": "copies INT [BLANK] (copies >= 0)", "answer": "CHECK", "hint": "Rejects rows that fail the condition."},
-			{"desc": "Reject a negative late fee.", "code": "late_fee REAL [BLANK] (late_fee >= 0)", "answer": "CHECK", "hint": "Validates each value before storing."},
-		],
-		# F7 Schema Management
-		[
-			{"desc": "Add a summary column to books.", "code": "[BLANK] TABLE books ADD summary TEXT;", "answer": "ALTER", "hint": "Modifies an existing table."},
-			{"desc": "Complete the column addition.", "code": "ALTER TABLE books [BLANK] summary TEXT;", "answer": "ADD", "hint": "ALTER TABLE t ___ column type."},
-			{"desc": "Delete the old_books table entirely.", "code": "[BLANK] TABLE old_books;", "answer": "DROP", "hint": "Removes a table and all its data."},
-			{"desc": "Complete the drop statement.", "code": "DROP [BLANK] old_books;", "answer": "TABLE", "hint": "DROP ___ name."},
-			{"desc": "Empty all rows from search_logs fast.", "code": "[BLANK] TABLE search_logs;", "answer": "TRUNCATE", "hint": "Empties a table but keeps its structure."},
-			{"desc": "Complete the truncate statement.", "code": "TRUNCATE [BLANK] search_logs;", "answer": "TABLE", "hint": "TRUNCATE ___ name."},
-			{"desc": "Create an index on title.", "code": "CREATE [BLANK] idx_title ON books(title);", "answer": "INDEX", "hint": "Speeds up lookups on a column."},
-			{"desc": "Complete the index target.", "code": "CREATE INDEX idx_title [BLANK] books(title);", "answer": "ON", "hint": "CREATE INDEX name ___ table(col)."},
-			{"desc": "Save a query as a virtual table.", "code": "CREATE [BLANK] vw_avail AS\nSELECT * FROM books WHERE status='Available';", "answer": "VIEW", "hint": "A saved SELECT you can query."},
-			{"desc": "Complete the view definition.", "code": "CREATE VIEW vw_avail [BLANK]\nSELECT * FROM books;", "answer": "AS", "hint": "CREATE VIEW name ___ SELECT ..."},
-		],
-		# F8 Advanced Concepts
-		[
-			{"desc": "1NF requires each cell to hold a single ___ value.", "code": "1NF = [BLANK] values (no lists in one cell)", "answer": "atomic", "hint": "One indivisible value per cell."},
-			{"desc": "Repeating an author's details in every book is data ___.", "code": "Normalization removes data [BLANK]", "answer": "redundancy", "hint": "The same data stored over and over."},
-			{"desc": "Start a transaction block.", "code": "[BLANK];\n  UPDATE loans SET status='Returned';\nCOMMIT;", "answer": "BEGIN", "hint": "Starts a transaction."},
-			{"desc": "Save all changes permanently.", "code": "BEGIN;\n  UPDATE loans SET status='Returned';\n[BLANK];", "answer": "COMMIT", "hint": "Makes changes permanent (opposite of ROLLBACK)."},
-			{"desc": "Label books by popularity (SQL's if-else).", "code": "SELECT title,\n  [BLANK] WHEN borrow_count>=10 THEN 'Popular' ELSE 'Rare' END\nFROM books;", "answer": "CASE", "hint": "___ WHEN ... THEN ... END."},
-			{"desc": "Complete the conditional expression.", "code": "SELECT title,\n  CASE [BLANK] borrow_count>=10 THEN 'Popular' ELSE 'Rare' END\nFROM books;", "answer": "WHEN", "hint": "CASE ___ condition THEN value."},
-			{"desc": "Give an assistant read access to books.", "code": "[BLANK] SELECT ON books TO assistant;", "answer": "GRANT", "hint": "Gives a permission (DCL)."},
-			{"desc": "Take back the assistant's access.", "code": "[BLANK] SELECT ON books FROM assistant;", "answer": "REVOKE", "hint": "Removes a permission (opposite of GRANT)."},
-			{"desc": "One member, many loans is One-to-___.", "code": "MEMBER (1) ---- (M) LOAN = One-to-[BLANK]", "answer": "Many", "hint": "1:M cardinality."},
-			{"desc": "A 1:M link uses a ___ KEY on the many side.", "code": "loans.member_id is a [BLANK] KEY", "answer": "FOREIGN", "hint": "Links the many side to the one side."},
 		],
 	],
 }
@@ -798,3 +511,4 @@ func _style_ghost(btn: Button) -> void:
 	btn.add_theme_stylebox_override("normal",  s)
 	btn.add_theme_stylebox_override("hover",   s)
 	btn.add_theme_stylebox_override("pressed", s)
+

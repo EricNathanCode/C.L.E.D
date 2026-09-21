@@ -34,7 +34,7 @@ var _logout_btn: Button = null
 var _completion_lbl: Label = null
 
 # Total lessons per world (used for completion %)
-const LESSONS_PER_WORLD: int = 44
+const LESSONS_PER_WORLD: int = 17
 
 func _ready() -> void:
 	$UpButton.pressed.connect(_on_up)
