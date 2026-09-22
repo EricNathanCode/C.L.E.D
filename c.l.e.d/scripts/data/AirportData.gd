@@ -351,6 +351,53 @@ const LESSONS: Dictionary = {
 	{ "type": "dialogue", "char": "pilot", "name": "CAPTAIN",
 	  "npc": "NPC_occupations/pilot/think",
 	  "text": "Excellent. Bautista, Cruz, Fernandez. Perfect order. Well done." },
+	{ "type": "dialogue", "char": "pilot", "name": "CAPTAIN",
+	  "npc": "NPC_occupations/pilot/talk",
+	  "text": "Actually, flip that — Z to A. We're boarding back-of-alphabet passengers first this time." },
+	{ "type": "dialogue", "char": "you",   "name": "YOU",
+	  "npc": "NPC_occupations/pilot/idle",
+	  "text": "Z to A is Descending order. I'll change ASC to DESC." },
+	{ "type": "sql_fill",
+	  "gamemode": "order_by",
+	  "desc": "Retrieve all passengers sorted Z to A by last_name. Type ASC or DESC.",
+	  "table": "passengers",
+	  "column": "last_name",
+	  "table_headers": ["id", "first_name", "last_name", "seat_no"],
+	  "table_rows": [
+	  	["1", "Elena",  "Cruz",       "14A"],
+	  	["2", "Marco",  "Bautista",   "22C"],
+	  	["3", "Rosa",   "Fernandez",  "9B"],
+	  	["4", "Carla",  "Garcia",     "17D"],
+	  	["5", "Linda",  "Lim",        "3A"],
+	  	["6", "Miguel", "Reyes",      "11C"],
+	  	["7", "Sofia",  "Torres",     "20B"],
+	  	["8", "Ana",    "Villanueva", "5D"]
+	  ],
+	  "answer": "DESC",
+	  "hint": "Z to A is Descending order. Type: DESC",
+	  "fail": [
+		{ "type": "dialogue", "char": "pilot",  "name": "CAPTAIN", "npc": "NPC_occupations/pilot/shock", "text": "This is still A to Z! I need it reversed for this boarding call!" },
+		{ "type": "dialogue", "char": "scene",  "name": "SCENE",   "npc": "NPC_occupations/pilot/idle",  "text": "The captain checks his watch again." },
+		{ "type": "dialogue", "char": "you",    "name": "YOU",     "npc": "NPC_occupations/pilot/idle",  "text": "Sorry, Captain! Z to A means DESC." }
+	  ],
+	  "result_headers": ["id", "first_name", "last_name", "seat_no"],
+	  "result_rows": [
+	  	["8", "Ana",    "Villanueva", "5D"],
+	  	["7", "Sofia",  "Torres",     "20B"],
+	  	["6", "Miguel", "Reyes",      "11C"],
+	  	["5", "Linda",  "Lim",        "3A"],
+	  	["4", "Carla",  "Garcia",     "17D"],
+	  	["3", "Rosa",   "Fernandez",  "9B"],
+	  	["1", "Elena",  "Cruz",       "14A"],
+	  	["2", "Marco",  "Bautista",   "22C"]
+	  ],
+	  "result_msg": "Records sorted by last_name DESC." },
+	{ "type": "dialogue", "char": "you",   "name": "YOU",
+	  "npc": "NPC_occupations/pilot/idle",
+	  "text": "There you go, Captain — Villanueva, Torres, Reyes on top now." },
+	{ "type": "dialogue", "char": "pilot", "name": "CAPTAIN",
+	  "npc": "NPC_occupations/pilot/talk",
+	  "text": "Perfect. ASC for A-to-Z, DESC for Z-to-A. Now you've got both directions down." },
 	{ "type": "end" }
 ],
 
@@ -461,6 +508,48 @@ const LESSONS: Dictionary = {
 	{ "type": "dialogue", "char": "pilot", "name": "CAPTAIN",
 	  "npc": "NPC_occupations/pilot/talk",
 	  "text": "Perfect. IS NULL is a powerful tool for finding gaps in our data. Good thinking." },
+	{ "type": "dialogue", "char": "pilot", "name": "CAPTAIN",
+	  "npc": "NPC_occupations/pilot/talk",
+	  "text": "Now show me who DOES have a meal preference on file, so catering can prep those trays first." },
+	{ "type": "dialogue", "char": "you",   "name": "YOU",
+	  "npc": "NPC_occupations/pilot/idle",
+	  "text": "That's IS NOT NULL this time it finds rows where the value is actually filled in." },
+	{
+		"type": "sql_fill",
+		"gamemode": "select_where_null",
+		"desc": "Find all passengers who DO have a meal preference on file. Type NOT NULL after IS.",
+		"table": "passengers",
+		"column": "meal_pref",
+		"table_headers": ["id", "first_name", "last_name", "meal_pref"],
+		"table_rows": [
+			["1", "Elena", "Cruz",      "Vegetarian"],
+			["2", "Marco", "Bautista",  ""],
+			["3", "Rosa",  "Fernandez", "Chicken"],
+			["4", "Carla", "Garcia",    ""],
+			["5", "Linda", "Lim",       "Beef"],
+			["6", "Miguel","Reyes",     ""]
+		],
+		"answer": "NOT NULL",
+		"hint": "A filled-in value is NOT NULL. Type: NOT NULL",
+		"result_headers": ["id", "first_name", "last_name", "meal_pref"],
+		"result_rows": [
+			["1", "Elena", "Cruz",      "Vegetarian"],
+			["3", "Rosa",  "Fernandez", "Chicken"],
+			["5", "Linda", "Lim",       "Beef"]
+		],
+		"result_msg": "3 passengers have a meal preference on file. IS NOT NULL finds the opposite of IS NULL.",
+		"fail": [
+			{ "type": "dialogue", "char": "pilot", "name": "CAPTAIN", "npc": "NPC_occupations/pilot/shock", "text": "That's the empty ones again! I need the passengers who DO have a preference this time." },
+			{ "type": "dialogue", "char": "scene", "name": "SCENE",   "npc": "NPC_occupations/pilot/idle",  "text": "The captain glances at the galley cart, waiting." },
+			{ "type": "dialogue", "char": "you",   "name": "YOU",     "npc": "NPC_occupations/pilot/idle",  "text": "Right for values that ARE present: NOT NULL." }
+		]
+	},
+	{ "type": "dialogue", "char": "you",   "name": "YOU",
+	  "npc": "NPC_occupations/pilot/idle",
+	  "text": "Here you go, Captain Elena, Rosa, and Linda all have preferences on file." },
+	{ "type": "dialogue", "char": "pilot", "name": "CAPTAIN",
+	  "npc": "NPC_occupations/pilot/talk",
+	  "text": "Perfect. IS NULL for missing data, IS NOT NULL for what's actually there. Both are useful." },
 	{ "type": "end" }
 ],
 
@@ -527,6 +616,31 @@ const LESSONS: Dictionary = {
 	  "text": "Only Elena and Carla — Business class and already checked in. AND is strict." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/pilot/idle",
 	  "text": "Right. OR would include Rosa, who is Business but not checked in, and Marco, who is checked in but Economy." },
+	{ "type": "dialogue", "char": "pilot", "name": "CAPTAIN", "npc": "NPC_occupations/pilot/talk",
+	  "text": "Now show me every passenger who is Business class OR already checked in — either one gets priority boarding." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/pilot/idle",
+	  "text": "That's OR instead of AND. OR only needs ONE condition to be true, so it'll return more passengers." },
+	{ "type": "sql_fill", "gamemode": "where_and_or",
+	  "desc": "Find passengers who are Business class OR checked in. Fill in AND or OR.",
+	  "table": "passengers",
+	  "condition1": "seat_class = 'Business'",
+	  "condition2": "checked_in = 'Yes'",
+	  "answer": "OR",
+	  "table_headers": ["id","first_name","seat_class","checked_in"],
+	  "table_rows": [["1","Elena","Business","Yes"],["2","Marco","Economy","Yes"],["3","Rosa","Business","No"],["4","Carla","Business","Yes"],["5","Linda","Economy","No"]],
+	  "hint": "Either condition is enough here: OR",
+	  "result_headers": ["id","first_name","seat_class","checked_in"],
+	  "result_rows": [["1","Elena","Business","Yes"],["2","Marco","Economy","Yes"],["3","Rosa","Business","No"],["4","Carla","Business","Yes"]],
+	  "result_msg": "4 passengers match. OR only needs ONE condition true, so only Linda (neither Business nor checked in) is excluded.",
+	  "fail": [
+		{ "type": "dialogue", "char": "pilot", "name": "CAPTAIN", "npc": "NPC_occupations/pilot/shock", "text": "That's too few! I need either condition to count, not both at once." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/pilot/idle", "text": "Right for either condition being enough: OR." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "pilot", "name": "CAPTAIN", "npc": "NPC_occupations/pilot/talk",
+	  "text": "Perfect four passengers for priority boarding. OR is much more inclusive than AND." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/pilot/idle",
+	  "text": "Exactly. AND narrows results down both conditions must hold. OR widens them either one will do." },
 	{ "type": "end" }
 ],
 
@@ -693,6 +807,28 @@ const LESSONS: Dictionary = {
 	  "text": "6 passengers. Aggregate functions like COUNT, SUM, and AVG are essential for load reports and analysis." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/pilot/idle",
 	  "text": "Right. SELECT SUM(ticket_price) FROM bookings gives total revenue. AVG gives the average fare." },
+	{ "type": "dialogue", "char": "pilot", "name": "CAPTAIN", "npc": "NPC_occupations/pilot/talk",
+	  "text": "Actually, can you pull that number for me? I need today's total ticket revenue for the flight log." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/pilot/idle",
+	  "text": "Sure that's SUM instead of COUNT. SUM adds up every value in a column." },
+	{ "type": "sql_fill", "gamemode": "aggregate",
+	  "desc": "Find the total ticket revenue from all bookings. Fill in the aggregate function name.",
+	  "table": "bookings",
+	  "column": "ticket_price",
+	  "answer": "SUM",
+	  "table_headers": ["id","destination","ticket_price"],
+	  "table_rows": [["1","Manila","150"],["2","Cebu","320"],["3","Davao","650"],["4","Manila","180"],["5","Cebu","480"],["6","Davao","720"],["7","Manila","250"]],
+	  "hint": "To add up every value: SUM",
+	  "result_headers": ["SUM(ticket_price)"],
+	  "result_rows": [["2750"]],
+	  "result_msg": "Total ticket revenue: 2750. SUM adds every value together, unlike COUNT which just counts rows.",
+	  "fail": [
+		{ "type": "dialogue", "char": "pilot", "name": "CAPTAIN", "npc": "NPC_occupations/pilot/shock", "text": "That's not the total! I need the ticket revenue added up, not a row count." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/pilot/idle", "text": "Right to add values together: SUM." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "pilot", "name": "CAPTAIN", "npc": "NPC_occupations/pilot/talk",
+	  "text": "2750 in ticket revenue. Now I have both the count and the total for the flight log." },
 	{ "type": "end" }
 ],
 

@@ -371,6 +371,55 @@ const LESSONS: Dictionary = {
 	{ "type": "dialogue", "char": "cafe_supervisor", "name": "SUPERVISOR",
 	  "npc": "NPC_occupations/coffee_owner/talk",
 	  "text": "Perfect. That's exactly what I needed for the menu board update. Great work!" },
+	{ "type": "dialogue", "char": "cafe_supervisor", "name": "SUPERVISOR",
+	  "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "Actually, now flip it — most expensive first. We're doing a 'treat yourself' premium display this week." },
+	{ "type": "dialogue", "char": "you",             "name": "YOU",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "Most expensive first is Descending order. I'll change ASC to DESC." },
+	{ "type": "sql_fill",
+	  "gamemode": "order_by",
+	  "desc": "Sort all menu items from most expensive to cheapest by price. Type ASC or DESC.",
+	  "table": "menu",
+	  "column": "price",
+	  "table_headers": ["id", "item", "category", "price"],
+	  "table_rows": [
+	  	["1", "Espresso",         "Drinks",   "2.50"],
+	  	["2", "Latte",            "Drinks",   "4.00"],
+	  	["3", "Cappuccino",       "Drinks",   "3.50"],
+	  	["4", "Blueberry Muffin", "Pastries", "3.00"],
+	  	["5", "Croissant",        "Pastries", "2.75"],
+	  	["6", "Matcha Latte",     "Drinks",   "4.25"],
+	  	["7", "Cheesecake",       "Pastries", "3.75"],
+	  	["8", "Cold Brew",        "Drinks",   "3.25"],
+	  	["9", "Donut",            "Pastries", "2.00"]
+	  ],
+	  "answer": "DESC",
+	  "hint": "Most expensive first = highest to lowest = Descending. Type: DESC",
+	  "result_headers": ["id", "item", "category", "price"],
+	  "result_rows": [
+	  	["6", "Matcha Latte",     "Drinks",   "4.25"],
+	  	["2", "Latte",            "Drinks",   "4.00"],
+	  	["7", "Cheesecake",       "Pastries", "3.75"],
+	  	["3", "Cappuccino",       "Drinks",   "3.50"],
+	  	["8", "Cold Brew",        "Drinks",   "3.25"],
+	  	["4", "Blueberry Muffin", "Pastries", "3.00"],
+	  	["5", "Croissant",        "Pastries", "2.75"],
+	  	["1", "Espresso",         "Drinks",   "2.50"],
+	  	["9", "Donut",            "Pastries", "2.00"]
+	  ],
+	  "result_msg": "Records sorted by price DESC.",
+					"fail": [
+						{ "type": "dialogue", "char": "cafe_supervisor", "name": "SUPERVISOR", "npc": "NPC_occupations/coffee_owner/shock", "text": "Cheapest first?! That's backwards for a premium display! Flip it!" },
+						{ "type": "dialogue", "char": "scene",          "name": "SCENE",      "npc": "NPC_occupations/coffee_owner/idle",  "text": "The supervisor points at the screen, unimpressed." },
+						{ "type": "dialogue", "char": "you",            "name": "YOU",        "npc": "NPC_occupations/coffee_owner/idle",  "text": "Sorry! Most expensive first means DESC." }
+					] },
+	{ "type": "dialogue", "char": "you",             "name": "YOU",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "Done! Now sorted most expensive to cheapest: Matcha Latte, Latte, Cheesecake..." },
+	{ "type": "dialogue", "char": "cafe_supervisor", "name": "SUPERVISOR",
+	  "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "Perfect. ASC for cheapest-first, DESC for priciest-first. You've got both directions now." },
 	{ "type": "end" }
 ],
 
@@ -424,6 +473,48 @@ const LESSONS: Dictionary = {
 	{ "type": "dialogue", "char": "cafe_supervisor",  "name": "SUPERVISOR",
 	  "npc": "NPC_occupations/coffee_owner/talk",
 	  "text": "Perfect. IS NULL is great for catching incomplete data. Nice SQL work." },
+	{ "type": "dialogue", "char": "cafe_supervisor",  "name": "SUPERVISOR",
+	  "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "Now show me the orders that DO have a note, so the barista knows which ones need customizing." },
+	{ "type": "dialogue", "char": "you",              "name": "YOU",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "That's IS NOT NULL this time it finds rows where the value is actually filled in." },
+	{
+		"type": "sql_fill",
+		"gamemode": "select_where_null",
+		"desc": "Find all orders that DO have a special note. Type NOT NULL after IS.",
+		"table": "orders",
+		"column": "notes",
+		"table_headers": ["id", "customer", "item", "notes"],
+		"table_rows": [
+			["1", "Maria",  "Latte",        ""],
+			["2", "Rivera", "Iced Tea",     "Less ice"],
+			["3", "Santos", "Hot Latte",    ""],
+			["4", "Kim",    "Americano",    "Extra shot"],
+			["5", "Carlos", "Cappuccino",   ""],
+			["6", "Reyes",  "Matcha Latte", "Oat milk"]
+		],
+		"answer": "NOT NULL",
+		"hint": "A filled-in value is NOT NULL. Type: NOT NULL",
+		"result_headers": ["id", "customer", "item", "notes"],
+		"result_rows": [
+			["2", "Rivera", "Iced Tea",     "Less ice"],
+			["4", "Kim",    "Americano",    "Extra shot"],
+			["6", "Reyes",  "Matcha Latte", "Oat milk"]
+		],
+		"result_msg": "3 orders have a note. IS NOT NULL finds the opposite of IS NULL.",
+		"fail": [
+			{ "type": "dialogue", "char": "cafe_supervisor", "name": "SUPERVISOR", "npc": "NPC_occupations/coffee_owner/shock", "text": "That's the empty ones again! I need the orders that DO have a note this time." },
+			{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/coffee_owner/idle", "text": "The supervisor waits by the customization station." },
+			{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "NPC_occupations/coffee_owner/idle", "text": "Right for values that ARE present: NOT NULL." }
+		]
+	},
+	{ "type": "dialogue", "char": "you",             "name": "YOU",
+	  "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "Here you go Rivera, Kim, and Reyes all left custom notes." },
+	{ "type": "dialogue", "char": "cafe_supervisor",  "name": "SUPERVISOR",
+	  "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "Perfect. IS NULL for missing data, IS NOT NULL for what's actually there. Both are useful." },
 	{ "type": "end" }
 ],
 
@@ -490,6 +581,31 @@ const LESSONS: Dictionary = {
 	  "text": "3 high-value Latte orders. AND is strict both conditions must hold." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/coffee_owner/idle",
 	  "text": "OR would also include cheap Lattes and expensive non-Lattes too broad for this report." },
+	{ "type": "dialogue", "char": "cafe_owner", "name": "OWNER", "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "Now pull up every order that's a Latte OR a Cappuccino for the new drink combo flyer either drink counts." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "That's OR this time. OR only needs one of the conditions to be true, so it matches more rows." },
+	{ "type": "sql_fill", "gamemode": "where_and_or",
+	  "desc": "Find orders where item is 'Latte' OR item is 'Cappuccino'. Fill in AND or OR.",
+	  "table": "orders",
+	  "condition1": "item = 'Latte'",
+	  "condition2": "item = 'Cappuccino'",
+	  "answer": "OR",
+	  "table_headers": ["id","customer","item","price"],
+	  "table_rows": [["1","Ana","Latte","4.50"],["2","Ben","Espresso","3.00"],["3","Cara","Latte","4.50"],["4","Dan","Cappuccino","4.00"],["5","Eve","Espresso","3.00"],["6","Fay","Latte","4.50"]],
+	  "hint": "Either drink counts here: OR",
+	  "result_headers": ["id","customer","item","price"],
+	  "result_rows": [["1","Ana","Latte","4.50"],["3","Cara","Latte","4.50"],["4","Dan","Cappuccino","4.00"],["6","Fay","Latte","4.50"]],
+	  "result_msg": "4 orders match. OR only needs ONE condition true, so Lattes and Cappuccinos both count.",
+	  "fail": [
+		{ "type": "dialogue", "char": "cafe_owner", "name": "OWNER", "npc": "NPC_occupations/coffee_owner/shock", "text": "That's missing orders! I need either drink to count, not both at once on the same row." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/coffee_owner/idle", "text": "Right for either condition being enough: OR." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "cafe_owner", "name": "OWNER", "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "4 orders for the flyer. OR is much more inclusive than AND." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "Exactly. AND narrows results down both conditions must hold. OR widens them either one will do." },
 	{ "type": "end" }
 ],
 
@@ -627,7 +743,7 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON C22 | COUNT  |  NPC: coffee_owner
+#  LESSON C22 | COUNT/SUM  |  NPC: coffee_owner
 # ─────────────────────────────────────────────
 "C22": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/coffee_owner/idle",
@@ -656,6 +772,28 @@ const LESSONS: Dictionary = {
 	  "text": "5 orders! And SELECT SUM(price) would give me today's total revenue." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/coffee_owner/idle",
 	  "text": "Exactly. AVG(price) gives the average order value useful for pricing decisions." },
+	{ "type": "dialogue", "char": "cafe_owner", "name": "OWNER", "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "Actually, can you pull that number for me? I need today's total for the register close-out." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/coffee_owner/idle",
+	  "text": "Sure that's SUM instead of COUNT. SUM adds up every value in a column." },
+	{ "type": "sql_fill", "gamemode": "aggregate",
+	  "desc": "Find the total revenue from today's orders. Fill in the aggregate function name.",
+	  "table": "orders",
+	  "column": "price",
+	  "answer": "SUM",
+	  "table_headers": ["id","customer","item","price"],
+	  "table_rows": [["1","Ana","Latte","4.50"],["2","Ben","Espresso","3.00"],["3","Cara","Cappuccino","4.00"],["4","Dan","Tea","2.00"],["5","Eve","Latte","4.50"]],
+	  "hint": "To add up every value: SUM",
+	  "result_headers": ["SUM(price)"],
+	  "result_rows": [["18.00"]],
+	  "result_msg": "Total revenue: $18.00. SUM adds every value together, unlike COUNT which just counts rows.",
+	  "fail": [
+		{ "type": "dialogue", "char": "cafe_owner", "name": "OWNER", "npc": "NPC_occupations/coffee_owner/shock", "text": "That's not the total! I need the revenue added up, not a row count." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/coffee_owner/idle", "text": "Right to add values together: SUM." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "cafe_owner", "name": "OWNER", "npc": "NPC_occupations/coffee_owner/talk",
+	  "text": "$18.00 for the day. Now I have both the count and the total for close-out." },
 	{ "type": "end" }
 ],
 

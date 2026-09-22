@@ -441,11 +441,11 @@ const LESSONS: Dictionary = {
 			["6",  "Clean Code",       "Martin",     "Technology"],
 			["7",  "Cosmos",           "Sagan",      "Science"],
 			["8",  "Database Design",  "Chen",       "Technology"],
+			["4",  "Design Patterns",  "GoF",        "Technology"],
 			["10", "Physics 101",      "Einstein",   "Science"],
 			["1",  "SQL Basics",       "Rivera",     "Technology"],
 			["5",  "The Great Gatsby", "Fitzgerald", "Fiction"],
-			["2",  "The Universe",     "Hawking",    "Science"],
-			["4",  "Design Patterns",  "GoF",        "Technology"]
+			["2",  "The Universe",     "Hawking",    "Science"]
 		],
 		"result_msg": "Records sorted by title ASC.",
 		"fail": [
@@ -467,6 +467,75 @@ const LESSONS: Dictionary = {
 		"name": "LIBRARIAN",
 		"npc":  "NPC_occupations/librarian/think",
 		"text": "Perfect alphabetical order. That matches the shelves exactly. Excellent work."
+	},
+	{
+		"type": "dialogue",
+		"char": "librarian",
+		"name": "LIBRARIAN",
+		"npc":  "NPC_occupations/librarian/talk",
+		"text": "Actually, flip that for the new-arrivals cart Z to A this time."
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "NPC_occupations/librarian/idle",
+		"text": "Z to A is Descending order. I'll change ASC to DESC."
+	},
+	{
+		"type": "sql_fill",
+		"gamemode": "order_by",
+		"desc": "Sort all books Z to A by title. Type ASC or DESC.",
+		"table": "books",
+		"column": "title",
+		"table_headers": ["id", "title", "author", "genre"],
+		"table_rows": [
+			["1",  "SQL Basics",       "Rivera",     "Technology"],
+			["2",  "The Universe",     "Hawking",    "Science"],
+			["3",  "Brief History",    "Sagan",      "Science"],
+			["4",  "Design Patterns",  "GoF",        "Technology"],
+			["5",  "The Great Gatsby", "Fitzgerald", "Fiction"],
+			["6",  "Clean Code",       "Martin",     "Technology"],
+			["7",  "Cosmos",           "Sagan",      "Science"],
+			["8",  "Database Design",  "Chen",       "Technology"],
+			["9",  "Animal Farm",      "Orwell",     "Fiction"],
+			["10", "Physics 101",      "Einstein",   "Science"]
+		],
+		"answer": "DESC",
+		"hint": "Z to A = Descending. Type: DESC",
+		"result_headers": ["id", "title", "author", "genre"],
+		"result_rows": [
+			["2",  "The Universe",     "Hawking",    "Science"],
+			["5",  "The Great Gatsby", "Fitzgerald", "Fiction"],
+			["1",  "SQL Basics",       "Rivera",     "Technology"],
+			["10", "Physics 101",      "Einstein",   "Science"],
+			["4",  "Design Patterns",  "GoF",        "Technology"],
+			["8",  "Database Design",  "Chen",       "Technology"],
+			["7",  "Cosmos",           "Sagan",      "Science"],
+			["6",  "Clean Code",       "Martin",     "Technology"],
+			["3",  "Brief History",    "Sagan",      "Science"],
+			["9",  "Animal Farm",      "Orwell",     "Fiction"]
+		],
+		"result_msg": "Records sorted by title DESC.",
+		"fail": [
+			{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "This is still A to Z! I need it reversed for the new-arrivals cart!" },
+			{ "type": "dialogue", "char": "scene",     "name": "SCENE",     "npc": "NPC_occupations/librarian/idle",  "text": "The librarian taps the cart handle, waiting." },
+			{ "type": "dialogue", "char": "you",       "name": "YOU",       "npc": "NPC_occupations/librarian/idle",  "text": "Sorry! Z to A means DESC." }
+		]
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "NPC_occupations/librarian/idle",
+		"text": "Done! The Universe, The Great Gatsby, SQL Basics now on top."
+	},
+	{
+		"type": "dialogue",
+		"char": "librarian",
+		"name": "LIBRARIAN",
+		"npc":  "NPC_occupations/librarian/talk",
+		"text": "Perfect. ASC for A-to-Z, DESC for Z-to-A. Now you've got both directions down."
 	},
 	{
 		"type": "end"
@@ -623,6 +692,64 @@ const LESSONS: Dictionary = {
 		"text": "Thank you. IS NULL is perfect for finding records where information is still missing."
 	},
 	{
+		"type": "dialogue",
+		"char": "librarian",
+		"name": "LIBRARIAN",
+		"npc":  "NPC_occupations/librarian/talk",
+		"text": "Now show me the borrows that HAVE already been returned, for the completed log."
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "NPC_occupations/librarian/idle",
+		"text": "That's IS NOT NULL this time it finds rows where the value is actually filled in."
+	},
+	{
+		"type": "sql_fill",
+		"gamemode": "select_where_null",
+		"desc": "Find all borrow records where the book HAS been returned. Type NOT NULL after IS.",
+		"table": "borrows",
+		"column": "return_date",
+		"table_headers": ["id", "borrower", "book", "return_date"],
+		"table_rows": [
+			["1", "Maria Santos",  "SQL Basics",      "June 10"],
+			["2", "Mr. Tan",       "The Universe",    ""],
+			["3", "Sofia Mendez",  "Brief History",   "June 20"],
+			["4", "Carlos Reyes",  "Clean Code",      ""],
+			["5", "Ana Torres",    "Design Patterns", "June 25"],
+			["6", "Kim Park",      "Cosmos",          ""]
+		],
+		"answer": "NOT NULL",
+		"hint": "A filled-in value is NOT NULL. Type: NOT NULL",
+		"result_headers": ["id", "borrower", "book", "return_date"],
+		"result_rows": [
+			["1", "Maria Santos", "SQL Basics",      "June 10"],
+			["3", "Sofia Mendez", "Brief History",   "June 20"],
+			["5", "Ana Torres",   "Design Patterns", "June 25"]
+		],
+		"result_msg": "3 books have already been returned. IS NOT NULL finds the opposite of IS NULL.",
+		"fail": [
+			{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "That's the ones still out again! I need the ones already returned this time." },
+			{ "type": "dialogue", "char": "scene",     "name": "SCENE",     "npc": "NPC_occupations/librarian/idle",  "text": "The librarian waits by the completed-returns log." },
+			{ "type": "dialogue", "char": "you",       "name": "YOU",       "npc": "NPC_occupations/librarian/idle",  "text": "Right for values that ARE present: NOT NULL." }
+		]
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "NPC_occupations/librarian/idle",
+		"text": "Here you go Maria Santos, Sofia Mendez, and Ana Torres have all returned their books."
+	},
+	{
+		"type": "dialogue",
+		"char": "librarian",
+		"name": "LIBRARIAN",
+		"npc":  "NPC_occupations/librarian/talk",
+		"text": "Perfect. IS NULL for missing data, IS NOT NULL for what's actually there. Both are useful."
+	},
+	{
 		"type": "end"
 	}
 ],
@@ -690,6 +817,31 @@ const LESSONS: Dictionary = {
 	  "text": "Dune and Neuromancer only. AND ensures both conditions apply simultaneously." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
 	  "text": "OR would include every available book and every Sci-Fi book regardless of the other condition." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "Now pull up every book that's Sci-Fi OR Fiction for the new 'Speculative Reads' shelf either genre counts." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
+	  "text": "That's OR this time. OR only needs one of the conditions to be true, so it matches more books." },
+	{ "type": "sql_fill", "gamemode": "where_and_or",
+	  "desc": "Find books where genre is 'Sci-Fi' OR genre is 'Fiction'. Fill in AND or OR.",
+	  "table": "books",
+	  "condition1": "genre = 'Sci-Fi'",
+	  "condition2": "genre = 'Fiction'",
+	  "answer": "OR",
+	  "table_headers": ["id","title","genre","status"],
+	  "table_rows": [["1","Dune","Sci-Fi","Available"],["2","1984","Fiction","Available"],["3","Foundation","Sci-Fi","Borrowed"],["4","Neuromancer","Sci-Fi","Available"],["5","Hamlet","Drama","Available"]],
+	  "hint": "Either genre counts here: OR",
+	  "result_headers": ["id","title","genre","status"],
+	  "result_rows": [["1","Dune","Sci-Fi","Available"],["2","1984","Fiction","Available"],["3","Foundation","Sci-Fi","Borrowed"],["4","Neuromancer","Sci-Fi","Available"]],
+	  "result_msg": "4 books match. OR only needs ONE condition true, so Sci-Fi and Fiction both count regardless of status.",
+	  "fail": [
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "That's missing books! I need either genre to count, not both at once on the same row." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle", "text": "Right for either condition being enough: OR." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "4 books for the shelf. OR is much more inclusive than AND." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
+	  "text": "Exactly. AND narrows results down both conditions must hold. OR widens them either one will do." },
 	{ "type": "end" }
 ],
 
@@ -827,7 +979,7 @@ const LESSONS: Dictionary = {
 ],
 
 # ─────────────────────────────────────────────
-#  LESSON L22 | COUNT  |  NPC: librarian
+#  LESSON L22 | COUNT/AVG  |  NPC: librarian
 # ─────────────────────────────────────────────
 "L22": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/librarian/idle",
@@ -856,6 +1008,28 @@ const LESSONS: Dictionary = {
 	  "text": "5 books though in reality we have thousands. COUNT(*) counts all rows including NULLs." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
 	  "text": "COUNT(column) skips NULL values. COUNT(*) counts every row regardless of NULLs." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "One more thing what's the average publication year across our catalog? I need it for a history display." },
+	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
+	  "text": "That's AVG instead of COUNT. AVG adds up every value and divides by how many rows there are." },
+	{ "type": "sql_fill", "gamemode": "aggregate",
+	  "desc": "Find the average publication year across the catalog. Fill in the aggregate function name.",
+	  "table": "books",
+	  "column": "year_published",
+	  "answer": "AVG",
+	  "table_headers": ["id","title","author","year_published"],
+	  "table_rows": [["1","Dune","Herbert","1965"],["2","Hamlet","Shakespeare","1603"],["3","1984","Orwell","1949"],["4","Foundation","Asimov","1951"],["5","Neuromancer","Gibson","1984"],["6","Brave New World","Huxley","1932"]],
+	  "hint": "To find the average value: AVG",
+	  "result_headers": ["AVG(year_published)"],
+	  "result_rows": [["1897.33"]],
+	  "result_msg": "Average publication year: 1897.33. AVG adds every value together and divides by the row count.",
+	  "fail": [
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "That's not an average! I need the mean publication year, not a row count." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle", "text": "Right for the average of a column: AVG." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "1897 on average, thanks to Hamlet and Brave New World pulling it back. Now I have COUNT and AVG both." },
 	{ "type": "end" }
 ],
 
