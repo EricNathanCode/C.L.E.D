@@ -1,5 +1,7 @@
 extends Control
 
+const Dashboard = preload("res://scripts/DashboardScreen.gd")
+
 @onready var _vbox        := $CenterContainer/CardPanel/VBoxContainer
 @onready var _icon_lbl    := $CenterContainer/CardPanel/VBoxContainer/IconLabel
 @onready var _title_lbl   := $CenterContainer/CardPanel/VBoxContainer/Title
@@ -33,13 +35,13 @@ func _ready() -> void:
 	_sub_lbl.add_theme_font_size_override("font_size", 15)
 	_sub_lbl.add_theme_color_override("font_color", Color(0.60, 0.65, 0.75))
 
-	# Buttons | primary CTA and ghost secondary
-	_style_btn(_hub_btn,   "primary", 16)
-	_style_btn(_world_btn, "ghost",   15)
+	# Buttons | ghost secondary (the dynamic "next step" button, when present, is the primary CTA)
+	_style_btn(_hub_btn,   "ghost", 16)
+	_style_btn(_world_btn, "ghost", 15)
 
 func set_mode(mode: String) -> void:
 	# Remove any dynamic nodes from a previous call immediately (not deferred)
-	for tag in ["_stars_row", "_recap_box", "_replay_btn"]:
+	for tag in ["_stars_row", "_recap_box", "_next_btn", "_replay_btn"]:
 		var old = _vbox.get_node_or_null(tag)
 		if old:
 			old.free()
@@ -139,6 +141,29 @@ func _add_complete_extras() -> void:
 			cl.add_theme_color_override("font_color", Color("#4ADE80"))
 			inner.add_child(cl)
 
+	# ── Next step button (Next Lesson / Folder Challenge) ──
+	var next_data: Dictionary = _next_step_data()
+	if not next_data.is_empty():
+		var next_btn := Button.new()
+		next_btn.name = "_next_btn"
+		next_btn.text = next_data["label"]
+		if next_data["action"] == "quiz":
+			var cap_fi: int = next_data["folder_idx"]
+			next_btn.pressed.connect(func():
+				GameManager.current_quiz_folder_idx = cap_fi
+				get_tree().root.get_node("Main").show_screen("folder_quiz")
+			)
+		else:
+			var cap_lid = next_data["lesson_id"]
+			next_btn.pressed.connect(func():
+				GameManager.lesson_id = cap_lid
+				get_tree().root.get_node("Main").show_screen("game")
+			)
+		_style_btn(next_btn, "primary", 16)
+		_vbox.add_child(next_btn)
+		_vbox.move_child(next_btn, insert_idx)
+		insert_idx += 1
+
 	# ── Replay button ─────────────────────────────────
 	var replay_btn := Button.new()
 	replay_btn.name = "_replay_btn"
@@ -149,6 +174,53 @@ func _add_complete_extras() -> void:
 	_style_btn(replay_btn, "ghost", 15)
 	_vbox.add_child(replay_btn)
 	_vbox.move_child(replay_btn, insert_idx)
+
+# ── Determine what comes after the just-completed lesson ──
+# Mirrors DashboardScreen's own unlock rules so this button
+# never offers something the Dashboard would still show as locked.
+func _next_step_data() -> Dictionary:
+	var world: String = GameManager.world
+	var lid = GameManager.lesson_id
+	var ids: Array
+	var folders: Array
+	match world:
+		"hotel":   ids = Dashboard.HOTEL_LESSONS;   folders = Dashboard.HOTEL_FOLDERS
+		"cafe":    ids = Dashboard.CAFE_LESSONS;    folders = Dashboard.CAFE_FOLDERS
+		"airport": ids = Dashboard.AIRPORT_LESSONS; folders = Dashboard.AIRPORT_FOLDERS
+		"library": ids = Dashboard.LIBRARY_LESSONS; folders = Dashboard.LIBRARY_FOLDERS
+		_: return {}
+
+	var folder_idx: int = -1
+	var is_last_in_folder: bool = false
+	for fi in range(folders.size()):
+		var fids: Array = folders[fi]["ids"]
+		if fids.has(lid):
+			folder_idx = fi
+			is_last_in_folder = fids[fids.size() - 1] == lid
+			break
+
+	if folder_idx == -1:
+		return {}
+
+	# Just finished the last lesson in this folder and haven't passed its
+	# challenge yet — that's the next thing to do, not the next folder.
+	if is_last_in_folder and not GameManager.is_folder_quiz_done(world, folder_idx):
+		var is_final: bool = folder_idx == folders.size() - 1
+		return {
+			"label":  "⚡  Final Test  →" if is_final else "⚡  Folder Challenge  →",
+			"action": "quiz",
+			"folder_idx": folder_idx,
+		}
+
+	var idx: int = ids.find(lid)
+	if idx >= 0 and idx < ids.size() - 1:
+		return {
+			"label":  "Next Lesson  →",
+			"action": "lesson",
+			"lesson_id": ids[idx + 1],
+		}
+
+	return {}
 
 # ── 3-variant button style ────────────────────────────
 func _style_btn(btn: Button, variant: String = "primary", font_size: int = 16) -> void:
