@@ -4,7 +4,6 @@ extends Control
 # ═══════════════════════════════════════════════════════
 
 const GM_TO_SQL: Dictionary = {
-	"select":            "SELECT",
 	"select_basic":      "SELECT",
 	"insert_into":       "INSERT INTO",
 	"select_where":      "SELECT WHERE",
@@ -53,7 +52,6 @@ const SQL_GLOSSARY: Array = [
 ]
 
 const GM_SCENES: Dictionary = {
-	"select":       "res://gamemode/scene/GM_Select.tscn",
 	"select_basic": "res://gamemode/scene/GM_SelectBasic.tscn",
 	"insert_into":  "res://gamemode/scene/GM_InsertInto.tscn",
 	"select_where": "res://gamemode/scene/GM_SelectWhere.tscn",
@@ -404,10 +402,6 @@ func _run_step() -> void:
 			else:
 				_stop_bob()
 			GameManager.speak(s.get("text", ""), char_key)
-
-		"sql_choice":
-			$DialogueArea/DialogueButtons/NextButton.visible = false
-			_show_challenge(s, "select")
 
 		"sql_fill":
 			$DialogueArea/DialogueButtons/NextButton.visible = false

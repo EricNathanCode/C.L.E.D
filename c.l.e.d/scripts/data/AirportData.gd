@@ -189,20 +189,6 @@ const LESSONS: Dictionary = {
 	{ "type": "dialogue", "char": "passenger", "name": "MRS. FERNANDEZ",
 	  "npc": "adult_15/shock",
 	  "text": "EXCUSE ME. My name is spelled WRONG on this ticket and I am NOT happy about it!!" },
-	{ "type": "sql_choice",
-	  "desc": "An upset passenger is in front of you. Choose the most professional response.",
-	  "options": [
-	  	[1, "Please calm down, ma'am, you're disturbing other passengers."],
-	  	[2, "I'm very sorry to hear that. I'll fix it right away."],
-	  	[3, "Not my problem, take it up with the airline."]
-	  ],
-	  "correct_id": 2,
-	  "hint": "De-escalate calmly and offer to help. Answer: id = 2",
-	  "fail": [
-		{ "type": "dialogue", "char": "passenger", "name": "MRS. FERNANDEZ", "npc": "adult_15/shock", "text": "ARE YOU SERIOUS?! I want your supervisor THIS INSTANT!!" },
-		{ "type": "dialogue", "char": "scene",      "name": "SCENE",         "npc": "adult_15/idle",  "text": "The whole terminal goes quiet. Heads turn toward the counter." },
-		{ "type": "dialogue", "char": "you",        "name": "YOU",           "npc": "adult_15/idle",  "text": "I need to handle this better. Let me choose the right response." }
-	  ] },
 	{ "type": "dialogue", "char": "you",       "name": "YOU",
 	  "npc": "adult_15/idle",
 	  "text": "I'm very sorry to hear that. I'll fix it right away. May I have your booking id?" },

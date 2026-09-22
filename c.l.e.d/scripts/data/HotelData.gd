@@ -189,20 +189,6 @@ const LESSONS: Dictionary = {
 	{ "type": "dialogue", "char": "guest3", "name": "MR. H",
 	  "npc": "adult_9/shock",
 	  "text": "EXCUSE ME. There is a MISTAKE in my booking and I am NOT happy about it!!" },
-	{ "type": "sql_choice",
-	  "desc": "An upset guest is in front of you. Choose the most professional response.",
-	  "options": [
-	  	[1, "Please calm down, sir, you're disturbing other guests."],
-	  	[2, "I'm very sorry to hear that. I'll fix it right away."],
-	  	[3, "Not my problem."]
-	  ],
-	  "correct_id": 2,
-	  "hint": "De-escalate calmly and offer to help. Answer: id = 2",
-	  "fail": [
-		{ "type": "dialogue", "char": "guest3", "name": "MR. H", "npc": "adult_9/shock", "text": "ARE YOU SERIOUS?! I want your manager THIS INSTANT!!" },
-		{ "type": "dialogue", "char": "scene",  "name": "SCENE", "npc": "adult_9/idle",  "text": "The whole lobby goes quiet. Your supervisor appears looking displeased." },
-		{ "type": "dialogue", "char": "you",    "name": "YOU",   "npc": "adult_9/idle",  "text": "I need to handle this better. Let me choose the right response." }
-	  ] },
 	{ "type": "dialogue", "char": "you",    "name": "YOU",
 	  "npc": "adult_9/idle",
 	  "text": "I'm very sorry to hear that. I'll fix it right away. May I have your booking id?" },
