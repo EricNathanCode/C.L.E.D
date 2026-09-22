@@ -23,34 +23,6 @@ const GM_TO_SQL: Dictionary = {
 	"select_alias":      "AS (Alias)",
 }
 
-const SQL_GLOSSARY: Array = [
-	["SELECT",       "Retrieves data from one or more columns in a table.",
-		"SELECT column1, column2\nFROM table_name;"],
-	["INSERT INTO",  "Adds a new row of data into a table.",
-		"INSERT INTO table_name (col1, col2)\nVALUES ('value1', 'value2');"],
-	["SELECT WHERE", "Retrieves rows filtered by a specific condition.",
-		"SELECT * FROM table_name\nWHERE column = 'value';"],
-	["UPDATE SET",   "Modifies values in existing rows of a table.",
-		"UPDATE table_name\nSET column = 'new_value'\nWHERE condition;"],
-	["DELETE",       "Removes rows from a table based on a condition.",
-		"DELETE FROM table_name\nWHERE column = 'value';"],
-	["ORDER BY",     "Sorts result rows in ascending or descending order.",
-		"SELECT * FROM table_name\nORDER BY column ASC;"],
-	["GROUP BY",           "Groups rows that share the same column value.",
-		"SELECT column, COUNT(*)\nFROM table_name\nGROUP BY column;"],
-	["IS NULL / IS NOT NULL", "Checks whether a column's value is missing or present.",
-		"SELECT * FROM table_name\nWHERE column IS NULL;\n\nSELECT * FROM table_name\nWHERE column IS NOT NULL;"],
-	["SELECT DISTINCT", "Returns only unique (non-duplicate) values in a result column.", "SELECT DISTINCT column\nFROM table_name;"],
-	["AND / OR",        "AND requires ALL conditions. OR requires AT LEAST ONE condition.", "SELECT * FROM t WHERE a=1 AND b=2;\nSELECT * FROM t WHERE a=1 OR b=2;"],
-	["BETWEEN",         "Filters rows where a value falls within an inclusive range.", "SELECT * FROM t\nWHERE price BETWEEN 10 AND 50;"],
-	["LIKE",            "Pattern matching. % = any characters, _ = one character.", "SELECT * FROM t\nWHERE name LIKE 'S%';"],
-	["IN",              "Filters rows where a column value matches any item in a list.", "SELECT * FROM t\nWHERE city IN ('Manila','Cebu');"],
-	["LIMIT",           "Restricts how many rows are returned by a query.", "SELECT * FROM t\nLIMIT 10;"],
-	["COUNT / SUM / AVG","Aggregate functions: COUNT counts rows, SUM adds values, AVG averages them.", "SELECT COUNT(id) FROM t;\nSELECT SUM(price) FROM t;\nSELECT AVG(price) FROM t;"],
-	["HAVING",          "Filters groups after GROUP BY like WHERE but for grouped data.", "SELECT col, COUNT(*) FROM t\nGROUP BY col\nHAVING COUNT(*) > 1;"],
-	["AS (Alias)",      "Renames a column or expression in the result. Does not change the table.", "SELECT price * 1.12 AS price_with_tax\nFROM orders;"],
-]
-
 const GM_SCENES: Dictionary = {
 	"select_basic": "res://gamemode/scene/GM_SelectBasic.tscn",
 	"insert_into":  "res://gamemode/scene/GM_InsertInto.tscn",
@@ -105,7 +77,6 @@ var _step:            int        = 0
 var _current_gm:      Node       = null
 var _dlg_line:        ColorRect  = null
 var _failed_step:     Dictionary = {}
-var _glossary_overlay: Control   = null
 
 func _ready() -> void:
 	$SceneBG.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
@@ -183,7 +154,6 @@ func _ready() -> void:
 	add_child(tb)
 
 	_style_sql_panel()
-	_build_glossary()
 	_load_all_textures()
 	_style_progress_bar()
 
@@ -524,183 +494,6 @@ func _clear_gm() -> void:
 func _go_complete() -> void:
 	GameManager.finish_lesson()
 	get_tree().root.get_node("Main").show_screen("complete")
-
-# ── SQL Glossary overlay ──────────────────────────────
-func _build_glossary() -> void:
-	# Glossary toggle button in TopBar
-	var gloss_btn := Button.new()
-	gloss_btn.text = "📖  Glossary"
-	gloss_btn.pressed.connect(_toggle_glossary)
-	_style_btn(gloss_btn, "secondary", 13)
-	$TopBar.add_child(gloss_btn)
-
-	# Full-screen overlay | added last so it's on top of all scene children
-	_glossary_overlay = Control.new()
-	_glossary_overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
-	_glossary_overlay.visible = false
-	_glossary_overlay.z_index = 100
-	_glossary_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
-	add_child(_glossary_overlay)
-
-	# Dark backdrop
-	var backdrop := ColorRect.new()
-	backdrop.set_anchors_preset(Control.PRESET_FULL_RECT)
-	backdrop.color = Color(0.0, 0.0, 0.0, 0.80)
-	backdrop.mouse_filter = Control.MOUSE_FILTER_STOP
-	_glossary_overlay.add_child(backdrop)
-
-	# Centered panel
-	var center := CenterContainer.new()
-	center.set_anchors_preset(Control.PRESET_FULL_RECT)
-	_glossary_overlay.add_child(center)
-
-	var panel := PanelContainer.new()
-	panel.custom_minimum_size = Vector2(520, 560)
-	var ps := StyleBoxFlat.new()
-	ps.bg_color = Color(0.09, 0.11, 0.16, 0.98)
-	ps.border_color = Color("#F59E0B")
-	ps.set_border_width_all(2)
-	ps.set_corner_radius_all(12)
-	ps.content_margin_left   = 24
-	ps.content_margin_right  = 24
-	ps.content_margin_top    = 20
-	ps.content_margin_bottom = 20
-	panel.add_theme_stylebox_override("panel", ps)
-	center.add_child(panel)
-
-	var vbox := VBoxContainer.new()
-	vbox.add_theme_constant_override("separation", 8)
-	vbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	panel.add_child(vbox)
-
-	# Header row
-	var header_row := HBoxContainer.new()
-	vbox.add_child(header_row)
-	var header_lbl := Label.new()
-	header_lbl.text = "SQL Glossary"
-	header_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	header_lbl.add_theme_font_size_override("font_size", 18)
-	header_lbl.add_theme_color_override("font_color", Color("#F59E0B"))
-	header_row.add_child(header_lbl)
-	var close_btn := Button.new()
-	close_btn.text = "✕"
-	close_btn.pressed.connect(_toggle_glossary)
-	_style_btn(close_btn, "ghost", 16)
-	header_row.add_child(close_btn)
-
-	# Divider
-	var sep := ColorRect.new()
-	sep.custom_minimum_size = Vector2(0, 1)
-	sep.color = Color(0.25, 0.30, 0.42)
-	vbox.add_child(sep)
-
-	# Filter search bar
-	var filter_box := LineEdit.new()
-	filter_box.placeholder_text = "🔍  Filter terms..."
-	filter_box.clear_button_enabled = true
-	filter_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	var fns := StyleBoxFlat.new()
-	fns.bg_color = Color(0.04, 0.07, 0.13, 1.0)
-	fns.border_color = Color(1.0, 0.78, 0.0)
-	fns.border_width_bottom = 2
-	fns.content_margin_left = 8; fns.content_margin_right  = 8
-	fns.content_margin_top  = 5; fns.content_margin_bottom = 5
-	filter_box.add_theme_stylebox_override("normal", fns)
-	var ffs := fns.duplicate() as StyleBoxFlat; ffs.border_width_bottom = 3
-	filter_box.add_theme_stylebox_override("focus", ffs)
-	filter_box.add_theme_color_override("font_color", Color(1.0, 0.78, 0.0))
-	filter_box.add_theme_color_override("font_placeholder_color", Color(1.0, 0.78, 0.0, 0.3))
-	filter_box.add_theme_font_size_override("font_size", 13)
-	vbox.add_child(filter_box)
-
-	var sep2 := ColorRect.new()
-	sep2.custom_minimum_size = Vector2(0, 1)
-	sep2.color = Color(0.25, 0.30, 0.42)
-	vbox.add_child(sep2)
-
-	# Scrollable entries area
-	var scroll := ScrollContainer.new()
-	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	vbox.add_child(scroll)
-
-	var entry_list := VBoxContainer.new()
-	entry_list.add_theme_constant_override("separation", 6)
-	entry_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	scroll.add_child(entry_list)
-
-	# entries_meta filled below | lambda captures array reference so filtering works
-	var entries_meta: Array = []
-	filter_box.text_changed.connect(func(query: String):
-		var q := query.strip_edges().to_lower()
-		for pair in entries_meta:
-			pair[0].visible = q.is_empty() or pair[1].contains(q)
-	)
-
-	# Entries
-	for entry in SQL_GLOSSARY:
-		# Wrapper column so example panel sits below the row
-		var entry_col := VBoxContainer.new()
-		entry_col.add_theme_constant_override("separation", 4)
-		entry_list.add_child(entry_col)
-		entries_meta.append([entry_col, (entry[0] + " " + entry[1]).to_lower()])
-
-		# Main info row
-		var row := HBoxContainer.new()
-		row.add_theme_constant_override("separation", 10)
-		entry_col.add_child(row)
-
-		var cmd_lbl := Label.new()
-		cmd_lbl.text = entry[0]
-		cmd_lbl.custom_minimum_size = Vector2(120, 0)
-		cmd_lbl.add_theme_font_size_override("font_size", 14)
-		cmd_lbl.add_theme_color_override("font_color", Color("#F59E0B"))
-		row.add_child(cmd_lbl)
-
-		var def_lbl := Label.new()
-		def_lbl.text = entry[1]
-		def_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		def_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		def_lbl.add_theme_font_size_override("font_size", 13)
-		def_lbl.add_theme_color_override("font_color", Color(0.80, 0.83, 0.90))
-		row.add_child(def_lbl)
-
-		# Example toggle button
-		var ex_btn := Button.new()
-		ex_btn.text = "{ }"
-		ex_btn.tooltip_text = "Show example"
-		_style_btn(ex_btn, "ghost", 12)
-		row.add_child(ex_btn)
-
-		# Collapsible syntax panel (hidden by default)
-		var snippet_panel := PanelContainer.new()
-		snippet_panel.visible = false
-		var sp := StyleBoxFlat.new()
-		sp.bg_color = Color(0.04, 0.05, 0.08, 1.0)
-		sp.border_color = Color("#F59E0B")
-		sp.border_width_left = 3
-		sp.content_margin_left  = 12
-		sp.content_margin_right = 12
-		sp.content_margin_top   = 8
-		sp.content_margin_bottom = 8
-		snippet_panel.add_theme_stylebox_override("panel", sp)
-		entry_col.add_child(snippet_panel)
-
-		var snippet_lbl := Label.new()
-		snippet_lbl.text = entry[2]
-		snippet_lbl.add_theme_font_size_override("font_size", 13)
-		snippet_lbl.add_theme_color_override("font_color", Color("#4ADE80"))
-		snippet_panel.add_child(snippet_lbl)
-
-		# Toggle visibility on button press
-		ex_btn.pressed.connect(func():
-			snippet_panel.visible = not snippet_panel.visible
-			ex_btn.text = "▲" if snippet_panel.visible else "{ }"
-		)
-
-func _toggle_glossary() -> void:
-	if _glossary_overlay:
-		_glossary_overlay.visible = not _glossary_overlay.visible
 
 func _get_story(id) -> Array:
 	var script: Node
