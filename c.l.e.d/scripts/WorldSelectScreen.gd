@@ -37,6 +37,7 @@ var _completion_lbl: Label = null
 const LESSONS_PER_WORLD: int = 17
 
 func _ready() -> void:
+	$SceneBG.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	$UpButton.pressed.connect(_on_up)
 	$DownButton.pressed.connect(_on_down)
 	$EnterButton.pressed.connect(_on_enter)

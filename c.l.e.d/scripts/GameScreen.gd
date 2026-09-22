@@ -110,6 +110,7 @@ var _failed_step:     Dictionary = {}
 var _glossary_overlay: Control   = null
 
 func _ready() -> void:
+	$SceneBG.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	$TopBar/BackToHubButton.pressed.connect(_on_back_to_hub)
 	$DialogueArea/DialogueButtons/NextButton.pressed.connect(_on_next)
 	$DialogueArea/DialogueButtons/BackButton.pressed.connect(_on_back)
