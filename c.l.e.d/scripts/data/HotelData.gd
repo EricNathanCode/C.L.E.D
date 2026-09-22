@@ -31,33 +31,47 @@ const LESSONS: Dictionary = {
 1: [
 	{ "type": "dialogue", "char": "scene",  "name": "SCENE",
 	  "npc": "adult_1/idle",
-	  "text": "A guest steps up to the counter with a friendly wave. It's your first interaction of the day." },
-	{ "type": "dialogue", "char": "guest",  "name": "GUEST",
+	  "text": "It's your first morning at the front desk. Before guests start arriving, a coworker walks you through the system." },
+	{ "type": "dialogue", "char": "guest",  "name": "TRAINER",
 	  "npc": "adult_1/talk",
-	  "text": "Good morning! I was wondering do you happen to have any rooms available for tonight?" },
+	  "text": "Let's start with the basics. Pull up every guest currently in our system every column, every row." },
 	{ "type": "dialogue", "char": "you",    "name": "YOU",
 	  "npc": "adult_1/idle",
-	  "text": "Let me check my options before responding..." },
-	{ "type": "sql_choice",
-	  "desc": "Three responses are in the table below. Type the id of the most professional and helpful answer.",
-	  "options": [
-	  	[1, "Yes! We have Deluxe and Standard rooms. Which type would you prefer?"],
-	  	[2, "I don't know, check the board yourself."],
-	  	[3, "Come back later."]
+	  "text": "Sure! Let me query the guests table and show you everything." },
+	{ "type": "sql_fill",
+	  "gamemode": "select_basic",
+	  "desc": "Retrieve every column and every row from the guests table.",
+	  "table": "guests",
+	  "table_headers": ["id", "first_name", "last_name", "room_no"],
+	  "table_rows": [
+	  	["1", "Alex",   "Santos",     "101"],
+	  	["2", "Maya",   "Dela Cruz",  "204"],
+	  	["3", "Jose",   "Hernandez",  "312"],
+	  	["4", "Carlos", "Garcia",     "412"],
+	  	["5", "Linda",  "Lim",        "205"]
 	  ],
-	  "correct_id": 1,
-	  "hint": "A good receptionist informs and offers options. Answer: id = 1",
+	  "answer": "*",
+	  "hint": "To select every column, type the wildcard: *",
 	  "fail": [
-		{ "type": "dialogue", "char": "guest", "name": "GUEST", "npc": "adult_1/shock", "text": "Excuse me?! That is NOT a helpful response!" },
-		{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "adult_1/idle",  "text": "The guest storms off. Your supervisor sighs from across the lobby." },
-		{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "adult_1/idle",  "text": "That did not go well. Let me choose the correct response this time." }
-	  ] },
+		{ "type": "dialogue", "char": "guest", "name": "TRAINER", "npc": "adult_1/shock", "text": "That's not right. To grab every column at once, use the wildcard character." },
+		{ "type": "dialogue", "char": "scene", "name": "SCENE",   "npc": "adult_1/idle",  "text": "The trainer taps the keyboard, waiting patiently." },
+		{ "type": "dialogue", "char": "you",   "name": "YOU",     "npc": "adult_1/idle",  "text": "Right the wildcard for 'everything' is: *" }
+	  ],
+	  "result_headers": ["id", "first_name", "last_name", "room_no"],
+	  "result_rows": [
+	  	["1", "Alex",   "Santos",     "101"],
+	  	["2", "Maya",   "Dela Cruz",  "204"],
+	  	["3", "Jose",   "Hernandez",  "312"],
+	  	["4", "Carlos", "Garcia",     "412"],
+	  	["5", "Linda",  "Lim",        "205"]
+	  ],
+	  "result_msg": "5 guests retrieved. SELECT * returns every column for every row in the table." },
 	{ "type": "dialogue", "char": "you",    "name": "YOU",
 	  "npc": "adult_1/idle",
-	  "text": "Yes! We have Deluxe and Standard rooms available. Which type would you prefer?" },
-	{ "type": "dialogue", "char": "guest",  "name": "GUEST",
+	  "text": "There you go all 5 guests, every column." },
+	{ "type": "dialogue", "char": "guest",  "name": "TRAINER",
 	  "npc": "adult_1/talk",
-	  "text": "A Deluxe room would be perfect! You're so helpful, thank you!" },
+	  "text": "Perfect. SELECT * is the most basic query there is, and you'll type it constantly. Good start!" },
 	{ "type": "end" }
 ],
 
@@ -86,7 +100,12 @@ const LESSONS: Dictionary = {
 	  "table": "customers",
 	  "columns": ["first_name", "middle_name", "last_name"],
 	  "table_headers": ["id", "first_name", "middle_name", "last_name"],
-	  "table_rows": [],
+	  "table_rows": [
+	  	["1", "Maya",   "Dela",  "Cruz"],
+	  	["2", "Jose",   "R.",    "Hernandez"],
+	  	["3", "Carlos", "M.",    "Garcia"],
+	  	["4", "Linda",  "P.",    "Lim"]
+	  ],
 	  "answers": ["Alex", "Rivera", "Santos"],
 	  "hint": "Alex Rivera Santos First: Alex Middle: Rivera Last: Santos",
 	  "fail": [
@@ -95,8 +114,8 @@ const LESSONS: Dictionary = {
 		{ "type": "dialogue", "char": "you",   "name": "YOU",   "npc": "adult_13/idle",   "text": "I am so sorry! Let me re-enter that correctly." }
 	  ],
 	  "result_headers": ["id", "first_name", "middle_name", "last_name"],
-	  "result_rows": [["1", "Alex", "Rivera", "Santos"]],
-	  "result_msg": "1 record inserted into customers." },
+	  "result_rows": [["5", "Alex", "Rivera", "Santos"]],
+	  "result_msg": "1 record inserted into customers Alex is now guest id 5." },
 	{ "type": "dialogue", "char": "you",    "name": "YOU",
 	  "npc": "adult_13/idle",
 	  "text": "You're all set, Mr. Santos! Room 101 is confirmed. Enjoy your stay!" },

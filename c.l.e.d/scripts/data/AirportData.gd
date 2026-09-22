@@ -28,33 +28,47 @@ const LESSONS: Dictionary = {
 "A1": [
 	{ "type": "dialogue", "char": "scene",     "name": "SCENE",
 	  "npc": "adult_2/idle",
-	  "text": "The morning rush at the check-in counter. A passenger steps up, glancing at the departure board." },
-	{ "type": "dialogue", "char": "passenger", "name": "PASSENGER",
+	  "text": "It's your first morning at the check-in counter. Before the gate opens, a coworker walks you through the system." },
+	{ "type": "dialogue", "char": "passenger", "name": "COWORKER",
 	  "npc": "adult_2/talk",
-	  "text": "Hi! Do you happen to have any window seats left on this flight?" },
+	  "text": "Let's start with the basics. Pull up every passenger currently checked in every column, every row." },
 	{ "type": "dialogue", "char": "you",       "name": "YOU",
 	  "npc": "adult_2/idle",
-	  "text": "Let me check the seat map before responding..." },
-	{ "type": "sql_choice",
-	  "desc": "Three responses are in the table below. Type the id of the most professional and helpful answer.",
-	  "options": [
-	  	[1, "Yes! We have a few window seats left. Would you like me to assign one for you?"],
-	  	[2, "I don't know, ask at the gate."],
-	  	[3, "Just take whatever seat you're given."]
+	  "text": "Sure! Let me query the passengers table and show you everything." },
+	{ "type": "sql_fill",
+	  "gamemode": "select_basic",
+	  "desc": "Retrieve every column and every row from the passengers table.",
+	  "table": "passengers",
+	  "table_headers": ["id", "first_name", "last_name", "seat_no"],
+	  "table_rows": [
+	  	["1", "Elena",  "Cruz",      "14A"],
+	  	["2", "Marco",  "Bautista",  "22C"],
+	  	["3", "Rosa",   "Fernandez", "9B"],
+	  	["4", "Carla",  "Garcia",    "17D"],
+	  	["5", "Linda",  "Lim",       "3A"]
 	  ],
-	  "correct_id": 1,
-	  "hint": "A good check-in agent checks the system and offers options. Answer: id = 1",
+	  "answer": "*",
+	  "hint": "To select every column, type the wildcard: *",
 	  "fail": [
-		{ "type": "dialogue", "char": "passenger", "name": "PASSENGER", "npc": "adult_2/shock", "text": "Excuse me?! That is NOT a helpful response!" },
-		{ "type": "dialogue", "char": "scene",     "name": "SCENE",     "npc": "adult_2/idle",  "text": "The passenger frowns and glances toward the supervisor's desk." },
-		{ "type": "dialogue", "char": "you",       "name": "YOU",       "npc": "adult_2/idle",  "text": "That did not go well. Let me choose the correct response this time." }
-	  ] },
+		{ "type": "dialogue", "char": "passenger", "name": "COWORKER", "npc": "adult_2/shock", "text": "That's not right. To grab every column at once, use the wildcard character." },
+		{ "type": "dialogue", "char": "scene",     "name": "SCENE",    "npc": "adult_2/idle",  "text": "The coworker points at the terminal screen, waiting patiently." },
+		{ "type": "dialogue", "char": "you",       "name": "YOU",      "npc": "adult_2/idle",  "text": "Right the wildcard for 'everything' is: *" }
+	  ],
+	  "result_headers": ["id", "first_name", "last_name", "seat_no"],
+	  "result_rows": [
+	  	["1", "Elena",  "Cruz",      "14A"],
+	  	["2", "Marco",  "Bautista",  "22C"],
+	  	["3", "Rosa",   "Fernandez", "9B"],
+	  	["4", "Carla",  "Garcia",    "17D"],
+	  	["5", "Linda",  "Lim",       "3A"]
+	  ],
+	  "result_msg": "5 passengers retrieved. SELECT * returns every column for every row in the table." },
 	{ "type": "dialogue", "char": "you",       "name": "YOU",
 	  "npc": "adult_2/idle",
-	  "text": "Yes! We have a few window seats left. Would you like me to assign one for you?" },
-	{ "type": "dialogue", "char": "passenger", "name": "PASSENGER",
+	  "text": "There you go all 5 passengers, every column." },
+	{ "type": "dialogue", "char": "passenger", "name": "COWORKER",
 	  "npc": "adult_2/talk",
-	  "text": "That would be perfect! You're so helpful, thank you!" },
+	  "text": "Perfect. SELECT * is the most basic query there is, and you'll type it constantly. Good start!" },
 	{ "type": "end" }
 ],
 
@@ -84,7 +98,12 @@ const LESSONS: Dictionary = {
 	  "table": "passengers",
 	  "columns": ["first_name", "last_name", "seat_class"],
 	  "table_headers": ["id", "first_name", "last_name", "seat_class"],
-	  "table_rows": [],
+	  "table_rows": [
+	  	["1", "Marco",  "Bautista",  "Business"],
+	  	["2", "Rosa",   "Fernandez", "Economy"],
+	  	["3", "Carla",  "Garcia",    "Economy"],
+	  	["4", "Linda",  "Lim",       "First"]
+	  ],
 	  "answers": ["Elena", "Cruz", "Economy"],
 	  "hint": "First: Elena Last: Cruz Class: Economy",
 	  "fail": [
@@ -93,8 +112,8 @@ const LESSONS: Dictionary = {
 		{ "type": "dialogue", "char": "you",       "name": "YOU",    "npc": "adult_4/idle",    "text": "I am so sorry! Let me re-enter that correctly." }
 	  ],
 	  "result_headers": ["id", "first_name", "last_name", "seat_class"],
-	  "result_rows": [["1", "Elena", "Cruz", "Economy"]],
-	  "result_msg": "1 record inserted into passengers." },
+	  "result_rows": [["5", "Elena", "Cruz", "Economy"]],
+	  "result_msg": "1 record inserted into passengers Elena is now passenger id 5." },
 	{ "type": "dialogue", "char": "you",       "name": "YOU",
 	  "npc": "adult_4/idle",
 	  "text": "You're all checked in, Ms. Cruz! Gate 14, boarding in an hour. Have a safe flight!" },

@@ -15,7 +15,7 @@ const AIRPORT_LESSONS:= ["A1","A2","A3","A4","A5", "A8","A16","A17","A18","A19",
 const LIBRARY_LESSONS:= ["L1","L2","L3","L4","L5", "L8","L16","L17","L18","L19","L20", "L6","L21","L7","L22","L23","L24"]
 
 const HOTEL_NAMES: Dictionary = {
-	1:  "SELECT | Choose Your Response",
+	1:  "SELECT | View All Guest Records",
 	2:  "INSERT INTO | Book a New Guest",
 	3:  "SELECT WHERE | Search a Guest Record",
 	4:  "UPDATE SET | Fix a Wrong Record",
@@ -34,7 +34,7 @@ const HOTEL_NAMES: Dictionary = {
 	24: "AS | Rename a Calculated Column",
 }
 const CAFE_NAMES: Dictionary = {
-	"C1":  "SELECT | Take the Order",
+	"C1":  "SELECT | View All Orders",
 	"C2":  "INSERT INTO | Log a New Order",
 	"C3":  "GROUP BY | End-of-Day Report",
 	"C4":  "SELECT WHERE | Find an Order",
@@ -53,7 +53,7 @@ const CAFE_NAMES: Dictionary = {
 	"C24": "AS | Rename a Calculated Column",
 }
 const AIRPORT_NAMES: Dictionary = {
-	"A1":  "SELECT | Assist a Passenger",
+	"A1":  "SELECT | View the Passenger Manifest",
 	"A2":  "INSERT INTO | Check In a New Passenger",
 	"A3":  "SELECT WHERE | Find a Lost Boarding Pass",
 	"A4":  "UPDATE SET | Fix a Misspelled Name",
@@ -72,7 +72,7 @@ const AIRPORT_NAMES: Dictionary = {
 	"A24": "AS | Rename a Calculated Column",
 }
 const LIBRARY_NAMES: Dictionary = {
-	"L1":  "SELECT | Help a Visitor",
+	"L1":  "SELECT | View the Full Catalog",
 	"L2":  "INSERT INTO | Register a New Borrower",
 	"L3":  "SELECT WHERE | Find a Book Record",
 	"L4":  "UPDATE SET | Update a Return Date",

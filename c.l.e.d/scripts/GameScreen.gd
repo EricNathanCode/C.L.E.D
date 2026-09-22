@@ -5,6 +5,7 @@ extends Control
 
 const GM_TO_SQL: Dictionary = {
 	"select":            "SELECT",
+	"select_basic":      "SELECT",
 	"insert_into":       "INSERT INTO",
 	"select_where":      "SELECT WHERE",
 	"update_set":        "UPDATE SET",
@@ -53,6 +54,7 @@ const SQL_GLOSSARY: Array = [
 
 const GM_SCENES: Dictionary = {
 	"select":       "res://gamemode/scene/GM_Select.tscn",
+	"select_basic": "res://gamemode/scene/GM_SelectBasic.tscn",
 	"insert_into":  "res://gamemode/scene/GM_InsertInto.tscn",
 	"select_where": "res://gamemode/scene/GM_SelectWhere.tscn",
 	"update_set":   "res://gamemode/scene/GM_UpdateSet.tscn",

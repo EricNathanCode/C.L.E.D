@@ -31,28 +31,47 @@ const LESSONS: Dictionary = {
 "C1": [
 	{ "type": "dialogue", "char": "scene",        "name": "SCENE",
 	  "npc": "adult_6/idle",
-	  "text": "The morning rush begins. A customer steps up to the counter and glances at the menu." },
-	{ "type": "dialogue", "char": "cafe_customer", "name": "CUSTOMER",
+	  "text": "It's your first morning behind the counter. Before the rush hits, a coworker shows you the order system." },
+	{ "type": "dialogue", "char": "cafe_customer", "name": "COWORKER",
 	  "npc": "adult_6/talk",
-	  "text": "Hi! I'd like a latte, please." },
+	  "text": "Let's start with the basics. Pull up every order in the system every column, every row." },
 	{ "type": "dialogue", "char": "you",           "name": "YOU",
 	  "npc": "adult_6/idle",
-	  "text": "Let me choose the right response for this customer..." },
-	{ "type": "sql_choice",
-	  "desc": "A customer just placed a coffee order. Choose the most professional response for a cafe staff member.",
-	  "options": [
-	  	[1, "Of course! What size would you like small, medium, or large?"],
-	  	[2, "We're out of lattes."],
-	  	[3, "Just stand over there and wait."]
+	  "text": "Sure! Let me query the orders table and show you everything." },
+	{ "type": "sql_fill",
+	  "gamemode": "select_basic",
+	  "desc": "Retrieve every column and every row from the orders table.",
+	  "table": "orders",
+	  "table_headers": ["id", "customer", "item", "status"],
+	  "table_rows": [
+	  	["1", "Maria",  "Latte",      "Paid"],
+	  	["2", "Rivera", "Iced Tea",   "Paid"],
+	  	["3", "Santos", "Cappuccino", "Pending"],
+	  	["4", "Kim",    "Americano",  "Paid"],
+	  	["5", "Reyes",  "Mocha",      "Pending"]
 	  ],
-	  "correct_id": 1,
-	  "hint": "Confirm the order and ask a helpful follow-up. Answer: id = 1" },
+	  "answer": "*",
+	  "hint": "To select every column, type the wildcard: *",
+	  "fail": [
+		{ "type": "dialogue", "char": "cafe_customer", "name": "COWORKER", "npc": "adult_6/shock", "text": "That's not right. To grab every column at once, use the wildcard character." },
+		{ "type": "dialogue", "char": "scene",          "name": "SCENE",    "npc": "adult_6/idle",  "text": "The coworker points at the register screen, waiting patiently." },
+		{ "type": "dialogue", "char": "you",            "name": "YOU",      "npc": "adult_6/idle",  "text": "Right the wildcard for 'everything' is: *" }
+	  ],
+	  "result_headers": ["id", "customer", "item", "status"],
+	  "result_rows": [
+	  	["1", "Maria",  "Latte",      "Paid"],
+	  	["2", "Rivera", "Iced Tea",   "Paid"],
+	  	["3", "Santos", "Cappuccino", "Pending"],
+	  	["4", "Kim",    "Americano",  "Paid"],
+	  	["5", "Reyes",  "Mocha",      "Pending"]
+	  ],
+	  "result_msg": "5 orders retrieved. SELECT * returns every column for every row in the table." },
 	{ "type": "dialogue", "char": "you",           "name": "YOU",
 	  "npc": "adult_6/idle",
-	  "text": "Of course! What size would you like small, medium, or large?" },
-	{ "type": "dialogue", "char": "cafe_customer", "name": "CUSTOMER",
+	  "text": "There you go all 5 orders, every column." },
+	{ "type": "dialogue", "char": "cafe_customer", "name": "COWORKER",
 	  "npc": "adult_6/talk",
-	  "text": "Medium please! You're so helpful, thank you!" },
+	  "text": "Perfect. SELECT * is the most basic query there is, and you'll type it constantly. Good start!" },
 	{ "type": "end" }
 ],
 
@@ -75,7 +94,12 @@ const LESSONS: Dictionary = {
 	  "table": "orders",
 	  "columns": ["customer_name", "drink", "food"],
 	  "table_headers": ["id", "customer_name", "drink", "food"],
-	  "table_rows": [],
+	  "table_rows": [
+	  	["1", "Maria",  "Latte",      "Croissant"],
+	  	["2", "Rivera", "Iced Tea",   "None"],
+	  	["3", "Kim",    "Americano",  "Bagel"],
+	  	["4", "Reyes",  "Mocha",      "Cookie"]
+	  ],
 	  "answers": ["Carlos", "Cappuccino", "Blueberry Muffin"],
 	  "hint": "Name: Carlos Drink: Cappuccino Food: Blueberry Muffin",
 	  "result_headers": ["id", "customer_name", "drink", "food"],

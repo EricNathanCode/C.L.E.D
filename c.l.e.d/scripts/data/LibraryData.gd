@@ -29,51 +29,65 @@ const LESSONS: Dictionary = {
 		"char": "scene",
 		"name": "SCENE",
 		"npc":  "adult_7/idle",
-		"text": "A quiet Tuesday morning at the library. A visitor approaches your desk looking lost."
+		"text": "It's your first morning at the front desk. Before the doors open, a coworker walks you through the catalog system."
 	},
 	{
 		"type": "dialogue",
 		"char": "visitor",
-		"name": "VISITOR",
-		"npc":  "adult_7/confuse",
-		"text": "Excuse me... I'm looking for books about SQL and databases. I have no idea where to start."
-	},
-	{
-		"type": "dialogue",
-		"char": "you",
-		"name": "YOU",
-		"npc":  "adult_7/idle",
-		"text": "Let me think of the best way to help this visitor."
-	},
-	{
-		"type": "sql_choice",
-		"desc": "A visitor needs help finding books. Choose the most helpful librarian response.",
-		"options": [
-			[1, "Great choice! I can check our database and show you exactly where those books are."],
-			[2, "Try looking in the science section. Somewhere over there."],
-			[3, "We only have fiction books here."]
-		],
-		"correct_id": 1,
-		"hint": "A good librarian uses the system and gives direct help. Answer: id = 1",
-		"fail": [
-			{ "type": "dialogue", "char": "visitor", "name": "VISITOR", "npc": "adult_7/shock", "text": "That is not helpful at all. I will just go somewhere else." },
-			{ "type": "dialogue", "char": "scene",   "name": "SCENE",   "npc": "adult_7/idle",  "text": "The visitor turns and leaves. You notice the librarian watching from across the room." },
-			{ "type": "dialogue", "char": "you",     "name": "YOU",     "npc": "adult_7/idle",  "text": "I should have used the database. Let me choose the right response." }
-		]
-	},
-	{
-		"type": "dialogue",
-		"char": "you",
-		"name": "YOU",
-		"npc":  "adult_7/idle",
-		"text": "Great choice! Let me check our database and show you exactly where those books are."
-	},
-	{
-		"type": "dialogue",
-		"char": "visitor",
-		"name": "VISITOR",
+		"name": "COWORKER",
 		"npc":  "adult_7/talk",
-		"text": "Oh wonderful! You're so much more helpful than I expected. Thank you!"
+		"text": "Let's start with the basics. Pull up every book in the catalog every column, every row."
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "adult_7/idle",
+		"text": "Sure! Let me query the books table and show you everything."
+	},
+	{
+		"type": "sql_fill",
+		"gamemode": "select_basic",
+		"desc": "Retrieve every column and every row from the books table.",
+		"table": "books",
+		"table_headers": ["id", "title", "author", "genre"],
+		"table_rows": [
+			["1", "SQL Basics",      "Rivera",  "Technology"],
+			["2", "The Universe",    "Hawking", "Science"],
+			["3", "Brief History",   "Sagan",   "Science"],
+			["4", "Design Patterns", "GoF",     "Technology"],
+			["5", "Animal Farm",     "Orwell",  "Fiction"]
+		],
+		"answer": "*",
+		"hint": "To select every column, type the wildcard: *",
+		"fail": [
+			{ "type": "dialogue", "char": "visitor", "name": "COWORKER", "npc": "adult_7/shock", "text": "That's not right. To grab every column at once, use the wildcard character." },
+			{ "type": "dialogue", "char": "scene",    "name": "SCENE",    "npc": "adult_7/idle",  "text": "The coworker points at the terminal, waiting patiently." },
+			{ "type": "dialogue", "char": "you",      "name": "YOU",      "npc": "adult_7/idle",  "text": "Right the wildcard for 'everything' is: *" }
+		],
+		"result_headers": ["id", "title", "author", "genre"],
+		"result_rows": [
+			["1", "SQL Basics",      "Rivera",  "Technology"],
+			["2", "The Universe",    "Hawking", "Science"],
+			["3", "Brief History",   "Sagan",   "Science"],
+			["4", "Design Patterns", "GoF",     "Technology"],
+			["5", "Animal Farm",     "Orwell",  "Fiction"]
+		],
+		"result_msg": "5 books retrieved. SELECT * returns every column for every row in the table."
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "adult_7/idle",
+		"text": "There you go all 5 books, every column."
+	},
+	{
+		"type": "dialogue",
+		"char": "visitor",
+		"name": "COWORKER",
+		"npc":  "adult_7/talk",
+		"text": "Perfect. SELECT * is the most basic query there is, and you'll type it constantly. Good start!"
 	},
 	{
 		"type": "end"
@@ -113,7 +127,12 @@ const LESSONS: Dictionary = {
 		"table": "borrowers",
 		"columns": ["first_name", "last_name", "membership_type"],
 		"table_headers": ["id", "first_name", "last_name", "membership_type"],
-		"table_rows": [],
+		"table_rows": [
+			["1", "Carlos", "Reyes",  "Faculty"],
+			["2", "Ana",    "Torres", "Student"],
+			["3", "Miguel", "Cruz",   "Student"],
+			["4", "Rosa",   "Lim",    "Faculty"]
+		],
 		"answers": ["Sofia", "Mendez", "Student"],
 		"hint": "First: Sofia Last: Mendez Type: Student",
 		"result_headers": ["id", "first_name", "last_name", "membership_type"],
