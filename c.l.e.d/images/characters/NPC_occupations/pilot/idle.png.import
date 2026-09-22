@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bucpptubgsaq1"
-path="res://.godot/imported/tjink.png-37c75b4e3c533bd16b21a45fcdbdc6ae.ctex"
+uid="uid://ciqxypdrq15qm"
+path="res://.godot/imported/idle.png-7a87a8c1599dff8dce8c8678cfdbc9c9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://images/characters/NPC_adults/adult_22/tjink.png"
-dest_files=["res://.godot/imported/tjink.png-37c75b4e3c533bd16b21a45fcdbdc6ae.ctex"]
+source_file="res://images/characters/NPC_occupations/pilot/idle.png"
+dest_files=["res://.godot/imported/idle.png-7a87a8c1599dff8dce8c8678cfdbc9c9.ctex"]
 
 [params]
 
