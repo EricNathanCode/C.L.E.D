@@ -21,8 +21,6 @@ const WORLD_BGS: Dictionary = {
 
 var _bg_cache: Dictionary = {}
 var _index: int = 0
-var _merged: bool = false
-var _merge_btn: Button = null
 
 @onready var _panel      := $SettingsOverlay/SettingsPanel
 @onready var _music_btn  := $SettingsOverlay/SettingsPanel/VBox/MusicToggle
@@ -97,12 +95,6 @@ func _ready() -> void:
 	title_lbl.add_theme_font_size_override("font_size", 17)
 	title_lbl.add_theme_color_override("font_color", Color.WHITE)
 
-	# Merge Worlds toggle | lives inside the Settings panel
-	_merge_btn = Button.new()
-	_merge_btn.pressed.connect(_on_merge_toggle)
-	$SettingsOverlay/SettingsPanel/VBox.add_child(_merge_btn)
-	_style_btn(_merge_btn, "secondary", 15)
-
 	# Reset Progress button | danger action, lives at the bottom of Settings
 	$SettingsOverlay/SettingsPanel/VBox.add_child(HSeparator.new())
 	_reset_btn = Button.new()
@@ -145,7 +137,6 @@ func _ready() -> void:
 	_update_tts_button()
 	_update_music_button()
 	_update_dark_button()
-	_update_merge_button()
 
 func _style_settings_panel() -> void:
 	var s := StyleBoxFlat.new()
@@ -197,26 +188,8 @@ func _on_down() -> void:
 	_index = (_index + 1) % WORLDS.size()
 	_update_display()
 
-func _on_merge_toggle() -> void:
-	_merged = not _merged
-	_update_merge_button()
-	_update_display()
-
-func _update_merge_button() -> void:
-	if not _merge_btn:
-		return
-	if _merged:
-		_merge_btn.text = "Merge Worlds: ON"
-	else:
-		_merge_btn.text = "Merge Worlds: OFF"
-	_style_btn(_merge_btn, "secondary", 15)
-
 func _on_enter() -> void:
-	GameManager.merged_mode = _merged
-	if _merged:
-		GameManager.world = WORLDS[0]
-	else:
-		GameManager.world = WORLDS[_index]
+	GameManager.world = WORLDS[_index]
 	get_tree().root.get_node("Main").show_screen("dashboard")
 
 func _on_exit() -> void:
@@ -302,24 +275,14 @@ func _on_dark_toggle() -> void:
 	GameManager.save_settings()
 
 func _update_display() -> void:
-	if _merged:
-		$UpButton.visible   = false
-		$DownButton.visible = false
-		$WorldName.text     = "Merge Worlds"
-		$WorldName.add_theme_color_override("font_color", Color.WHITE)
-		# Blend all 4 backgrounds by just showing the first
-		$SceneBG.texture = _bg_cache.get(WORLDS[0], null)
-		if _completion_lbl:
-			_completion_lbl.text = _completion_text_all()
-	else:
-		$UpButton.visible   = true
-		$DownButton.visible = true
-		var world: String = WORLDS[_index]
-		$WorldName.text = WORLD_NAMES[world]
-		$WorldName.add_theme_color_override("font_color", Color.WHITE)
-		$SceneBG.texture = _bg_cache.get(world, null)
-		if _completion_lbl:
-			_completion_lbl.text = _completion_text(world)
+	$UpButton.visible   = true
+	$DownButton.visible = true
+	var world: String = WORLDS[_index]
+	$WorldName.text = WORLD_NAMES[world]
+	$WorldName.add_theme_color_override("font_color", Color.WHITE)
+	$SceneBG.texture = _bg_cache.get(world, null)
+	if _completion_lbl:
+		_completion_lbl.text = _completion_text(world)
 
 # ── Completion % ──────────────────────────────────────
 func _count_done(world: String) -> int:
@@ -333,12 +296,6 @@ func _completion_text(world: String) -> String:
 	var done: int = _count_done(world)
 	var pct: int = int(round(float(done) / float(LESSONS_PER_WORLD) * 100.0))
 	return "★  %d / %d lessons  ·  %d%% complete" % [done, LESSONS_PER_WORLD, pct]
-
-func _completion_text_all() -> String:
-	var done: int = GameManager.completed_lessons.size()
-	var total: int = LESSONS_PER_WORLD * WORLDS.size()
-	var pct: int = int(round(float(done) / float(total) * 100.0))
-	return "★  %d / %d lessons  ·  %d%% complete" % [done, total, pct]
 
 func _update_tts_button() -> void:
 	_tts_btn.text = "TTS: ON" if GameManager.tts_enabled else "TTS: OFF"

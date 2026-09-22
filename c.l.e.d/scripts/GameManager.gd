@@ -5,7 +5,6 @@ extends Node
 
 var world:       String = ""
 var lesson_id           = null
-var merged_mode: bool   = false   # true = all worlds shown as one path
 
 # ── Accounts ───────────────────────────────────────────
 const ACCOUNTS_PATH := "user://accounts.cfg"
@@ -139,7 +138,6 @@ func logout() -> void:
 	current_user             = ""
 	world                    = ""
 	lesson_id                = null
-	merged_mode              = false
 	completed_lessons        = {}
 	completed_folder_quizzes = {}
 

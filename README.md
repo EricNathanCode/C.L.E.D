@@ -23,8 +23,6 @@ The same 17-lesson SQL curriculum is retold across four settings, so the player 
 
 Airport World's boss character is the **Captain** (pilot), who stops by the check-in counter before departure to review the passenger manifest — mirroring the manager/supervisor role each other world has for its report-style lessons (Hotel's manager, Cafe's supervisor, the Library's head librarian).
 
-A **Merge Worlds** mode is also available, which threads all four worlds' lessons into a single continuous path.
-
 ## Curriculum structure
 
 Each world's 17 lessons are grouped into 3 unlockable chapters ("folders"), focused on core SQL querying (scope trimmed from an earlier, larger curriculum per panel feedback):
@@ -56,7 +54,6 @@ Credentials and progress are stored locally only (no server/network account) —
 - **Hint system** — an on-demand hint for players who get stuck
 - **Folder Challenges** — gated quizzes that lock the next chapter until passed
 - **World Select & Dashboard** — browse worlds, preview a lesson's story as a mini comic strip before starting it, and track completion %
-- **Merge Worlds mode** — play all four worlds' lessons as one combined path
 - **SQL glossary / recap** — every command learned in a lesson is logged and can be reviewed as a cheat-sheet
 - **Accessibility & settings** — text-to-speech narration with per-character voice profiles, toggleable background music, and a dark-mode overlay
 - **Local accounts & per-user saves** — accounts, per-user progress, global settings, and the remembered session each persist locally via Godot's `ConfigFile` (see Accounts & Progress above)
@@ -76,7 +73,7 @@ c.l.e.d/
 ├── scene/                     # Top-level app screens
 │   ├── Main.tscn               # Root scene / screen router
 │   ├── LoginScreen.tscn        # Sign up / log in, pre-login settings
-│   ├── WorldSelectScreen.tscn  # Choose a world (or Merge Worlds), Exit confirm dialog
+│   ├── WorldSelectScreen.tscn  # Choose a world, Exit confirm dialog
 │   ├── DashboardScreen.tscn    # Lesson list, chapters, comic-strip previews
 │   ├── GameScreen.tscn         # Dialogue + SQL terminal lesson runner
 │   ├── FolderQuizScreen.tscn   # End-of-chapter challenge quiz
