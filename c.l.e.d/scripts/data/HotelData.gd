@@ -51,7 +51,7 @@ const LESSONS: Dictionary = {
 	  	["5", "Linda",  "Lim",        "205"]
 	  ],
 	  "answer": "*",
-	  "hint": "To select every column, type the wildcard: *",
+	  "hint": "There's a single symbol that means 'every column' — you won't need to type each column name out.",
 	  "fail": [
 		{ "type": "dialogue", "char": "guest", "name": "TRAINER", "npc": "adult_1/shock", "text": "That's not right. To grab every column at once, use the wildcard character." },
 		{ "type": "dialogue", "char": "scene", "name": "SCENE",   "npc": "adult_1/idle",  "text": "The trainer taps the keyboard, waiting patiently." },
@@ -107,7 +107,7 @@ const LESSONS: Dictionary = {
 	  	["4", "Linda",  "P.",    "Lim"]
 	  ],
 	  "answers": ["Alex", "Rivera", "Santos"],
-	  "hint": "Alex Rivera Santos First: Alex Middle: Rivera Last: Santos",
+	  "hint": "Match the three blanks to the order Alex gave his name in — first name first.",
 	  "fail": [
 		{ "type": "dialogue", "char": "guest", "name": "ALEX",  "npc": "adult_13/confuse", "text": "That is not my name at all. Are you sure you typed it right?" },
 		{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "adult_13/idle",   "text": "Alex looks uncomfortable. The guest in line behind him sighs." },
@@ -161,7 +161,7 @@ const LESSONS: Dictionary = {
 	  	["8", "Ana",    "Villanueva", "217"]
 	  ],
 	  "answer": "Dela Cruz",
-	  "hint": "Type her last name exactly: Dela Cruz",
+	  "hint": "WHERE needs the exact spelling Maya just gave you, space included.",
 	  "fail": [
 		{ "type": "dialogue", "char": "guest2", "name": "MAYA",  "npc": "adult_12/shock",  "text": "That is not my name! What if my booking is really gone?!" },
 		{ "type": "dialogue", "char": "scene",  "name": "SCENE", "npc": "adult_12/idle",   "text": "Maya starts to tear up. Someone behind her in the lobby gives you a look." },
@@ -211,7 +211,7 @@ const LESSONS: Dictionary = {
 	  ],
 	  "answer_value": "Hernandez",
 	  "answer_id": "3",
-	  "hint": "Correct spelling: Hernandez Record id: 3",
+	  "hint": "Use the spelling Mr. Hernandez corrected you with, and match it to the id he gave you a moment ago.",
 	  "fail": [
 		{ "type": "dialogue", "char": "guest3", "name": "MR. H", "npc": "adult_9/shock",   "text": "THAT IS STILL WRONG! Hernandez with a Z! Are you even listening?!" },
 		{ "type": "dialogue", "char": "scene",  "name": "SCENE", "npc": "adult_9/idle",    "text": "Mr. Hernandez slams his fist on the counter. Other guests are staring." },
@@ -264,7 +264,7 @@ const LESSONS: Dictionary = {
 	  	["8", "Ana",    "Villanueva", "217"]
 	  ],
 	  "answer_id": "5",
-	  "hint": "Delete the record where id = 5",
+	  "hint": "The id you need was mentioned earlier in the conversation — scroll back if you lost track of the number.",
 	  "fail": [
 		{ "type": "dialogue", "char": "guest2", "name": "MS. LIM", "npc": "adult_14/confuse", "text": "That is the wrong record. That is someone else's booking!" },
 		{ "type": "dialogue", "char": "scene",  "name": "SCENE",   "npc": "adult_14/idle",   "text": "A long pause on the phone line. This could be a serious data error." },
@@ -312,7 +312,7 @@ const LESSONS: Dictionary = {
 	  	["8", "Ana",    "Villanueva", "217"]
 	  ],
 	  "answer": "ASC",
-	  "hint": "A to Z is Ascending order. Type: ASC",
+	  "hint": "Alphabetical A-to-Z, or lowest-to-highest, is the 'normal' sort direction — one of the two keywords means exactly that.",
 	  "fail": [
 		{ "type": "dialogue", "char": "mgr",   "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/shock", "text": "This is sorted Z to A! That is backwards! This is for a board meeting!" },
 		{ "type": "dialogue", "char": "scene", "name": "SCENE",   "npc": "NPC_occupations/hotel_manager/idle",  "text": "The manager pinches the bridge of his nose. You feel your face go red." },
@@ -359,7 +359,7 @@ const LESSONS: Dictionary = {
 	  	["8", "Ana",    "Villanueva", "217"]
 	  ],
 	  "answer": "DESC",
-	  "hint": "Z to A is Descending order. Type: DESC",
+	  "hint": "This is the opposite direction from what you just used — the other keyword reverses the order.",
 	  "fail": [
 		{ "type": "dialogue", "char": "mgr",   "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/shock", "text": "This is still A to Z! I asked for the reverse order for the handout!" },
 		{ "type": "dialogue", "char": "scene", "name": "SCENE",   "npc": "NPC_occupations/hotel_manager/idle",  "text": "The manager taps the paper impatiently." },
@@ -418,7 +418,7 @@ const LESSONS: Dictionary = {
 	  	["10", "Rosa",   "Standard"]
 	  ],
 	  "answer": "room_type",
-	  "hint": "You want to count per room type. Type: room_type",
+	  "hint": "GROUP BY needs the column the manager wants the counts broken down by — check what category the report is split into.",
 	  "fail": [
 		{ "type": "dialogue", "char": "mgr",   "name": "MANAGER", "npc": "NPC_occupations/hotel_manager/shock", "text": "What is this? These numbers are completely off. It is not grouped by room type!" },
 		{ "type": "dialogue", "char": "scene", "name": "SCENE",   "npc": "NPC_occupations/hotel_manager/idle",  "text": "The manager sets down the report. The board meeting is in one hour." },
@@ -473,7 +473,7 @@ const LESSONS: Dictionary = {
 			["6", "Marco",  "Reyes",     ""]
 		],
 		"answer": "NULL",
-		"hint": "Missing values are NULL. Type: NULL",
+		"hint": "A blank/missing value in SQL isn't an empty string — it has its own keyword you check for right after IS.",
 		"result_headers": ["id", "first_name", "last_name", "email"],
 		"result_rows": [
 			["2", "Maya",   "Dela Cruz", "NULL"],
@@ -515,7 +515,7 @@ const LESSONS: Dictionary = {
 			["6", "Marco",  "Reyes",     ""]
 		],
 		"answer": "NOT NULL",
-		"hint": "A filled-in value is NOT NULL. Type: NOT NULL",
+		"hint": "You want the opposite of 'missing' this time — the phrasing for 'a value is actually present.'",
 		"result_headers": ["id", "first_name", "last_name", "email"],
 		"result_rows": [
 			["1", "Alex",  "Santos",    "alex@mail.com"],
@@ -554,7 +554,7 @@ const LESSONS: Dictionary = {
 	  "column": "room_type",
 	  "table_headers": ["id","guest_id","room_type","check_in"],
 	  "table_rows": [["1","1","Standard","June 1"],["2","2","Deluxe","June 3"],["3","3","Standard","June 4"],["4","4","Suite","June 5"],["5","5","Deluxe","June 6"],["6","6","Standard","June 7"]],
-	  "hint": "The column with repeating values to deduplicate: room_type",
+	  "hint": "DISTINCT needs the column that has repeated values — think about which column would show duplicates without it.",
 	  "result_headers": ["room_type"],
 	  "result_rows": [["Standard"],["Deluxe"],["Suite"]],
 	  "result_msg": "3 unique room types found. DISTINCT removed duplicate 'Standard' and 'Deluxe' entries.",
@@ -588,7 +588,7 @@ const LESSONS: Dictionary = {
 	  "answer": "AND",
 	  "table_headers": ["id","first_name","status","has_booking"],
 	  "table_rows": [["1","Alex","VIP","Yes"],["2","Maya","Regular","Yes"],["3","Jose","VIP","No"],["4","Carlos","VIP","Yes"],["5","Linda","Regular","No"]],
-	  "hint": "Both conditions must be true simultaneously: AND",
+	  "hint": "Ask yourself: does the manager need BOTH conditions true at once, or is just one enough? That decides the connector.",
 	  "result_headers": ["id","first_name","status","has_booking"],
 	  "result_rows": [["1","Alex","VIP","Yes"],["4","Carlos","VIP","Yes"]],
 	  "result_msg": "2 VIP guests with active bookings. AND requires BOTH conditions. OR would return 4 rows.",
@@ -613,7 +613,7 @@ const LESSONS: Dictionary = {
 	  "answer": "OR",
 	  "table_headers": ["id","first_name","status","has_booking"],
 	  "table_rows": [["1","Alex","VIP","Yes"],["2","Maya","Regular","Yes"],["3","Jose","VIP","No"],["4","Carlos","VIP","Yes"],["5","Linda","Regular","No"]],
-	  "hint": "Either condition is enough here: OR",
+	  "hint": "This time only one of the two conditions needs to be true — the other logical connector fits that.",
 	  "result_headers": ["id","first_name","status","has_booking"],
 	  "result_rows": [["1","Alex","VIP","Yes"],["2","Maya","Regular","Yes"],["3","Jose","VIP","No"],["4","Carlos","VIP","Yes"]],
 	  "result_msg": "4 guests match. OR only needs ONE condition true, so only Linda (neither VIP nor booked) is excluded.",
@@ -647,7 +647,7 @@ const LESSONS: Dictionary = {
 	  "answer": "BETWEEN",
 	  "table_headers": ["id","room_type","price_per_night"],
 	  "table_rows": [["1","Standard","85"],["2","Deluxe","150"],["3","Suite","350"],["4","Standard","95"],["5","Deluxe","220"],["6","Suite","400"],["7","Standard","110"]],
-	  "hint": "The range filtering keyword is: BETWEEN",
+	  "hint": "There's a keyword built for 'anywhere within this range, inclusive on both ends' — it always pairs with AND.",
 	  "result_headers": ["id","room_type","price_per_night"],
 	  "result_rows": [["2","Deluxe","150"],["5","Deluxe","220"],["7","Standard","110"]],
 	  "result_msg": "3 bookings in the 100-300 range. BETWEEN is inclusive 100 and 300 themselves would also match.",
@@ -680,7 +680,7 @@ const LESSONS: Dictionary = {
 	  "answer": "'S%'",
 	  "table_headers": ["id","first_name","last_name"],
 	  "table_rows": [["1","Alex","Santos"],["2","Maya","Dela Cruz"],["3","Jose","Hernandez"],["4","Carlos","Santos"],["5","Linda","Sim"],["6","Marco","Reyes"]],
-	  "hint": "Starts with S then any characters: 'S%'",
+	  "hint": "LIKE uses a wildcard symbol for 'anything after this point' — pair it with the first letter you're matching.",
 	  "result_headers": ["id","first_name","last_name"],
 	  "result_rows": [["1","Alex","Santos"],["4","Carlos","Santos"],["5","Linda","Sim"]],
 	  "result_msg": "3 guests found. 'S%' = starts with S, then anything. Santos and Sim both match.",
@@ -714,7 +714,7 @@ const LESSONS: Dictionary = {
 	  "answer": "IN",
 	  "table_headers": ["id","room_type","price_per_night"],
 	  "table_rows": [["1","Standard","85"],["2","Deluxe","150"],["3","Suite","350"],["4","Standard","95"],["5","Deluxe","220"],["6","Suite","400"]],
-	  "hint": "The list membership keyword is: IN",
+	  "hint": "One keyword checks a column against a whole list of values at once, instead of writing OR three times.",
 	  "result_headers": ["id","room_type","price_per_night"],
 	  "result_rows": [["1","Standard","85"],["2","Deluxe","150"],["4","Standard","95"],["5","Deluxe","220"]],
 	  "result_msg": "4 bookings found. IN ('Standard','Deluxe') equals: room_type='Standard' OR room_type='Deluxe'.",
@@ -746,7 +746,7 @@ const LESSONS: Dictionary = {
 	  "answer": "5",
 	  "table_headers": ["id","first_name","last_name","email"],
 	  "table_rows": [["1","Alex","Santos","alex@mail.com"],["2","Maya","Dela Cruz","maya@mail.com"],["3","Jose","Hernandez","jose@mail.com"],["4","Carlos","Garcia","carlos@mail.com"],["5","Linda","Lim","linda@mail.com"],["6","Marco","Reyes","marco@mail.com"],["7","Ana","Torres","ana@mail.com"]],
-	  "hint": "Show only 5 rows type the number: 5",
+	  "hint": "The number goes right after the keyword that caps how many rows come back — reread how many the manager asked for.",
 	  "result_headers": ["id","first_name","last_name","email"],
 	  "result_rows": [["1","Alex","Santos","alex@mail.com"],["2","Maya","Dela Cruz","maya@mail.com"],["3","Jose","Hernandez","jose@mail.com"],["4","Carlos","Garcia","carlos@mail.com"],["5","Linda","Lim","linda@mail.com"]],
 	  "result_msg": "5 rows returned. Rows 6 and 7 were not fetched. LIMIT saves time on large tables.",
@@ -779,7 +779,7 @@ const LESSONS: Dictionary = {
 	  "answer": "COUNT",
 	  "table_headers": ["id","first_name","last_name"],
 	  "table_rows": [["1","Alex","Santos"],["2","Maya","Dela Cruz"],["3","Jose","Hernandez"],["4","Carlos","Garcia"],["5","Linda","Lim"],["6","Marco","Reyes"]],
-	  "hint": "To count the number of rows: COUNT",
+	  "hint": "One aggregate function's entire job is collapsing many rows into a single row-count.",
 	  "result_headers": ["COUNT(id)"],
 	  "result_rows": [["6"]],
 	  "result_msg": "6 guests total.\n\nOther aggregate functions:\n- SUM(price) adds all values\n- AVG(price) calculates the average\n- MIN/MAX finds smallest or largest value",
@@ -801,7 +801,7 @@ const LESSONS: Dictionary = {
 	  "answer": "SUM",
 	  "table_headers": ["id","room_type","price_per_night"],
 	  "table_rows": [["1","Standard","85"],["2","Deluxe","150"],["3","Suite","350"],["4","Standard","95"],["5","Deluxe","220"],["6","Suite","400"],["7","Standard","110"]],
-	  "hint": "To add up every value: SUM",
+	  "hint": "You need the aggregate function that totals a column's values together — not the one that just counts rows.",
 	  "result_headers": ["SUM(price_per_night)"],
 	  "result_rows": [["1410"]],
 	  "result_msg": "Total revenue: 1410. SUM adds every value in the column together, unlike COUNT which just counts rows.",
@@ -834,7 +834,7 @@ const LESSONS: Dictionary = {
 	  "answer": "COUNT",
 	  "table_headers": ["id","room_type","guest_id"],
 	  "table_rows": [["1","Standard","1"],["2","Deluxe","2"],["3","Standard","3"],["4","Suite","4"],["5","Deluxe","5"],["6","Standard","6"]],
-	  "hint": "HAVING uses the aggregate function: COUNT",
+	  "hint": "HAVING filters on a calculated number from the GROUP BY — think about which aggregate function produced group sizes.",
 	  "result_headers": ["room_type","COUNT(*)"],
 	  "result_rows": [["Standard","3"],["Deluxe","2"]],
 	  "result_msg": "Standard (3) and Deluxe (2) appear more than once. Suite had only 1 booking so it was filtered out.",
@@ -867,7 +867,7 @@ const LESSONS: Dictionary = {
 	  "answer": "price_with_tax",
 	  "table_headers": ["id","room_type","price_per_night"],
 	  "table_rows": [["1","Standard","100"],["2","Deluxe","200"],["3","Suite","300"]],
-	  "hint": "The alias name for the tax column: price_with_tax",
+	  "hint": "AS just needs a short, readable name for the calculated column — check what the manager's request called it.",
 	  "result_headers": ["price_with_tax"],
 	  "result_rows": [["112.0"],["224.0"],["336.0"]],
 	  "result_msg": "Column now displays as 'price_with_tax' in results. AS only affects output the table is unchanged.",

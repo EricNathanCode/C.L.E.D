@@ -48,7 +48,7 @@ const LESSONS: Dictionary = {
 	  	["5", "Linda",  "Lim",       "3A"]
 	  ],
 	  "answer": "*",
-	  "hint": "To select every column, type the wildcard: *",
+	  "hint": "There's a single symbol that means 'every column' — you won't need to type each column name out.",
 	  "fail": [
 		{ "type": "dialogue", "char": "passenger", "name": "COWORKER", "npc": "adult_2/shock", "text": "That's not right. To grab every column at once, use the wildcard character." },
 		{ "type": "dialogue", "char": "scene",     "name": "SCENE",    "npc": "adult_2/idle",  "text": "The coworker points at the terminal screen, waiting patiently." },
@@ -105,7 +105,7 @@ const LESSONS: Dictionary = {
 	  	["4", "Linda",  "Lim",       "First"]
 	  ],
 	  "answers": ["Elena", "Cruz", "Economy"],
-	  "hint": "First: Elena Last: Cruz Class: Economy",
+	  "hint": "Match each blank to what Elena told you, in the same order as the INSERT statement's column list.",
 	  "fail": [
 		{ "type": "dialogue", "char": "passenger", "name": "ELENA",  "npc": "adult_4/confuse", "text": "That doesn't look right at all. Did you type my name correctly?" },
 		{ "type": "dialogue", "char": "scene",     "name": "SCENE",  "npc": "adult_4/idle",    "text": "Elena looks uneasy. The line behind her is starting to grow." },
@@ -160,7 +160,7 @@ const LESSONS: Dictionary = {
 	  	["8", "Ana",    "Villanueva","5D"]
 	  ],
 	  "answer": "Bautista",
-	  "hint": "Type his last name exactly: Bautista",
+	  "hint": "WHERE needs the exact name the passenger just gave you.",
 	  "fail": [
 		{ "type": "dialogue", "char": "passenger", "name": "MR. BAUTISTA", "npc": "adult_11/shock", "text": "That is not my name! What if my seat is given away?!" },
 		{ "type": "dialogue", "char": "scene",      "name": "SCENE",       "npc": "adult_11/idle",  "text": "Mr. Bautista starts checking his watch. Boarding closes soon." },
@@ -211,7 +211,7 @@ const LESSONS: Dictionary = {
 	  ],
 	  "answer_value": "Fernandez",
 	  "answer_id": "3",
-	  "hint": "Correct spelling: Fernandez Record id: 3",
+	  "hint": "Use the spelling Mrs. Fernandez corrected you with, and match it to the id she gave you a moment ago.",
 	  "fail": [
 		{ "type": "dialogue", "char": "passenger", "name": "MRS. FERNANDEZ", "npc": "adult_15/shock", "text": "THAT IS STILL WRONG! Fernandez with a Z! Are you even listening?!" },
 		{ "type": "dialogue", "char": "scene",      "name": "SCENE",         "npc": "adult_15/idle",  "text": "Mrs. Fernandez taps the counter impatiently. Other passengers are staring." },
@@ -265,7 +265,7 @@ const LESSONS: Dictionary = {
 	  	["8", "Ana",    "Villanueva", "5D"]
 	  ],
 	  "answer_id": "5",
-	  "hint": "Delete the record where id = 5",
+	  "hint": "The id you need was mentioned earlier in the conversation — scroll back if you lost track of the number.",
 	  "fail": [
 		{ "type": "dialogue", "char": "passenger", "name": "MR. TAN", "npc": "adult_18/confuse", "text": "That is the wrong record. That is someone else's booking!" },
 		{ "type": "dialogue", "char": "scene",      "name": "SCENE",  "npc": "adult_18/idle",   "text": "A long pause on the phone line. This could be a serious data error." },
@@ -313,7 +313,7 @@ const LESSONS: Dictionary = {
 	  	["8", "Ana",    "Villanueva", "5D"]
 	  ],
 	  "answer": "ASC",
-	  "hint": "A to Z is Ascending order. Type: ASC",
+	  "hint": "Alphabetical A-to-Z, or lowest-to-highest, is the 'normal' sort direction — one of the two keywords means exactly that.",
 	  "fail": [
 		{ "type": "dialogue", "char": "pilot",  "name": "CAPTAIN", "npc": "NPC_occupations/pilot/shock", "text": "This is sorted Z to A! That is backwards! We board in ten minutes!" },
 		{ "type": "dialogue", "char": "scene",  "name": "SCENE",   "npc": "NPC_occupations/pilot/idle",  "text": "The captain checks his watch. You feel your face go red." },
@@ -360,7 +360,7 @@ const LESSONS: Dictionary = {
 	  	["8", "Ana",    "Villanueva", "5D"]
 	  ],
 	  "answer": "DESC",
-	  "hint": "Z to A is Descending order. Type: DESC",
+	  "hint": "This is the opposite direction from what you just used — the other keyword reverses the order.",
 	  "fail": [
 		{ "type": "dialogue", "char": "pilot",  "name": "CAPTAIN", "npc": "NPC_occupations/pilot/shock", "text": "This is still A to Z! I need it reversed for this boarding call!" },
 		{ "type": "dialogue", "char": "scene",  "name": "SCENE",   "npc": "NPC_occupations/pilot/idle",  "text": "The captain checks his watch again." },
@@ -419,7 +419,7 @@ const LESSONS: Dictionary = {
 	  	["10", "Rosario","Economy"]
 	  ],
 	  "answer": "seat_class",
-	  "hint": "You want to count per seat class. Type: seat_class",
+	  "hint": "GROUP BY needs the column the captain wants the counts broken down by — check what category the report is split into.",
 	  "fail": [
 		{ "type": "dialogue", "char": "pilot",  "name": "CAPTAIN", "npc": "NPC_occupations/pilot/shock", "text": "What is this? These numbers are completely off. It is not grouped by seat class!" },
 		{ "type": "dialogue", "char": "scene",  "name": "SCENE",   "npc": "NPC_occupations/pilot/idle",  "text": "The captain sets down the report. We push back from the gate in ten minutes." },
@@ -474,7 +474,7 @@ const LESSONS: Dictionary = {
 			["6", "Miguel","Reyes",     ""]
 		],
 		"answer": "NULL",
-		"hint": "Missing values are NULL. Type: NULL",
+		"hint": "A blank/missing value in SQL isn't an empty string — it has its own keyword you check for right after IS.",
 		"result_headers": ["id", "first_name", "last_name", "meal_pref"],
 		"result_rows": [
 			["2", "Marco",  "Bautista", "NULL"],
@@ -516,7 +516,7 @@ const LESSONS: Dictionary = {
 			["6", "Miguel","Reyes",     ""]
 		],
 		"answer": "NOT NULL",
-		"hint": "A filled-in value is NOT NULL. Type: NOT NULL",
+		"hint": "You want the opposite of 'missing' this time — the phrasing for 'a value is actually present.'",
 		"result_headers": ["id", "first_name", "last_name", "meal_pref"],
 		"result_rows": [
 			["1", "Elena", "Cruz",      "Vegetarian"],
@@ -555,7 +555,7 @@ const LESSONS: Dictionary = {
 	  "column": "destination",
 	  "table_headers": ["id","passenger_id","destination","flight_no"],
 	  "table_rows": [["1","1","Manila","PR101"],["2","2","Cebu","PR202"],["3","3","Manila","PR101"],["4","4","Davao","PR303"],["5","5","Cebu","PR202"],["6","6","Manila","PR101"]],
-	  "hint": "The column with repeating values to deduplicate: destination",
+	  "hint": "DISTINCT needs the column with repeated values — think about which column would show duplicates without it.",
 	  "result_headers": ["destination"],
 	  "result_rows": [["Manila"],["Cebu"],["Davao"]],
 	  "result_msg": "3 unique destinations found. DISTINCT removed the duplicate 'Manila' and 'Cebu' entries.",
@@ -589,7 +589,7 @@ const LESSONS: Dictionary = {
 	  "answer": "AND",
 	  "table_headers": ["id","first_name","seat_class","checked_in"],
 	  "table_rows": [["1","Elena","Business","Yes"],["2","Marco","Economy","Yes"],["3","Rosa","Business","No"],["4","Carla","Business","Yes"],["5","Linda","Economy","No"]],
-	  "hint": "Both conditions must be true simultaneously: AND",
+	  "hint": "Ask yourself: does the captain need BOTH conditions true at once, or is just one enough? That decides the connector.",
 	  "result_headers": ["id","first_name","seat_class","checked_in"],
 	  "result_rows": [["1","Elena","Business","Yes"],["4","Carla","Business","Yes"]],
 	  "result_msg": "2 Business class passengers already checked in. AND requires BOTH conditions. OR would return 4 rows.",
@@ -614,7 +614,7 @@ const LESSONS: Dictionary = {
 	  "answer": "OR",
 	  "table_headers": ["id","first_name","seat_class","checked_in"],
 	  "table_rows": [["1","Elena","Business","Yes"],["2","Marco","Economy","Yes"],["3","Rosa","Business","No"],["4","Carla","Business","Yes"],["5","Linda","Economy","No"]],
-	  "hint": "Either condition is enough here: OR",
+	  "hint": "This time only one of the two conditions needs to be true — the other logical connector fits that.",
 	  "result_headers": ["id","first_name","seat_class","checked_in"],
 	  "result_rows": [["1","Elena","Business","Yes"],["2","Marco","Economy","Yes"],["3","Rosa","Business","No"],["4","Carla","Business","Yes"]],
 	  "result_msg": "4 passengers match. OR only needs ONE condition true, so only Linda (neither Business nor checked in) is excluded.",
@@ -648,7 +648,7 @@ const LESSONS: Dictionary = {
 	  "answer": "BETWEEN",
 	  "table_headers": ["id","destination","ticket_price"],
 	  "table_rows": [["1","Manila","150"],["2","Cebu","320"],["3","Davao","650"],["4","Manila","180"],["5","Cebu","480"],["6","Davao","720"],["7","Manila","250"]],
-	  "hint": "The range filtering keyword is: BETWEEN",
+	  "hint": "There's a keyword built for 'anywhere within this range, inclusive on both ends' — it always pairs with AND.",
 	  "result_headers": ["id","destination","ticket_price"],
 	  "result_rows": [["2","Cebu","320"],["5","Cebu","480"],["7","Manila","250"]],
 	  "result_msg": "3 bookings in the 200-500 range. BETWEEN is inclusive — 200 and 500 themselves would also match.",
@@ -681,7 +681,7 @@ const LESSONS: Dictionary = {
 	  "answer": "'D%'",
 	  "table_headers": ["id","first_name","last_name"],
 	  "table_rows": [["1","Elena","Dizon"],["2","Marco","Bautista"],["3","Jose","Delacruz"],["4","Carla","Garcia"],["5","Linda","Diaz"],["6","Miguel","Reyes"]],
-	  "hint": "Starts with D then any characters: 'D%'",
+	  "hint": "LIKE uses a wildcard symbol for 'anything after this point' — pair it with the first letter you're matching.",
 	  "result_headers": ["id","first_name","last_name"],
 	  "result_rows": [["1","Elena","Dizon"],["3","Jose","Delacruz"],["5","Linda","Diaz"]],
 	  "result_msg": "3 passengers found. 'D%' = starts with D, then anything. Dizon, Delacruz, and Diaz all match.",
@@ -715,7 +715,7 @@ const LESSONS: Dictionary = {
 	  "answer": "IN",
 	  "table_headers": ["id","destination","ticket_price"],
 	  "table_rows": [["1","Manila","250"],["2","Cebu","320"],["3","Tokyo","900"],["4","Manila","180"],["5","Davao","410"],["6","Singapore","1100"]],
-	  "hint": "The list membership keyword is: IN",
+	  "hint": "One keyword checks a column against a whole list of values at once, instead of writing OR three times.",
 	  "result_headers": ["id","destination","ticket_price"],
 	  "result_rows": [["1","Manila","250"],["2","Cebu","320"],["4","Manila","180"],["5","Davao","410"]],
 	  "result_msg": "4 bookings found. IN ('Manila','Cebu','Davao') equals: destination='Manila' OR destination='Cebu' OR destination='Davao'.",
@@ -747,7 +747,7 @@ const LESSONS: Dictionary = {
 	  "answer": "5",
 	  "table_headers": ["id","first_name","last_name","seat_no"],
 	  "table_rows": [["1","Elena","Cruz","14A"],["2","Marco","Bautista","22C"],["3","Rosa","Fernandez","9B"],["4","Carla","Garcia","17D"],["5","Linda","Lim","3A"],["6","Miguel","Reyes","11C"],["7","Ana","Torres","20B"]],
-	  "hint": "Show only 5 rows — type the number: 5",
+	  "hint": "The number goes right after the keyword that caps how many rows come back — reread how many were asked for.",
 	  "result_headers": ["id","first_name","last_name","seat_no"],
 	  "result_rows": [["1","Elena","Cruz","14A"],["2","Marco","Bautista","22C"],["3","Rosa","Fernandez","9B"],["4","Carla","Garcia","17D"],["5","Linda","Lim","3A"]],
 	  "result_msg": "5 rows returned. Rows 6 and 7 were not fetched. LIMIT saves time on large tables.",
@@ -780,7 +780,7 @@ const LESSONS: Dictionary = {
 	  "answer": "COUNT",
 	  "table_headers": ["id","first_name","last_name"],
 	  "table_rows": [["1","Elena","Cruz"],["2","Marco","Bautista"],["3","Rosa","Fernandez"],["4","Carla","Garcia"],["5","Linda","Lim"],["6","Miguel","Reyes"]],
-	  "hint": "To count the number of rows: COUNT",
+	  "hint": "One aggregate function's entire job is collapsing many rows into a single row-count.",
 	  "result_headers": ["COUNT(id)"],
 	  "result_rows": [["6"]],
 	  "result_msg": "6 passengers total.\n\nOther aggregate functions:\n- SUM(price) adds all values\n- AVG(price) calculates the average\n- MIN/MAX finds smallest or largest value",
@@ -804,7 +804,7 @@ const LESSONS: Dictionary = {
 	  "answer": "SUM",
 	  "table_headers": ["id","destination","ticket_price"],
 	  "table_rows": [["1","Manila","150"],["2","Cebu","320"],["3","Davao","650"],["4","Manila","180"],["5","Cebu","480"],["6","Davao","720"],["7","Manila","250"]],
-	  "hint": "To add up every value: SUM",
+	  "hint": "You need the aggregate function that totals a column's values together — not the one that just counts rows.",
 	  "result_headers": ["SUM(ticket_price)"],
 	  "result_rows": [["2750"]],
 	  "result_msg": "Total ticket revenue: 2750. SUM adds every value together, unlike COUNT which just counts rows.",
@@ -835,7 +835,7 @@ const LESSONS: Dictionary = {
 	  "answer": "COUNT",
 	  "table_headers": ["id","destination","passenger_id"],
 	  "table_rows": [["1","Manila","1"],["2","Cebu","2"],["3","Manila","3"],["4","Davao","4"],["5","Cebu","5"],["6","Manila","6"]],
-	  "hint": "HAVING uses the aggregate function: COUNT",
+	  "hint": "HAVING filters on a calculated number from the GROUP BY — think about which aggregate function produced group sizes.",
 	  "result_headers": ["destination","COUNT(*)"],
 	  "result_rows": [["Manila","3"],["Cebu","2"]],
 	  "result_msg": "Manila (3) and Cebu (2) appear more than once. Davao had only 1 booking so it was filtered out.",
@@ -868,7 +868,7 @@ const LESSONS: Dictionary = {
 	  "answer": "price_with_tax",
 	  "table_headers": ["id","destination","ticket_price"],
 	  "table_rows": [["1","Manila","200"],["2","Cebu","300"],["3","Davao","400"]],
-	  "hint": "The alias name for the tax column: price_with_tax",
+	  "hint": "AS just needs a short, readable name for the calculated column — check what the request called it.",
 	  "result_headers": ["price_with_tax"],
 	  "result_rows": [["224.0"],["336.0"],["448.0"]],
 	  "result_msg": "Column now displays as 'price_with_tax' in results. AS only affects output — the table is unchanged.",
