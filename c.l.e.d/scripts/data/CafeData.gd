@@ -84,7 +84,7 @@ const LESSONS: Dictionary = {
 	  "text": "A customer walks up to the counter ready to order." },
 	{ "type": "dialogue", "char": "cafe_customer", "name": "CARLOS",
 	  "npc": "adult_7/talk",
-	  "text": "Hi, I'd like a cappuccino and a blueberry muffin, please. Name's Carlos." },
+	  "text": "Hi, I'd like a tea and toast, please. Name's Carlos." },
 	{ "type": "dialogue", "char": "you",           "name": "YOU",
 	  "npc": "adult_7/idle",
 	  "text": "Got it, Carlos! Let me log that order into our system." },
@@ -100,10 +100,10 @@ const LESSONS: Dictionary = {
 	  	["3", "Kim",    "Americano",  "Bagel"],
 	  	["4", "Reyes",  "Mocha",      "Cookie"]
 	  ],
-	  "answers": ["Carlos", "Cappuccino", "Blueberry Muffin"],
-	  "hint": "Name: Carlos Drink: Cappuccino Food: Blueberry Muffin",
+	  "answers": ["Carlos", "Tea", "Toast"],
+	  "hint": "Name: Carlos Drink: Tea Food: Toast",
 	  "result_headers": ["id", "customer_name", "drink", "food"],
-	  "result_rows": [["5", "Carlos", "Cappuccino", "Blueberry Muffin"]],
+	  "result_rows": [["5", "Carlos", "Tea", "Toast"]],
 	  "result_msg": "1 record inserted into orders.",
 					"fail": [
 						{ "type": "dialogue", "char": "cafe_customer", "name": "CARLOS",    "npc": "adult_7/confuse", "text": "Wait... that is not my order at all. Who is Hernandez?!" },
@@ -112,7 +112,7 @@ const LESSONS: Dictionary = {
 					] },
 	{ "type": "dialogue", "char": "you",           "name": "YOU",
 	  "npc": "adult_7/idle",
-	  "text": "Order logged! Your cappuccino and blueberry muffin will be ready shortly, Carlos!" },
+	  "text": "Order logged! Your tea and toast will be ready shortly, Carlos!" },
 	{ "type": "dialogue", "char": "cafe_customer", "name": "CARLOS",
 	  "npc": "adult_7/talk",
 	  "text": "Wonderful, thank you so much!" },
@@ -193,7 +193,7 @@ const LESSONS: Dictionary = {
 	  	["2", "Rivera",  "Iced Tea",     "Croissant"],
 	  	["3", "Santos",  "Hot Latte",    "None"],
 	  	["4", "Kim",     "Americano",    "Cheesecake"],
-	  	["5", "Carlos",  "Cappuccino",   "Blueberry Muffin"],
+	  	["5", "Carlos",  "Tea",          "Toast"],
 	  	["6", "Reyes",   "Matcha Latte", "None"],
 	  	["7", "Cruz",    "Cold Brew",    "Donut"]
 	  ],
@@ -243,7 +243,7 @@ const LESSONS: Dictionary = {
 	  	["2", "Rivera",  "Iced Tea",     "Croissant"],
 	  	["3", "Santos",  "Hot Latte",    "None"],
 	  	["4", "Kim",     "Americano",    "Cheesecake"],
-	  	["5", "Carlos",  "Cappuccino",   "Blueberry Muffin"],
+	  	["5", "Carlos",  "Tea",          "Toast"],
 	  	["6", "Reyes",   "Matcha Latte", "None"]
 	  ],
 	  "answer_value": "Iced Latte",
@@ -292,7 +292,7 @@ const LESSONS: Dictionary = {
 	  	["2", "Rivera",  "Iced Tea",     "Croissant"],
 	  	["3", "Santos",  "Iced Latte",   "None"],
 	  	["4", "Kim",     "Americano",    "Cheesecake"],
-	  	["5", "Carlos",  "Cappuccino",   "Blueberry Muffin"],
+	  	["5", "Carlos",  "Tea",          "Toast"],
 	  	["6", "Reyes",   "Matcha Latte", "None"],
 	  	["7", "Cruz",    "Espresso",     "Donut"]
 	  ],

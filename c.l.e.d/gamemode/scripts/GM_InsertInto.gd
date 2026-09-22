@@ -15,6 +15,7 @@ func _ready() -> void:
 	]
 	_apply_terminal_style($SQLTerminal)
 	for b in _blanks: _style_input(b as LineEdit)
+	for b in _blanks: _wire_grow(b as LineEdit)
 	$QueryLabel.add_theme_color_override("font_color", Color("#4fc3f7"))
 	$ButtonRow/ExecuteButton.pressed.connect(_on_execute)
 	$ButtonRow/HintButton.pressed.connect(_on_hint)
@@ -48,7 +49,7 @@ func _on_execute() -> void:
 	for i in range(_answers.size()):
 		var inp: LineEdit = _blanks[i];  var exp: String = str(_answers[i])
 		if inp.text.strip_edges().to_lower() != exp.to_lower(): all_ok = false
-		else: inp.text = exp
+		else: inp.text = exp; _fit_grow(inp, exp)
 	if all_ok:
 		_fill_result($ResultBox, _step_data.get("result_headers",[]),
 			_step_data.get("result_rows",[]), _step_data.get("result_msg",""))
@@ -85,6 +86,19 @@ func _apply_terminal_style(panel: PanelContainer) -> void:
 	s.content_margin_left = 14;  s.content_margin_right  = 14
 	s.content_margin_top  = 10;  s.content_margin_bottom = 10
 	panel.add_theme_stylebox_override("panel", s)
+
+func _fit_grow(le: LineEdit, text: String) -> void:
+	var font: Font = le.get_theme_font("font")
+	if font == null: font = ThemeDB.fallback_font
+	var fsize: int = le.get_theme_font_size("font_size")
+	if fsize <= 0: fsize = ThemeDB.fallback_font_size
+	var base_w: float = max(font.get_string_size(le.placeholder_text, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize).x + 14.0, 30.0)
+	var text_w: float = font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize).x
+	le.custom_minimum_size.x = clamp(text_w + 14.0, base_w, base_w + 320.0)
+
+func _wire_grow(le: LineEdit) -> void:
+	_fit_grow(le, le.text)
+	le.text_changed.connect(func(new_text: String): _fit_grow(le, new_text))
 
 func _style_input(inp: LineEdit) -> void:
 	var ns := StyleBoxFlat.new()

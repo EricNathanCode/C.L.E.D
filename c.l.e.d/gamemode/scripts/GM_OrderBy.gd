@@ -10,6 +10,7 @@ var _step_data: Dictionary = {}
 func _ready() -> void:
 	_apply_terminal_style($SQLTerminal)
 	_style_input($SQLTerminal/SQLBlock/Line2/Blank1)
+	_wire_grow($SQLTerminal/SQLBlock/Line2/Blank1)
 	$QueryLabel.add_theme_color_override("font_color", Color("#4fc3f7"))
 	$ButtonRow/ExecuteButton.pressed.connect(_on_execute)
 	$ButtonRow/HintButton.pressed.connect(_on_hint)
@@ -39,6 +40,7 @@ func _on_execute() -> void:
 	if val != "ASC" and val != "DESC": _fill_error($ResultBox, "Only ASC or DESC are valid."); return
 	if val == _answer:
 		inp.text = _answer
+		_fit_grow(inp, _answer)
 		_fill_result($ResultBox, _step_data.get("result_headers",[]),
 			_step_data.get("result_rows",[]), _step_data.get("result_msg",""))
 	else:
@@ -74,6 +76,19 @@ func _apply_terminal_style(panel: PanelContainer) -> void:
 	s.content_margin_left = 14;  s.content_margin_right  = 14
 	s.content_margin_top  = 10;  s.content_margin_bottom = 10
 	panel.add_theme_stylebox_override("panel", s)
+
+func _fit_grow(le: LineEdit, text: String) -> void:
+	var font: Font = le.get_theme_font("font")
+	if font == null: font = ThemeDB.fallback_font
+	var fsize: int = le.get_theme_font_size("font_size")
+	if fsize <= 0: fsize = ThemeDB.fallback_font_size
+	var base_w: float = max(font.get_string_size(le.placeholder_text, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize).x + 14.0, 30.0)
+	var text_w: float = font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize).x
+	le.custom_minimum_size.x = clamp(text_w + 14.0, base_w, base_w + 320.0)
+
+func _wire_grow(le: LineEdit) -> void:
+	_fit_grow(le, le.text)
+	le.text_changed.connect(func(new_text: String): _fit_grow(le, new_text))
 
 func _style_input(inp: LineEdit) -> void:
 	var ns := StyleBoxFlat.new()

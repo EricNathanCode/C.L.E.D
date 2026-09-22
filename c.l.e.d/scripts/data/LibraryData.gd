@@ -20,8 +20,8 @@ const LESSONS: Dictionary = {
 #  Advanced Concepts) were removed.
 
 # ─────────────────────────────────────────────
-#  LESSON L1 | SELECT (sql_choice)
-#  Topic: Responding professionally to a library visitor
+#  LESSON L1 | SELECT
+#  Topic: Pulling every book record on your first day
 # ─────────────────────────────────────────────
 "L1": [
 	{

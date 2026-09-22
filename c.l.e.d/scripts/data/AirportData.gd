@@ -22,8 +22,8 @@ extends Node
 const LESSONS: Dictionary = {
 
 # ─────────────────────────────────────────────
-#  LESSON A1 | SELECT (sql_choice)
-#  Topic: Responding professionally to a passenger
+#  LESSON A1 | SELECT
+#  Topic: Pulling every passenger record on your first day
 # ─────────────────────────────────────────────
 "A1": [
 	{ "type": "dialogue", "char": "scene",     "name": "SCENE",

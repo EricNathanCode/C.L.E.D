@@ -36,7 +36,7 @@ func setup(data: Dictionary) -> void:
 	var pre := Label.new(); pre.text = "HAVING  "; _style_code_label(pre); row.add_child(pre)
 	_blank = LineEdit.new(); _blank.placeholder_text = "function"
 	_blank.custom_minimum_size = Vector2(100, 0); _blank.max_length = 5
-	_blank.text_submitted.connect(func(_t): _on_execute()); _style_input(_blank); row.add_child(_blank)
+	_blank.text_submitted.connect(func(_t): _on_execute()); _style_input(_blank); _wire_grow(_blank); row.add_child(_blank)
 	var suf := Label.new(); suf.text = "(*)  >  1;"; _style_code_label(suf); row.add_child(suf)
 	_fill_table($DataTable, data.get("table_headers",[]), data.get("table_rows",[]))
 	_blank.grab_focus()
@@ -47,6 +47,7 @@ func _on_execute() -> void:
 	if val.is_empty(): _fill_error($ResultBox, "Type the aggregate function used in HAVING."); return
 	if val.to_upper() == _answer.to_upper():
 		_blank.text = _answer
+		_fit_grow(_blank, _answer)
 		_fill_result($ResultBox, _step_data.get("result_headers",[]), _step_data.get("result_rows",[]), _step_data.get("result_msg",""))
 	else:
 		on_wrong.emit(); _fill_error($ResultBox, "'" + val + "' is not correct. HAVING uses COUNT here.")
@@ -59,6 +60,19 @@ func _apply_terminal_style(panel: PanelContainer) -> void:
 	s.content_margin_left = 14;  s.content_margin_right  = 14
 	s.content_margin_top  = 10;  s.content_margin_bottom = 10
 	panel.add_theme_stylebox_override("panel", s)
+
+func _fit_grow(le: LineEdit, text: String) -> void:
+	var font: Font = le.get_theme_font("font")
+	if font == null: font = ThemeDB.fallback_font
+	var fsize: int = le.get_theme_font_size("font_size")
+	if fsize <= 0: fsize = ThemeDB.fallback_font_size
+	var base_w: float = max(font.get_string_size(le.placeholder_text, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize).x + 14.0, 30.0)
+	var text_w: float = font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize).x
+	le.custom_minimum_size.x = clamp(text_w + 14.0, base_w, base_w + 320.0)
+
+func _wire_grow(le: LineEdit) -> void:
+	_fit_grow(le, le.text)
+	le.text_changed.connect(func(new_text: String): _fit_grow(le, new_text))
 
 func _style_input(inp: LineEdit) -> void:
 	var ns := StyleBoxFlat.new()
