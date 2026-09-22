@@ -2,6 +2,10 @@
 
 **C.L.E.D.** (Capstone) is a 2D story-driven learning game built in **Godot 4.6** that teaches SQL through role-play scenarios. Instead of memorizing syntax from a slide deck, players step into everyday jobs — hotel receptionist, café barista, airport check-in agent, librarian — and write real SQL queries to solve the problems each character brings them.
 
+## Goals
+
+C.L.E.D. is built to reinforce the SQL querying and data-manipulation skills covered in **DCIT 24 (Information Management)** — specifically the `SELECT`/`INSERT`/`UPDATE`/`DELETE` practice and the WHERE-filtering, sorting, and aggregate skills that support it. It's a **supplementary drill tool**, not a substitute for the course's database-design theory, ER modeling, or GUI database-builder (LibreOffice Base) instruction — the goal is repetition and immediate feedback on query syntax, framed through a story so practice doesn't feel like a worksheet.
+
 ## Concept
 
 Every lesson opens with a short dialogue scene: an NPC walks up with a request ("I need to check in a new guest," "Can you find every order from last Tuesday?"), and the player has to answer it by typing or building the correct SQL statement in an in-game terminal. Getting it right moves the story forward; getting it wrong costs a star rating and nudges the player toward a hint.
@@ -31,6 +35,19 @@ Each world's 17 lessons are grouped into 3 unlockable chapters ("folders"), focu
 
 Each chapter ends with a **Folder Challenge** — a quiz that must be passed to unlock the next chapter. Lessons within a chapter also unlock sequentially as prior lessons are completed.
 
+Lesson 1 in every world is a real query-typing exercise (`SELECT * FROM <table>;`) rather than a multiple-choice pick — every subsequent lesson follows the same pattern of typing the actual SQL keyword or clause into an in-game terminal.
+
+## Accounts & Progress
+
+Each player signs in with a local username/password before choosing a world:
+
+- **Sign Up / Log In** — separate flows on the same screen, with inline validation (username format, password confirmation) and a show/hide toggle on password fields
+- **Per-user save profiles** — progress (`completed_lessons`, `completed_folder_quizzes`) is stored separately per account, so multiple players can share one PC without overwriting each other's progress
+- **Remembered session** — quitting via **Exit Game** keeps the player signed in for next launch; a confirmation dialog offers to log out instead if they want the next launch to require sign-in
+- **Pre-login settings** — the gear icon on the Login screen exposes music, text-to-speech, and dark-mode toggles before an account even exists
+
+Credentials and progress are stored locally only (no server/network account) — this fits the project's classroom/single-PC deployment, not a production login system.
+
 ## Features
 
 - **Dialogue-driven lessons** — every SQL concept is taught through an in-scene conversation with a world-specific NPC before the player writes any code
@@ -42,7 +59,7 @@ Each chapter ends with a **Folder Challenge** — a quiz that must be passed to 
 - **Merge Worlds mode** — play all four worlds' lessons as one combined path
 - **SQL glossary / recap** — every command learned in a lesson is logged and can be reviewed as a cheat-sheet
 - **Accessibility & settings** — text-to-speech narration with per-character voice profiles, toggleable background music, and a dark-mode overlay
-- **Persistent save file** — progress and settings are stored locally in `user://cled_save.cfg` via Godot's `ConfigFile`, so play resumes across sessions
+- **Local accounts & per-user saves** — accounts, per-user progress, global settings, and the remembered session each persist locally via Godot's `ConfigFile` (see Accounts & Progress above)
 - **Reset progress** — a two-tap confirm control lets players wipe save data from Settings
 
 ## Tech stack
@@ -58,13 +75,15 @@ c.l.e.d/
 ├── project.godot              # Engine config — entry scene, autoloads, viewport
 ├── scene/                     # Top-level app screens
 │   ├── Main.tscn               # Root scene / screen router
-│   ├── WorldSelectScreen.tscn  # Choose a world (or Merge Worlds)
+│   ├── LoginScreen.tscn        # Sign up / log in, pre-login settings
+│   ├── WorldSelectScreen.tscn  # Choose a world (or Merge Worlds), Exit confirm dialog
 │   ├── DashboardScreen.tscn    # Lesson list, chapters, comic-strip previews
 │   ├── GameScreen.tscn         # Dialogue + SQL terminal lesson runner
 │   ├── FolderQuizScreen.tscn   # End-of-chapter challenge quiz
 │   └── CompleteScreen.tscn     # Post-lesson results / star recap
 ├── scripts/                   # Screen logic (GDScript, one per scene)
-│   ├── GameManager.gd          # Autoload — save/load, progress, star scoring, TTS
+│   ├── GameManager.gd          # Autoload — accounts, sessions, per-user saves, star scoring, TTS
+│   ├── LoginScreen.gd
 │   └── data/                   # Per-world lesson content
 │       ├── HotelData.gd
 │       ├── CafeData.gd
