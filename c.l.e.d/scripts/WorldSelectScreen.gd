@@ -22,9 +22,11 @@ const WORLD_BGS: Dictionary = {
 var _bg_cache: Dictionary = {}
 var _index: int = 0
 
-@onready var _panel      := $SettingsOverlay/SettingsPanel
-@onready var _music_btn  := $SettingsOverlay/SettingsPanel/VBox/MusicToggle
-@onready var _tts_btn    := $SettingsOverlay/SettingsPanel/VBox/TTSToggle
+@onready var _panel         := $SettingsOverlay/SettingsPanel
+@onready var _music_slider  := $SettingsOverlay/SettingsPanel/VBox/MusicRow/MusicToggle
+@onready var _tts_slider    := $SettingsOverlay/SettingsPanel/VBox/TTSRow/TTSToggle
+@onready var _music_label   := $SettingsOverlay/SettingsPanel/VBox/MusicRow/MusicLabel
+@onready var _tts_label     := $SettingsOverlay/SettingsPanel/VBox/TTSRow/TTSLabel
 var _dark_btn: Button = null
 var _reset_btn: Button = null
 var _reset_armed: bool = false
@@ -44,8 +46,8 @@ func _ready() -> void:
 
 	$SettingsOverlay/DimBG.gui_input.connect(_on_dim_input)
 	$SettingsOverlay/SettingsPanel/VBox/TitleRow/CloseButton.pressed.connect(_on_settings_close)
-	_music_btn.pressed.connect(_on_music_toggle)
-	_tts_btn.pressed.connect(_on_tts_toggle)
+	_music_slider.value_changed.connect(_on_music_changed)
+	_tts_slider.value_changed.connect(_on_tts_changed)
 
 	$ExitConfirmOverlay/DimBG.gui_input.connect(_on_exit_dim_input)
 	$ExitConfirmOverlay/ConfirmPanel/VBox/LogoutExitButton.pressed.connect(_on_exit_logout)
@@ -67,8 +69,8 @@ func _ready() -> void:
 	_style_btn($EnterButton, "primary",   22)
 	_style_btn($ExitButton,  "ghost",     15)
 	_style_btn($SettingsOverlay/SettingsPanel/VBox/TitleRow/CloseButton, "ghost", 15)
-	_style_btn(_music_btn, "secondary", 15)
-	_style_btn(_tts_btn,   "secondary", 15)
+	_music_label.add_theme_color_override("font_color", Color(0.85, 0.87, 0.92))
+	_tts_label.add_theme_color_override("font_color", Color(0.85, 0.87, 0.92))
 	_style_btn(_dark_btn,  "secondary", 15)
 	_style_settings_btn($SettingsButton)
 
@@ -251,22 +253,14 @@ func _on_dim_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed:
 		_on_settings_close()
 
-func _on_tts_toggle() -> void:
-	GameManager.tts_enabled = not GameManager.tts_enabled
+func _on_tts_changed(value: float) -> void:
+	GameManager.tts_volume = value
 	if not GameManager.tts_enabled:
 		GameManager.stop_speaking()
-	_update_tts_button()
 	GameManager.save_settings()
 
-func _on_music_toggle() -> void:
-	GameManager.music_enabled = not GameManager.music_enabled
-	var main = get_tree().root.get_node("Main")
-	if GameManager.music_enabled:
-		main.resume_bgm()
-	else:
-		main.pause_bgm()
-	_update_music_button()
-	GameManager.save_settings()
+func _on_music_changed(value: float) -> void:
+	get_tree().root.get_node("Main").set_music_volume(value)
 
 func _on_dark_toggle() -> void:
 	GameManager.dark_overlay_enabled = not GameManager.dark_overlay_enabled
@@ -298,10 +292,10 @@ func _completion_text(world: String) -> String:
 	return "★  %d / %d lessons  ·  %d%% complete" % [done, LESSONS_PER_WORLD, pct]
 
 func _update_tts_button() -> void:
-	_tts_btn.text = "TTS: ON" if GameManager.tts_enabled else "TTS: OFF"
+	_tts_slider.value = GameManager.tts_volume
 
 func _update_music_button() -> void:
-	_music_btn.text = "Music: ON" if GameManager.music_enabled else "Music: OFF"
+	_music_slider.value = GameManager.music_volume
 
 func _update_dark_button() -> void:
 	if _dark_btn:

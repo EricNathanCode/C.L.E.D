@@ -28,12 +28,10 @@ func _setup_bgm_player() -> void:
 	var bgm := AudioStreamPlayer.new()
 	bgm.name = "BGM"
 	bgm.bus = "Master"
-	bgm.volume_db = 0.0
+	bgm.volume_db = linear_to_db(GameManager.music_volume)
 	add_child(bgm)
 
 func _play_bgm(key: String) -> void:
-	if not GameManager.music_enabled:
-		return
 	if _current_bgm_key == key and $BGM.playing:
 		return
 	_current_bgm_key = key
@@ -44,21 +42,14 @@ func _play_bgm(key: String) -> void:
 	if stream is AudioStreamMP3:
 		stream.loop = true
 	$BGM.stream = stream
+	$BGM.volume_db = linear_to_db(GameManager.music_volume)
 	$BGM.play()
 
-func resume_bgm() -> void:
-	if _current_bgm_key == "":
-		_play_bgm("menu")
-	else:
-		var stream = load(BGM_MAP.get(_current_bgm_key, BGM_MAP["menu"]))
-		if stream and stream is AudioStreamMP3:
-			stream.loop = true
-		if stream:
-			$BGM.stream = stream
-		$BGM.play()
-
-func pause_bgm() -> void:
-	$BGM.stop()
+# Called live as the Music slider is dragged.
+func set_music_volume(v: float) -> void:
+	GameManager.music_volume = v
+	$BGM.volume_db = linear_to_db(v)
+	GameManager.save_settings()
 
 func _build_dark_overlay() -> void:
 	_dark_overlay = ColorRect.new()

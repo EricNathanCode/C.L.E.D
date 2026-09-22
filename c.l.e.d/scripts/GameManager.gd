@@ -13,9 +13,21 @@ const SAVES_DIR      := "user://saves/"
 var current_user: String = ""
 
 # ── Toggles | persist across scenes ──────────────────
-var tts_enabled:         bool = false
-var music_enabled:       bool = true
+# tts_enabled / music_enabled are derived automatically whenever the
+# matching volume is set (0 = off) — read them, but set the volume instead.
+var tts_enabled:          bool = false
+var music_enabled:        bool = true
 var dark_overlay_enabled: bool = false
+
+var tts_volume: float = 1.0:
+	set(value):
+		tts_volume = clamp(value, 0.0, 1.0)
+		tts_enabled = tts_volume > 0.0
+
+var music_volume: float = 1.0:
+	set(value):
+		music_volume = clamp(value, 0.0, 1.0)
+		music_enabled = music_volume > 0.0
 
 # ── Progress & scoring ────────────────────────────────
 var completed_lessons:       Dictionary = {}   # "world_lid"  → star_count (1–3)
@@ -38,14 +50,15 @@ func load_settings() -> void:
 	var cfg := ConfigFile.new()
 	if cfg.load(SETTINGS_PATH) != OK:
 		return  # no settings file yet — first launch
-	tts_enabled          = cfg.get_value("settings", "tts_enabled",          false)
-	music_enabled        = cfg.get_value("settings", "music_enabled",        true)
+	# Assigning through the setters above also refreshes tts_enabled/music_enabled.
+	tts_volume           = cfg.get_value("settings", "tts_volume",           1.0)
+	music_volume         = cfg.get_value("settings", "music_volume",         1.0)
 	dark_overlay_enabled = cfg.get_value("settings", "dark_overlay_enabled", false)
 
 func save_settings() -> void:
 	var cfg := ConfigFile.new()
-	cfg.set_value("settings", "tts_enabled",          tts_enabled)
-	cfg.set_value("settings", "music_enabled",        music_enabled)
+	cfg.set_value("settings", "tts_volume",           tts_volume)
+	cfg.set_value("settings", "music_volume",         music_volume)
 	cfg.set_value("settings", "dark_overlay_enabled", dark_overlay_enabled)
 	cfg.save(SETTINGS_PATH)
 
@@ -211,7 +224,7 @@ func speak(text: String, char_key: String = "") -> void:
 		return
 	DisplayServer.tts_stop()
 	var profile: Array = VOICE_PROFILES.get(char_key, DEFAULT_PROFILE)
-	var vol:   int   = profile[0]
+	var vol:   int   = int(profile[0] * tts_volume)
 	var pitch: float = profile[1]
 	var rate:  float = profile[2]
 	DisplayServer.tts_speak(text, "", vol, pitch, rate)

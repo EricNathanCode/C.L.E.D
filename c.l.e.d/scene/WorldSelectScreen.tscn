@@ -48,13 +48,15 @@ text = "⚙︎"
 
 [node name="UpButton" type="Button" parent="."]
 layout_mode = 0
-anchor_left = 0.44
+anchor_left = 0.5
 anchor_top = 0.0
-anchor_right = 0.56
+anchor_right = 0.5
 anchor_bottom = 0.0
-offset_top = 240.0
-offset_bottom = 295.0
-text = "▲"
+offset_left = -320.0
+offset_right = -260.0
+offset_top = 317.0
+offset_bottom = 373.0
+text = "◀"
 
 [node name="WorldName" type="Label" parent="."]
 layout_mode = 0
@@ -70,13 +72,15 @@ text = "Hotel World"
 
 [node name="DownButton" type="Button" parent="."]
 layout_mode = 0
-anchor_left = 0.44
+anchor_left = 0.5
 anchor_top = 0.0
-anchor_right = 0.56
+anchor_right = 0.5
 anchor_bottom = 0.0
-offset_top = 395.0
-offset_bottom = 450.0
-text = "▼"
+offset_left = 260.0
+offset_right = 320.0
+offset_top = 317.0
+offset_bottom = 373.0
+text = "▶"
 
 [node name="EnterButton" type="Button" parent="."]
 layout_mode = 0
@@ -145,15 +149,39 @@ text = "✕"
 [node name="HSep" type="HSeparator" parent="SettingsOverlay/SettingsPanel/VBox"]
 layout_mode = 2
 
-[node name="MusicToggle" type="Button" parent="SettingsOverlay/SettingsPanel/VBox"]
+[node name="MusicRow" type="HBoxContainer" parent="SettingsOverlay/SettingsPanel/VBox"]
 layout_mode = 2
-size_flags_horizontal = 3
-text = "🎵  Music: ON"
+theme_override_constants/separation = 12
 
-[node name="TTSToggle" type="Button" parent="SettingsOverlay/SettingsPanel/VBox"]
+[node name="MusicLabel" type="Label" parent="SettingsOverlay/SettingsPanel/VBox/MusicRow"]
+layout_mode = 2
+text = "Music"
+
+[node name="MusicToggle" type="HSlider" parent="SettingsOverlay/SettingsPanel/VBox/MusicRow"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "🔇  TTS: OFF"
+size_flags_vertical = 1
+min_value = 0.0
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="TTSRow" type="HBoxContainer" parent="SettingsOverlay/SettingsPanel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="TTSLabel" type="Label" parent="SettingsOverlay/SettingsPanel/VBox/TTSRow"]
+layout_mode = 2
+text = "Text-to-Speech"
+
+[node name="TTSToggle" type="HSlider" parent="SettingsOverlay/SettingsPanel/VBox/TTSRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+min_value = 0.0
+max_value = 1.0
+step = 0.01
+value = 1.0
 
 [node name="ExitConfirmOverlay" type="Control" parent="."]
 visible = false

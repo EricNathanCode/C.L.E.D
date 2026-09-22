@@ -24,8 +24,10 @@ const USERNAME_REGEX_PATTERN := "^[A-Za-z0-9_]{3,20}$"
 @onready var _exit_button:     Button   = $CenterContainer/CardPanel/VBox/ExitButton
 
 @onready var _settings_button: Button = $SettingsButton
-@onready var _music_toggle:    Button = $SettingsOverlay/SettingsPanel/VBox/MusicToggle
-@onready var _tts_toggle:      Button = $SettingsOverlay/SettingsPanel/VBox/TTSToggle
+@onready var _music_toggle:    HSlider = $SettingsOverlay/SettingsPanel/VBox/MusicRow/MusicToggle
+@onready var _tts_toggle:      HSlider = $SettingsOverlay/SettingsPanel/VBox/TTSRow/TTSToggle
+@onready var _music_label:     Label   = $SettingsOverlay/SettingsPanel/VBox/MusicRow/MusicLabel
+@onready var _tts_label:       Label   = $SettingsOverlay/SettingsPanel/VBox/TTSRow/TTSLabel
 @onready var _dark_toggle:     Button = $SettingsOverlay/SettingsPanel/VBox/DarkToggle
 
 var _username_regex := RegEx.new()
@@ -48,8 +50,8 @@ func _ready() -> void:
 	_style_eye_btn(_confirm_toggle)
 	_style_settings_btn(_settings_button)
 	_style_settings_panel()
-	_style_btn(_music_toggle, "secondary")
-	_style_btn(_tts_toggle,   "secondary")
+	_music_label.add_theme_color_override("font_color", Color(0.85, 0.87, 0.92))
+	_tts_label.add_theme_color_override("font_color", Color(0.85, 0.87, 0.92))
 	_style_btn(_dark_toggle,  "secondary")
 
 	_password_input.secret = true
@@ -68,8 +70,8 @@ func _ready() -> void:
 	_settings_button.pressed.connect(_on_settings_open)
 	$SettingsOverlay/DimBG.gui_input.connect(_on_dim_input)
 	$SettingsOverlay/SettingsPanel/VBox/TitleRow/CloseButton.pressed.connect(_on_settings_close)
-	_music_toggle.pressed.connect(_on_music_toggle)
-	_tts_toggle.pressed.connect(_on_tts_toggle)
+	_music_toggle.value_changed.connect(_on_music_changed)
+	_tts_toggle.value_changed.connect(_on_tts_changed)
 	_dark_toggle.pressed.connect(_on_dark_toggle)
 
 	_update_music_button()
@@ -164,21 +166,13 @@ func _on_dim_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed:
 		_on_settings_close()
 
-func _on_music_toggle() -> void:
-	GameManager.music_enabled = not GameManager.music_enabled
-	var main = get_tree().root.get_node("Main")
-	if GameManager.music_enabled:
-		main.resume_bgm()
-	else:
-		main.pause_bgm()
-	_update_music_button()
-	GameManager.save_settings()
+func _on_music_changed(value: float) -> void:
+	get_tree().root.get_node("Main").set_music_volume(value)
 
-func _on_tts_toggle() -> void:
-	GameManager.tts_enabled = not GameManager.tts_enabled
+func _on_tts_changed(value: float) -> void:
+	GameManager.tts_volume = value
 	if not GameManager.tts_enabled:
 		GameManager.stop_speaking()
-	_update_tts_button()
 	GameManager.save_settings()
 
 func _on_dark_toggle() -> void:
@@ -188,10 +182,10 @@ func _on_dark_toggle() -> void:
 	GameManager.save_settings()
 
 func _update_music_button() -> void:
-	_music_toggle.text = "🎵  Music: ON" if GameManager.music_enabled else "🔇  Music: OFF"
+	_music_toggle.value = GameManager.music_volume
 
 func _update_tts_button() -> void:
-	_tts_toggle.text = "🔊  TTS: ON" if GameManager.tts_enabled else "🔇  TTS: OFF"
+	_tts_toggle.value = GameManager.tts_volume
 
 func _update_dark_button() -> void:
 	_dark_toggle.text = "🌙  Dark Mode: ON" if GameManager.dark_overlay_enabled else "🌙  Dark Mode: OFF"

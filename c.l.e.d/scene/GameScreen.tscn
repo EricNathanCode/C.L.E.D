@@ -107,14 +107,14 @@ autowrap_mode = 3
 layout_mode = 2
 theme_override_constants/separation = 8
 
+[node name="Spacer" type="Control" parent="DialogueArea/DialogueButtons" unique_id=751072598]
+layout_mode = 2
+size_flags_horizontal = 3
+
 [node name="BackButton" type="Button" parent="DialogueArea/DialogueButtons" unique_id=1968840249]
 visible = false
 layout_mode = 2
 text = "Back"
-
-[node name="Spacer" type="Control" parent="DialogueArea/DialogueButtons" unique_id=751072598]
-layout_mode = 2
-size_flags_horizontal = 3
 
 [node name="NextButton" type="Button" parent="DialogueArea/DialogueButtons" unique_id=367367895]
 layout_mode = 2
