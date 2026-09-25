@@ -162,7 +162,8 @@ const SQL_GLOSSARY: Array = [
 var _preview_tex_cache: Dictionary = {}
 var _glossary_overlay: Control = null
 var _sim_picker_overlay: Control = null
-var _sim_picker_labels: Dictionary = {}   # folder key -> best-score Label
+var _sim_picker_title_lbl: Label = null
+var _sim_picker_body: VBoxContainer = null
 
 func _ready() -> void:
 	# Full dark background
@@ -219,8 +220,9 @@ func _ready() -> void:
 func _on_change_world() -> void:
 	get_tree().root.get_node("Main").show_screen("world_select")
 
-func _start_simulation(folder: String) -> void:
+func _start_simulation(folder: String, lesson_index: int = 0) -> void:
 	GameManager.sim_folder = folder
+	GameManager.sim_lesson_index = lesson_index
 	_toggle_sim_picker()
 	get_tree().root.get_node("Main").show_screen("simulation")
 
@@ -988,15 +990,25 @@ func _toggle_glossary() -> void:
 	if _glossary_overlay:
 		_glossary_overlay.visible = not _glossary_overlay.visible
 
-# ── Simulation folder picker overlay ───────────────────
-# Shown when "Simulation" is pressed so the player can either follow
-# their overall progress or drill one specific folder/genre and track
-# a separate best score for it.
+# ── Simulation folder / lesson picker overlay ──────────
+# Shown when "Simulation" is pressed. Top level picks a folder/genre;
+# "Basic SQL" drills one level deeper into its individual lessons, same
+# pattern (a button per option + its own tracked best score) at both
+# levels, so a player can run the whole folder mixed or grind one
+# specific concept.
 const SIM_FOLDERS: Array = [
 	["all",       "Your Progress",         "Runs problems from every lesson you've unlocked so far."],
 	["basic",     "Basic SQL",             "SELECT, INSERT, WHERE, UPDATE, DELETE."],
 	["filtering", "Filtering Rows",        "Coming soon."],
 	["sorting",   "Sorting & Aggregates",  "Coming soon."],
+]
+
+const SIM_BASIC_LESSONS: Array = [
+	[1, "SELECT",       "View all records, or just one column."],
+	[2, "INSERT INTO",  "Add a brand-new record."],
+	[3, "SELECT WHERE", "Look up one specific record."],
+	[4, "UPDATE SET",   "Fix a wrong value on an existing record."],
+	[5, "DELETE",       "Remove a record."],
 ]
 
 func _build_sim_picker() -> void:
@@ -1037,12 +1049,12 @@ func _build_sim_picker() -> void:
 
 	var header_row := HBoxContainer.new()
 	vbox.add_child(header_row)
-	var header_lbl := Label.new()
-	header_lbl.text = "Simulation Mode"
-	header_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	header_lbl.add_theme_font_size_override("font_size", 18)
-	header_lbl.add_theme_color_override("font_color", Color("#F59E0B"))
-	header_row.add_child(header_lbl)
+	_sim_picker_title_lbl = Label.new()
+	_sim_picker_title_lbl.text = "Simulation Mode"
+	_sim_picker_title_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_sim_picker_title_lbl.add_theme_font_size_override("font_size", 18)
+	_sim_picker_title_lbl.add_theme_color_override("font_color", Color("#F59E0B"))
+	header_row.add_child(_sim_picker_title_lbl)
 	var close_btn := Button.new()
 	close_btn.text = "✕"
 	close_btn.pressed.connect(_toggle_sim_picker)
@@ -1054,60 +1066,110 @@ func _build_sim_picker() -> void:
 	sep.color = Color(0.25, 0.30, 0.42)
 	vbox.add_child(sep)
 
-	for entry in SIM_FOLDERS:
-		var key: String = entry[0]
-		var title: String = entry[1]
-		var desc: String = entry[2]
-		var locked: bool = (key == "filtering" or key == "sorting")
-
-		var btn := Button.new()
-		btn.custom_minimum_size = Vector2(0, 56)
-		if locked:
-			btn.disabled = true
-			_style_btn(btn, "locked", 14)
-		else:
-			_style_btn(btn, "secondary", 14)
-
-		var row := HBoxContainer.new()
-		row.set_anchors_preset(Control.PRESET_FULL_RECT)
-		row.offset_left = 14; row.offset_right = -14
-		row.offset_top = 6;   row.offset_bottom = -6
-		row.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		row.add_theme_constant_override("separation", 4)
-		var text_col := VBoxContainer.new()
-		text_col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		text_col.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		var title_lbl := Label.new()
-		title_lbl.text = title
-		title_lbl.add_theme_color_override("font_color", Color(0.30, 0.33, 0.40) if locked else Color(0.90, 0.92, 0.96))
-		title_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		var desc_lbl := Label.new()
-		desc_lbl.text = desc
-		desc_lbl.add_theme_font_size_override("font_size", 11)
-		desc_lbl.add_theme_color_override("font_color", Color(0.30, 0.33, 0.40) if locked else Color(0.55, 0.60, 0.70))
-		desc_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		text_col.add_child(title_lbl)
-		text_col.add_child(desc_lbl)
-		row.add_child(text_col)
-
-		if not locked:
-			var best_lbl := Label.new()
-			best_lbl.add_theme_font_size_override("font_size", 13)
-			best_lbl.add_theme_color_override("font_color", Color("#F59E0B"))
-			best_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			row.add_child(best_lbl)
-			_sim_picker_labels[key] = best_lbl
-
-		btn.add_child(row)
-		if not locked:
-			btn.pressed.connect(_start_simulation.bind(key))
-		vbox.add_child(btn)
+	_sim_picker_body = VBoxContainer.new()
+	_sim_picker_body.add_theme_constant_override("separation", 10)
+	vbox.add_child(_sim_picker_body)
 
 func _toggle_sim_picker() -> void:
 	if not _sim_picker_overlay:
 		return
 	_sim_picker_overlay.visible = not _sim_picker_overlay.visible
 	if _sim_picker_overlay.visible:
-		for key in _sim_picker_labels.keys():
+		_show_sim_folder_list()
+
+func _show_sim_folder_list() -> void:
+	_sim_picker_title_lbl.text = "Simulation Mode"
+	for c in _sim_picker_body.get_children():
+		c.queue_free()
+
+	for entry in SIM_FOLDERS:
+		var key: String = entry[0]
+		var title: String = entry[1]
+		var desc: String = entry[2]
+		var locked: bool = (key == "filtering" or key == "sorting")
+		var pair: Array = _build_sim_picker_row(title, desc, locked)
+		var btn: Button = pair[0]
+		var best_lbl: Label = pair[1]
+		if not locked:
 			var score_key: String = GameManager.world if key == "all" else GameManager.world + "_" + key
-			_sim_picker_labels[key].text = "Best: %d" % GameManager.get_sim_best(score_key)
+			best_lbl.text = "Best: %d" % GameManager.get_sim_best(score_key)
+			if key == "basic":
+				btn.pressed.connect(_show_sim_basic_lesson_list)
+			else:
+				btn.pressed.connect(_start_simulation.bind(key, 0))
+		_sim_picker_body.add_child(btn)
+
+func _show_sim_basic_lesson_list() -> void:
+	_sim_picker_title_lbl.text = "Basic SQL"
+	for c in _sim_picker_body.get_children():
+		c.queue_free()
+
+	var back_btn := Button.new()
+	back_btn.text = "← Back"
+	_style_btn(back_btn, "ghost", 13)
+	back_btn.pressed.connect(_show_sim_folder_list)
+	_sim_picker_body.add_child(back_btn)
+
+	var all_pair: Array = _build_sim_picker_row("All of Basic SQL", "Mixes every concept you've unlocked in this folder.", false)
+	var all_btn: Button = all_pair[0]
+	var all_best: Label = all_pair[1]
+	all_best.text = "Best: %d" % GameManager.get_sim_best(GameManager.world + "_basic")
+	all_btn.pressed.connect(_start_simulation.bind("basic", 0))
+	_sim_picker_body.add_child(all_btn)
+
+	for entry in SIM_BASIC_LESSONS:
+		var idx: int = entry[0]
+		var title: String = entry[1]
+		var desc: String = entry[2]
+		var pair: Array = _build_sim_picker_row(title, desc, false)
+		var btn: Button = pair[0]
+		var best_lbl: Label = pair[1]
+		best_lbl.text = "Best: %d" % GameManager.get_sim_best(GameManager.world + "_basic_" + str(idx))
+		btn.pressed.connect(_start_simulation.bind("basic", idx))
+		_sim_picker_body.add_child(btn)
+
+# Builds one picker row: a styled Button containing a title/description
+# column and (if unlocked) a best-score Label. Returns [Button, Label-or-null]
+# so the caller can set the score text and connect the press handler.
+func _build_sim_picker_row(title: String, desc: String, locked: bool) -> Array:
+	var btn := Button.new()
+	btn.custom_minimum_size = Vector2(0, 56)
+	if locked:
+		btn.disabled = true
+		_style_btn(btn, "locked", 14)
+	else:
+		_style_btn(btn, "secondary", 14)
+
+	var row := HBoxContainer.new()
+	row.set_anchors_preset(Control.PRESET_FULL_RECT)
+	row.offset_left = 14; row.offset_right = -14
+	row.offset_top = 6;   row.offset_bottom = -6
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_theme_constant_override("separation", 4)
+
+	var text_col := VBoxContainer.new()
+	text_col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	text_col.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var title_lbl := Label.new()
+	title_lbl.text = title
+	title_lbl.add_theme_color_override("font_color", Color(0.30, 0.33, 0.40) if locked else Color(0.90, 0.92, 0.96))
+	title_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var desc_lbl := Label.new()
+	desc_lbl.text = desc
+	desc_lbl.add_theme_font_size_override("font_size", 11)
+	desc_lbl.add_theme_color_override("font_color", Color(0.30, 0.33, 0.40) if locked else Color(0.55, 0.60, 0.70))
+	desc_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	text_col.add_child(title_lbl)
+	text_col.add_child(desc_lbl)
+	row.add_child(text_col)
+
+	var best_lbl: Label = null
+	if not locked:
+		best_lbl = Label.new()
+		best_lbl.add_theme_font_size_override("font_size", 13)
+		best_lbl.add_theme_color_override("font_color", Color("#F59E0B"))
+		best_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		row.add_child(best_lbl)
+
+	btn.add_child(row)
+	return [btn, best_lbl]

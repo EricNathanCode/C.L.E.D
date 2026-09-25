@@ -6,6 +6,7 @@ extends Node
 var world:       String = ""
 var lesson_id           = null
 var sim_folder:  String = "all"   # "all" | "basic" | "filtering" | "sorting" — picked from the Simulation folder menu
+var sim_lesson_index: int = 0     # 0 = whole folder mixed; >0 = one specific lesson within that folder
 
 # ── Accounts ───────────────────────────────────────────
 const ACCOUNTS_PATH := "user://accounts.cfg"

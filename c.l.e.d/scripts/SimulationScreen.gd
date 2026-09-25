@@ -26,6 +26,17 @@ const OCCUPATION_BY_WORLD: Dictionary = {
 	"library": "librarian",
 }
 
+# Sprite numbers classified by visual gender, so an INSERT round's rolled
+# name (e.g. "My name is Ana Torres") always gets a matching NPC sprite.
+const ADULT_MALE:    Array = [1, 3, 5, 7, 9, 11, 13, 15, 17, 20, 22]
+const ADULT_FEMALE:  Array = [2, 4, 6, 8, 10, 12, 14, 16, 18, 19, 21, 23, 24]
+const KID_MALE:      Array = [3, 5, 9, 10, 11]
+const KID_FEMALE:    Array = [1, 2, 4, 6, 7, 8]
+const SENIOR_MALE:   Array = [1, 2, 3]
+const SENIOR_FEMALE: Array = [4]
+const PLUS_MALE:     Array = [2, 6, 8]
+const PLUS_FEMALE:   Array = [1, 3, 4, 5, 7, 9]
+
 const Dashboard = preload("res://scripts/DashboardScreen.gd")
 
 const FOLDER_DISPLAY: Dictionary = {
@@ -35,8 +46,13 @@ const FOLDER_DISPLAY: Dictionary = {
 	"sorting":   "Sorting & Aggregates",
 }
 
+const BASIC_LESSON_NAMES: Dictionary = {
+	1: "SELECT", 2: "INSERT INTO", 3: "SELECT WHERE", 4: "UPDATE SET", 5: "DELETE",
+}
+
 var _world: String = ""
 var _folder: String = "all"
+var _lesson_index: int = 0
 var _sim_db: SimDatabase = null
 var _templates: Array = []
 var _current_template: Dictionary = {}
@@ -58,12 +74,14 @@ var _typing: bool = false
 
 var _table_windows: Dictionary = {}   # table_name -> FloatingWindow
 var _terminal_win: FloatingWindow = null
-var _terminal_input: LineEdit = null
+var _terminal_input: TextEdit = null
 var _terminal_status: Label = null
 
 func _ready() -> void:
 	_terminal_win = $WindowLayer/TerminalWindow
 	_build_terminal_ui()
+
+	$TopBar/RunLabel.add_theme_color_override("font_color", Color(0.70, 0.75, 0.85))
 
 	$TopBar/EndButton.pressed.connect(_on_end_button)
 	$GameOverOverlay/CenterContainer/ResultPanel/ResultVBox/RetryButton.pressed.connect(_on_retry_pressed)
@@ -90,9 +108,10 @@ func _process(delta: float) -> void:
 				_finish_talking()
 
 # ── Run lifecycle ──────────────────────────────────────
-func start_run(world: String, folder: String = "all") -> void:
+func start_run(world: String, folder: String = "all", lesson_index: int = 0) -> void:
 	_world = world
 	_folder = folder
+	_lesson_index = lesson_index
 	_score = 0
 	_round_locked = false
 	_current_template = {}
@@ -115,7 +134,7 @@ func start_run(world: String, folder: String = "all") -> void:
 
 	_terminal_win.visible = true
 	_terminal_win.set_minimized(false)
-	_terminal_win.place_at(Vector2(60, 420), Vector2(400, 190))
+	_terminal_win.place_at(Vector2(60, 360), Vector2(420, 260))
 	_terminal_status.text = ""
 	_terminal_input.text = ""
 
@@ -134,11 +153,15 @@ func start_run(world: String, folder: String = "all") -> void:
 func _score_key() -> String:
 	if _folder == "all":
 		return _world
-	return _world + "_" + _folder
+	var key: String = _world + "_" + _folder
+	if _lesson_index > 0:
+		key += "_" + str(_lesson_index)
+	return key
 
 func _show_locked_message() -> void:
 	$DialogueBox/DialogueVBox/NPCNameLabel.text = "LOCKED"
-	$DialogueBox/DialogueVBox/ProblemLabel.text = "Complete at least Lesson 1 in this world before running the Simulation."
+	var need: int = _lesson_index if _lesson_index > 0 else 1
+	$DialogueBox/DialogueVBox/ProblemLabel.text = "Complete Lesson %d in this world before running this Simulation." % need
 
 func _show_coming_soon_message() -> void:
 	$DialogueBox/DialogueVBox/NPCNameLabel.text = "COMING SOON"
@@ -158,7 +181,7 @@ func _end_run() -> void:
 	$GameOverOverlay.visible = true
 
 func _on_retry_pressed() -> void:
-	start_run(_world, _folder)
+	start_run(_world, _folder, _lesson_index)
 
 func _on_back_pressed() -> void:
 	get_tree().root.get_node("Main").show_screen("dashboard")
@@ -168,7 +191,9 @@ func _on_end_button() -> void:
 
 func _update_score_label() -> void:
 	var mode_name: String = FOLDER_DISPLAY.get(_folder, _folder)
-	$TopBar/RunLabel.text = "  SIMULATION — %s   Score: %d   |   Best: %d" % [mode_name, _score, GameManager.get_sim_best(_score_key())]
+	if _lesson_index > 0:
+		mode_name += " · " + BASIC_LESSON_NAMES.get(_lesson_index, str(_lesson_index))
+	$TopBar/RunLabel.text = "  SIMULATION: %s   Score: %d   |   Best: %d" % [mode_name, _score, GameManager.get_sim_best(_score_key())]
 
 # ── Round flow ─────────────────────────────────────────
 func _start_next_round() -> void:
@@ -187,8 +212,9 @@ func _start_next_round() -> void:
 	text = _fill_template(text, _current_rolled)
 
 	_current_role = tmpl.get("role", "customer")
+	var gender: String = _current_rolled.get("_gender", "")
 	_refresh_table_window(tmpl["table"])
-	_walk_in_and_show(text, _random_npc_base(_world, _current_role))
+	_walk_in_and_show(text, _random_npc_base(_world, _current_role, gender))
 
 func _get_available_templates() -> Array:
 	var furthest: int = _furthest_completed_index(_world)
@@ -198,7 +224,10 @@ func _get_available_templates() -> Array:
 	for t in _templates:
 		if _folder != "all" and t.get("folder", "basic") != _folder:
 			continue
-		if int(t["requires_lesson_index"]) > furthest:
+		var req: int = int(t["requires_lesson_index"])
+		if req > furthest:
+			continue
+		if _lesson_index > 0 and req != _lesson_index:
 			continue
 		if _needs_existing_rows(t["kind"]) and _sim_db.has_table(t["table"]) and _sim_db.fetch_rows(t["table"]).is_empty():
 			continue
@@ -215,9 +244,18 @@ func _roll_variables(tmpl: Dictionary) -> Dictionary:
 			var pool: Array = tmpl["pick_from_columns"]
 			rolled["column"] = pool[randi() % pool.size()]
 		"insert_into":
+			var gender: String = "male" if randi() % 2 == 0 else "female"
+			var gender_field: String = tmpl.get("gender_field", "")
 			for key in tmpl["variables"].keys():
+				if key == gender_field + "_male" or key == gender_field + "_female":
+					if key == gender_field + "_" + gender:
+						var gpool: Array = tmpl["variables"][key]
+						rolled[gender_field] = gpool[randi() % gpool.size()]
+					continue
 				var pool: Array = tmpl["variables"][key]
 				rolled[key] = pool[randi() % pool.size()]
+			if gender_field != "":
+				rolled["_gender"] = gender
 		"select_where":
 			var headers: Array = _sim_db.headers_for(tmpl["table"])
 			var rows: Array = _sim_db.fetch_rows(tmpl["table"])
@@ -256,7 +294,11 @@ func _build_expected(tmpl: Dictionary, rolled: Dictionary) -> Dictionary:
 		"select_where":
 			return {"starts_with": "SELECT", "table": table, "must_contain": [str(rolled["value"])]}
 		"insert_into":
-			return {"starts_with": "INSERT INTO", "table": table, "must_contain": rolled.values()}
+			var vals: Array = []
+			for key in rolled.keys():
+				if key != "_gender":
+					vals.append(rolled[key])
+			return {"starts_with": "INSERT INTO", "table": table, "must_contain": vals}
 		"update_set":
 			return {"starts_with": "UPDATE", "table": table, "must_contain": [str(rolled["new_value"]), str(rolled["target_id"])]}
 		"delete":
@@ -275,10 +317,13 @@ func _build_example_query(tmpl: Dictionary, rolled: Dictionary) -> String:
 		"select_where":
 			return "SELECT * FROM %s WHERE %s = '%s';" % [table, tmpl["pick_from_column"], rolled["value"]]
 		"insert_into":
-			var cols: Array = tmpl.get("insert_columns", tmpl["variables"].keys())
+			var cols: Array = []
 			var vals: Array = []
-			for v in rolled.values():
-				vals.append("'%s'" % v)
+			for key in rolled.keys():
+				if key == "_gender":
+					continue
+				cols.append(key)
+				vals.append("'%s'" % rolled[key])
 			return "INSERT INTO %s (%s) VALUES (%s);" % [table, ", ".join(cols), ", ".join(vals)]
 		"update_set":
 			return "UPDATE %s SET %s = '%s' WHERE %s = %s;" % [table, tmpl["set_column"], rolled["new_value"], tmpl["pick_id_from"], rolled["target_id"]]
@@ -398,11 +443,16 @@ func _walk_out_then_advance() -> void:
 # world's one occupation sprite, matching the lessons' own convention of a
 # single recurring boss/manager character. "customer" lines get a random
 # regular person, since any kind of guest/customer/passenger/patron could
-# plausibly walk up and ask for themselves.
-func _random_npc_base(world: String, role: String = "customer") -> String:
+# plausibly walk up and ask for themselves. When the line has the NPC state
+# their own rolled name (INSERT rounds), gender is passed in so the sprite
+# actually matches who's supposedly speaking.
+func _random_npc_base(world: String, role: String = "customer", gender: String = "") -> String:
 	if role == "staff":
 		var occ: String = OCCUPATION_BY_WORLD.get(world, "hotel_manager")
 		return "NPC_occupations/%s" % occ
+
+	if gender == "male" or gender == "female":
+		return _random_gendered_customer_base(gender)
 
 	var roll: int = randi() % 100
 	if roll < 55:
@@ -413,6 +463,22 @@ func _random_npc_base(world: String, role: String = "customer") -> String:
 		return "NPC_seniors/Senior_%d" % (randi() % 4 + 1)
 	else:
 		return "NPC_plus_size/plus_size_%d" % (randi() % 9 + 1)
+
+func _random_gendered_customer_base(gender: String) -> String:
+	var adult_pool:  Array = ADULT_MALE  if gender == "male" else ADULT_FEMALE
+	var kid_pool:    Array = KID_MALE    if gender == "male" else KID_FEMALE
+	var senior_pool: Array = SENIOR_MALE if gender == "male" else SENIOR_FEMALE
+	var plus_pool:   Array = PLUS_MALE   if gender == "male" else PLUS_FEMALE
+
+	var roll: int = randi() % 100
+	if roll < 55:
+		return "adult_%d" % adult_pool[randi() % adult_pool.size()]
+	elif roll < 75:
+		return "NPC_kids/kid_%d" % kid_pool[randi() % kid_pool.size()]
+	elif roll < 88:
+		return "NPC_seniors/Senior_%d" % senior_pool[randi() % senior_pool.size()]
+	else:
+		return "NPC_plus_size/plus_size_%d" % plus_pool[randi() % plus_pool.size()]
 
 # expr is "idle" or "talk". Folders without a dedicated talk.png simply
 # have no file at that path — _load_texture returns null and the caller
@@ -433,7 +499,10 @@ func _spawn_table_window(table_name: String) -> void:
 
 	var scroll := ScrollContainer.new()
 	scroll.custom_minimum_size = Vector2(320, 150)
+	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	var grid := GridContainer.new()
+	grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	grid.add_theme_constant_override("h_separation", 0)
 	grid.add_theme_constant_override("v_separation", 0)
 	scroll.add_child(grid)
@@ -463,6 +532,7 @@ func _refresh_table_window(table_name: String) -> void:
 
 func _make_cell(text: String, is_header: bool) -> PanelContainer:
 	var panel := PanelContainer.new()
+	panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var style := StyleBoxFlat.new()
 	style.bg_color = Color(0.14, 0.17, 0.24, 1.0) if is_header else Color(0.09, 0.11, 0.16, 1.0)
 	style.border_color = Color(0.30, 0.36, 0.48)
@@ -495,11 +565,35 @@ func _build_terminal_ui() -> void:
 	hint.add_theme_color_override("font_color", Color(0.70, 0.75, 0.85))
 	vbox.add_child(hint)
 
-	_terminal_input = LineEdit.new()
+	_terminal_input = TextEdit.new()
 	_terminal_input.placeholder_text = "SELECT * FROM ..."
-	_terminal_input.custom_minimum_size = Vector2(360, 0)
-	_terminal_input.text_submitted.connect(func(_t): _on_execute())
+	_terminal_input.custom_minimum_size = Vector2(360, 90)
+	_terminal_input.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_terminal_input.wrap_mode = TextEdit.LINE_WRAPPING_BOUNDARY
+	_terminal_input.scroll_fit_content_height = false
+	var tes := StyleBoxFlat.new()
+	tes.bg_color = Color(0.04, 0.05, 0.08, 1.0)
+	tes.border_color = Color(0.30, 0.36, 0.48)
+	tes.set_border_width_all(1)
+	tes.content_margin_left   = 8; tes.content_margin_right  = 8
+	tes.content_margin_top    = 6; tes.content_margin_bottom = 6
+	_terminal_input.add_theme_stylebox_override("normal", tes)
+	var tesf := tes.duplicate() as StyleBoxFlat
+	tesf.border_color = Color("#F59E0B")
+	_terminal_input.add_theme_stylebox_override("focus", tesf)
+	_terminal_input.add_theme_color_override("font_color", Color(0.85, 0.90, 0.95))
+	_terminal_input.gui_input.connect(func(event: InputEvent):
+		if event is InputEventKey and event.pressed and event.keycode == KEY_ENTER and event.ctrl_pressed:
+			_on_execute()
+			_terminal_input.accept_event()
+	)
 	vbox.add_child(_terminal_input)
+
+	var run_hint := Label.new()
+	run_hint.text = "Ctrl+Enter to run, or press Execute below."
+	run_hint.add_theme_font_size_override("font_size", 10)
+	run_hint.add_theme_color_override("font_color", Color(0.45, 0.50, 0.60))
+	vbox.add_child(run_hint)
 
 	var execute_btn := Button.new()
 	execute_btn.text = "Execute"

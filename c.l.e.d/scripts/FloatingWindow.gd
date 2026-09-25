@@ -15,26 +15,35 @@ signal minimized_changed(is_minimized: bool)
 			_title_lbl.text = value
 			_chip.text = "▸  " + value
 
+const MIN_WINDOW_SIZE: Vector2 = Vector2(220, 140)
+
 var _dragging: bool = false
 var _drag_offset: Vector2 = Vector2.ZERO
 var _minimized: bool = false
 
-@onready var _panel:        PanelContainer = $Panel
-@onready var _title_bar:    PanelContainer = $Panel/VBox/TitleBar
-@onready var _title_lbl:    Label          = $Panel/VBox/TitleBar/TitleBarRow/TitleLabel
-@onready var _min_btn:      Button         = $Panel/VBox/TitleBar/TitleBarRow/MinimizeButton
-@onready var _content_area: MarginContainer = $Panel/VBox/ContentArea
-@onready var _chip:         Button         = $Chip
+var _resizing: bool = false
+var _resize_start_mouse: Vector2 = Vector2.ZERO
+var _resize_start_size: Vector2 = Vector2.ZERO
+
+@onready var _panel:         PanelContainer = $Panel
+@onready var _title_bar:     PanelContainer = $Panel/VBox/TitleBar
+@onready var _title_lbl:     Label          = $Panel/VBox/TitleBar/TitleBarRow/TitleLabel
+@onready var _min_btn:       Button         = $Panel/VBox/TitleBar/TitleBarRow/MinimizeButton
+@onready var _content_area:  MarginContainer = $Panel/VBox/ContentArea
+@onready var _chip:          Button         = $Chip
+@onready var _resize_handle: Label          = $ResizeHandle
 
 func _ready() -> void:
 	_style_panel()
 	_style_chip()
+	_style_resize_handle()
 	_title_lbl.text = window_title
 	_chip.text = "▸  " + window_title
 
 	_min_btn.pressed.connect(func(): set_minimized(true))
 	_chip.pressed.connect(func(): set_minimized(false))
 	_title_bar.gui_input.connect(_on_titlebar_input)
+	_resize_handle.gui_input.connect(_on_resize_input)
 
 func get_content_area() -> MarginContainer:
 	return _content_area
@@ -43,6 +52,7 @@ func set_minimized(value: bool) -> void:
 	_minimized = value
 	_panel.visible = not value
 	_chip.visible = value
+	_resize_handle.visible = not value
 	minimized_changed.emit(value)
 
 func is_minimized() -> bool:
@@ -67,6 +77,27 @@ func _on_titlebar_input(event: InputEvent) -> void:
 		var parent_size: Vector2 = get_parent_area_size()
 		global_position.x = clamp(global_position.x, -size.x + 60, parent_size.x - 60)
 		global_position.y = clamp(global_position.y, 0, parent_size.y - 32)
+
+func _on_resize_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if event.pressed:
+			_resizing = true
+			_resize_start_mouse = get_global_mouse_position()
+			_resize_start_size = size
+			get_viewport().set_input_as_handled()
+		else:
+			_resizing = false
+	elif event is InputEventMouseMotion and _resizing:
+		var delta: Vector2 = get_global_mouse_position() - _resize_start_mouse
+		var new_size: Vector2 = _resize_start_size + delta
+		new_size.x = max(new_size.x, MIN_WINDOW_SIZE.x)
+		new_size.y = max(new_size.y, MIN_WINDOW_SIZE.y)
+		size = new_size
+		custom_minimum_size = new_size
+
+func _style_resize_handle() -> void:
+	_resize_handle.add_theme_font_size_override("font_size", 14)
+	_resize_handle.add_theme_color_override("font_color", Color(0.45, 0.52, 0.65))
 
 func _style_panel() -> void:
 	var s := StyleBoxFlat.new()

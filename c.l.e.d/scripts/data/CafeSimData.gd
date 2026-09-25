@@ -68,13 +68,14 @@ const TEMPLATES: Array = [
 			[1, "Maria", "Latte", "Croissant"], [2, "Rivera", "Iced Tea", "None"],
 			[3, "Kim", "Americano", "Bagel"], [4, "Reyes", "Mocha", "Cookie"],
 		],
-		"problem_template": "Hi, I'd like a {drink} and a {food}, please. Name's {name}.",
+		"problem_template": "Hi, I'd like a {drink} and a {food}, please. Name's {customer_name}.",
 		"variables": {
 			"drink": ["Cappuccino", "Espresso", "Matcha Latte", "Cold Brew"],
 			"food":  ["Muffin", "Donut", "Cheesecake", "Toast"],
-			"name":  ["Carlos", "Elena", "Diego", "Sofia", "Marco"],
+			"customer_name_male":   ["Carlos", "Diego", "Marco"],
+			"customer_name_female": ["Elena", "Sofia"],
 		},
-		"insert_columns": ["drink", "food", "customer_name"],
+		"gender_field": "customer_name",
 	},
 	{
 		"requires_lesson_index": 2, "kind": "insert_into",
@@ -85,13 +86,14 @@ const TEMPLATES: Array = [
 			[1, "Maria", "Latte", "Croissant"], [2, "Rivera", "Iced Tea", "None"],
 			[3, "Kim", "Americano", "Bagel"], [4, "Reyes", "Mocha", "Cookie"],
 		],
-		"problem_template": "Order for {name} — a {drink}, and a {food} on the side.",
+		"problem_template": "Order for {customer_name} — a {drink}, and a {food} on the side.",
 		"variables": {
 			"drink": ["Hot Chocolate", "Flat White", "Iced Latte", "Green Tea"],
 			"food":  ["Brownie", "Bagel", "Waffle", "Cinnamon Roll"],
-			"name":  ["Ana", "Miguel", "Grace", "Paolo", "Rosa"],
+			"customer_name_male":   ["Miguel", "Paolo"],
+			"customer_name_female": ["Ana", "Grace", "Rosa"],
 		},
-		"insert_columns": ["drink", "food", "customer_name"],
+		"gender_field": "customer_name",
 	},
 
 	# ── SELECT WHERE (unlocks after Lesson 3) ──────────
