@@ -50,6 +50,18 @@ const BASIC_LESSON_NAMES: Dictionary = {
 	1: "SELECT", 2: "INSERT INTO", 3: "SELECT WHERE", 4: "UPDATE SET", 5: "DELETE",
 }
 
+const SQL_KEYWORDS: Array = [
+	"select", "from", "where", "insert", "into", "values", "update", "set", "delete",
+	"and", "or", "not", "null", "is", "like", "in", "between", "order", "by", "group",
+	"having", "limit", "as", "distinct", "asc", "desc", "count", "sum", "avg", "join", "on",
+]
+
+# Same palette as the Terminal's CodeHighlighter, as BBCode hex colors.
+const BBCODE_KEYWORD := "#6BB0E8"
+const BBCODE_MEMBER  := "#F5BF4D"
+const BBCODE_STRING  := "#CF9178"
+const BBCODE_NUMBER  := "#B5CFA8"
+
 var _world: String = ""
 var _folder: String = "all"
 var _lesson_index: int = 0
@@ -74,8 +86,10 @@ var _typing: bool = false
 
 var _table_windows: Dictionary = {}   # table_name -> FloatingWindow
 var _terminal_win: FloatingWindow = null
-var _terminal_input: TextEdit = null
+var _terminal_input: CodeEdit = null
 var _terminal_status: Label = null
+var _sql_highlighter: CodeHighlighter = null
+var _auto_caps_guard: bool = false
 
 func _ready() -> void:
 	_terminal_win = $WindowLayer/TerminalWindow
@@ -163,6 +177,10 @@ func _show_locked_message() -> void:
 	var need: int = _lesson_index if _lesson_index > 0 else 1
 	$DialogueBox/DialogueVBox/ProblemLabel.text = "Complete Lesson %d in this world before running this Simulation." % need
 
+func _show_drained_message() -> void:
+	$DialogueBox/DialogueVBox/NPCNameLabel.text = "ALL CLEAR"
+	$DialogueBox/DialogueVBox/ProblemLabel.text = "You've cleared out every record available in this mode. Nice work — hit End Run to bank your score."
+
 func _show_coming_soon_message() -> void:
 	$DialogueBox/DialogueVBox/NPCNameLabel.text = "COMING SOON"
 	$DialogueBox/DialogueVBox/ProblemLabel.text = "%s Simulation problems aren't ready yet — check back after a future update." % FOLDER_DISPLAY.get(_folder, _folder)
@@ -177,7 +195,10 @@ func _end_run() -> void:
 	if is_new_best:
 		best_text += "  —  New Best!"
 	$GameOverOverlay/CenterContainer/ResultPanel/ResultVBox/BestLabel.text = best_text
-	$GameOverOverlay/CenterContainer/ResultPanel/ResultVBox/CorrectQueryLabel.text = "Correct query:\n%s" % _last_correct_query
+	var table: String = _current_template.get("table", "")
+	var headers: Array = _current_template.get("table_headers", [])
+	var colored_query: String = _colorize_sql(_last_correct_query, table, headers)
+	$GameOverOverlay/CenterContainer/ResultPanel/ResultVBox/CorrectQueryLabel.text = "[center]Correct query:\n%s[/center]" % colored_query
 	$GameOverOverlay.visible = true
 
 func _on_retry_pressed() -> void:
@@ -199,7 +220,10 @@ func _update_score_label() -> void:
 func _start_next_round() -> void:
 	var pool: Array = _get_available_templates()
 	if pool.is_empty():
-		_show_locked_message()
+		if _score > 0:
+			_show_drained_message()
+		else:
+			_show_locked_message()
 		return
 
 	var tmpl: Dictionary = pool[randi() % pool.size()]
@@ -214,6 +238,7 @@ func _start_next_round() -> void:
 	_current_role = tmpl.get("role", "customer")
 	var gender: String = _current_rolled.get("_gender", "")
 	_refresh_table_window(tmpl["table"])
+	_update_sql_members(tmpl["table"], tmpl["table_headers"])
 	_walk_in_and_show(text, _random_npc_base(_world, _current_role, gender))
 
 func _get_available_templates() -> Array:
@@ -565,7 +590,7 @@ func _build_terminal_ui() -> void:
 	hint.add_theme_color_override("font_color", Color(0.70, 0.75, 0.85))
 	vbox.add_child(hint)
 
-	_terminal_input = TextEdit.new()
+	_terminal_input = CodeEdit.new()
 	_terminal_input.placeholder_text = "SELECT * FROM ..."
 	_terminal_input.custom_minimum_size = Vector2(360, 90)
 	_terminal_input.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -587,6 +612,9 @@ func _build_terminal_ui() -> void:
 			_on_execute()
 			_terminal_input.accept_event()
 	)
+	_terminal_input.text_changed.connect(_on_terminal_text_changed)
+	_sql_highlighter = _build_sql_highlighter()
+	_terminal_input.syntax_highlighter = _sql_highlighter
 	vbox.add_child(_terminal_input)
 
 	var run_hint := Label.new()
@@ -605,6 +633,114 @@ func _build_terminal_ui() -> void:
 	_terminal_status.custom_minimum_size = Vector2(360, 0)
 	_terminal_status.add_theme_font_size_override("font_size", 13)
 	vbox.add_child(_terminal_status)
+
+func _build_sql_highlighter() -> CodeHighlighter:
+	var hl := CodeHighlighter.new()
+	hl.number_color          = Color(0.71, 0.81, 0.66)
+	hl.symbol_color          = Color(0.75, 0.75, 0.78)
+	hl.function_color        = Color(0.86, 0.86, 0.67)
+	hl.member_variable_color = Color(0.96, 0.75, 0.30)
+	var keyword_color := Color(0.42, 0.69, 0.91)
+	for kw in SQL_KEYWORDS:
+		hl.add_keyword_color(kw.to_upper(), keyword_color)
+		hl.add_keyword_color(kw, keyword_color)
+	var string_color := Color(0.81, 0.57, 0.47)
+	hl.add_color_region("'", "'", string_color, false)
+	hl.add_color_region("\"", "\"", string_color, false)
+	return hl
+
+# Colors the current round's table + column names distinctly, so the
+# player can visually tell "these words are this table's real fields."
+func _update_sql_members(table: String, headers: Array) -> void:
+	_sql_highlighter.clear_member_keyword_colors()
+	var member_color := Color(0.96, 0.75, 0.30)
+	_sql_highlighter.add_member_keyword_color(table, member_color)
+	for h in headers:
+		_sql_highlighter.add_member_keyword_color(str(h), member_color)
+
+func _is_sql_word_char(c: String) -> bool:
+	return (c >= "a" and c <= "z") or (c >= "A" and c <= "Z") or (c >= "0" and c <= "9") or c == "_"
+
+# Wraps a plain SQL string in BBCode color tags — keywords, string literals,
+# numbers, and this round's real table/column names each get their own
+# color, matching the Terminal's live syntax highlighting.
+func _colorize_sql(query: String, table: String, headers: Array) -> String:
+	var known_members: Dictionary = {}
+	known_members[table] = true
+	for h in headers:
+		known_members[str(h)] = true
+
+	var result: String = ""
+	var i: int = 0
+	var n: int = query.length()
+	while i < n:
+		var c: String = query[i]
+		if c == "'":
+			var j: int = i + 1
+			while j < n and query[j] != "'":
+				j += 1
+			j = min(j + 1, n)
+			var lit: String = query.substr(i, j - i)
+			result += "[color=%s]%s[/color]" % [BBCODE_STRING, lit]
+			i = j
+		elif _is_sql_word_char(c):
+			var j: int = i
+			while j < n and _is_sql_word_char(query[j]):
+				j += 1
+			var word: String = query.substr(i, j - i)
+			if SQL_KEYWORDS.has(word.to_lower()):
+				result += "[color=%s]%s[/color]" % [BBCODE_KEYWORD, word]
+			elif known_members.has(word):
+				result += "[color=%s]%s[/color]" % [BBCODE_MEMBER, word]
+			elif word.is_valid_int() or word.is_valid_float():
+				result += "[color=%s]%s[/color]" % [BBCODE_NUMBER, word]
+			else:
+				result += word
+			i = j
+		else:
+			result += c
+			i += 1
+	return result
+
+# Live auto-uppercase: whenever a word boundary (space, newline, comma,
+# parenthesis, semicolon...) is typed right after a recognized SQL keyword,
+# that keyword gets capitalized in place, cursor position preserved.
+func _on_terminal_text_changed() -> void:
+	if _auto_caps_guard:
+		return
+
+	var caret_line: int = _terminal_input.get_caret_line()
+	var caret_col: int = _terminal_input.get_caret_column()
+
+	var check_line: int = caret_line
+	var check_col: int = caret_col
+	if caret_col == 0:
+		if caret_line == 0:
+			return
+		check_line = caret_line - 1
+		check_col = _terminal_input.get_line(check_line).length()
+	else:
+		var cur_line: String = _terminal_input.get_line(caret_line)
+		if _is_sql_word_char(cur_line[caret_col - 1]):
+			return
+		check_col = caret_col - 1
+
+	var line: String = _terminal_input.get_line(check_line)
+	var word_end: int = check_col
+	var word_start: int = word_end
+	while word_start > 0 and _is_sql_word_char(line[word_start - 1]):
+		word_start -= 1
+	if word_start >= word_end:
+		return
+
+	var word: String = line.substr(word_start, word_end - word_start)
+	if SQL_KEYWORDS.has(word.to_lower()) and word != word.to_upper():
+		_auto_caps_guard = true
+		var new_line: String = line.substr(0, word_start) + word.to_upper() + line.substr(word_end)
+		_terminal_input.set_line(check_line, new_line)
+		_terminal_input.set_caret_line(caret_line)
+		_terminal_input.set_caret_column(caret_col)
+		_auto_caps_guard = false
 
 # ── Lesson-gating helpers ──────────────────────────────
 func _lessons_for(world: String) -> Array:

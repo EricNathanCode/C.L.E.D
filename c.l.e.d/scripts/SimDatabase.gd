@@ -35,8 +35,15 @@ func seed_table(table_name: String, headers: Array, types: Array, rows: Array) -
 		return
 	var col_defs: Array = []
 	for i in range(headers.size()):
+		var h: String = headers[i]
 		var t: String = types[i] if i < types.size() else "TEXT"
-		col_defs.append("%s %s" % [headers[i], t])
+		# SQLite only auto-fills an omitted column when it's the table's
+		# real INTEGER PRIMARY KEY (a ROWID alias) — a plain "INTEGER"
+		# column left out of an INSERT just gets stored as NULL.
+		if h.to_lower() == "id" and t.to_upper() == "INTEGER":
+			col_defs.append("%s INTEGER PRIMARY KEY" % h)
+		else:
+			col_defs.append("%s %s" % [h, t])
 	_db.query("CREATE TABLE %s (%s);" % [table_name, ", ".join(col_defs)])
 	for row in rows:
 		_insert_raw(table_name, headers, row)
