@@ -197,6 +197,12 @@ func _ready() -> void:
 
 	_build_glossary()
 
+	var sim_btn := Button.new()
+	sim_btn.text = "🎮  Simulation"
+	sim_btn.pressed.connect(_on_simulation_pressed)
+	_style_btn(sim_btn, "secondary", 13)
+	$TopBar.add_child(sim_btn)
+
 	_screen_lbl.add_theme_font_size_override("font_size", 13)
 	_screen_lbl.add_theme_color_override("font_color", Color(0.50, 0.55, 0.65))
 
@@ -208,6 +214,9 @@ func _ready() -> void:
 
 func _on_change_world() -> void:
 	get_tree().root.get_node("Main").show_screen("world_select")
+
+func _on_simulation_pressed() -> void:
+	get_tree().root.get_node("Main").show_screen("simulation")
 
 func build_lessons() -> void:
 	for child in _lesson_list.get_children():

@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" path="res://scene/CompleteScreen.tscn" id="5"]
 [ext_resource type="PackedScene" path="res://scene/FolderQuizScreen.tscn" id="6"]
 [ext_resource type="PackedScene" path="res://scene/LoginScreen.tscn" id="7"]
+[ext_resource type="PackedScene" path="res://scene/SimulationScreen.tscn" id="8"]
 
 [node name="Main" type="Control" unique_id=526736446]
 layout_mode = 3
@@ -45,6 +46,12 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="FolderQuizScreen" parent="." unique_id=1880369814 instance=ExtResource("6")]
+visible = false
+layout_mode = 1
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SimulationScreen" parent="." instance=ExtResource("8")]
 visible = false
 layout_mode = 1
 grow_horizontal = 2

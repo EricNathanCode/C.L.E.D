@@ -69,6 +69,8 @@ func save_settings() -> void:
 func _save_path() -> String:
 	return SAVES_DIR + current_user + ".cfg"
 
+var sim_best_scores: Dictionary = {}   # "world" → best correct-answer streak
+
 func save_game() -> void:
 	if current_user.is_empty():
 		return  # nobody logged in yet — nothing to save to
@@ -76,11 +78,13 @@ func save_game() -> void:
 	var cfg := ConfigFile.new()
 	cfg.set_value("progress", "completed_lessons",        completed_lessons)
 	cfg.set_value("progress", "completed_folder_quizzes", completed_folder_quizzes)
+	cfg.set_value("progress", "sim_best_scores",          sim_best_scores)
 	cfg.save(_save_path())
 
 func load_game() -> void:
 	completed_lessons        = {}
 	completed_folder_quizzes = {}
+	sim_best_scores          = {}
 	if current_user.is_empty():
 		return
 	var cfg := ConfigFile.new()
@@ -88,6 +92,18 @@ func load_game() -> void:
 		return  # no save yet for this user — first login
 	completed_lessons        = cfg.get_value("progress", "completed_lessons",        {})
 	completed_folder_quizzes = cfg.get_value("progress", "completed_folder_quizzes", {})
+	sim_best_scores          = cfg.get_value("progress", "sim_best_scores",          {})
+
+func get_sim_best(world: String) -> int:
+	return sim_best_scores.get(world, 0)
+
+# Returns true if this run set a new best (caller can use that to celebrate it).
+func report_sim_score(world: String, score: int) -> bool:
+	var is_new_best: bool = score > get_sim_best(world)
+	if is_new_best:
+		sim_best_scores[world] = score
+		save_game()
+	return is_new_best
 
 # ── Accounts ───────────────────────────────────────────
 # Plain local credential store — offline single-PC use only, no server.
@@ -153,6 +169,7 @@ func logout() -> void:
 	lesson_id                = null
 	completed_lessons        = {}
 	completed_folder_quizzes = {}
+	sim_best_scores          = {}
 
 func reset_progress() -> void:
 	completed_lessons        = {}

@@ -73,11 +73,12 @@ func show_screen(name: String) -> void:
 	$GameScreen.visible         = (name == "game")
 	$CompleteScreen.visible     = (name == "complete" or name == "failed")
 	$FolderQuizScreen.visible   = (name == "folder_quiz")
+	$SimulationScreen.visible   = (name == "simulation")
 
 	match name:
 		"login", "world_select":
 			_play_bgm("menu")
-		"game", "dashboard", "folder_quiz":
+		"game", "dashboard", "folder_quiz", "simulation":
 			_play_bgm(GameManager.world)
 		"complete", "failed":
 			pass
@@ -90,3 +91,5 @@ func show_screen(name: String) -> void:
 		$CompleteScreen.set_mode(name)
 	if name == "folder_quiz":
 		$FolderQuizScreen.start_quiz()
+	if name == "simulation":
+		$SimulationScreen.start_run(GameManager.world)
