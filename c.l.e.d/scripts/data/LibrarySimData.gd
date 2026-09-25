@@ -31,6 +31,32 @@ const TEMPLATES: Array = [
 			[3, "Brief History", "Sagan", "Science"], [4, "Animal Farm", "Orwell", "Fiction"],
 		],
 		"problem": "The head librarian wants a full listing of the catalog for inventory.",
+		"role": "staff",
+	},
+	{
+		"requires_lesson_index": 1, "kind": "select_column",
+		"table": "books",
+		"table_headers": ["id", "title", "author", "genre"],
+		"table_types":   ["INTEGER", "TEXT", "TEXT", "TEXT"],
+		"seed_rows": [
+			[1, "SQL Basics", "Rivera", "Technology"], [2, "The Universe", "Hawking", "Science"],
+			[3, "Brief History", "Sagan", "Science"], [4, "Animal Farm", "Orwell", "Fiction"],
+		],
+		"problem_template": "I just need the {column} for every book — skip the rest.",
+		"pick_from_columns": ["title", "author", "genre"],
+	},
+	{
+		"requires_lesson_index": 1, "kind": "select_column",
+		"table": "books",
+		"table_headers": ["id", "title", "author", "genre"],
+		"table_types":   ["INTEGER", "TEXT", "TEXT", "TEXT"],
+		"seed_rows": [
+			[1, "SQL Basics", "Rivera", "Technology"], [2, "The Universe", "Hawking", "Science"],
+			[3, "Brief History", "Sagan", "Science"], [4, "Animal Farm", "Orwell", "Fiction"],
+		],
+		"problem_template": "For the shelf labels, can you list just the {column} column?",
+		"pick_from_columns": ["title", "author", "genre"],
+		"role": "staff",
 	},
 
 	# ── INSERT INTO (unlocks after Lesson 2) | table: borrowers ──
@@ -49,6 +75,7 @@ const TEMPLATES: Array = [
 			"last":       ["Mendez", "Bautista", "Fernandez", "Santos", "Garcia"],
 			"membership": ["Student", "Faculty"],
 		},
+		"insert_columns": ["first_name", "last_name", "membership_type"],
 	},
 	{
 		"requires_lesson_index": 2, "kind": "insert_into",
@@ -65,6 +92,8 @@ const TEMPLATES: Array = [
 			"last":       ["Villanueva", "Dela Cruz", "Hernandez", "Rivera", "Kim"],
 			"membership": ["Student", "Faculty"],
 		},
+		"insert_columns": ["first_name", "last_name", "membership_type"],
+		"role": "staff",
 	},
 
 	# ── SELECT WHERE (unlocks after Lesson 3) | table: books ──
@@ -79,6 +108,7 @@ const TEMPLATES: Array = [
 		],
 		"problem_template": "A professor is looking for books in the {value} genre. Can you search for them?",
 		"pick_from_column": "genre",
+		"role": "staff",
 	},
 	{
 		"requires_lesson_index": 3, "kind": "select_where",
@@ -91,6 +121,7 @@ const TEMPLATES: Array = [
 		],
 		"problem_template": "Do we have anything written by {value}? A student's asking.",
 		"pick_from_column": "author",
+		"role": "staff",
 	},
 
 	# ── UPDATE SET (unlocks after Lesson 4) | table: borrows ──
@@ -121,6 +152,7 @@ const TEMPLATES: Array = [
 		"set_column": "return_date",
 		"pick_id_from": "id",
 		"new_value_pool": ["June 24", "June 26", "July 1", "June 29"],
+		"role": "staff",
 	},
 
 	# ── DELETE (unlocks after Lesson 5) | table: borrows ──
@@ -135,6 +167,7 @@ const TEMPLATES: Array = [
 		],
 		"problem_template": "Borrow record id {target_id} has been settled and the book returned. Remove it.",
 		"pick_id_from": "id",
+		"role": "staff",
 	},
 	{
 		"requires_lesson_index": 5, "kind": "delete",
@@ -147,5 +180,6 @@ const TEMPLATES: Array = [
 		],
 		"problem_template": "Record id {target_id} was logged twice by mistake. Delete the duplicate.",
 		"pick_id_from": "id",
+		"role": "staff",
 	},
 ]

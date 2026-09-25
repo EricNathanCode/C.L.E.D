@@ -5,6 +5,7 @@ extends Node
 
 var world:       String = ""
 var lesson_id           = null
+var sim_folder:  String = "all"   # "all" | "basic" | "filtering" | "sorting" — picked from the Simulation folder menu
 
 # ── Accounts ───────────────────────────────────────────
 const ACCOUNTS_PATH := "user://accounts.cfg"

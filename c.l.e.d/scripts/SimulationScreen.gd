@@ -13,6 +13,7 @@ const CHAR_ROOT := "res://images/characters/"
 
 const BOB_AMP:   float = 7.0
 const BOB_SPEED: float = 10.0
+const TYPEWRITER_CPS: float = 26.0
 
 const NPC_WIDTH:  float = 420.0
 const _npc_base_top:    float = 60.0
@@ -27,17 +28,33 @@ const OCCUPATION_BY_WORLD: Dictionary = {
 
 const Dashboard = preload("res://scripts/DashboardScreen.gd")
 
+const FOLDER_DISPLAY: Dictionary = {
+	"all":       "Your Progress",
+	"basic":     "Basic SQL",
+	"filtering": "Filtering Rows",
+	"sorting":   "Sorting & Aggregates",
+}
+
 var _world: String = ""
+var _folder: String = "all"
 var _sim_db: SimDatabase = null
 var _templates: Array = []
 var _current_template: Dictionary = {}
 var _current_rolled: Dictionary = {}
+var _last_correct_query: String = ""
 var _score: int = 0
 var _round_locked: bool = false
 
 var _tex_cache: Dictionary = {}
 var _bob_time: float = 0.0
 var _is_bobbing: bool = false
+var _npc_base: String = ""
+var _current_role: String = "customer"
+
+var _full_text: String = ""
+var _type_index: int = 0
+var _type_accum: float = 0.0
+var _typing: bool = false
 
 var _table_windows: Dictionary = {}   # table_name -> FloatingWindow
 var _terminal_win: FloatingWindow = null
@@ -62,9 +79,20 @@ func _process(delta: float) -> void:
 		$NPCSprite.offset_top    = _npc_base_top    + bob
 		$NPCSprite.offset_bottom = _npc_base_bottom + bob
 
+	if _typing:
+		_type_accum += delta * TYPEWRITER_CPS
+		var n: int = int(_type_accum)
+		if n > 0:
+			_type_index = min(_type_index + n, _full_text.length())
+			_type_accum -= float(n)
+			$DialogueBox/DialogueVBox/ProblemLabel.text = _full_text.substr(0, _type_index)
+			if _type_index >= _full_text.length():
+				_finish_talking()
+
 # ── Run lifecycle ──────────────────────────────────────
-func start_run(world: String) -> void:
+func start_run(world: String, folder: String = "all") -> void:
 	_world = world
+	_folder = folder
 	_score = 0
 	_round_locked = false
 	_current_template = {}
@@ -93,29 +121,44 @@ func start_run(world: String) -> void:
 
 	_update_score_label()
 
+	if _folder == "filtering" or _folder == "sorting":
+		_show_coming_soon_message()
+		return
+
 	if _get_available_templates().is_empty():
 		_show_locked_message()
 		return
 
 	_start_next_round()
 
+func _score_key() -> String:
+	if _folder == "all":
+		return _world
+	return _world + "_" + _folder
+
 func _show_locked_message() -> void:
 	$DialogueBox/DialogueVBox/NPCNameLabel.text = "LOCKED"
 	$DialogueBox/DialogueVBox/ProblemLabel.text = "Complete at least Lesson 1 in this world before running the Simulation."
 
+func _show_coming_soon_message() -> void:
+	$DialogueBox/DialogueVBox/NPCNameLabel.text = "COMING SOON"
+	$DialogueBox/DialogueVBox/ProblemLabel.text = "%s Simulation problems aren't ready yet — check back after a future update." % FOLDER_DISPLAY.get(_folder, _folder)
+
 func _end_run() -> void:
+	_typing = false
 	_stop_bob()
 	$NPCSprite.visible = false
-	var is_new_best: bool = GameManager.report_sim_score(_world, _score)
+	var is_new_best: bool = GameManager.report_sim_score(_score_key(), _score)
 	$GameOverOverlay/CenterContainer/ResultPanel/ResultVBox/ScoreLabel.text = "You served %d correctly." % _score
-	var best_text: String = "Best: %d" % GameManager.get_sim_best(_world)
+	var best_text: String = "Best: %d" % GameManager.get_sim_best(_score_key())
 	if is_new_best:
 		best_text += "  —  New Best!"
 	$GameOverOverlay/CenterContainer/ResultPanel/ResultVBox/BestLabel.text = best_text
+	$GameOverOverlay/CenterContainer/ResultPanel/ResultVBox/CorrectQueryLabel.text = "Correct query:\n%s" % _last_correct_query
 	$GameOverOverlay.visible = true
 
 func _on_retry_pressed() -> void:
-	start_run(_world)
+	start_run(_world, _folder)
 
 func _on_back_pressed() -> void:
 	get_tree().root.get_node("Main").show_screen("dashboard")
@@ -124,7 +167,8 @@ func _on_end_button() -> void:
 	get_tree().root.get_node("Main").show_screen("dashboard")
 
 func _update_score_label() -> void:
-	$TopBar/RunLabel.text = "  SIMULATION   Score: %d   |   Best: %d" % [_score, GameManager.get_sim_best(_world)]
+	var mode_name: String = FOLDER_DISPLAY.get(_folder, _folder)
+	$TopBar/RunLabel.text = "  SIMULATION — %s   Score: %d   |   Best: %d" % [mode_name, _score, GameManager.get_sim_best(_score_key())]
 
 # ── Round flow ─────────────────────────────────────────
 func _start_next_round() -> void:
@@ -137,12 +181,14 @@ func _start_next_round() -> void:
 	_current_template = tmpl
 	_sim_db.seed_table(tmpl["table"], tmpl["table_headers"], tmpl.get("table_types", []), tmpl["seed_rows"])
 	_current_rolled = _roll_variables(tmpl)
+	_last_correct_query = _build_example_query(tmpl, _current_rolled)
 
 	var text: String = tmpl.get("problem_template", tmpl.get("problem", ""))
 	text = _fill_template(text, _current_rolled)
 
+	_current_role = tmpl.get("role", "customer")
 	_refresh_table_window(tmpl["table"])
-	_walk_in_and_show(text, _random_npc_override(_world))
+	_walk_in_and_show(text, _random_npc_base(_world, _current_role))
 
 func _get_available_templates() -> Array:
 	var furthest: int = _furthest_completed_index(_world)
@@ -150,6 +196,8 @@ func _get_available_templates() -> Array:
 		return []
 	var pool: Array = []
 	for t in _templates:
+		if _folder != "all" and t.get("folder", "basic") != _folder:
+			continue
 		if int(t["requires_lesson_index"]) > furthest:
 			continue
 		if _needs_existing_rows(t["kind"]) and _sim_db.has_table(t["table"]) and _sim_db.fetch_rows(t["table"]).is_empty():
@@ -163,6 +211,9 @@ func _needs_existing_rows(kind: String) -> bool:
 func _roll_variables(tmpl: Dictionary) -> Dictionary:
 	var rolled: Dictionary = {}
 	match tmpl["kind"]:
+		"select_column":
+			var pool: Array = tmpl["pick_from_columns"]
+			rolled["column"] = pool[randi() % pool.size()]
 		"insert_into":
 			for key in tmpl["variables"].keys():
 				var pool: Array = tmpl["variables"][key]
@@ -200,6 +251,8 @@ func _build_expected(tmpl: Dictionary, rolled: Dictionary) -> Dictionary:
 	match tmpl["kind"]:
 		"select_basic":
 			return {"starts_with": "SELECT", "table": table, "must_contain": []}
+		"select_column":
+			return {"starts_with": "SELECT", "table": table, "must_contain": [str(rolled["column"])]}
 		"select_where":
 			return {"starts_with": "SELECT", "table": table, "must_contain": [str(rolled["value"])]}
 		"insert_into":
@@ -209,6 +262,29 @@ func _build_expected(tmpl: Dictionary, rolled: Dictionary) -> Dictionary:
 		"delete":
 			return {"starts_with": "DELETE", "table": table, "must_contain": [str(rolled["target_id"])]}
 	return {"starts_with": "", "table": table, "must_contain": []}
+
+# Builds one valid example answer for this round, shown on the game-over
+# screen so a wrong answer still teaches the player the right shape.
+func _build_example_query(tmpl: Dictionary, rolled: Dictionary) -> String:
+	var table: String = tmpl["table"]
+	match tmpl["kind"]:
+		"select_basic":
+			return "SELECT * FROM %s;" % table
+		"select_column":
+			return "SELECT %s FROM %s;" % [rolled["column"], table]
+		"select_where":
+			return "SELECT * FROM %s WHERE %s = '%s';" % [table, tmpl["pick_from_column"], rolled["value"]]
+		"insert_into":
+			var cols: Array = tmpl.get("insert_columns", tmpl["variables"].keys())
+			var vals: Array = []
+			for v in rolled.values():
+				vals.append("'%s'" % v)
+			return "INSERT INTO %s (%s) VALUES (%s);" % [table, ", ".join(cols), ", ".join(vals)]
+		"update_set":
+			return "UPDATE %s SET %s = '%s' WHERE %s = %s;" % [table, tmpl["set_column"], rolled["new_value"], tmpl["pick_id_from"], rolled["target_id"]]
+		"delete":
+			return "DELETE FROM %s WHERE %s = %s;" % [table, tmpl["pick_id_from"], rolled["target_id"]]
+	return ""
 
 func _check_and_run(query: String, expected: Dictionary) -> bool:
 	var q: String = query.strip_edges()
@@ -249,12 +325,30 @@ func _on_execute() -> void:
 		await get_tree().create_timer(0.9).timeout
 		_end_run()
 
-# ── NPC walk / bob ─────────────────────────────────────
-func _show_dialogue(text: String) -> void:
-	$DialogueBox/DialogueVBox/NPCNameLabel.text = "CUSTOMER"
-	$DialogueBox/DialogueVBox/ProblemLabel.text = text
+# ── NPC walk / bob / talk ──────────────────────────────
+func _start_talking(text: String) -> void:
+	$DialogueBox/DialogueVBox/NPCNameLabel.text = "COWORKER" if _current_role == "staff" else "CUSTOMER"
+	$DialogueBox/DialogueVBox/ProblemLabel.text = ""
 	_terminal_status.text = ""
 	_round_locked = false
+
+	_full_text  = text
+	_type_index = 0
+	_type_accum = 0.0
+	_typing     = true
+
+	_bob_time = 0.0
+	_start_bob()
+	var talk_tex: Texture2D = _load_texture(_resolve_npc_path(_npc_base, "talk"))
+	if talk_tex:
+		$NPCSprite.texture = talk_tex
+
+func _finish_talking() -> void:
+	_typing = false
+	_stop_bob()
+	var idle_tex: Texture2D = _load_texture(_resolve_npc_path(_npc_base, "idle"))
+	if idle_tex:
+		$NPCSprite.texture = idle_tex
 
 func _start_bob() -> void:
 	_is_bobbing = true
@@ -264,9 +358,10 @@ func _stop_bob() -> void:
 	$NPCSprite.offset_top    = _npc_base_top
 	$NPCSprite.offset_bottom = _npc_base_bottom
 
-func _walk_in_and_show(problem_text: String, npc_override: String) -> void:
+func _walk_in_and_show(problem_text: String, npc_base: String) -> void:
+	_npc_base = npc_base
 	var npc: TextureRect = $NPCSprite
-	npc.texture = _load_texture(_resolve_npc_path(npc_override))
+	npc.texture = _load_texture(_resolve_npc_path(npc_base, "idle"))
 	npc.visible = true
 	npc.offset_top    = _npc_base_top
 	npc.offset_bottom = _npc_base_bottom
@@ -281,12 +376,11 @@ func _walk_in_and_show(problem_text: String, npc_override: String) -> void:
 	tw.tween_property(npc, "offset_left",  center_x,               0.6).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 	tw.tween_property(npc, "offset_right", center_x + NPC_WIDTH,    0.6).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 	tw.chain().tween_callback(func():
-		_bob_time = 0.0
-		_start_bob()
-		_show_dialogue(problem_text)
+		_start_talking(problem_text)
 	)
 
 func _walk_out_then_advance() -> void:
+	_typing = false
 	_stop_bob()
 	var npc: TextureRect = $NPCSprite
 	var vp_w: float = size.x if size.x > 0 else get_viewport_rect().size.x
@@ -300,22 +394,31 @@ func _walk_out_then_advance() -> void:
 		_start_next_round()
 	)
 
-func _random_npc_override(world: String) -> String:
-	var roll: int = randi() % 100
-	if roll < 45:
-		return "adult_%d/idle" % (randi() % 24 + 1)
-	elif roll < 60:
-		return "NPC_kids/kid_%d/idle" % (randi() % 11 + 1)
-	elif roll < 72:
-		return "NPC_seniors/Senior_%d/idle" % (randi() % 4 + 1)
-	elif roll < 85:
-		return "NPC_plus_size/plus_size_%d/idle" % (randi() % 9 + 1)
-	else:
+# "staff" lines (coworkers relaying an internal request) always use the
+# world's one occupation sprite, matching the lessons' own convention of a
+# single recurring boss/manager character. "customer" lines get a random
+# regular person, since any kind of guest/customer/passenger/patron could
+# plausibly walk up and ask for themselves.
+func _random_npc_base(world: String, role: String = "customer") -> String:
+	if role == "staff":
 		var occ: String = OCCUPATION_BY_WORLD.get(world, "hotel_manager")
-		return "NPC_occupations/%s/idle" % occ
+		return "NPC_occupations/%s" % occ
 
-func _resolve_npc_path(npc_override: String) -> String:
-	var parts := npc_override.split("/")
+	var roll: int = randi() % 100
+	if roll < 55:
+		return "adult_%d" % (randi() % 24 + 1)
+	elif roll < 75:
+		return "NPC_kids/kid_%d" % (randi() % 11 + 1)
+	elif roll < 88:
+		return "NPC_seniors/Senior_%d" % (randi() % 4 + 1)
+	else:
+		return "NPC_plus_size/plus_size_%d" % (randi() % 9 + 1)
+
+# expr is "idle" or "talk". Folders without a dedicated talk.png simply
+# have no file at that path — _load_texture returns null and the caller
+# keeps whatever texture is already showing instead of blanking it out.
+func _resolve_npc_path(npc_base: String, expr: String) -> String:
+	var parts := (npc_base + "/" + expr).split("/")
 	if parts.size() == 3:
 		return CHAR_ROOT + parts[0] + "/" + parts[1] + "/" + parts[2] + ".png"
 	elif parts.size() == 2:
@@ -331,8 +434,8 @@ func _spawn_table_window(table_name: String) -> void:
 	var scroll := ScrollContainer.new()
 	scroll.custom_minimum_size = Vector2(320, 150)
 	var grid := GridContainer.new()
-	grid.add_theme_constant_override("h_separation", 18)
-	grid.add_theme_constant_override("v_separation", 6)
+	grid.add_theme_constant_override("h_separation", 0)
+	grid.add_theme_constant_override("v_separation", 0)
 	scroll.add_child(grid)
 	win.get_content_area().add_child(scroll)
 	win.set_meta("grid", grid)
@@ -353,18 +456,29 @@ func _refresh_table_window(table_name: String) -> void:
 	var headers: Array = _sim_db.headers_for(table_name)
 	grid.columns = max(headers.size(), 1)
 	for h in headers:
-		var lbl := Label.new()
-		lbl.text = str(h).capitalize()
-		lbl.add_theme_font_size_override("font_size", 13)
-		lbl.add_theme_color_override("font_color", Color(0.55, 0.82, 1.0))
-		grid.add_child(lbl)
+		grid.add_child(_make_cell(str(h), true))
 	for row in _sim_db.fetch_rows(table_name):
 		for v in row:
-			var cell := Label.new()
-			cell.text = str(v)
-			cell.add_theme_font_size_override("font_size", 13)
-			cell.add_theme_color_override("font_color", Color(0.85, 0.88, 0.94))
-			grid.add_child(cell)
+			grid.add_child(_make_cell(str(v), false))
+
+func _make_cell(text: String, is_header: bool) -> PanelContainer:
+	var panel := PanelContainer.new()
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color(0.14, 0.17, 0.24, 1.0) if is_header else Color(0.09, 0.11, 0.16, 1.0)
+	style.border_color = Color(0.30, 0.36, 0.48)
+	style.set_border_width_all(1)
+	style.content_margin_left   = 8
+	style.content_margin_right  = 8
+	style.content_margin_top    = 4
+	style.content_margin_bottom = 4
+	panel.add_theme_stylebox_override("panel", style)
+
+	var lbl := Label.new()
+	lbl.text = text
+	lbl.add_theme_font_size_override("font_size", 13)
+	lbl.add_theme_color_override("font_color", Color(0.55, 0.82, 1.0) if is_header else Color(0.85, 0.88, 0.94))
+	panel.add_child(lbl)
+	return panel
 
 # ── Terminal window ────────────────────────────────────
 func _build_terminal_ui() -> void:

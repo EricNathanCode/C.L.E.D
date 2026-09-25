@@ -20,6 +20,7 @@ const TEMPLATES: Array = [
 			[3, "Jose", "Hernandez", "312"], [4, "Carlos", "Garcia", "412"],
 		],
 		"problem": "Can you pull up every guest we have on file right now?",
+		"role": "staff",
 	},
 	{
 		"requires_lesson_index": 1, "kind": "select_basic",
@@ -31,6 +32,33 @@ const TEMPLATES: Array = [
 			[3, "Jose", "Hernandez", "312"], [4, "Carlos", "Garcia", "412"],
 		],
 		"problem": "I need the full guest list for the shift handover.",
+		"role": "staff",
+	},
+	{
+		"requires_lesson_index": 1, "kind": "select_column",
+		"table": "customers",
+		"table_headers": ["id", "first_name", "last_name", "room_no"],
+		"table_types":   ["INTEGER", "TEXT", "TEXT", "TEXT"],
+		"seed_rows": [
+			[1, "Alex", "Santos", "101"], [2, "Maya", "Dela Cruz", "204"],
+			[3, "Jose", "Hernandez", "312"], [4, "Carlos", "Garcia", "412"],
+		],
+		"problem_template": "I don't need everything — just show me everyone's {column}.",
+		"pick_from_columns": ["first_name", "last_name", "room_no"],
+		"role": "staff",
+	},
+	{
+		"requires_lesson_index": 1, "kind": "select_column",
+		"table": "customers",
+		"table_headers": ["id", "first_name", "last_name", "room_no"],
+		"table_types":   ["INTEGER", "TEXT", "TEXT", "TEXT"],
+		"seed_rows": [
+			[1, "Alex", "Santos", "101"], [2, "Maya", "Dela Cruz", "204"],
+			[3, "Jose", "Hernandez", "312"], [4, "Carlos", "Garcia", "412"],
+		],
+		"problem_template": "For the log book, I only need the {column} column, nothing else.",
+		"pick_from_columns": ["first_name", "last_name", "room_no"],
+		"role": "staff",
 	},
 
 	# ── INSERT INTO (unlocks after Lesson 2) ───────────
@@ -49,6 +77,7 @@ const TEMPLATES: Array = [
 			"last":  ["Lim", "Reyes", "Torres", "Villanueva", "Cruz"],
 			"room":  ["205", "108", "310", "217", "150"],
 		},
+		"insert_columns": ["first_name", "last_name", "room_no"],
 	},
 	{
 		"requires_lesson_index": 2, "kind": "insert_into",
@@ -65,6 +94,7 @@ const TEMPLATES: Array = [
 			"last":  ["Bautista", "Fernandez", "Santos", "Garcia", "Lim"],
 			"room":  ["220", "115", "330", "240", "160"],
 		},
+		"insert_columns": ["first_name", "last_name", "room_no"],
 	},
 
 	# ── SELECT WHERE (unlocks after Lesson 3) ──────────
@@ -91,6 +121,7 @@ const TEMPLATES: Array = [
 		],
 		"problem_template": "I'm checking on the guest in room {value}. Can you confirm they're checked in?",
 		"pick_from_column": "room_no",
+		"role": "staff",
 	},
 
 	# ── UPDATE SET (unlocks after Lesson 4) ────────────
@@ -107,6 +138,7 @@ const TEMPLATES: Array = [
 		"set_column": "room_no",
 		"pick_id_from": "id",
 		"new_value_pool": ["500", "501", "502", "503"],
+		"role": "staff",
 	},
 	{
 		"requires_lesson_index": 4, "kind": "update_set",
@@ -121,6 +153,7 @@ const TEMPLATES: Array = [
 		"set_column": "last_name",
 		"pick_id_from": "id",
 		"new_value_pool": ["Santoz", "DelaCruz", "Hernandes", "Garciah"],
+		"role": "staff",
 	},
 
 	# ── DELETE (unlocks after Lesson 5) ────────────────
@@ -135,6 +168,7 @@ const TEMPLATES: Array = [
 		],
 		"problem_template": "Guest id {target_id} just cancelled. Please remove their record.",
 		"pick_id_from": "id",
+		"role": "staff",
 	},
 	{
 		"requires_lesson_index": 5, "kind": "delete",
@@ -147,5 +181,6 @@ const TEMPLATES: Array = [
 		],
 		"problem_template": "Front office needs record id {target_id} deleted — duplicate entry.",
 		"pick_id_from": "id",
+		"role": "staff",
 	},
 ]

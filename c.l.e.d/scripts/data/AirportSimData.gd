@@ -17,6 +17,7 @@ const TEMPLATES: Array = [
 			[3, "Ben", "Torres", "7B"], [4, "Iris", "Reyes", "22F"],
 		],
 		"problem": "Ground control needs the full passenger manifest right now.",
+		"role": "staff",
 	},
 	{
 		"requires_lesson_index": 1, "kind": "select_basic",
@@ -28,6 +29,33 @@ const TEMPLATES: Array = [
 			[3, "Ben", "Torres", "7B"], [4, "Iris", "Reyes", "22F"],
 		],
 		"problem": "Can you print the boarding list for this flight?",
+		"role": "staff",
+	},
+	{
+		"requires_lesson_index": 1, "kind": "select_column",
+		"table": "passengers",
+		"table_headers": ["id", "first_name", "last_name", "seat_no"],
+		"table_types":   ["INTEGER", "TEXT", "TEXT", "TEXT"],
+		"seed_rows": [
+			[1, "Liam", "Cruz", "12A"], [2, "Nora", "Santos", "14C"],
+			[3, "Ben", "Torres", "7B"], [4, "Iris", "Reyes", "22F"],
+		],
+		"problem_template": "Cabin crew just needs the {column} for everyone, nothing more.",
+		"pick_from_columns": ["first_name", "last_name", "seat_no"],
+		"role": "staff",
+	},
+	{
+		"requires_lesson_index": 1, "kind": "select_column",
+		"table": "passengers",
+		"table_headers": ["id", "first_name", "last_name", "seat_no"],
+		"table_types":   ["INTEGER", "TEXT", "TEXT", "TEXT"],
+		"seed_rows": [
+			[1, "Liam", "Cruz", "12A"], [2, "Nora", "Santos", "14C"],
+			[3, "Ben", "Torres", "7B"], [4, "Iris", "Reyes", "22F"],
+		],
+		"problem_template": "For the gate announcement, just list the {column} column.",
+		"pick_from_columns": ["first_name", "last_name", "seat_no"],
+		"role": "staff",
 	},
 
 	# ── INSERT INTO (unlocks after Lesson 2) ───────────
@@ -46,6 +74,7 @@ const TEMPLATES: Array = [
 			"last":  ["Villanueva", "Bautista", "Fernandez", "Lim", "Garcia"],
 			"seat":  ["9C", "18A", "3F", "25B", "11D"],
 		},
+		"insert_columns": ["first_name", "last_name", "seat_no"],
 	},
 	{
 		"requires_lesson_index": 2, "kind": "insert_into",
@@ -62,6 +91,8 @@ const TEMPLATES: Array = [
 			"last":  ["Hernandez", "Dela Cruz", "Mendez", "Rivera", "Kim"],
 			"seat":  ["6E", "20A", "15C", "2F", "8B"],
 		},
+		"insert_columns": ["first_name", "last_name", "seat_no"],
+		"role": "staff",
 	},
 
 	# ── SELECT WHERE (unlocks after Lesson 3) ──────────
@@ -88,6 +119,7 @@ const TEMPLATES: Array = [
 		],
 		"problem_template": "Who's sitting in seat {value}? Cabin crew needs to confirm before takeoff.",
 		"pick_from_column": "seat_no",
+		"role": "staff",
 	},
 
 	# ── UPDATE SET (unlocks after Lesson 4) ────────────
@@ -104,6 +136,7 @@ const TEMPLATES: Array = [
 		"set_column": "seat_no",
 		"pick_id_from": "id",
 		"new_value_pool": ["4A", "16C", "21F", "1B"],
+		"role": "staff",
 	},
 	{
 		"requires_lesson_index": 4, "kind": "update_set",
@@ -118,6 +151,7 @@ const TEMPLATES: Array = [
 		"set_column": "last_name",
 		"pick_id_from": "id",
 		"new_value_pool": ["Cruzz", "Santoz", "Torress", "Reyess"],
+		"role": "staff",
 	},
 
 	# ── DELETE (unlocks after Lesson 5) ────────────────
@@ -132,6 +166,7 @@ const TEMPLATES: Array = [
 		],
 		"problem_template": "Passenger id {target_id} cancelled their booking. Please remove them from the manifest.",
 		"pick_id_from": "id",
+		"role": "staff",
 	},
 	{
 		"requires_lesson_index": 5, "kind": "delete",
@@ -144,5 +179,6 @@ const TEMPLATES: Array = [
 		],
 		"problem_template": "Record id {target_id} is a duplicate check-in. Delete it before boarding starts.",
 		"pick_id_from": "id",
+		"role": "staff",
 	},
 ]

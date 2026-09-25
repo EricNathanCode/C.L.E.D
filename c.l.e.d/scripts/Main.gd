@@ -92,4 +92,4 @@ func show_screen(name: String) -> void:
 	if name == "folder_quiz":
 		$FolderQuizScreen.start_quiz()
 	if name == "simulation":
-		$SimulationScreen.start_run(GameManager.world)
+		$SimulationScreen.start_run(GameManager.world, GameManager.sim_folder)

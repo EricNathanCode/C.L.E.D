@@ -161,6 +161,8 @@ const SQL_GLOSSARY: Array = [
 # from disk on every single hover.
 var _preview_tex_cache: Dictionary = {}
 var _glossary_overlay: Control = null
+var _sim_picker_overlay: Control = null
+var _sim_picker_labels: Dictionary = {}   # folder key -> best-score Label
 
 func _ready() -> void:
 	# Full dark background
@@ -199,9 +201,11 @@ func _ready() -> void:
 
 	var sim_btn := Button.new()
 	sim_btn.text = "🎮  Simulation"
-	sim_btn.pressed.connect(_on_simulation_pressed)
+	sim_btn.pressed.connect(_toggle_sim_picker)
 	_style_btn(sim_btn, "secondary", 13)
 	$TopBar.add_child(sim_btn)
+
+	_build_sim_picker()
 
 	_screen_lbl.add_theme_font_size_override("font_size", 13)
 	_screen_lbl.add_theme_color_override("font_color", Color(0.50, 0.55, 0.65))
@@ -215,7 +219,9 @@ func _ready() -> void:
 func _on_change_world() -> void:
 	get_tree().root.get_node("Main").show_screen("world_select")
 
-func _on_simulation_pressed() -> void:
+func _start_simulation(folder: String) -> void:
+	GameManager.sim_folder = folder
+	_toggle_sim_picker()
 	get_tree().root.get_node("Main").show_screen("simulation")
 
 func build_lessons() -> void:
@@ -981,3 +987,127 @@ func _build_glossary() -> void:
 func _toggle_glossary() -> void:
 	if _glossary_overlay:
 		_glossary_overlay.visible = not _glossary_overlay.visible
+
+# ── Simulation folder picker overlay ───────────────────
+# Shown when "Simulation" is pressed so the player can either follow
+# their overall progress or drill one specific folder/genre and track
+# a separate best score for it.
+const SIM_FOLDERS: Array = [
+	["all",       "Your Progress",         "Runs problems from every lesson you've unlocked so far."],
+	["basic",     "Basic SQL",             "SELECT, INSERT, WHERE, UPDATE, DELETE."],
+	["filtering", "Filtering Rows",        "Coming soon."],
+	["sorting",   "Sorting & Aggregates",  "Coming soon."],
+]
+
+func _build_sim_picker() -> void:
+	_sim_picker_overlay = Control.new()
+	_sim_picker_overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_sim_picker_overlay.visible = false
+	_sim_picker_overlay.z_index = 100
+	_sim_picker_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(_sim_picker_overlay)
+
+	var backdrop := ColorRect.new()
+	backdrop.set_anchors_preset(Control.PRESET_FULL_RECT)
+	backdrop.color = Color(0.0, 0.0, 0.0, 0.80)
+	backdrop.mouse_filter = Control.MOUSE_FILTER_STOP
+	_sim_picker_overlay.add_child(backdrop)
+
+	var center := CenterContainer.new()
+	center.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_sim_picker_overlay.add_child(center)
+
+	var panel := PanelContainer.new()
+	panel.custom_minimum_size = Vector2(440, 0)
+	var ps := StyleBoxFlat.new()
+	ps.bg_color = Color(0.09, 0.11, 0.16, 0.98)
+	ps.border_color = Color("#F59E0B")
+	ps.set_border_width_all(2)
+	ps.set_corner_radius_all(12)
+	ps.content_margin_left   = 24
+	ps.content_margin_right  = 24
+	ps.content_margin_top    = 20
+	ps.content_margin_bottom = 20
+	panel.add_theme_stylebox_override("panel", ps)
+	center.add_child(panel)
+
+	var vbox := VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 10)
+	panel.add_child(vbox)
+
+	var header_row := HBoxContainer.new()
+	vbox.add_child(header_row)
+	var header_lbl := Label.new()
+	header_lbl.text = "Simulation Mode"
+	header_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	header_lbl.add_theme_font_size_override("font_size", 18)
+	header_lbl.add_theme_color_override("font_color", Color("#F59E0B"))
+	header_row.add_child(header_lbl)
+	var close_btn := Button.new()
+	close_btn.text = "✕"
+	close_btn.pressed.connect(_toggle_sim_picker)
+	_style_btn(close_btn, "ghost", 16)
+	header_row.add_child(close_btn)
+
+	var sep := ColorRect.new()
+	sep.custom_minimum_size = Vector2(0, 1)
+	sep.color = Color(0.25, 0.30, 0.42)
+	vbox.add_child(sep)
+
+	for entry in SIM_FOLDERS:
+		var key: String = entry[0]
+		var title: String = entry[1]
+		var desc: String = entry[2]
+		var locked: bool = (key == "filtering" or key == "sorting")
+
+		var btn := Button.new()
+		btn.custom_minimum_size = Vector2(0, 56)
+		if locked:
+			btn.disabled = true
+			_style_btn(btn, "locked", 14)
+		else:
+			_style_btn(btn, "secondary", 14)
+
+		var row := HBoxContainer.new()
+		row.set_anchors_preset(Control.PRESET_FULL_RECT)
+		row.offset_left = 14; row.offset_right = -14
+		row.offset_top = 6;   row.offset_bottom = -6
+		row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		row.add_theme_constant_override("separation", 4)
+		var text_col := VBoxContainer.new()
+		text_col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		text_col.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var title_lbl := Label.new()
+		title_lbl.text = title
+		title_lbl.add_theme_color_override("font_color", Color(0.30, 0.33, 0.40) if locked else Color(0.90, 0.92, 0.96))
+		title_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var desc_lbl := Label.new()
+		desc_lbl.text = desc
+		desc_lbl.add_theme_font_size_override("font_size", 11)
+		desc_lbl.add_theme_color_override("font_color", Color(0.30, 0.33, 0.40) if locked else Color(0.55, 0.60, 0.70))
+		desc_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		text_col.add_child(title_lbl)
+		text_col.add_child(desc_lbl)
+		row.add_child(text_col)
+
+		if not locked:
+			var best_lbl := Label.new()
+			best_lbl.add_theme_font_size_override("font_size", 13)
+			best_lbl.add_theme_color_override("font_color", Color("#F59E0B"))
+			best_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			row.add_child(best_lbl)
+			_sim_picker_labels[key] = best_lbl
+
+		btn.add_child(row)
+		if not locked:
+			btn.pressed.connect(_start_simulation.bind(key))
+		vbox.add_child(btn)
+
+func _toggle_sim_picker() -> void:
+	if not _sim_picker_overlay:
+		return
+	_sim_picker_overlay.visible = not _sim_picker_overlay.visible
+	if _sim_picker_overlay.visible:
+		for key in _sim_picker_labels.keys():
+			var score_key: String = GameManager.world if key == "all" else GameManager.world + "_" + key
+			_sim_picker_labels[key].text = "Best: %d" % GameManager.get_sim_best(score_key)
