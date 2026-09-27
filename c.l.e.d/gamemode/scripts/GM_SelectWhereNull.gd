@@ -114,6 +114,7 @@ func _style_input(inp: LineEdit) -> void:
 	inp.add_theme_stylebox_override("focus", fs)
 	inp.add_theme_color_override("font_color", Color(1.0, 0.78, 0.0))
 	inp.add_theme_color_override("font_placeholder_color", Color(1.0, 0.78, 0.0, 0.3))
+	inp.add_theme_font_size_override("font_size", 14)
 
 func _build_table(headers: Array, rows: Array) -> VBoxContainer:
 	var all_rows: Array = [headers] + rows

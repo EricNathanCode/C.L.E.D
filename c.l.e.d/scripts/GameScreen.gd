@@ -41,6 +41,7 @@ const GM_SCENES: Dictionary = {
 	"aggregate":        "res://gamemode/scene/GM_Aggregate.tscn",
 	"having":           "res://gamemode/scene/GM_Having.tscn",
 	"select_alias":     "res://gamemode/scene/GM_SelectAlias.tscn",
+	"sql_blank":        "res://gamemode/scene/GM_SqlBlank.tscn",
 }
 
 const BG_HOTEL   := "res://images/backgrounds/BG_hotel.png"
