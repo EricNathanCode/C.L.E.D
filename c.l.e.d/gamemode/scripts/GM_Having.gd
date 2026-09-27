@@ -29,11 +29,23 @@ func setup(data: Dictionary) -> void:
 	$HintLabel.visible = false; $ResultBox.visible = false; $ContinueButton.visible = false
 	var gc: String = data.get("group_col","col"); var tbl: String = data.get("table","table")
 	for ch in $SQLTerminal/SQLBlock.get_children(): ch.queue_free()
-	_add_code_line("SELECT " + gc + ",  COUNT(*)")
-	_add_code_line("FROM " + tbl + "  GROUP BY " + gc)
+	var line1 := HBoxContainer.new(); line1.add_theme_constant_override("separation", 0)
+	$SQLTerminal/SQLBlock.add_child(line1)
+	var l1_kw1 := Label.new(); l1_kw1.text = "SELECT "; _style_keyword_label(l1_kw1); line1.add_child(l1_kw1)
+	var l1_col := Label.new(); l1_col.text = gc; _style_identifier_label(l1_col); line1.add_child(l1_col)
+	var l1_mid := Label.new(); l1_mid.text = ",  "; _style_code_label(l1_mid); line1.add_child(l1_mid)
+	var l1_kw2 := Label.new(); l1_kw2.text = "COUNT"; _style_keyword_label(l1_kw2); line1.add_child(l1_kw2)
+	var l1_tail := Label.new(); l1_tail.text = "(*)"; _style_code_label(l1_tail); line1.add_child(l1_tail)
+	var line2 := HBoxContainer.new(); line2.add_theme_constant_override("separation", 0)
+	$SQLTerminal/SQLBlock.add_child(line2)
+	var l2_kw1 := Label.new(); l2_kw1.text = "FROM "; _style_keyword_label(l2_kw1); line2.add_child(l2_kw1)
+	var l2_tbl := Label.new(); l2_tbl.text = tbl; _style_identifier_label(l2_tbl); line2.add_child(l2_tbl)
+	var l2_mid := Label.new(); l2_mid.text = "  "; _style_code_label(l2_mid); line2.add_child(l2_mid)
+	var l2_kw2 := Label.new(); l2_kw2.text = "GROUP BY "; _style_keyword_label(l2_kw2); line2.add_child(l2_kw2)
+	var l2_col := Label.new(); l2_col.text = gc; _style_identifier_label(l2_col); line2.add_child(l2_col)
 	var row := HBoxContainer.new(); row.add_theme_constant_override("separation", 4)
 	$SQLTerminal/SQLBlock.add_child(row)
-	var pre := Label.new(); pre.text = "HAVING  "; _style_code_label(pre); row.add_child(pre)
+	var pre := Label.new(); pre.text = "HAVING  "; _style_keyword_label(pre); row.add_child(pre)
 	_blank = LineEdit.new(); _blank.placeholder_text = "function"
 	_blank.custom_minimum_size = Vector2(100, 0); _blank.max_length = 5
 	_blank.text_submitted.connect(func(_t): _on_execute()); _style_input(_blank); _wire_grow(_blank); row.add_child(_blank)
@@ -89,6 +101,14 @@ func _style_input(inp: LineEdit) -> void:
 func _style_code_label(lbl: Label) -> void:
 	lbl.add_theme_font_size_override("font_size", 14)
 	lbl.add_theme_color_override("font_color", Color(0.78, 0.85, 0.95))
+
+func _style_keyword_label(lbl: Label) -> void:
+	lbl.add_theme_font_size_override("font_size", 14)
+	lbl.add_theme_color_override("font_color", Color(0.42, 0.69, 0.91))
+
+func _style_identifier_label(lbl: Label) -> void:
+	lbl.add_theme_font_size_override("font_size", 14)
+	lbl.add_theme_color_override("font_color", Color(0.96, 0.75, 0.30))
 
 func _add_code_line(txt: String) -> void:
 	var lbl := Label.new()
@@ -158,7 +178,7 @@ func _cell(txt: String, is_header: bool, min_w: float) -> PanelContainer:
 	s.content_margin_top  = 5;   s.content_margin_bottom = 5
 	pc.add_theme_stylebox_override("panel", s)
 	var lbl: Label = Label.new();  lbl.text = txt
-	if is_header: lbl.modulate = Color(1.0, 0.78, 0.0)
+	if is_header: lbl.modulate = Color(0.96, 0.75, 0.30)
 	elif txt == "NULL": lbl.modulate = Color(0.80, 0.35, 0.35)
 	pc.add_child(lbl);  return pc
 

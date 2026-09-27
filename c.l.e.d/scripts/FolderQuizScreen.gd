@@ -3,6 +3,16 @@
 #  FOLDER QUIZ SCREEN  |  scripts/FolderQuizScreen.gd
 # ═══════════════════════════════════════════════════════
 
+# Same SQL keyword palette as SimulationScreen.gd's Terminal, reused here
+# since question "code" strings are free-form (no per-question table/column
+# metadata) — only keywords, string literals, and numbers are safely
+# colorable without guessing which bare word is a table/column name.
+const SQL_KEYWORDS: Array = [
+	"select", "from", "where", "insert", "into", "values", "update", "set", "delete",
+	"and", "or", "not", "null", "is", "like", "in", "between", "order", "by", "group",
+	"having", "limit", "as", "distinct", "asc", "desc", "count", "sum", "avg", "join", "on",
+]
+
 const QUIZ_DATA: Dictionary = {
 	# Each world now has 3 genre folders (Basic SQL, Filtering Rows,
 	# Sorting & Aggregates). Questions = lessons in folder x 2.
@@ -388,6 +398,52 @@ func _build_question_widgets() -> void:
 	hint_row.add_child(_hint_lbl)
 
 # ── Show current question ─────────────────────────────────
+# Colors keywords blue, string literals orange, and numbers green — same
+# palette as the Terminal — while leaving bare identifiers (table/column
+# names) neutral, since this screen's questions carry no per-question
+# table/column metadata to safely tell an identifier from any other word.
+# Run BEFORE the "[BLANK]" -> underline replacement so the literal
+# "[BLANK]" marker passes through untouched (it matches no keyword).
+func _is_letter_or_underscore(c: String) -> bool:
+	return (c >= "a" and c <= "z") or (c >= "A" and c <= "Z") or c == "_"
+
+func _is_ident_char(c: String) -> bool:
+	return _is_letter_or_underscore(c) or (c >= "0" and c <= "9")
+
+func _colorize_sql_line(code: String) -> String:
+	var result: String = ""
+	var i: int = 0
+	var n: int = code.length()
+	while i < n:
+		var c: String = code[i]
+		if c == "'":
+			var j: int = i + 1
+			while j < n and code[j] != "'":
+				j += 1
+			j = min(j, n - 1)
+			result += "[color=#CF9178]" + code.substr(i, j - i + 1) + "[/color]"
+			i = j + 1
+		elif c >= "0" and c <= "9":
+			var j: int = i
+			while j < n and (code[j] >= "0" and code[j] <= "9"):
+				j += 1
+			result += "[color=#B5CFA8]" + code.substr(i, j - i) + "[/color]"
+			i = j
+		elif _is_letter_or_underscore(c):
+			var j: int = i
+			while j < n and _is_ident_char(code[j]):
+				j += 1
+			var word: String = code.substr(i, j - i)
+			if SQL_KEYWORDS.has(word.to_lower()):
+				result += "[color=#6BB0E8]" + word + "[/color]"
+			else:
+				result += word
+			i = j
+		else:
+			result += c
+			i += 1
+	return result
+
 func _show_question() -> void:
 	if _current_q >= _questions.size():
 		_show_complete()
@@ -397,7 +453,7 @@ func _show_question() -> void:
 	_progress_lbl.text = "Question  %d / %d" % [_current_q + 1, _questions.size()]
 	_desc_lbl.text = q["desc"]
 
-	var raw: String = q["code"].replace("[BLANK]", "[color=#F59E0B][b] _____ [/b][/color]")
+	var raw: String = _colorize_sql_line(q["code"]).replace("[BLANK]", "[color=#F59E0B][b] _____ [/b][/color]")
 	_code_lbl.text = raw
 
 	_input.text = ""
@@ -433,6 +489,19 @@ func _on_submit(text: String) -> void:
 		_result_lbl.text = "✗  Wrong answer check the hint and try again."
 		panel.visible    = true
 		_input.select_all()
+		_shake(panel)
+
+# Quick side-to-side shake so a wrong answer is unmistakable even on a
+# repeated miss, not just a color change.
+func _shake(node: Control) -> void:
+	var base_x: float = node.position.x
+	var tw := create_tween()
+	tw.tween_property(node, "position:x", base_x - 10, 0.05)
+	tw.tween_property(node, "position:x", base_x + 10, 0.05)
+	tw.tween_property(node, "position:x", base_x - 8,  0.05)
+	tw.tween_property(node, "position:x", base_x + 8,  0.05)
+	tw.tween_property(node, "position:x", base_x - 4,  0.05)
+	tw.tween_property(node, "position:x", base_x,      0.05)
 
 func _on_hint() -> void:
 	_hint_visible      = not _hint_visible

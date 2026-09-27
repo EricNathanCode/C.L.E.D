@@ -30,11 +30,17 @@ func setup(data: Dictionary) -> void:
 	for ch in $SQLTerminal/SQLBlock.get_children(): ch.queue_free()
 	var row := HBoxContainer.new(); row.add_theme_constant_override("separation", 4)
 	$SQLTerminal/SQLBlock.add_child(row)
-	var pre := Label.new(); pre.text = "SELECT  "; _style_code_label(pre); row.add_child(pre)
+	var pre := Label.new(); pre.text = "SELECT  "; _style_keyword_label(pre); row.add_child(pre)
 	_blank = LineEdit.new(); _blank.placeholder_text = "function"
 	_blank.custom_minimum_size = Vector2(100, 0); _blank.max_length = 5
 	_blank.text_submitted.connect(func(_t): _on_execute()); _style_input(_blank); _wire_grow(_blank); row.add_child(_blank)
-	var suf := Label.new(); suf.text = "(" + data.get("column","col") + ")  FROM  " + data.get("table","table") + ";"; _style_code_label(suf); row.add_child(suf)
+	var suf := HBoxContainer.new(); suf.add_theme_constant_override("separation", 0); row.add_child(suf)
+	var suf_p1 := Label.new(); suf_p1.text = "("; _style_code_label(suf_p1); suf.add_child(suf_p1)
+	var suf_col := Label.new(); suf_col.text = data.get("column","col"); _style_identifier_label(suf_col); suf.add_child(suf_col)
+	var suf_p2 := Label.new(); suf_p2.text = ")  "; _style_code_label(suf_p2); suf.add_child(suf_p2)
+	var suf_kw := Label.new(); suf_kw.text = "FROM  "; _style_keyword_label(suf_kw); suf.add_child(suf_kw)
+	var suf_tbl := Label.new(); suf_tbl.text = data.get("table","table"); _style_identifier_label(suf_tbl); suf.add_child(suf_tbl)
+	var suf_p3 := Label.new(); suf_p3.text = ";"; _style_code_label(suf_p3); suf.add_child(suf_p3)
 	_fill_table($DataTable, data.get("table_headers",[]), data.get("table_rows",[]))
 	_blank.grab_focus()
 
@@ -86,6 +92,14 @@ func _style_input(inp: LineEdit) -> void:
 func _style_code_label(lbl: Label) -> void:
 	lbl.add_theme_font_size_override("font_size", 14)
 	lbl.add_theme_color_override("font_color", Color(0.78, 0.85, 0.95))
+
+func _style_keyword_label(lbl: Label) -> void:
+	lbl.add_theme_font_size_override("font_size", 14)
+	lbl.add_theme_color_override("font_color", Color(0.42, 0.69, 0.91))
+
+func _style_identifier_label(lbl: Label) -> void:
+	lbl.add_theme_font_size_override("font_size", 14)
+	lbl.add_theme_color_override("font_color", Color(0.96, 0.75, 0.30))
 
 func _add_code_line(txt: String) -> void:
 	var lbl := Label.new()
@@ -155,7 +169,7 @@ func _cell(txt: String, is_header: bool, min_w: float) -> PanelContainer:
 	s.content_margin_top  = 5;   s.content_margin_bottom = 5
 	pc.add_theme_stylebox_override("panel", s)
 	var lbl: Label = Label.new();  lbl.text = txt
-	if is_header: lbl.modulate = Color(1.0, 0.78, 0.0)
+	if is_header: lbl.modulate = Color(0.96, 0.75, 0.30)
 	elif txt == "NULL": lbl.modulate = Color(0.80, 0.35, 0.35)
 	pc.add_child(lbl);  return pc
 

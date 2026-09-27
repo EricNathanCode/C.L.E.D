@@ -27,8 +27,8 @@ func setup(data: Dictionary) -> void:
 	$Description.text   = data.get("desc", "")
 	$HintLabel.text     = "Hint: " + data.get("hint", "")
 	$TableLabel.text    = "TABLE: " + data.get("table", "[table]")
-	$SQLTerminal/SQLBlock/Line1.text       = "SELECT * FROM " + data.get("table", "[table]")
-	$SQLTerminal/SQLBlock/Line2/IsKeyword.text = "WHERE " + data.get("column", "[column]") + " IS "
+	$SQLTerminal/SQLBlock/Line1.text       = "[color=#6BB0E8]SELECT[/color] * [color=#6BB0E8]FROM[/color] [color=#F5BF4D]" + data.get("table", "[table]") + "[/color]"
+	$SQLTerminal/SQLBlock/Line2/IsKeyword.text = "[color=#6BB0E8]WHERE[/color] [color=#F5BF4D]" + data.get("column", "[column]") + "[/color] [color=#6BB0E8]IS[/color] "
 	$SQLTerminal/SQLBlock/Line2/Blank1.text = ""
 	$HintLabel.visible      = false
 	$ResultBox.visible      = false
@@ -155,7 +155,7 @@ func _cell(txt: String, is_header: bool, min_w: float) -> PanelContainer:
 	pc.add_theme_stylebox_override("panel", s)
 	var lbl: Label = Label.new();  lbl.text = txt
 	if is_header:
-		lbl.modulate = Color(1.0, 0.78, 0.0)
+		lbl.modulate = Color(0.96, 0.75, 0.30)
 	elif txt == "NULL":
 		lbl.modulate = Color(0.80, 0.35, 0.35)
 	pc.add_child(lbl);  return pc

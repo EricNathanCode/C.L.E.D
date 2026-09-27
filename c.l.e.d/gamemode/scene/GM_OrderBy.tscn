@@ -25,14 +25,22 @@ text = "> Fill in the blank:"
 [node name="SQLBlock" type="VBoxContainer" parent="SQLTerminal"]
 theme_override_constants/separation = 6
 
-[node name="Line1" type="Label" parent="SQLTerminal/SQLBlock"]
-text = "SELECT * FROM [table]"
+[node name="Line1" type="RichTextLabel" parent="SQLTerminal/SQLBlock"]
+bbcode_enabled = true
+text = "[color=#6BB0E8]SELECT[/color] * [color=#6BB0E8]FROM[/color] [color=#F5BF4D][table][/color]"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
 
 [node name="Line2" type="HBoxContainer" parent="SQLTerminal/SQLBlock"]
 theme_override_constants/separation = 2
 
-[node name="OrderKeyword" type="Label" parent="SQLTerminal/SQLBlock/Line2"]
-text = "ORDER BY [column]"
+[node name="OrderKeyword" type="RichTextLabel" parent="SQLTerminal/SQLBlock/Line2"]
+bbcode_enabled = true
+text = "[color=#6BB0E8]ORDER BY[/color] [color=#F5BF4D][column][/color]"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
 
 [node name="Blank1" type="LineEdit" parent="SQLTerminal/SQLBlock/Line2"]
 placeholder_text = "ASC / DESC"

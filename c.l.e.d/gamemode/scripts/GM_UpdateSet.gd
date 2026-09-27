@@ -31,8 +31,8 @@ func setup(data: Dictionary) -> void:
 	$Description.text                            = data.get("desc", "")
 	$HintLabel.text                              = "Hint: " + data.get("hint", "")
 	$TableLabel.text                             = "TABLE: " + data.get("table", "[table]")
-	$SQLTerminal/SQLBlock/Line1.text             = "UPDATE " + data.get("table", "[table]")
-	$SQLTerminal/SQLBlock/Line2/SetKeyword.text  = "SET " + data.get("column", "[column]") + " = '"
+	$SQLTerminal/SQLBlock/Line1.text             = "[color=#6BB0E8]UPDATE[/color] [color=#F5BF4D]" + data.get("table", "[table]") + "[/color]"
+	$SQLTerminal/SQLBlock/Line2/SetKeyword.text  = "[color=#6BB0E8]SET[/color] [color=#F5BF4D]" + data.get("column", "[column]") + "[/color] = '"
 	$SQLTerminal/SQLBlock/Line2/Blank1.text      = ""
 	$SQLTerminal/SQLBlock/Line3/Blank2.text      = ""
 	$HintLabel.visible = false;  $ResultBox.visible = false;  $ContinueButton.visible = false
@@ -149,7 +149,7 @@ func _cell(txt: String, is_header: bool, min_w: float) -> PanelContainer:
 	s.content_margin_top  = 5;   s.content_margin_bottom = 5
 	pc.add_theme_stylebox_override("panel", s)
 	var lbl: Label = Label.new();  lbl.text = txt
-	if is_header: lbl.modulate = Color(1.0, 0.78, 0.0)
+	if is_header: lbl.modulate = Color(0.96, 0.75, 0.30)
 	pc.add_child(lbl);  return pc
 
 # ── Shared button stylers ─────────────────────────────────

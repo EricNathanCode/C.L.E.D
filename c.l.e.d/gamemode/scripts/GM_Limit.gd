@@ -30,7 +30,12 @@ func setup(data: Dictionary) -> void:
 	for ch in $SQLTerminal/SQLBlock.get_children(): ch.queue_free()
 	var row := HBoxContainer.new(); row.add_theme_constant_override("separation", 4)
 	$SQLTerminal/SQLBlock.add_child(row)
-	var pre := Label.new(); pre.text = "SELECT * FROM " + data.get("table","table") + "  LIMIT  "; _style_code_label(pre); row.add_child(pre)
+	var pre := HBoxContainer.new(); pre.add_theme_constant_override("separation", 0); row.add_child(pre)
+	var pre_kw1 := Label.new(); pre_kw1.text = "SELECT "; _style_keyword_label(pre_kw1); pre.add_child(pre_kw1)
+	var pre_star := Label.new(); pre_star.text = "* "; _style_code_label(pre_star); pre.add_child(pre_star)
+	var pre_kw2 := Label.new(); pre_kw2.text = "FROM "; _style_keyword_label(pre_kw2); pre.add_child(pre_kw2)
+	var pre_tbl := Label.new(); pre_tbl.text = data.get("table","table"); _style_identifier_label(pre_tbl); pre.add_child(pre_tbl)
+	var pre_kw3 := Label.new(); pre_kw3.text = "  LIMIT  "; _style_keyword_label(pre_kw3); pre.add_child(pre_kw3)
 	_blank = LineEdit.new(); _blank.placeholder_text = "number"
 	_blank.custom_minimum_size = Vector2(70, 0); _blank.max_length = 4
 	_blank.text_submitted.connect(func(_t): _on_execute()); _style_input(_blank); _wire_grow(_blank); row.add_child(_blank)
@@ -86,6 +91,14 @@ func _style_input(inp: LineEdit) -> void:
 func _style_code_label(lbl: Label) -> void:
 	lbl.add_theme_font_size_override("font_size", 14)
 	lbl.add_theme_color_override("font_color", Color(0.78, 0.85, 0.95))
+
+func _style_keyword_label(lbl: Label) -> void:
+	lbl.add_theme_font_size_override("font_size", 14)
+	lbl.add_theme_color_override("font_color", Color(0.42, 0.69, 0.91))
+
+func _style_identifier_label(lbl: Label) -> void:
+	lbl.add_theme_font_size_override("font_size", 14)
+	lbl.add_theme_color_override("font_color", Color(0.96, 0.75, 0.30))
 
 func _add_code_line(txt: String) -> void:
 	var lbl := Label.new()
@@ -155,7 +168,7 @@ func _cell(txt: String, is_header: bool, min_w: float) -> PanelContainer:
 	s.content_margin_top  = 5;   s.content_margin_bottom = 5
 	pc.add_theme_stylebox_override("panel", s)
 	var lbl: Label = Label.new();  lbl.text = txt
-	if is_header: lbl.modulate = Color(1.0, 0.78, 0.0)
+	if is_header: lbl.modulate = Color(0.96, 0.75, 0.30)
 	elif txt == "NULL": lbl.modulate = Color(0.80, 0.35, 0.35)
 	pc.add_child(lbl);  return pc
 

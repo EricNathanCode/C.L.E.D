@@ -25,14 +25,22 @@ text = "> Fill in the blanks:"
 [node name="SQLBlock" type="VBoxContainer" parent="SQLTerminal"]
 theme_override_constants/separation = 6
 
-[node name="Line1" type="Label" parent="SQLTerminal/SQLBlock"]
-text = "UPDATE [table]"
+[node name="Line1" type="RichTextLabel" parent="SQLTerminal/SQLBlock"]
+bbcode_enabled = true
+text = "[color=#6BB0E8]UPDATE[/color] [color=#F5BF4D][table][/color]"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
 
 [node name="Line2" type="HBoxContainer" parent="SQLTerminal/SQLBlock"]
 theme_override_constants/separation = 2
 
-[node name="SetKeyword" type="Label" parent="SQLTerminal/SQLBlock/Line2"]
-text = "SET [column] = '"
+[node name="SetKeyword" type="RichTextLabel" parent="SQLTerminal/SQLBlock/Line2"]
+bbcode_enabled = true
+text = "[color=#6BB0E8]SET[/color] [color=#F5BF4D][column][/color] = '"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
 
 [node name="Blank1" type="LineEdit" parent="SQLTerminal/SQLBlock/Line2"]
 placeholder_text = "new value"
@@ -45,8 +53,12 @@ text = "'"
 [node name="Line3" type="HBoxContainer" parent="SQLTerminal/SQLBlock"]
 theme_override_constants/separation = 2
 
-[node name="WhereKeyword" type="Label" parent="SQLTerminal/SQLBlock/Line3"]
-text = "WHERE id ="
+[node name="WhereKeyword" type="RichTextLabel" parent="SQLTerminal/SQLBlock/Line3"]
+bbcode_enabled = true
+text = "[color=#6BB0E8]WHERE[/color] [color=#F5BF4D]id[/color] ="
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
 
 [node name="Blank2" type="LineEdit" parent="SQLTerminal/SQLBlock/Line3"]
 placeholder_text = "id"

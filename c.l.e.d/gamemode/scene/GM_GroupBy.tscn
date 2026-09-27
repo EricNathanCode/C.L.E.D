@@ -25,17 +25,29 @@ text = "> Fill in the blank:"
 [node name="SQLBlock" type="VBoxContainer" parent="SQLTerminal"]
 theme_override_constants/separation = 6
 
-[node name="Line1" type="Label" parent="SQLTerminal/SQLBlock"]
-text = "SELECT [column], COUNT(*)"
+[node name="Line1" type="RichTextLabel" parent="SQLTerminal/SQLBlock"]
+bbcode_enabled = true
+text = "[color=#6BB0E8]SELECT[/color] [color=#F5BF4D][column][/color], [color=#6BB0E8]COUNT[/color](*)"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
 
-[node name="Line2" type="Label" parent="SQLTerminal/SQLBlock"]
-text = "FROM [table]"
+[node name="Line2" type="RichTextLabel" parent="SQLTerminal/SQLBlock"]
+bbcode_enabled = true
+text = "[color=#6BB0E8]FROM[/color] [color=#F5BF4D][table][/color]"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
 
 [node name="Line3" type="HBoxContainer" parent="SQLTerminal/SQLBlock"]
 theme_override_constants/separation = 2
 
-[node name="GroupKeyword" type="Label" parent="SQLTerminal/SQLBlock/Line3"]
-text = "GROUP BY"
+[node name="GroupKeyword" type="RichTextLabel" parent="SQLTerminal/SQLBlock/Line3"]
+bbcode_enabled = true
+text = "[color=#6BB0E8]GROUP BY[/color]"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
 
 [node name="Blank1" type="LineEdit" parent="SQLTerminal/SQLBlock/Line3"]
 placeholder_text = "column name"
