@@ -87,6 +87,127 @@ const LESSONS: Dictionary = {
 		"char": "visitor",
 		"name": "COWORKER",
 		"npc":  "adult_7/talk",
+		"text": "Good instinct. Now let's slow down I want you to know each piece of that line, not just the whole thing."
+	},
+	{
+		"type": "dialogue",
+		"char": "visitor",
+		"name": "COWORKER",
+		"npc":  "adult_7/talk",
+		"text": "What's the very first word that tells the database 'go fetch me some rows'? Type just that word."
+	},
+	{
+		"type": "sql_fill",
+		"gamemode": "sql_blank",
+		"recap": "SELECT",
+		"desc": "Fill in the keyword that starts a query for retrieving data.",
+		"table": "books",
+		"table_headers": ["id", "title", "author", "genre"],
+		"table_rows": [
+			["1", "SQL Basics",      "Rivera",  "Technology"],
+			["2", "The Universe",    "Hawking", "Science"],
+			["3", "Brief History",   "Sagan",   "Science"],
+			["4", "Design Patterns", "GoF",     "Technology"],
+			["5", "Animal Farm",     "Orwell",  "Fiction"]
+		],
+		"code": "[BLANK] * FROM books;",
+		"answer": "SELECT",
+		"hint": "This is the very first word of almost every query that reads data back out of a table.",
+		"fail": [
+			{ "type": "dialogue", "char": "visitor", "name": "COWORKER", "npc": "adult_7/shock", "text": "That's not the keyword. Every retrieval query starts with the same word." },
+			{ "type": "dialogue", "char": "you",      "name": "YOU",      "npc": "adult_7/idle",  "text": "Right the keyword for 'fetch data' is SELECT." }
+		],
+		"result_headers": ["id", "title", "author", "genre"],
+		"result_rows": [
+			["1", "SQL Basics",      "Rivera",  "Technology"],
+			["2", "The Universe",    "Hawking", "Science"],
+			["3", "Brief History",   "Sagan",   "Science"],
+			["4", "Design Patterns", "GoF",     "Technology"],
+			["5", "Animal Farm",     "Orwell",  "Fiction"]
+		],
+		"result_msg": "SELECT is the keyword that starts a query. It always comes first."
+	},
+	{
+		"type": "dialogue",
+		"char": "visitor",
+		"name": "COWORKER",
+		"npc":  "adult_7/talk",
+		"text": "Right. Now, there's a keyword that says which table we're actually reading from. Fill that one in."
+	},
+	{
+		"type": "sql_fill",
+		"gamemode": "sql_blank",
+		"recap": "SELECT",
+		"desc": "Fill in the keyword that tells the database which table to read from.",
+		"table": "books",
+		"table_headers": ["id", "title", "author", "genre"],
+		"table_rows": [
+			["1", "SQL Basics",      "Rivera",  "Technology"],
+			["2", "The Universe",    "Hawking", "Science"],
+			["3", "Brief History",   "Sagan",   "Science"],
+			["4", "Design Patterns", "GoF",     "Technology"],
+			["5", "Animal Farm",     "Orwell",  "Fiction"]
+		],
+		"code": "SELECT * [BLANK] books;",
+		"answer": "FROM",
+		"hint": "This keyword points at the table name that comes right after it.",
+		"fail": [
+			{ "type": "dialogue", "char": "visitor", "name": "COWORKER", "npc": "adult_7/shock", "text": "Not quite. I need the keyword that sits right before the table name." },
+			{ "type": "dialogue", "char": "you",      "name": "YOU",      "npc": "adult_7/idle",  "text": "Got it the keyword before a table name is FROM." }
+		],
+		"result_headers": ["id", "title", "author", "genre"],
+		"result_rows": [
+			["1", "SQL Basics",      "Rivera",  "Technology"],
+			["2", "The Universe",    "Hawking", "Science"],
+			["3", "Brief History",   "Sagan",   "Science"],
+			["4", "Design Patterns", "GoF",     "Technology"],
+			["5", "Animal Farm",     "Orwell",  "Fiction"]
+		],
+		"result_msg": "FROM tells the database which table to read the rows from."
+	},
+	{
+		"type": "dialogue",
+		"char": "visitor",
+		"name": "COWORKER",
+		"npc":  "adult_7/talk",
+		"text": "Last piece which table are we actually pulling all these books from?"
+	},
+	{
+		"type": "sql_fill",
+		"gamemode": "sql_blank",
+		"recap": "SELECT",
+		"desc": "Fill in the table name this query is reading from.",
+		"table": "books",
+		"table_headers": ["id", "title", "author", "genre"],
+		"table_rows": [
+			["1", "SQL Basics",      "Rivera",  "Technology"],
+			["2", "The Universe",    "Hawking", "Science"],
+			["3", "Brief History",   "Sagan",   "Science"],
+			["4", "Design Patterns", "GoF",     "Technology"],
+			["5", "Animal Farm",     "Orwell",  "Fiction"]
+		],
+		"code": "SELECT * FROM [BLANK];",
+		"answer": "books",
+		"hint": "Look at the TABLE label above the query it's the exact name you need.",
+		"fail": [
+			{ "type": "dialogue", "char": "visitor", "name": "COWORKER", "npc": "adult_7/shock", "text": "That's not our table's name. Check the label above the query." },
+			{ "type": "dialogue", "char": "you",      "name": "YOU",      "npc": "adult_7/idle",  "text": "Right we're reading from the books table." }
+		],
+		"result_headers": ["id", "title", "author", "genre"],
+		"result_rows": [
+			["1", "SQL Basics",      "Rivera",  "Technology"],
+			["2", "The Universe",    "Hawking", "Science"],
+			["3", "Brief History",   "Sagan",   "Science"],
+			["4", "Design Patterns", "GoF",     "Technology"],
+			["5", "Animal Farm",     "Orwell",  "Fiction"]
+		],
+		"result_msg": "books is the table every one of these queries has been reading from."
+	},
+	{
+		"type": "dialogue",
+		"char": "visitor",
+		"name": "COWORKER",
+		"npc":  "adult_7/talk",
 		"text": "Perfect. SELECT * is the most basic query there is, and you'll type it constantly. Good start!"
 	},
 	{
@@ -150,6 +271,124 @@ const LESSONS: Dictionary = {
 		"name": "YOU",
 		"npc":  "adult_16/idle",
 		"text": "You're all set, Sofia! Your borrower ID is 5. You can borrow up to 5 books at a time."
+	},
+	{
+		"type": "dialogue",
+		"char": "visitor",
+		"name": "STUDENT",
+		"npc":  "adult_16/talk",
+		"text": "That's amazing! Before I go, can you show me exactly how that command was built? I'm curious."
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "adult_16/idle",
+		"text": "Sure! First word tells the database we're adding a brand new row. What is it?"
+	},
+	{
+		"type": "sql_fill",
+		"gamemode": "sql_blank",
+		"recap": "INSERT INTO",
+		"desc": "Fill in the first keyword of the two-word phrase that adds a new row.",
+		"table": "borrowers",
+		"table_headers": ["id", "first_name", "last_name", "membership_type"],
+		"table_rows": [
+			["1", "Carlos", "Reyes",  "Faculty"],
+			["2", "Ana",    "Torres", "Student"],
+			["3", "Miguel", "Cruz",   "Student"],
+			["4", "Rosa",   "Lim",    "Faculty"]
+		],
+		"code": "[BLANK] INTO borrowers (first_name, last_name, membership_type) VALUES ('Sofia', 'Mendez', 'Student');",
+		"answer": "INSERT",
+		"hint": "The phrase for adding a new row is two words together this is the first one.",
+		"fail": [
+			{ "type": "dialogue", "char": "visitor", "name": "STUDENT", "npc": "adult_16/confuse", "text": "That doesn't look right. What's the first word of that phrase?" },
+			{ "type": "dialogue", "char": "you",      "name": "YOU",     "npc": "adult_16/idle",   "text": "The phrase for adding a row starts with INSERT." }
+		],
+		"result_headers": ["id", "first_name", "last_name", "membership_type"],
+		"result_rows": [
+			["1", "Carlos", "Reyes",  "Faculty"],
+			["2", "Ana",    "Torres", "Student"],
+			["3", "Miguel", "Cruz",   "Student"],
+			["4", "Rosa",   "Lim",    "Faculty"],
+			["5", "Sofia",  "Mendez", "Student"]
+		],
+		"result_msg": "INSERT is the first word of the phrase INSERT INTO."
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "adult_16/idle",
+		"text": "And the second word of that same phrase, right before the table name?"
+	},
+	{
+		"type": "sql_fill",
+		"gamemode": "sql_blank",
+		"recap": "INSERT INTO",
+		"desc": "Fill in the second keyword of the two-word phrase that adds a new row.",
+		"table": "borrowers",
+		"table_headers": ["id", "first_name", "last_name", "membership_type"],
+		"table_rows": [
+			["1", "Carlos", "Reyes",  "Faculty"],
+			["2", "Ana",    "Torres", "Student"],
+			["3", "Miguel", "Cruz",   "Student"],
+			["4", "Rosa",   "Lim",    "Faculty"]
+		],
+		"code": "INSERT [BLANK] borrowers (first_name, last_name, membership_type) VALUES ('Sofia', 'Mendez', 'Student');",
+		"answer": "INTO",
+		"hint": "INSERT always pairs with this short word right before the table name.",
+		"fail": [
+			{ "type": "dialogue", "char": "visitor", "name": "STUDENT", "npc": "adult_16/confuse", "text": "Not quite. What's the second half of that phrase?" },
+			{ "type": "dialogue", "char": "you",      "name": "YOU",     "npc": "adult_16/idle",   "text": "INSERT always pairs with INTO right before the table." }
+		],
+		"result_headers": ["id", "first_name", "last_name", "membership_type"],
+		"result_rows": [
+			["1", "Carlos", "Reyes",  "Faculty"],
+			["2", "Ana",    "Torres", "Student"],
+			["3", "Miguel", "Cruz",   "Student"],
+			["4", "Rosa",   "Lim",    "Faculty"],
+			["5", "Sofia",  "Mendez", "Student"]
+		],
+		"result_msg": "INTO always follows INSERT, right before the table name."
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "adult_16/idle",
+		"text": "Last piece which table did I just add your record to?"
+	},
+	{
+		"type": "sql_fill",
+		"gamemode": "sql_blank",
+		"recap": "INSERT INTO",
+		"desc": "Fill in the table name this INSERT is adding a row to.",
+		"table": "borrowers",
+		"table_headers": ["id", "first_name", "last_name", "membership_type"],
+		"table_rows": [
+			["1", "Carlos", "Reyes",  "Faculty"],
+			["2", "Ana",    "Torres", "Student"],
+			["3", "Miguel", "Cruz",   "Student"],
+			["4", "Rosa",   "Lim",    "Faculty"]
+		],
+		"code": "INSERT INTO [BLANK] (first_name, last_name, membership_type) VALUES ('Sofia', 'Mendez', 'Student');",
+		"answer": "borrowers",
+		"hint": "Look at the TABLE label above the query it's the exact name you need.",
+		"fail": [
+			{ "type": "dialogue", "char": "visitor", "name": "STUDENT", "npc": "adult_16/confuse", "text": "That's not the right table name. Check the label above the query." },
+			{ "type": "dialogue", "char": "you",      "name": "YOU",     "npc": "adult_16/idle",   "text": "Right your record went into the borrowers table." }
+		],
+		"result_headers": ["id", "first_name", "last_name", "membership_type"],
+		"result_rows": [
+			["1", "Carlos", "Reyes",  "Faculty"],
+			["2", "Ana",    "Torres", "Student"],
+			["3", "Miguel", "Cruz",   "Student"],
+			["4", "Rosa",   "Lim",    "Faculty"],
+			["5", "Sofia",  "Mendez", "Student"]
+		],
+		"result_msg": "borrowers is the table every one of these INSERT statements has been writing to."
 	},
 	{
 		"type": "dialogue",
@@ -236,6 +475,139 @@ const LESSONS: Dictionary = {
 		"char": "librarian",
 		"name": "LIBRARIAN",
 		"npc":  "NPC_occupations/librarian/talk",
+		"text": "Good. Now walk me through that line piece by piece so you know it cold, not just as a whole."
+	},
+	{
+		"type": "dialogue",
+		"char": "librarian",
+		"name": "LIBRARIAN",
+		"npc":  "NPC_occupations/librarian/talk",
+		"text": "What's the very first word that tells the database 'go fetch me some rows'?"
+	},
+	{
+		"type": "sql_fill",
+		"gamemode": "sql_blank",
+		"recap": "SELECT WHERE",
+		"desc": "Fill in the keyword that starts a query for retrieving data.",
+		"table": "books",
+		"table_headers": ["id", "title", "author", "genre"],
+		"table_rows": [
+			["1",  "SQL Basics",       "Rivera",     "Technology"],
+			["2",  "The Universe",     "Hawking",    "Science"],
+			["3",  "Brief History",    "Sagan",      "Science"],
+			["4",  "Design Patterns",  "GoF",        "Technology"],
+			["5",  "The Great Gatsby", "Fitzgerald", "Fiction"],
+			["6",  "Clean Code",       "Martin",     "Technology"],
+			["7",  "Cosmos",           "Sagan",      "Science"],
+			["8",  "Database Design",  "Chen",       "Technology"],
+			["9",  "Animal Farm",      "Orwell",     "Fiction"],
+			["10", "Physics 101",      "Einstein",   "Science"]
+		],
+		"code": "[BLANK] * FROM books WHERE genre = 'Science';",
+		"answer": "SELECT",
+		"hint": "This is the very first word of almost every query that reads data back out of a table.",
+		"fail": [
+			{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "That's not the keyword. Every retrieval query starts with the same word." },
+			{ "type": "dialogue", "char": "you",       "name": "YOU",       "npc": "NPC_occupations/librarian/idle",  "text": "Right the keyword for 'fetch data' is SELECT." }
+		],
+		"result_headers": ["id", "title", "author", "genre"],
+		"result_rows": [
+			["2",  "The Universe",  "Hawking",  "Science"],
+			["3",  "Brief History", "Sagan",    "Science"],
+			["7",  "Cosmos",        "Sagan",    "Science"],
+			["10", "Physics 101",   "Einstein", "Science"]
+		],
+		"result_msg": "SELECT is the keyword that starts a query. It always comes first."
+	},
+	{
+		"type": "dialogue",
+		"char": "librarian",
+		"name": "LIBRARIAN",
+		"npc":  "NPC_occupations/librarian/talk",
+		"text": "Right. Now, there's a keyword that says which table we're actually reading from."
+	},
+	{
+		"type": "sql_fill",
+		"gamemode": "sql_blank",
+		"recap": "SELECT WHERE",
+		"desc": "Fill in the keyword that tells the database which table to read from.",
+		"table": "books",
+		"table_headers": ["id", "title", "author", "genre"],
+		"table_rows": [
+			["1",  "SQL Basics",       "Rivera",     "Technology"],
+			["2",  "The Universe",     "Hawking",    "Science"],
+			["3",  "Brief History",    "Sagan",      "Science"],
+			["4",  "Design Patterns",  "GoF",        "Technology"],
+			["5",  "The Great Gatsby", "Fitzgerald", "Fiction"],
+			["6",  "Clean Code",       "Martin",     "Technology"],
+			["7",  "Cosmos",           "Sagan",      "Science"],
+			["8",  "Database Design",  "Chen",       "Technology"],
+			["9",  "Animal Farm",      "Orwell",     "Fiction"],
+			["10", "Physics 101",      "Einstein",   "Science"]
+		],
+		"code": "SELECT * [BLANK] books WHERE genre = 'Science';",
+		"answer": "FROM",
+		"hint": "This keyword points at the table name that comes right after it.",
+		"fail": [
+			{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "Not quite. I need the keyword that sits right before the table name." },
+			{ "type": "dialogue", "char": "you",       "name": "YOU",       "npc": "NPC_occupations/librarian/idle",  "text": "Got it the keyword before a table name is FROM." }
+		],
+		"result_headers": ["id", "title", "author", "genre"],
+		"result_rows": [
+			["2",  "The Universe",  "Hawking",  "Science"],
+			["3",  "Brief History", "Sagan",    "Science"],
+			["7",  "Cosmos",        "Sagan",    "Science"],
+			["10", "Physics 101",   "Einstein", "Science"]
+		],
+		"result_msg": "FROM tells the database which table to read the rows from."
+	},
+	{
+		"type": "dialogue",
+		"char": "librarian",
+		"name": "LIBRARIAN",
+		"npc":  "NPC_occupations/librarian/talk",
+		"text": "Last piece which keyword actually filters the rows down to just Science?"
+	},
+	{
+		"type": "sql_fill",
+		"gamemode": "sql_blank",
+		"recap": "SELECT WHERE",
+		"desc": "Fill in the keyword that filters rows by a condition.",
+		"table": "books",
+		"table_headers": ["id", "title", "author", "genre"],
+		"table_rows": [
+			["1",  "SQL Basics",       "Rivera",     "Technology"],
+			["2",  "The Universe",     "Hawking",    "Science"],
+			["3",  "Brief History",    "Sagan",      "Science"],
+			["4",  "Design Patterns",  "GoF",        "Technology"],
+			["5",  "The Great Gatsby", "Fitzgerald", "Fiction"],
+			["6",  "Clean Code",       "Martin",     "Technology"],
+			["7",  "Cosmos",           "Sagan",      "Science"],
+			["8",  "Database Design",  "Chen",       "Technology"],
+			["9",  "Animal Farm",      "Orwell",     "Fiction"],
+			["10", "Physics 101",      "Einstein",   "Science"]
+		],
+		"code": "SELECT * FROM books [BLANK] genre = 'Science';",
+		"answer": "WHERE",
+		"hint": "This keyword comes right before the condition that narrows down the rows.",
+		"fail": [
+			{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "That's not the filtering keyword. It comes right before the condition." },
+			{ "type": "dialogue", "char": "you",       "name": "YOU",       "npc": "NPC_occupations/librarian/idle",  "text": "Right the filtering keyword is WHERE." }
+		],
+		"result_headers": ["id", "title", "author", "genre"],
+		"result_rows": [
+			["2",  "The Universe",  "Hawking",  "Science"],
+			["3",  "Brief History", "Sagan",    "Science"],
+			["7",  "Cosmos",        "Sagan",    "Science"],
+			["10", "Physics 101",   "Einstein", "Science"]
+		],
+		"result_msg": "WHERE is the keyword that filters rows down to those matching a condition."
+	},
+	{
+		"type": "dialogue",
+		"char": "librarian",
+		"name": "LIBRARIAN",
+		"npc":  "NPC_occupations/librarian/talk",
 		"text": "Perfect. That's exactly what the professor needed. Good database work."
 	},
 	{
@@ -309,6 +681,115 @@ const LESSONS: Dictionary = {
 		"char": "visitor",
 		"name": "BORROWER",
 		"npc":  "adult_8/talk",
+		"text": "Oh thank you so much! Out of curiosity, how does that update command actually work?"
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "adult_8/idle",
+		"text": "Happy to show you. What's the very first word that tells the database 'change an existing row'?"
+	},
+	{
+		"type": "sql_fill",
+		"gamemode": "sql_blank",
+		"recap": "UPDATE SET",
+		"desc": "Fill in the keyword that starts a query for changing an existing row.",
+		"table": "borrows",
+		"table_headers": ["id", "borrower_name", "book_title", "return_date"],
+		"table_rows": [
+			["1", "Maria Santos",  "SQL Basics",       "June 10"],
+			["2", "Mr. Tan",       "The Universe",     "June 15"],
+			["3", "Sofia Mendez",  "Brief History",    "June 20"],
+			["4", "Carlos Reyes",  "Clean Code",       "June 18"],
+			["5", "Ana Torres",    "Design Patterns",  "June 25"],
+			["6", "Kim Park",      "Cosmos",           "June 22"],
+			["7", "Rosa Lim",      "Physics 101",      "June 28"]
+		],
+		"code": "[BLANK] borrows SET return_date = 'June 30' WHERE id = 2;",
+		"answer": "UPDATE",
+		"hint": "This is the very first word of a query that changes data already in a table.",
+		"fail": [
+			{ "type": "dialogue", "char": "visitor", "name": "BORROWER", "npc": "adult_8/shock", "text": "That's not the keyword. Every change-a-row query starts with the same word." },
+			{ "type": "dialogue", "char": "you",      "name": "YOU",      "npc": "adult_8/idle",  "text": "Right the keyword for 'change a row' is UPDATE." }
+		],
+		"result_headers": ["id", "borrower_name", "book_title", "return_date"],
+		"result_rows": [["2", "Mr. Tan", "The Universe", "June 30"]],
+		"result_msg": "UPDATE is the keyword that starts a query that changes existing rows."
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "adult_8/idle",
+		"text": "Right. Now, there's a keyword that comes right before the column being changed."
+	},
+	{
+		"type": "sql_fill",
+		"gamemode": "sql_blank",
+		"recap": "UPDATE SET",
+		"desc": "Fill in the keyword that comes right before the column being changed.",
+		"table": "borrows",
+		"table_headers": ["id", "borrower_name", "book_title", "return_date"],
+		"table_rows": [
+			["1", "Maria Santos",  "SQL Basics",       "June 10"],
+			["2", "Mr. Tan",       "The Universe",     "June 15"],
+			["3", "Sofia Mendez",  "Brief History",    "June 20"],
+			["4", "Carlos Reyes",  "Clean Code",       "June 18"],
+			["5", "Ana Torres",    "Design Patterns",  "June 25"],
+			["6", "Kim Park",      "Cosmos",           "June 22"],
+			["7", "Rosa Lim",      "Physics 101",      "June 28"]
+		],
+		"code": "UPDATE borrows [BLANK] return_date = 'June 30' WHERE id = 2;",
+		"answer": "SET",
+		"hint": "This keyword sits right before the column-equals-new-value part of the query.",
+		"fail": [
+			{ "type": "dialogue", "char": "visitor", "name": "BORROWER", "npc": "adult_8/shock", "text": "Not quite. I need the keyword that sits right before the column name." },
+			{ "type": "dialogue", "char": "you",      "name": "YOU",      "npc": "adult_8/idle",  "text": "Got it the keyword before the column is SET." }
+		],
+		"result_headers": ["id", "borrower_name", "book_title", "return_date"],
+		"result_rows": [["2", "Mr. Tan", "The Universe", "June 30"]],
+		"result_msg": "SET tells the database which column to change and what to change it to."
+	},
+	{
+		"type": "dialogue",
+		"char": "you",
+		"name": "YOU",
+		"npc":  "adult_8/idle",
+		"text": "Last piece which keyword makes sure only YOUR record gets changed, not everyone's?"
+	},
+	{
+		"type": "sql_fill",
+		"gamemode": "sql_blank",
+		"recap": "UPDATE SET",
+		"desc": "Fill in the keyword that limits the update to a specific row.",
+		"table": "borrows",
+		"table_headers": ["id", "borrower_name", "book_title", "return_date"],
+		"table_rows": [
+			["1", "Maria Santos",  "SQL Basics",       "June 10"],
+			["2", "Mr. Tan",       "The Universe",     "June 15"],
+			["3", "Sofia Mendez",  "Brief History",    "June 20"],
+			["4", "Carlos Reyes",  "Clean Code",       "June 18"],
+			["5", "Ana Torres",    "Design Patterns",  "June 25"],
+			["6", "Kim Park",      "Cosmos",           "June 22"],
+			["7", "Rosa Lim",      "Physics 101",      "June 28"]
+		],
+		"code": "UPDATE borrows SET return_date = 'June 30' [BLANK] id = 2;",
+		"answer": "WHERE",
+		"hint": "Without this keyword, every row in the table would get updated instead of just one.",
+		"fail": [
+			{ "type": "dialogue", "char": "visitor", "name": "BORROWER", "npc": "adult_8/shock", "text": "That's not the keyword that targets one row. Everyone's date would change without it!" },
+			{ "type": "dialogue", "char": "you",      "name": "YOU",      "npc": "adult_8/idle",  "text": "Right the keyword to target one row is WHERE." }
+		],
+		"result_headers": ["id", "borrower_name", "book_title", "return_date"],
+		"result_rows": [["2", "Mr. Tan", "The Universe", "June 30"]],
+		"result_msg": "WHERE keeps UPDATE from changing every row it targets just the ones matching the condition."
+	},
+	{
+		"type": "dialogue",
+		"char": "visitor",
+		"name": "BORROWER",
+		"npc":  "adult_8/talk",
 		"text": "Oh thank you so much! You've been incredibly helpful."
 	},
 	{
@@ -374,6 +855,115 @@ const LESSONS: Dictionary = {
 		"name": "YOU",
 		"npc":  "NPC_occupations/librarian/idle",
 		"text": "Done! Sofia Mendez's overdue record has been cleared from the list."
+	},
+	{
+		"type": "dialogue",
+		"char": "librarian",
+		"name": "LIBRARIAN",
+		"npc":  "NPC_occupations/librarian/talk",
+		"text": "Good. Before you go, walk me through that command piece by piece. I want you to know it cold."
+	},
+	{
+		"type": "dialogue",
+		"char": "librarian",
+		"name": "LIBRARIAN",
+		"npc":  "NPC_occupations/librarian/talk",
+		"text": "What's the very first word that tells the database 'remove a row'?"
+	},
+	{
+		"type": "sql_fill",
+		"gamemode": "sql_blank",
+		"recap": "DELETE",
+		"desc": "Fill in the keyword that starts a query for removing a row.",
+		"table": "overdue",
+		"table_headers": ["id", "borrower_name", "book_title", "days_overdue"],
+		"table_rows": [
+			["1", "Carlos Reyes",  "SQL Basics",       "7"],
+			["2", "Ana Torres",    "The Universe",     "3"],
+			["3", "Sofia Mendez",  "SQL Basics",       "14"],
+			["4", "Miguel Cruz",   "Design Patterns",  "21"],
+			["5", "Rosa Lim",      "Clean Code",       "5"],
+			["6", "James Park",    "Brief History",    "9"],
+			["7", "Kim Santos",    "Cosmos",           "2"]
+		],
+		"code": "[BLANK] FROM overdue WHERE id = 3;",
+		"answer": "DELETE",
+		"hint": "This is the very first word of a query that removes a row from a table.",
+		"fail": [
+			{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "That's not the keyword. Every row-removal query starts with the same word." },
+			{ "type": "dialogue", "char": "you",       "name": "YOU",       "npc": "NPC_occupations/librarian/idle",  "text": "Right the keyword for 'remove a row' is DELETE." }
+		],
+		"result_headers": ["STATUS"],
+		"result_rows": [["Record with id = 3 has been removed."]],
+		"result_msg": "DELETE is the keyword that starts a query that removes rows."
+	},
+	{
+		"type": "dialogue",
+		"char": "librarian",
+		"name": "LIBRARIAN",
+		"npc":  "NPC_occupations/librarian/talk",
+		"text": "Right. Now, there's a keyword that says which table we're removing from."
+	},
+	{
+		"type": "sql_fill",
+		"gamemode": "sql_blank",
+		"recap": "DELETE",
+		"desc": "Fill in the keyword that tells the database which table to remove from.",
+		"table": "overdue",
+		"table_headers": ["id", "borrower_name", "book_title", "days_overdue"],
+		"table_rows": [
+			["1", "Carlos Reyes",  "SQL Basics",       "7"],
+			["2", "Ana Torres",    "The Universe",     "3"],
+			["3", "Sofia Mendez",  "SQL Basics",       "14"],
+			["4", "Miguel Cruz",   "Design Patterns",  "21"],
+			["5", "Rosa Lim",      "Clean Code",       "5"],
+			["6", "James Park",    "Brief History",    "9"],
+			["7", "Kim Santos",    "Cosmos",           "2"]
+		],
+		"code": "DELETE [BLANK] overdue WHERE id = 3;",
+		"answer": "FROM",
+		"hint": "This keyword points at the table name that comes right after it.",
+		"fail": [
+			{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "Not quite. I need the keyword that sits right before the table name." },
+			{ "type": "dialogue", "char": "you",       "name": "YOU",       "npc": "NPC_occupations/librarian/idle",  "text": "Got it the keyword before a table name is FROM." }
+		],
+		"result_headers": ["STATUS"],
+		"result_rows": [["Record with id = 3 has been removed."]],
+		"result_msg": "FROM tells the database which table to remove the row from."
+	},
+	{
+		"type": "dialogue",
+		"char": "librarian",
+		"name": "LIBRARIAN",
+		"npc":  "NPC_occupations/librarian/talk",
+		"text": "Last piece which keyword makes sure only THAT one record gets deleted, not the whole table?"
+	},
+	{
+		"type": "sql_fill",
+		"gamemode": "sql_blank",
+		"recap": "DELETE",
+		"desc": "Fill in the keyword that limits the delete to a specific row.",
+		"table": "overdue",
+		"table_headers": ["id", "borrower_name", "book_title", "days_overdue"],
+		"table_rows": [
+			["1", "Carlos Reyes",  "SQL Basics",       "7"],
+			["2", "Ana Torres",    "The Universe",     "3"],
+			["3", "Sofia Mendez",  "SQL Basics",       "14"],
+			["4", "Miguel Cruz",   "Design Patterns",  "21"],
+			["5", "Rosa Lim",      "Clean Code",       "5"],
+			["6", "James Park",    "Brief History",    "9"],
+			["7", "Kim Santos",    "Cosmos",           "2"]
+		],
+		"code": "DELETE FROM overdue [BLANK] id = 3;",
+		"answer": "WHERE",
+		"hint": "Without this keyword, every row in the table would be deleted instead of just one.",
+		"fail": [
+			{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "That's not the keyword that targets one row. The whole table would be wiped without it!" },
+			{ "type": "dialogue", "char": "you",       "name": "YOU",       "npc": "NPC_occupations/librarian/idle",  "text": "Right the keyword to target one row is WHERE." }
+		],
+		"result_headers": ["STATUS"],
+		"result_rows": [["Record with id = 3 has been removed."]],
+		"result_msg": "WHERE keeps DELETE from wiping every row it targets just the one matching the condition."
 	},
 	{
 		"type": "dialogue",
@@ -535,7 +1125,110 @@ const LESSONS: Dictionary = {
 		"char": "librarian",
 		"name": "LIBRARIAN",
 		"npc":  "NPC_occupations/librarian/talk",
-		"text": "Perfect. ASC for A-to-Z, DESC for Z-to-A. Now you've got both directions down."
+		"text": "Perfect. Before you move on, walk me through the sorting keywords themselves I want you to know them cold."
+	},
+	{
+		"type": "dialogue",
+		"char": "librarian",
+		"name": "LIBRARIAN",
+		"npc":  "NPC_occupations/librarian/talk",
+		"text": "What's the very first word of the two-word phrase that sorts query results?"
+	},
+	{
+		"type": "sql_fill",
+		"gamemode": "sql_blank",
+		"recap": "ORDER BY",
+		"desc": "Fill in the first keyword of the two-word phrase that sorts query results.",
+		"table": "books",
+		"table_headers": ["id", "title", "author", "genre"],
+		"table_rows": [
+			["1",  "SQL Basics",       "Rivera",     "Technology"],
+			["2",  "The Universe",     "Hawking",    "Science"],
+			["3",  "Brief History",    "Sagan",      "Science"],
+			["4",  "Design Patterns",  "GoF",        "Technology"],
+			["5",  "The Great Gatsby", "Fitzgerald", "Fiction"],
+			["6",  "Clean Code",       "Martin",     "Technology"],
+			["7",  "Cosmos",           "Sagan",      "Science"],
+			["8",  "Database Design",  "Chen",       "Technology"],
+			["9",  "Animal Farm",      "Orwell",     "Fiction"],
+			["10", "Physics 101",      "Einstein",   "Science"]
+		],
+		"code": "SELECT * FROM books [BLANK] BY title DESC;",
+		"answer": "ORDER",
+		"hint": "The sorting phrase is two words together this is the first one.",
+		"fail": [
+			{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "That's not the first word of the sorting phrase. Try again." },
+			{ "type": "dialogue", "char": "you",       "name": "YOU",       "npc": "NPC_occupations/librarian/idle",  "text": "The sorting phrase starts with ORDER." }
+		],
+		"result_headers": ["id", "title", "author", "genre"],
+		"result_rows": [
+			["2",  "The Universe",     "Hawking",    "Science"],
+			["5",  "The Great Gatsby", "Fitzgerald", "Fiction"],
+			["1",  "SQL Basics",       "Rivera",     "Technology"],
+			["10", "Physics 101",      "Einstein",   "Science"],
+			["4",  "Design Patterns",  "GoF",        "Technology"],
+			["8",  "Database Design",  "Chen",       "Technology"],
+			["7",  "Cosmos",           "Sagan",      "Science"],
+			["6",  "Clean Code",       "Martin",     "Technology"],
+			["3",  "Brief History",    "Sagan",      "Science"],
+			["9",  "Animal Farm",      "Orwell",     "Fiction"]
+		],
+		"result_msg": "ORDER is the first word of the sorting phrase ORDER BY."
+	},
+	{
+		"type": "dialogue",
+		"char": "librarian",
+		"name": "LIBRARIAN",
+		"npc":  "NPC_occupations/librarian/talk",
+		"text": "Good. And the second word of that same phrase?"
+	},
+	{
+		"type": "sql_fill",
+		"gamemode": "sql_blank",
+		"recap": "ORDER BY",
+		"desc": "Fill in the second keyword of the two-word phrase that sorts query results.",
+		"table": "books",
+		"table_headers": ["id", "title", "author", "genre"],
+		"table_rows": [
+			["1",  "SQL Basics",       "Rivera",     "Technology"],
+			["2",  "The Universe",     "Hawking",    "Science"],
+			["3",  "Brief History",    "Sagan",      "Science"],
+			["4",  "Design Patterns",  "GoF",        "Technology"],
+			["5",  "The Great Gatsby", "Fitzgerald", "Fiction"],
+			["6",  "Clean Code",       "Martin",     "Technology"],
+			["7",  "Cosmos",           "Sagan",      "Science"],
+			["8",  "Database Design",  "Chen",       "Technology"],
+			["9",  "Animal Farm",      "Orwell",     "Fiction"],
+			["10", "Physics 101",      "Einstein",   "Science"]
+		],
+		"code": "SELECT * FROM books ORDER [BLANK] title ASC;",
+		"answer": "BY",
+		"hint": "ORDER always pairs with this short word right before the column name.",
+		"fail": [
+			{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "Not quite. What's the second half of that sorting phrase?" },
+			{ "type": "dialogue", "char": "you",       "name": "YOU",       "npc": "NPC_occupations/librarian/idle",  "text": "ORDER always pairs with BY right before the column." }
+		],
+		"result_headers": ["id", "title", "author", "genre"],
+		"result_rows": [
+			["9",  "Animal Farm",      "Orwell",     "Fiction"],
+			["3",  "Brief History",    "Sagan",      "Science"],
+			["6",  "Clean Code",       "Martin",     "Technology"],
+			["7",  "Cosmos",           "Sagan",      "Science"],
+			["8",  "Database Design",  "Chen",       "Technology"],
+			["4",  "Design Patterns",  "GoF",        "Technology"],
+			["10", "Physics 101",      "Einstein",   "Science"],
+			["1",  "SQL Basics",       "Rivera",     "Technology"],
+			["5",  "The Great Gatsby", "Fitzgerald", "Fiction"],
+			["2",  "The Universe",     "Hawking",    "Science"]
+		],
+		"result_msg": "BY always follows ORDER, right before the column name."
+	},
+	{
+		"type": "dialogue",
+		"char": "librarian",
+		"name": "LIBRARIAN",
+		"npc":  "NPC_occupations/librarian/talk",
+		"text": "Perfect. ASC for A-to-Z, DESC for Z-to-A, and ORDER BY ties it all together. Now you've got it down."
 	},
 	{
 		"type": "end"
@@ -614,7 +1307,137 @@ const LESSONS: Dictionary = {
 		"char": "librarian",
 		"name": "LIBRARIAN",
 		"npc":  "NPC_occupations/librarian/think",
-		"text": "We're balanced on Technology and Science but light on Fiction. That helps me plan next year's budget. Excellent."
+		"text": "We're balanced on Technology and Science but light on Fiction. Now walk me through the rest of that query too."
+	},
+	{
+		"type": "dialogue",
+		"char": "librarian",
+		"name": "LIBRARIAN",
+		"npc":  "NPC_occupations/librarian/talk",
+		"text": "What's the very first word that tells the database 'go fetch me some rows'?"
+	},
+	{
+		"type": "sql_fill",
+		"gamemode": "sql_blank",
+		"recap": "GROUP BY",
+		"desc": "Fill in the keyword that starts a query for retrieving data.",
+		"table": "books",
+		"table_headers": ["id", "title", "genre"],
+		"table_rows": [
+			["1",  "SQL Basics",       "Technology"],
+			["2",  "The Universe",     "Science"],
+			["3",  "Brief History",    "Science"],
+			["4",  "Design Patterns",  "Technology"],
+			["5",  "The Great Gatsby", "Fiction"],
+			["6",  "Clean Code",       "Technology"],
+			["7",  "Cosmos",           "Science"],
+			["8",  "Database Design",  "Technology"],
+			["9",  "Animal Farm",      "Fiction"],
+			["10", "Physics 101",      "Science"]
+		],
+		"code": "[BLANK] genre, COUNT(*) FROM books GROUP BY genre;",
+		"answer": "SELECT",
+		"hint": "This is the very first word of almost every query that reads data back out of a table.",
+		"fail": [
+			{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "That's not the keyword. Every retrieval query starts with the same word." },
+			{ "type": "dialogue", "char": "you",       "name": "YOU",       "npc": "NPC_occupations/librarian/idle",  "text": "Right the keyword for 'fetch data' is SELECT." }
+		],
+		"result_headers": ["genre", "COUNT(*)"],
+		"result_rows": [
+			["Technology", "4"],
+			["Science",    "4"],
+			["Fiction",    "2"]
+		],
+		"result_msg": "SELECT is the keyword that starts a query. It always comes first."
+	},
+	{
+		"type": "dialogue",
+		"char": "librarian",
+		"name": "LIBRARIAN",
+		"npc":  "NPC_occupations/librarian/talk",
+		"text": "Right. Now, there's a keyword that says which table we're actually reading from."
+	},
+	{
+		"type": "sql_fill",
+		"gamemode": "sql_blank",
+		"recap": "GROUP BY",
+		"desc": "Fill in the keyword that tells the database which table to read from.",
+		"table": "books",
+		"table_headers": ["id", "title", "genre"],
+		"table_rows": [
+			["1",  "SQL Basics",       "Technology"],
+			["2",  "The Universe",     "Science"],
+			["3",  "Brief History",    "Science"],
+			["4",  "Design Patterns",  "Technology"],
+			["5",  "The Great Gatsby", "Fiction"],
+			["6",  "Clean Code",       "Technology"],
+			["7",  "Cosmos",           "Science"],
+			["8",  "Database Design",  "Technology"],
+			["9",  "Animal Farm",      "Fiction"],
+			["10", "Physics 101",      "Science"]
+		],
+		"code": "SELECT genre, COUNT(*) [BLANK] books GROUP BY genre;",
+		"answer": "FROM",
+		"hint": "This keyword points at the table name that comes right after it.",
+		"fail": [
+			{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "Not quite. I need the keyword that sits right before the table name." },
+			{ "type": "dialogue", "char": "you",       "name": "YOU",       "npc": "NPC_occupations/librarian/idle",  "text": "Got it the keyword before a table name is FROM." }
+		],
+		"result_headers": ["genre", "COUNT(*)"],
+		"result_rows": [
+			["Technology", "4"],
+			["Science",    "4"],
+			["Fiction",    "2"]
+		],
+		"result_msg": "FROM tells the database which table to read the rows from."
+	},
+	{
+		"type": "dialogue",
+		"char": "librarian",
+		"name": "LIBRARIAN",
+		"npc":  "NPC_occupations/librarian/talk",
+		"text": "Last piece which keyword starts the phrase that groups the rows together?"
+	},
+	{
+		"type": "sql_fill",
+		"gamemode": "sql_blank",
+		"recap": "GROUP BY",
+		"desc": "Fill in the first keyword of the two-word phrase that groups rows together.",
+		"table": "books",
+		"table_headers": ["id", "title", "genre"],
+		"table_rows": [
+			["1",  "SQL Basics",       "Technology"],
+			["2",  "The Universe",     "Science"],
+			["3",  "Brief History",    "Science"],
+			["4",  "Design Patterns",  "Technology"],
+			["5",  "The Great Gatsby", "Fiction"],
+			["6",  "Clean Code",       "Technology"],
+			["7",  "Cosmos",           "Science"],
+			["8",  "Database Design",  "Technology"],
+			["9",  "Animal Farm",      "Fiction"],
+			["10", "Physics 101",      "Science"]
+		],
+		"code": "SELECT genre, COUNT(*) FROM books [BLANK] BY genre;",
+		"answer": "GROUP",
+		"hint": "The grouping phrase is two words together this is the first one.",
+		"fail": [
+			{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "That's not the first word of the grouping phrase. Try again." },
+			{ "type": "dialogue", "char": "you",       "name": "YOU",       "npc": "NPC_occupations/librarian/idle",  "text": "The grouping phrase starts with GROUP." }
+		],
+		"result_headers": ["genre", "COUNT(*)"],
+		"result_rows": [
+			["Technology", "4"],
+			["Science",    "4"],
+			["Fiction",    "2"]
+		],
+		"result_msg": "GROUP is the first word of the phrase GROUP BY, which collapses rows sharing a value into one."
+	},
+	{
+		"type": "dialogue",
+		"char": "librarian",
+		"name": "LIBRARIAN",
+		"npc":  "NPC_occupations/librarian/talk",
+		"text": "Now you know every piece of it. That's excellent database work for the budget proposal."
 	},
 	{
 		"type": "end"
@@ -747,6 +1570,87 @@ const LESSONS: Dictionary = {
 		"char": "librarian",
 		"name": "LIBRARIAN",
 		"npc":  "NPC_occupations/librarian/talk",
+		"text": "Perfect. Before you go, walk me through the rest of that query too, not just the NULL part."
+	},
+	{
+		"type": "dialogue",
+		"char": "librarian",
+		"name": "LIBRARIAN",
+		"npc":  "NPC_occupations/librarian/talk",
+		"text": "What keyword actually filters the rows down to the ones we care about?"
+	},
+	{
+		"type": "sql_fill",
+		"gamemode": "sql_blank",
+		"recap": "IS NULL / IS NOT NULL",
+		"desc": "Fill in the keyword that filters rows by a condition.",
+		"table": "borrows",
+		"table_headers": ["id", "borrower", "book", "return_date"],
+		"table_rows": [
+			["1", "Maria Santos",  "SQL Basics",      "June 10"],
+			["2", "Mr. Tan",       "The Universe",    ""],
+			["3", "Sofia Mendez",  "Brief History",   "June 20"],
+			["4", "Carlos Reyes",  "Clean Code",      ""],
+			["5", "Ana Torres",    "Design Patterns", "June 25"],
+			["6", "Kim Park",      "Cosmos",          ""]
+		],
+		"code": "SELECT * FROM borrows [BLANK] return_date IS NULL;",
+		"answer": "WHERE",
+		"hint": "This keyword comes right before the condition that narrows down the rows.",
+		"fail": [
+			{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "That's not the filtering keyword. It comes right before the condition." },
+			{ "type": "dialogue", "char": "you",       "name": "YOU",       "npc": "NPC_occupations/librarian/idle",  "text": "Right the filtering keyword is WHERE." }
+		],
+		"result_headers": ["id", "borrower", "book", "return_date"],
+		"result_rows": [
+			["2", "Mr. Tan",      "The Universe", "NULL"],
+			["4", "Carlos Reyes", "Clean Code",   "NULL"],
+			["6", "Kim Park",     "Cosmos",       "NULL"]
+		],
+		"result_msg": "WHERE is the keyword that filters rows down to those matching a condition."
+	},
+	{
+		"type": "dialogue",
+		"char": "librarian",
+		"name": "LIBRARIAN",
+		"npc":  "NPC_occupations/librarian/talk",
+		"text": "Last piece which word comes right before NULL to check if a value is missing?"
+	},
+	{
+		"type": "sql_fill",
+		"gamemode": "sql_blank",
+		"recap": "IS NULL / IS NOT NULL",
+		"desc": "Fill in the keyword that pairs with NULL to test for a missing value.",
+		"table": "borrows",
+		"table_headers": ["id", "borrower", "book", "return_date"],
+		"table_rows": [
+			["1", "Maria Santos",  "SQL Basics",      "June 10"],
+			["2", "Mr. Tan",       "The Universe",    ""],
+			["3", "Sofia Mendez",  "Brief History",   "June 20"],
+			["4", "Carlos Reyes",  "Clean Code",      ""],
+			["5", "Ana Torres",    "Design Patterns", "June 25"],
+			["6", "Kim Park",      "Cosmos",          ""]
+		],
+		"code": "SELECT * FROM borrows WHERE return_date [BLANK] NULL;",
+		"answer": "IS",
+		"hint": "NULL is never checked with an equals sign this short word pairs with it instead.",
+		"fail": [
+			{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "That's not right. NULL always pairs with a specific keyword, never an equals sign." },
+			{ "type": "dialogue", "char": "you",       "name": "YOU",       "npc": "NPC_occupations/librarian/idle",  "text": "Right the keyword that pairs with NULL is IS." }
+		],
+		"result_headers": ["id", "borrower", "book", "return_date"],
+		"result_rows": [
+			["2", "Mr. Tan",      "The Universe", "NULL"],
+			["4", "Carlos Reyes", "Clean Code",   "NULL"],
+			["6", "Kim Park",     "Cosmos",       "NULL"]
+		],
+		"result_msg": "IS is the keyword that pairs with NULL you can never use = NULL in SQL."
+	},
+	{
+		"type": "dialogue",
+		"char": "librarian",
+		"name": "LIBRARIAN",
+		"npc":  "NPC_occupations/librarian/talk",
 		"text": "Perfect. IS NULL for missing data, IS NOT NULL for what's actually there. Both are useful."
 	},
 	{
@@ -783,6 +1687,65 @@ const LESSONS: Dictionary = {
 	  "text": "Sci-Fi, Fiction, Drama. DISTINCT is exactly what I needed for the genre catalogue display." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
 	  "text": "Without DISTINCT you would see Sci-Fi three times and Drama twice, which looks unprofessional." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "Walk me through the rest of that line too, word by word." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "What's the very first word that tells the database 'go fetch me some rows'?" },
+	{ "type": "sql_fill", "gamemode": "sql_blank",
+	  "recap": "SELECT DISTINCT",
+	  "desc": "Fill in the keyword that starts a query for retrieving data.",
+	  "table": "books",
+	  "table_headers": ["id","title","author","genre"],
+	  "table_rows": [["1","Dune","Herbert","Sci-Fi"],["2","1984","Orwell","Fiction"],["3","Foundation","Asimov","Sci-Fi"],["4","Hamlet","Shakespeare","Drama"],["5","Neuromancer","Gibson","Sci-Fi"],["6","Macbeth","Shakespeare","Drama"]],
+	  "code": "[BLANK] DISTINCT genre FROM books;",
+	  "answer": "SELECT",
+	  "hint": "This is the very first word of almost every query that reads data back out of a table.",
+	  "result_headers": ["genre"],
+	  "result_rows": [["Sci-Fi"],["Fiction"],["Drama"]],
+	  "result_msg": "SELECT is the keyword that starts a query. It always comes first.",
+	  "fail": [
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "That's not the keyword. Every retrieval query starts with the same word." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle", "text": "Right the keyword for 'fetch data' is SELECT." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "Right. And what's the keyword that strips out the duplicate values?" },
+	{ "type": "sql_fill", "gamemode": "sql_blank",
+	  "recap": "SELECT DISTINCT",
+	  "desc": "Fill in the keyword that removes duplicate values from the results.",
+	  "table": "books",
+	  "table_headers": ["id","title","author","genre"],
+	  "table_rows": [["1","Dune","Herbert","Sci-Fi"],["2","1984","Orwell","Fiction"],["3","Foundation","Asimov","Sci-Fi"],["4","Hamlet","Shakespeare","Drama"],["5","Neuromancer","Gibson","Sci-Fi"],["6","Macbeth","Shakespeare","Drama"]],
+	  "code": "SELECT [BLANK] genre FROM books;",
+	  "answer": "DISTINCT",
+	  "hint": "This keyword sits right after SELECT and collapses repeated values down to one each.",
+	  "result_headers": ["genre"],
+	  "result_rows": [["Sci-Fi"],["Fiction"],["Drama"]],
+	  "result_msg": "DISTINCT removes duplicate values, leaving only unique ones.",
+	  "fail": [
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "That's not the keyword. I need the one that removes the duplicates." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle", "text": "The duplicate-removing keyword is DISTINCT." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "Last piece which keyword says which table we're reading from?" },
+	{ "type": "sql_fill", "gamemode": "sql_blank",
+	  "recap": "SELECT DISTINCT",
+	  "desc": "Fill in the keyword that tells the database which table to read from.",
+	  "table": "books",
+	  "table_headers": ["id","title","author","genre"],
+	  "table_rows": [["1","Dune","Herbert","Sci-Fi"],["2","1984","Orwell","Fiction"],["3","Foundation","Asimov","Sci-Fi"],["4","Hamlet","Shakespeare","Drama"],["5","Neuromancer","Gibson","Sci-Fi"],["6","Macbeth","Shakespeare","Drama"]],
+	  "code": "SELECT DISTINCT genre [BLANK] books;",
+	  "answer": "FROM",
+	  "hint": "This keyword points at the table name that comes right after it.",
+	  "result_headers": ["genre"],
+	  "result_rows": [["Sci-Fi"],["Fiction"],["Drama"]],
+	  "result_msg": "FROM tells the database which table to read the rows from.",
+	  "fail": [
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "Not quite. I need the keyword that sits right before the table name." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle", "text": "Got it the keyword before a table name is FROM." }
+	  ]
+	},
 	{ "type": "end" }
 ],
 
@@ -842,6 +1805,46 @@ const LESSONS: Dictionary = {
 	  "text": "4 books for the shelf. OR is much more inclusive than AND." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
 	  "text": "Exactly. AND narrows results down both conditions must hold. OR widens them either one will do." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "Before you go, walk me through the rest of that query too not just the connector." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "What's the very first word that tells the database 'go fetch me some rows'?" },
+	{ "type": "sql_fill", "gamemode": "sql_blank",
+	  "recap": "AND / OR",
+	  "desc": "Fill in the keyword that starts a query for retrieving data.",
+	  "table": "books",
+	  "table_headers": ["id","title","genre","status"],
+	  "table_rows": [["1","Dune","Sci-Fi","Available"],["2","1984","Fiction","Available"],["3","Foundation","Sci-Fi","Borrowed"],["4","Neuromancer","Sci-Fi","Available"],["5","Hamlet","Drama","Available"]],
+	  "code": "[BLANK] * FROM books WHERE genre = 'Sci-Fi' AND status = 'Available';",
+	  "answer": "SELECT",
+	  "hint": "This is the very first word of almost every query that reads data back out of a table.",
+	  "result_headers": ["id","title","genre","status"],
+	  "result_rows": [["1","Dune","Sci-Fi","Available"],["4","Neuromancer","Sci-Fi","Available"]],
+	  "result_msg": "SELECT is the keyword that starts a query. It always comes first.",
+	  "fail": [
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "That's not the keyword. Every retrieval query starts with the same word." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle", "text": "Right the keyword for 'fetch data' is SELECT." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "Right. And which keyword tells the database which table we're reading from?" },
+	{ "type": "sql_fill", "gamemode": "sql_blank",
+	  "recap": "AND / OR",
+	  "desc": "Fill in the keyword that tells the database which table to read from.",
+	  "table": "books",
+	  "table_headers": ["id","title","genre","status"],
+	  "table_rows": [["1","Dune","Sci-Fi","Available"],["2","1984","Fiction","Available"],["3","Foundation","Sci-Fi","Borrowed"],["4","Neuromancer","Sci-Fi","Available"],["5","Hamlet","Drama","Available"]],
+	  "code": "SELECT * [BLANK] books WHERE genre = 'Sci-Fi' AND status = 'Available';",
+	  "answer": "FROM",
+	  "hint": "This keyword points at the table name that comes right after it.",
+	  "result_headers": ["id","title","genre","status"],
+	  "result_rows": [["1","Dune","Sci-Fi","Available"],["4","Neuromancer","Sci-Fi","Available"]],
+	  "result_msg": "FROM tells the database which table to read the rows from.",
+	  "fail": [
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "Not quite. I need the keyword that sits right before the table name." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle", "text": "Got it the keyword before a table name is FROM." }
+	  ]
+	},
 	{ "type": "end" }
 ],
 
@@ -876,6 +1879,65 @@ const LESSONS: Dictionary = {
 	  "text": "Dune, Foundation, Neuromancer the mid-century shelf is ready." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
 	  "text": "BETWEEN also works with dates: WHERE borrow_date BETWEEN '2024-01-01' AND '2024-06-30'." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "Good to know. Now walk me through the rest of that line too, word by word." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "What's the very first word that tells the database 'go fetch me some rows'?" },
+	{ "type": "sql_fill", "gamemode": "sql_blank",
+	  "recap": "BETWEEN",
+	  "desc": "Fill in the keyword that starts a query for retrieving data.",
+	  "table": "books",
+	  "table_headers": ["id","title","author","year_published"],
+	  "table_rows": [["1","Dune","Herbert","1965"],["2","Hamlet","Shakespeare","1603"],["3","1984","Orwell","1949"],["4","Foundation","Asimov","1951"],["5","Neuromancer","Gibson","1984"],["6","Brave New World","Huxley","1932"]],
+	  "code": "[BLANK] * FROM books WHERE year_published BETWEEN 1950 AND 1990;",
+	  "answer": "SELECT",
+	  "hint": "This is the very first word of almost every query that reads data back out of a table.",
+	  "result_headers": ["id","title","author","year_published"],
+	  "result_rows": [["1","Dune","Herbert","1965"],["4","Foundation","Asimov","1951"],["5","Neuromancer","Gibson","1984"]],
+	  "result_msg": "SELECT is the keyword that starts a query. It always comes first.",
+	  "fail": [
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "That's not the keyword. Every retrieval query starts with the same word." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle", "text": "Right the keyword for 'fetch data' is SELECT." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "Right. And which keyword tells the database which table we're reading from?" },
+	{ "type": "sql_fill", "gamemode": "sql_blank",
+	  "recap": "BETWEEN",
+	  "desc": "Fill in the keyword that tells the database which table to read from.",
+	  "table": "books",
+	  "table_headers": ["id","title","author","year_published"],
+	  "table_rows": [["1","Dune","Herbert","1965"],["2","Hamlet","Shakespeare","1603"],["3","1984","Orwell","1949"],["4","Foundation","Asimov","1951"],["5","Neuromancer","Gibson","1984"],["6","Brave New World","Huxley","1932"]],
+	  "code": "SELECT * [BLANK] books WHERE year_published BETWEEN 1950 AND 1990;",
+	  "answer": "FROM",
+	  "hint": "This keyword points at the table name that comes right after it.",
+	  "result_headers": ["id","title","author","year_published"],
+	  "result_rows": [["1","Dune","Herbert","1965"],["4","Foundation","Asimov","1951"],["5","Neuromancer","Gibson","1984"]],
+	  "result_msg": "FROM tells the database which table to read the rows from.",
+	  "fail": [
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "Not quite. I need the keyword that sits right before the table name." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle", "text": "Got it the keyword before a table name is FROM." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "Last piece which keyword actually filters the rows down by that range?" },
+	{ "type": "sql_fill", "gamemode": "sql_blank",
+	  "recap": "BETWEEN",
+	  "desc": "Fill in the keyword that filters rows by a condition.",
+	  "table": "books",
+	  "table_headers": ["id","title","author","year_published"],
+	  "table_rows": [["1","Dune","Herbert","1965"],["2","Hamlet","Shakespeare","1603"],["3","1984","Orwell","1949"],["4","Foundation","Asimov","1951"],["5","Neuromancer","Gibson","1984"],["6","Brave New World","Huxley","1932"]],
+	  "code": "SELECT * FROM books [BLANK] year_published BETWEEN 1950 AND 1990;",
+	  "answer": "WHERE",
+	  "hint": "This keyword comes right before the condition that narrows down the rows.",
+	  "result_headers": ["id","title","author","year_published"],
+	  "result_rows": [["1","Dune","Herbert","1965"],["4","Foundation","Asimov","1951"],["5","Neuromancer","Gibson","1984"]],
+	  "result_msg": "WHERE is the keyword that filters rows down to those matching a condition.",
+	  "fail": [
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "That's not the filtering keyword. It comes right before the condition." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle", "text": "Right the filtering keyword is WHERE." }
+	  ]
+	},
 	{ "type": "end" }
 ],
 
@@ -909,6 +1971,65 @@ const LESSONS: Dictionary = {
 	  "text": "The Hobbit, The Name of the Wind, The Martian. LIKE is essential for partial-title searches." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
 	  "text": "'%wind%' would find any title containing the word 'wind' anywhere in the title." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "Good to know. Now walk me through the rest of that line too, word by word." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "What's the very first word that tells the database 'go fetch me some rows'?" },
+	{ "type": "sql_fill", "gamemode": "sql_blank",
+	  "recap": "LIKE",
+	  "desc": "Fill in the keyword that starts a query for retrieving data.",
+	  "table": "books",
+	  "table_headers": ["id","title","author"],
+	  "table_rows": [["1","The Hobbit","Tolkien"],["2","Dune","Herbert"],["3","The Name of the Wind","Rothfuss"],["4","1984","Orwell"],["5","The Martian","Weir"],["6","Foundation","Asimov"]],
+	  "code": "[BLANK] * FROM books WHERE title LIKE 'The%';",
+	  "answer": "SELECT",
+	  "hint": "This is the very first word of almost every query that reads data back out of a table.",
+	  "result_headers": ["id","title","author"],
+	  "result_rows": [["1","The Hobbit","Tolkien"],["3","The Name of the Wind","Rothfuss"],["5","The Martian","Weir"]],
+	  "result_msg": "SELECT is the keyword that starts a query. It always comes first.",
+	  "fail": [
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "That's not the keyword. Every retrieval query starts with the same word." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle", "text": "Right the keyword for 'fetch data' is SELECT." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "Right. And which keyword tells the database which table we're reading from?" },
+	{ "type": "sql_fill", "gamemode": "sql_blank",
+	  "recap": "LIKE",
+	  "desc": "Fill in the keyword that tells the database which table to read from.",
+	  "table": "books",
+	  "table_headers": ["id","title","author"],
+	  "table_rows": [["1","The Hobbit","Tolkien"],["2","Dune","Herbert"],["3","The Name of the Wind","Rothfuss"],["4","1984","Orwell"],["5","The Martian","Weir"],["6","Foundation","Asimov"]],
+	  "code": "SELECT * [BLANK] books WHERE title LIKE 'The%';",
+	  "answer": "FROM",
+	  "hint": "This keyword points at the table name that comes right after it.",
+	  "result_headers": ["id","title","author"],
+	  "result_rows": [["1","The Hobbit","Tolkien"],["3","The Name of the Wind","Rothfuss"],["5","The Martian","Weir"]],
+	  "result_msg": "FROM tells the database which table to read the rows from.",
+	  "fail": [
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "Not quite. I need the keyword that sits right before the table name." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle", "text": "Got it the keyword before a table name is FROM." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "Last piece which keyword actually does the pattern matching against the title?" },
+	{ "type": "sql_fill", "gamemode": "sql_blank",
+	  "recap": "LIKE",
+	  "desc": "Fill in the keyword that performs pattern matching.",
+	  "table": "books",
+	  "table_headers": ["id","title","author"],
+	  "table_rows": [["1","The Hobbit","Tolkien"],["2","Dune","Herbert"],["3","The Name of the Wind","Rothfuss"],["4","1984","Orwell"],["5","The Martian","Weir"],["6","Foundation","Asimov"]],
+	  "code": "SELECT * FROM books WHERE title [BLANK] 'The%';",
+	  "answer": "LIKE",
+	  "hint": "This keyword pairs a column with a wildcard pattern instead of an exact value.",
+	  "result_headers": ["id","title","author"],
+	  "result_rows": [["1","The Hobbit","Tolkien"],["3","The Name of the Wind","Rothfuss"],["5","The Martian","Weir"]],
+	  "result_msg": "LIKE is the keyword that matches a column against a wildcard pattern.",
+	  "fail": [
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "That's not the pattern-matching keyword. It pairs with a wildcard, not an exact value." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle", "text": "The pattern-matching keyword is LIKE." }
+	  ]
+	},
 	{ "type": "end" }
 ],
 
@@ -943,6 +2064,65 @@ const LESSONS: Dictionary = {
 	  "text": "4 books for the reading club. IN is cleaner than genre='Sci-Fi' OR genre='Fantasy' OR genre='Mystery'." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
 	  "text": "NOT IN ('Drama','Fiction') would give the same result by exclusion both approaches work." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "Good to know. Now walk me through the rest of that line too, word by word." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "What's the very first word that tells the database 'go fetch me some rows'?" },
+	{ "type": "sql_fill", "gamemode": "sql_blank",
+	  "recap": "IN",
+	  "desc": "Fill in the keyword that starts a query for retrieving data.",
+	  "table": "books",
+	  "table_headers": ["id","title","genre"],
+	  "table_rows": [["1","Dune","Sci-Fi"],["2","Hamlet","Drama"],["3","The Hobbit","Fantasy"],["4","1984","Fiction"],["5","Sherlock Holmes","Mystery"],["6","Foundation","Sci-Fi"]],
+	  "code": "[BLANK] * FROM books WHERE genre IN ('Sci-Fi', 'Fantasy', 'Mystery');",
+	  "answer": "SELECT",
+	  "hint": "This is the very first word of almost every query that reads data back out of a table.",
+	  "result_headers": ["id","title","genre"],
+	  "result_rows": [["1","Dune","Sci-Fi"],["3","The Hobbit","Fantasy"],["5","Sherlock Holmes","Mystery"],["6","Foundation","Sci-Fi"]],
+	  "result_msg": "SELECT is the keyword that starts a query. It always comes first.",
+	  "fail": [
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "That's not the keyword. Every retrieval query starts with the same word." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle", "text": "Right the keyword for 'fetch data' is SELECT." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "Right. And which keyword tells the database which table we're reading from?" },
+	{ "type": "sql_fill", "gamemode": "sql_blank",
+	  "recap": "IN",
+	  "desc": "Fill in the keyword that tells the database which table to read from.",
+	  "table": "books",
+	  "table_headers": ["id","title","genre"],
+	  "table_rows": [["1","Dune","Sci-Fi"],["2","Hamlet","Drama"],["3","The Hobbit","Fantasy"],["4","1984","Fiction"],["5","Sherlock Holmes","Mystery"],["6","Foundation","Sci-Fi"]],
+	  "code": "SELECT * [BLANK] books WHERE genre IN ('Sci-Fi', 'Fantasy', 'Mystery');",
+	  "answer": "FROM",
+	  "hint": "This keyword points at the table name that comes right after it.",
+	  "result_headers": ["id","title","genre"],
+	  "result_rows": [["1","Dune","Sci-Fi"],["3","The Hobbit","Fantasy"],["5","Sherlock Holmes","Mystery"],["6","Foundation","Sci-Fi"]],
+	  "result_msg": "FROM tells the database which table to read the rows from.",
+	  "fail": [
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "Not quite. I need the keyword that sits right before the table name." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle", "text": "Got it the keyword before a table name is FROM." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "Last piece which keyword actually filters the rows down by that condition?" },
+	{ "type": "sql_fill", "gamemode": "sql_blank",
+	  "recap": "IN",
+	  "desc": "Fill in the keyword that filters rows by a condition.",
+	  "table": "books",
+	  "table_headers": ["id","title","genre"],
+	  "table_rows": [["1","Dune","Sci-Fi"],["2","Hamlet","Drama"],["3","The Hobbit","Fantasy"],["4","1984","Fiction"],["5","Sherlock Holmes","Mystery"],["6","Foundation","Sci-Fi"]],
+	  "code": "SELECT * FROM books [BLANK] genre IN ('Sci-Fi', 'Fantasy', 'Mystery');",
+	  "answer": "WHERE",
+	  "hint": "This keyword comes right before the condition that narrows down the rows.",
+	  "result_headers": ["id","title","genre"],
+	  "result_rows": [["1","Dune","Sci-Fi"],["3","The Hobbit","Fantasy"],["5","Sherlock Holmes","Mystery"],["6","Foundation","Sci-Fi"]],
+	  "result_msg": "WHERE is the keyword that filters rows down to those matching a condition.",
+	  "fail": [
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "That's not the filtering keyword. It comes right before the condition." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle", "text": "Right the filtering keyword is WHERE." }
+	  ]
+	},
 	{ "type": "end" }
 ],
 
@@ -975,6 +2155,65 @@ const LESSONS: Dictionary = {
 	  "text": "5 books for the homepage. LIMIT with ORDER BY date_added DESC would give the newest books." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
 	  "text": "LIMIT is also used for pagination: LIMIT 10 OFFSET 20 returns books 21–30." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "Good to know. Now walk me through the rest of that line too, word by word." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "What's the very first word that tells the database 'go fetch me some rows'?" },
+	{ "type": "sql_fill", "gamemode": "sql_blank",
+	  "recap": "LIMIT",
+	  "desc": "Fill in the keyword that starts a query for retrieving data.",
+	  "table": "books",
+	  "table_headers": ["id","title","author","genre"],
+	  "table_rows": [["1","Dune","Herbert","Sci-Fi"],["2","1984","Orwell","Fiction"],["3","The Hobbit","Tolkien","Fantasy"],["4","Foundation","Asimov","Sci-Fi"],["5","Hamlet","Shakespeare","Drama"],["6","Neuromancer","Gibson","Sci-Fi"],["7","Sherlock Holmes","Doyle","Mystery"]],
+	  "code": "[BLANK] * FROM books LIMIT 5;",
+	  "answer": "SELECT",
+	  "hint": "This is the very first word of almost every query that reads data back out of a table.",
+	  "result_headers": ["id","title","author","genre"],
+	  "result_rows": [["1","Dune","Herbert","Sci-Fi"],["2","1984","Orwell","Fiction"],["3","The Hobbit","Tolkien","Fantasy"],["4","Foundation","Asimov","Sci-Fi"],["5","Hamlet","Shakespeare","Drama"]],
+	  "result_msg": "SELECT is the keyword that starts a query. It always comes first.",
+	  "fail": [
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "That's not the keyword. Every retrieval query starts with the same word." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle", "text": "Right the keyword for 'fetch data' is SELECT." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "Right. And which keyword tells the database which table we're reading from?" },
+	{ "type": "sql_fill", "gamemode": "sql_blank",
+	  "recap": "LIMIT",
+	  "desc": "Fill in the keyword that tells the database which table to read from.",
+	  "table": "books",
+	  "table_headers": ["id","title","author","genre"],
+	  "table_rows": [["1","Dune","Herbert","Sci-Fi"],["2","1984","Orwell","Fiction"],["3","The Hobbit","Tolkien","Fantasy"],["4","Foundation","Asimov","Sci-Fi"],["5","Hamlet","Shakespeare","Drama"],["6","Neuromancer","Gibson","Sci-Fi"],["7","Sherlock Holmes","Doyle","Mystery"]],
+	  "code": "SELECT * [BLANK] books LIMIT 5;",
+	  "answer": "FROM",
+	  "hint": "This keyword points at the table name that comes right after it.",
+	  "result_headers": ["id","title","author","genre"],
+	  "result_rows": [["1","Dune","Herbert","Sci-Fi"],["2","1984","Orwell","Fiction"],["3","The Hobbit","Tolkien","Fantasy"],["4","Foundation","Asimov","Sci-Fi"],["5","Hamlet","Shakespeare","Drama"]],
+	  "result_msg": "FROM tells the database which table to read the rows from.",
+	  "fail": [
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "Not quite. I need the keyword that sits right before the table name." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle", "text": "Got it the keyword before a table name is FROM." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "Last piece which keyword actually caps how many rows come back?" },
+	{ "type": "sql_fill", "gamemode": "sql_blank",
+	  "recap": "LIMIT",
+	  "desc": "Fill in the keyword that caps how many rows are returned.",
+	  "table": "books",
+	  "table_headers": ["id","title","author","genre"],
+	  "table_rows": [["1","Dune","Herbert","Sci-Fi"],["2","1984","Orwell","Fiction"],["3","The Hobbit","Tolkien","Fantasy"],["4","Foundation","Asimov","Sci-Fi"],["5","Hamlet","Shakespeare","Drama"],["6","Neuromancer","Gibson","Sci-Fi"],["7","Sherlock Holmes","Doyle","Mystery"]],
+	  "code": "SELECT * FROM books [BLANK] 5;",
+	  "answer": "LIMIT",
+	  "hint": "This keyword sits right before the number of rows you want capped.",
+	  "result_headers": ["id","title","author","genre"],
+	  "result_rows": [["1","Dune","Herbert","Sci-Fi"],["2","1984","Orwell","Fiction"],["3","The Hobbit","Tolkien","Fantasy"],["4","Foundation","Asimov","Sci-Fi"],["5","Hamlet","Shakespeare","Drama"]],
+	  "result_msg": "LIMIT is the keyword that caps how many rows a query returns.",
+	  "fail": [
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "That's not the capping keyword. It comes right before the row count." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle", "text": "The row-capping keyword is LIMIT." }
+	  ]
+	},
 	{ "type": "end" }
 ],
 
@@ -1030,6 +2269,47 @@ const LESSONS: Dictionary = {
 	},
 	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
 	  "text": "1897 on average, thanks to Hamlet and Brave New World pulling it back. Now I have COUNT and AVG both." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "Walk me through the rest of one of those queries too, not just the function name." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "What's the very first word that tells the database 'go fetch me some rows'?" },
+	{ "type": "sql_fill", "gamemode": "sql_blank",
+	  "recap": "COUNT / SUM / AVG",
+	  "desc": "Fill in the keyword that starts a query for retrieving data.",
+	  "table": "books",
+	  "table_headers": ["id","title","author","genre"],
+	  "table_rows": [["1","Dune","Herbert","Sci-Fi"],["2","1984","Orwell","Fiction"],["3","The Hobbit","Tolkien","Fantasy"],["4","Foundation","Asimov","Sci-Fi"],["5","Hamlet","Shakespeare","Drama"]],
+	  "code": "[BLANK] COUNT(id) FROM books;",
+	  "answer": "SELECT",
+	  "hint": "This is the very first word of almost every query that reads data back out of a table.",
+	  "result_headers": ["COUNT(id)"],
+	  "result_rows": [["5"]],
+	  "result_msg": "SELECT is the keyword that starts a query. It always comes first.",
+	  "fail": [
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "That's not the keyword. Every retrieval query starts with the same word." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle", "text": "Right the keyword for 'fetch data' is SELECT." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "Right. And for the average-year query which keyword says which table we're reading from?" },
+	{ "type": "sql_fill", "gamemode": "sql_blank",
+	  "recap": "COUNT / SUM / AVG",
+	  "desc": "Fill in the keyword that tells the database which table to read from.",
+	  "table": "books",
+	  "column": "year_published",
+	  "table_headers": ["id","title","author","year_published"],
+	  "table_rows": [["1","Dune","Herbert","1965"],["2","Hamlet","Shakespeare","1603"],["3","1984","Orwell","1949"],["4","Foundation","Asimov","1951"],["5","Neuromancer","Gibson","1984"],["6","Brave New World","Huxley","1932"]],
+	  "code": "SELECT AVG(year_published) [BLANK] books;",
+	  "answer": "FROM",
+	  "hint": "This keyword points at the table name that comes right after it.",
+	  "result_headers": ["AVG(year_published)"],
+	  "result_rows": [["1897.33"]],
+	  "result_msg": "FROM tells the database which table to read the rows from.",
+	  "fail": [
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "Not quite. I need the keyword that sits right before the table name." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle", "text": "Got it the keyword before a table name is FROM." }
+	  ]
+	},
 	{ "type": "end" }
 ],
 
@@ -1063,6 +2343,65 @@ const LESSONS: Dictionary = {
 	  "text": "Sci-Fi is the biggest section with 3 books. HAVING is the WHERE for groups." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
 	  "text": "Remember: WHERE filters rows, GROUP BY groups them, HAVING filters the groups." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "Good. Now walk me through the rest of that line too, word by word." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "What's the very first word that tells the database 'go fetch me some rows'?" },
+	{ "type": "sql_fill", "gamemode": "sql_blank",
+	  "recap": "HAVING",
+	  "desc": "Fill in the keyword that starts a query for retrieving data.",
+	  "table": "books",
+	  "table_headers": ["id","title","genre"],
+	  "table_rows": [["1","Dune","Sci-Fi"],["2","Hamlet","Drama"],["3","Foundation","Sci-Fi"],["4","1984","Fiction"],["5","Neuromancer","Sci-Fi"],["6","Macbeth","Drama"]],
+	  "code": "[BLANK] genre, COUNT(*) FROM books GROUP BY genre HAVING COUNT(*) > 2;",
+	  "answer": "SELECT",
+	  "hint": "This is the very first word of almost every query that reads data back out of a table.",
+	  "result_headers": ["genre","COUNT(*)"],
+	  "result_rows": [["Sci-Fi","3"]],
+	  "result_msg": "SELECT is the keyword that starts a query. It always comes first.",
+	  "fail": [
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "That's not the keyword. Every retrieval query starts with the same word." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle", "text": "Right the keyword for 'fetch data' is SELECT." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "Right. And which keyword tells the database which table we're reading from?" },
+	{ "type": "sql_fill", "gamemode": "sql_blank",
+	  "recap": "HAVING",
+	  "desc": "Fill in the keyword that tells the database which table to read from.",
+	  "table": "books",
+	  "table_headers": ["id","title","genre"],
+	  "table_rows": [["1","Dune","Sci-Fi"],["2","Hamlet","Drama"],["3","Foundation","Sci-Fi"],["4","1984","Fiction"],["5","Neuromancer","Sci-Fi"],["6","Macbeth","Drama"]],
+	  "code": "SELECT genre, COUNT(*) [BLANK] books GROUP BY genre HAVING COUNT(*) > 2;",
+	  "answer": "FROM",
+	  "hint": "This keyword points at the table name that comes right after it.",
+	  "result_headers": ["genre","COUNT(*)"],
+	  "result_rows": [["Sci-Fi","3"]],
+	  "result_msg": "FROM tells the database which table to read the rows from.",
+	  "fail": [
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "Not quite. I need the keyword that sits right before the table name." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle", "text": "Got it the keyword before a table name is FROM." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "Last piece which keyword filters the groups themselves, after GROUP BY runs?" },
+	{ "type": "sql_fill", "gamemode": "sql_blank",
+	  "recap": "HAVING",
+	  "desc": "Fill in the keyword that filters groups after GROUP BY.",
+	  "table": "books",
+	  "table_headers": ["id","title","genre"],
+	  "table_rows": [["1","Dune","Sci-Fi"],["2","Hamlet","Drama"],["3","Foundation","Sci-Fi"],["4","1984","Fiction"],["5","Neuromancer","Sci-Fi"],["6","Macbeth","Drama"]],
+	  "code": "SELECT genre, COUNT(*) FROM books GROUP BY genre [BLANK] COUNT(*) > 2;",
+	  "answer": "HAVING",
+	  "hint": "This keyword is like WHERE, but it filters groups instead of individual rows.",
+	  "result_headers": ["genre","COUNT(*)"],
+	  "result_rows": [["Sci-Fi","3"]],
+	  "result_msg": "HAVING is the keyword that filters groups after GROUP BY has run.",
+	  "fail": [
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "That's not the group-filtering keyword. WHERE cannot filter on COUNT(*) this one can." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle", "text": "The group-filtering keyword is HAVING." }
+	  ]
+	},
 	{ "type": "end" }
 ],
 
@@ -1096,6 +2435,65 @@ const LESSONS: Dictionary = {
 	  "text": "late_fee is clear and readable. AS makes reports professional without touching the schema." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle",
 	  "text": "You can also alias table names in joins: FROM borrowers AS b saves typing in long queries." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "Good to know. Now walk me through the rest of that line too, word by word." },
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "What's the very first word that tells the database 'go fetch me some rows'?" },
+	{ "type": "sql_fill", "gamemode": "sql_blank",
+	  "recap": "AS (Alias)",
+	  "desc": "Fill in the keyword that starts a query for retrieving data.",
+	  "table": "borrowers",
+	  "table_headers": ["id","name","overdue_days"],
+	  "table_rows": [["1","Mendez","10"],["2","Santos","4"],["3","Reyes","0"]],
+	  "code": "[BLANK] overdue_days * 0.50 AS late_fee FROM borrowers;",
+	  "answer": "SELECT",
+	  "hint": "This is the very first word of almost every query that reads data back out of a table.",
+	  "result_headers": ["late_fee"],
+	  "result_rows": [["5.0"],["2.0"],["0.0"]],
+	  "result_msg": "SELECT is the keyword that starts a query. It always comes first.",
+	  "fail": [
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "That's not the keyword. Every retrieval query starts with the same word." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle", "text": "Right the keyword for 'fetch data' is SELECT." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "Right. And which keyword comes right before the alias name itself?" },
+	{ "type": "sql_fill", "gamemode": "sql_blank",
+	  "recap": "AS (Alias)",
+	  "desc": "Fill in the keyword that renames a column in the output.",
+	  "table": "borrowers",
+	  "table_headers": ["id","name","overdue_days"],
+	  "table_rows": [["1","Mendez","10"],["2","Santos","4"],["3","Reyes","0"]],
+	  "code": "SELECT overdue_days * 0.50 [BLANK] late_fee FROM borrowers;",
+	  "answer": "AS",
+	  "hint": "This short keyword sits right before the new display name you want to give a column.",
+	  "result_headers": ["late_fee"],
+	  "result_rows": [["5.0"],["2.0"],["0.0"]],
+	  "result_msg": "AS is the keyword that renames a column for display, without changing the table.",
+	  "fail": [
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "That's not the renaming keyword. It comes right before the alias name." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle", "text": "The renaming keyword is AS." }
+	  ]
+	},
+	{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/talk",
+	  "text": "Last piece which keyword tells the database which table we're reading from?" },
+	{ "type": "sql_fill", "gamemode": "sql_blank",
+	  "recap": "AS (Alias)",
+	  "desc": "Fill in the keyword that tells the database which table to read from.",
+	  "table": "borrowers",
+	  "table_headers": ["id","name","overdue_days"],
+	  "table_rows": [["1","Mendez","10"],["2","Santos","4"],["3","Reyes","0"]],
+	  "code": "SELECT overdue_days * 0.50 AS late_fee [BLANK] borrowers;",
+	  "answer": "FROM",
+	  "hint": "This keyword points at the table name that comes right after it.",
+	  "result_headers": ["late_fee"],
+	  "result_rows": [["5.0"],["2.0"],["0.0"]],
+	  "result_msg": "FROM tells the database which table to read the rows from.",
+	  "fail": [
+		{ "type": "dialogue", "char": "librarian", "name": "LIBRARIAN", "npc": "NPC_occupations/librarian/shock", "text": "Not quite. I need the keyword that sits right before the table name." },
+		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/librarian/idle", "text": "Got it the keyword before a table name is FROM." }
+	  ]
+	},
 	{ "type": "end" }
 ],
 
