@@ -1031,7 +1031,7 @@ const SIM_SORTING_LESSONS: Array = [
 
 # Worlds whose *SimData.gd has real Filtering Rows / Sorting & Aggregates
 # templates built out. Other worlds still show "Coming soon" for those folders.
-const FILTERING_SORTING_READY_WORLDS: Array = ["hotel", "cafe"]
+const FILTERING_SORTING_READY_WORLDS: Array = ["hotel", "cafe", "airport"]
 
 func _build_sim_picker() -> void:
 	_sim_picker_overlay = Control.new()
