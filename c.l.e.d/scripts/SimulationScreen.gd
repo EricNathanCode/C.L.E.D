@@ -56,6 +56,10 @@ const SORTING_LESSON_NAMES: Dictionary = {
 	12: "ORDER BY", 13: "LIMIT", 14: "GROUP BY", 15: "COUNT / SUM / AVG", 16: "HAVING", 17: "AS (Alias)",
 }
 
+# Worlds whose *SimData.gd has real Filtering Rows / Sorting & Aggregates
+# templates built out. Other worlds still show "Coming soon" for those folders.
+const FILTERING_SORTING_READY_WORLDS: Array = ["hotel", "cafe"]
+
 const SQL_KEYWORDS: Array = [
 	"select", "from", "where", "insert", "into", "values", "update", "set", "delete",
 	"and", "or", "not", "null", "is", "like", "in", "between", "order", "by", "group",
@@ -160,7 +164,7 @@ func start_run(world: String, folder: String = "all", lesson_index: int = 0) -> 
 
 	_update_score_label()
 
-	if (_folder == "filtering" or _folder == "sorting") and _world != "hotel":
+	if (_folder == "filtering" or _folder == "sorting") and not FILTERING_SORTING_READY_WORLDS.has(_world):
 		_show_coming_soon_message()
 		return
 

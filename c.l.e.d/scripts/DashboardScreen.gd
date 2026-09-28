@@ -1029,6 +1029,10 @@ const SIM_SORTING_LESSONS: Array = [
 	[17, "AS (Alias)",          "Give a calculated column a readable name."],
 ]
 
+# Worlds whose *SimData.gd has real Filtering Rows / Sorting & Aggregates
+# templates built out. Other worlds still show "Coming soon" for those folders.
+const FILTERING_SORTING_READY_WORLDS: Array = ["hotel", "cafe"]
+
 func _build_sim_picker() -> void:
 	_sim_picker_overlay = Control.new()
 	_sim_picker_overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -1104,7 +1108,7 @@ func _show_sim_folder_list() -> void:
 		var key: String = entry[0]
 		var title: String = entry[1]
 		var desc: String = entry[2]
-		var locked: bool = (key == "filtering" or key == "sorting") and GameManager.world != "hotel"
+		var locked: bool = (key == "filtering" or key == "sorting") and not FILTERING_SORTING_READY_WORLDS.has(GameManager.world)
 		var pair: Array = _build_sim_picker_row(title, desc, locked)
 		var btn: Button = pair[0]
 		var best_lbl: Label = pair[1]
