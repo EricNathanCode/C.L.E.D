@@ -37,8 +37,6 @@ const SENIOR_FEMALE: Array = [4]
 const PLUS_MALE:     Array = [2, 6, 8]
 const PLUS_FEMALE:   Array = [1, 3, 4, 5, 7, 9]
 
-const Dashboard = preload("res://scripts/DashboardScreen.gd")
-
 const FOLDER_DISPLAY: Dictionary = {
 	"all":       "Your Progress",
 	"basic":     "Basic SQL",
@@ -48,6 +46,14 @@ const FOLDER_DISPLAY: Dictionary = {
 
 const BASIC_LESSON_NAMES: Dictionary = {
 	1: "SELECT", 2: "INSERT INTO", 3: "SELECT WHERE", 4: "UPDATE SET", 5: "DELETE",
+}
+
+const FILTERING_LESSON_NAMES: Dictionary = {
+	6: "IS NULL", 7: "DISTINCT", 8: "AND / OR", 9: "BETWEEN", 10: "LIKE", 11: "IN",
+}
+
+const SORTING_LESSON_NAMES: Dictionary = {
+	12: "ORDER BY", 13: "LIMIT", 14: "GROUP BY", 15: "COUNT / SUM / AVG", 16: "HAVING", 17: "AS (Alias)",
 }
 
 const SQL_KEYWORDS: Array = [
@@ -154,12 +160,8 @@ func start_run(world: String, folder: String = "all", lesson_index: int = 0) -> 
 
 	_update_score_label()
 
-	if _folder == "filtering" or _folder == "sorting":
+	if (_folder == "filtering" or _folder == "sorting") and _world != "hotel":
 		_show_coming_soon_message()
-		return
-
-	if _get_available_templates().is_empty():
-		_show_locked_message()
 		return
 
 	_start_next_round()
@@ -172,10 +174,9 @@ func _score_key() -> String:
 		key += "_" + str(_lesson_index)
 	return key
 
-func _show_locked_message() -> void:
-	$DialogueBox/DialogueVBox/NPCNameLabel.text = "LOCKED"
-	var need: int = _lesson_index if _lesson_index > 0 else 1
-	$DialogueBox/DialogueVBox/ProblemLabel.text = "Complete Lesson %d in this world before running this Simulation." % need
+func _show_empty_message() -> void:
+	$DialogueBox/DialogueVBox/NPCNameLabel.text = "NO PROBLEMS"
+	$DialogueBox/DialogueVBox/ProblemLabel.text = "There's nothing set up for this selection yet."
 
 func _show_drained_message() -> void:
 	$DialogueBox/DialogueVBox/NPCNameLabel.text = "ALL CLEAR"
@@ -213,7 +214,10 @@ func _on_end_button() -> void:
 func _update_score_label() -> void:
 	var mode_name: String = FOLDER_DISPLAY.get(_folder, _folder)
 	if _lesson_index > 0:
-		mode_name += " · " + BASIC_LESSON_NAMES.get(_lesson_index, str(_lesson_index))
+		var names: Dictionary = BASIC_LESSON_NAMES
+		if _folder == "filtering": names = FILTERING_LESSON_NAMES
+		elif _folder == "sorting": names = SORTING_LESSON_NAMES
+		mode_name += " · " + names.get(_lesson_index, str(_lesson_index))
 	$TopBar/RunLabel.text = "  SIMULATION: %s   Score: %d   |   Best: %d" % [mode_name, _score, GameManager.get_sim_best(_score_key())]
 
 # ── Round flow ─────────────────────────────────────────
@@ -223,7 +227,7 @@ func _start_next_round() -> void:
 		if _score > 0:
 			_show_drained_message()
 		else:
-			_show_locked_message()
+			_show_empty_message()
 		return
 
 	var tmpl: Dictionary = pool[randi() % pool.size()]
@@ -242,16 +246,11 @@ func _start_next_round() -> void:
 	_walk_in_and_show(text, _random_npc_base(_world, _current_role, gender))
 
 func _get_available_templates() -> Array:
-	var furthest: int = _furthest_completed_index(_world)
-	if furthest <= 0:
-		return []
 	var pool: Array = []
 	for t in _templates:
 		if _folder != "all" and t.get("folder", "basic") != _folder:
 			continue
 		var req: int = int(t["requires_lesson_index"])
-		if req > furthest:
-			continue
 		if _lesson_index > 0 and req != _lesson_index:
 			continue
 		if _needs_existing_rows(t["kind"]) and _sim_db.has_table(t["table"]) and _sim_db.fetch_rows(t["table"]).is_empty():
@@ -301,6 +300,24 @@ func _roll_variables(tmpl: Dictionary) -> Dictionary:
 			var idx: int = headers.find(tmpl["pick_id_from"])
 			var row: Array = rows[randi() % rows.size()]
 			rolled["target_id"] = row[idx]
+		"where_between":
+			var pair: Array = tmpl["range_pool"][randi() % tmpl["range_pool"].size()]
+			rolled["low"]  = pair[0]
+			rolled["high"] = pair[1]
+		"where_like":
+			var letters: Array = tmpl["letter_pool"]
+			rolled["letter"] = letters[randi() % letters.size()]
+		"where_in":
+			var pool: Array = tmpl["value_pool"].duplicate()
+			pool.shuffle()
+			rolled["val1"] = pool[0]
+			rolled["val2"] = pool[1]
+		"limit":
+			var pool: Array = tmpl["count_pool"]
+			rolled["n"] = pool[randi() % pool.size()]
+		"having":
+			var pool: Array = tmpl["threshold_pool"]
+			rolled["threshold"] = pool[randi() % pool.size()]
 	return rolled
 
 func _fill_template(text: String, rolled: Dictionary) -> String:
@@ -328,6 +345,30 @@ func _build_expected(tmpl: Dictionary, rolled: Dictionary) -> Dictionary:
 			return {"starts_with": "UPDATE", "table": table, "must_contain": [str(rolled["new_value"]), str(rolled["target_id"])]}
 		"delete":
 			return {"starts_with": "DELETE", "table": table, "must_contain": [str(rolled["target_id"])]}
+		"select_where_null":
+			return {"starts_with": "SELECT", "table": table, "must_contain": [tmpl["column"], tmpl["mode"]]}
+		"select_distinct":
+			return {"starts_with": "SELECT", "table": table, "must_contain": ["DISTINCT", tmpl["column"]]}
+		"where_and_or":
+			return {"starts_with": "SELECT", "table": table, "must_contain": [tmpl["col1"], tmpl["val1"], tmpl["col2"], tmpl["val2"], tmpl["connector"]]}
+		"where_between":
+			return {"starts_with": "SELECT", "table": table, "must_contain": [tmpl["column"], "BETWEEN", str(rolled["low"]), str(rolled["high"])]}
+		"where_like":
+			return {"starts_with": "SELECT", "table": table, "must_contain": [tmpl["column"], "LIKE", "'" + str(rolled["letter"]) + "%'"]}
+		"where_in":
+			return {"starts_with": "SELECT", "table": table, "must_contain": [tmpl["column"], "IN", str(rolled["val1"]), str(rolled["val2"])]}
+		"order_by":
+			return {"starts_with": "SELECT", "table": table, "must_contain": ["ORDER BY", tmpl["column"], tmpl["direction"]]}
+		"group_by":
+			return {"starts_with": "SELECT", "table": table, "must_contain": ["GROUP BY", tmpl["column"]]}
+		"limit":
+			return {"starts_with": "SELECT", "table": table, "must_contain": ["LIMIT", str(rolled["n"])]}
+		"aggregate":
+			return {"starts_with": "SELECT", "table": table, "must_contain": [tmpl["func"], tmpl["column"]]}
+		"having":
+			return {"starts_with": "SELECT", "table": table, "must_contain": ["GROUP BY", "HAVING", "COUNT", tmpl["group_col"], str(rolled["threshold"])]}
+		"select_alias":
+			return {"starts_with": "SELECT", "table": table, "must_contain": [tmpl["base_col"], str(tmpl["multiplier"]), "AS", tmpl["alias"]]}
 	return {"starts_with": "", "table": table, "must_contain": []}
 
 # Builds one valid example answer for this round, shown on the game-over
@@ -354,6 +395,30 @@ func _build_example_query(tmpl: Dictionary, rolled: Dictionary) -> String:
 			return "UPDATE %s SET %s = '%s' WHERE %s = %s;" % [table, tmpl["set_column"], rolled["new_value"], tmpl["pick_id_from"], rolled["target_id"]]
 		"delete":
 			return "DELETE FROM %s WHERE %s = %s;" % [table, tmpl["pick_id_from"], rolled["target_id"]]
+		"select_where_null":
+			return "SELECT * FROM %s WHERE %s %s;" % [table, tmpl["column"], tmpl["mode"]]
+		"select_distinct":
+			return "SELECT DISTINCT %s FROM %s;" % [tmpl["column"], table]
+		"where_and_or":
+			return "SELECT * FROM %s WHERE %s = '%s' %s %s = '%s';" % [table, tmpl["col1"], tmpl["val1"], tmpl["connector"], tmpl["col2"], tmpl["val2"]]
+		"where_between":
+			return "SELECT * FROM %s WHERE %s BETWEEN %s AND %s;" % [table, tmpl["column"], rolled["low"], rolled["high"]]
+		"where_like":
+			return "SELECT * FROM %s WHERE %s LIKE '%s%%';" % [table, tmpl["column"], rolled["letter"]]
+		"where_in":
+			return "SELECT * FROM %s WHERE %s IN ('%s', '%s');" % [table, tmpl["column"], rolled["val1"], rolled["val2"]]
+		"order_by":
+			return "SELECT * FROM %s ORDER BY %s %s;" % [table, tmpl["column"], tmpl["direction"]]
+		"group_by":
+			return "SELECT %s, COUNT(*) FROM %s GROUP BY %s;" % [tmpl["column"], table, tmpl["column"]]
+		"limit":
+			return "SELECT * FROM %s LIMIT %s;" % [table, rolled["n"]]
+		"aggregate":
+			return "SELECT %s(%s) FROM %s;" % [tmpl["func"], tmpl["column"], table]
+		"having":
+			return "SELECT %s, COUNT(*) FROM %s GROUP BY %s HAVING COUNT(*) > %s;" % [tmpl["group_col"], table, tmpl["group_col"], rolled["threshold"]]
+		"select_alias":
+			return "SELECT %s * %s AS %s FROM %s;" % [tmpl["base_col"], tmpl["multiplier"], tmpl["alias"], table]
 	return ""
 
 func _check_and_run(query: String, expected: Dictionary) -> bool:
@@ -743,24 +808,6 @@ func _on_terminal_text_changed() -> void:
 		_auto_caps_guard = false
 
 # ── Lesson-gating helpers ──────────────────────────────
-func _lessons_for(world: String) -> Array:
-	match world:
-		"hotel":   return Dashboard.HOTEL_LESSONS
-		"cafe":    return Dashboard.CAFE_LESSONS
-		"airport": return Dashboard.AIRPORT_LESSONS
-		"library": return Dashboard.LIBRARY_LESSONS
-	return []
-
-func _furthest_completed_index(world: String) -> int:
-	var lessons: Array = _lessons_for(world)
-	var count: int = 0
-	for lid in lessons:
-		if GameManager.get_stars(world, lid) > 0:
-			count += 1
-		else:
-			break
-	return count
-
 func _load_templates(world: String) -> Array:
 	match world:
 		"hotel":   return preload("res://scripts/data/HotelSimData.gd").new().TEMPLATES

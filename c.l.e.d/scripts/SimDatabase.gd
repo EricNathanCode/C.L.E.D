@@ -56,6 +56,8 @@ func _insert_raw(table_name: String, headers: Array, row: Array) -> void:
 	_db.query("INSERT INTO %s (%s) VALUES (%s);" % [table_name, ", ".join(headers), ", ".join(vals)])
 
 func _sql_literal(v) -> String:
+	if v == null:
+		return "NULL"
 	if v is float or v is int:
 		return str(v)
 	var s: String = str(v)
@@ -86,7 +88,8 @@ func fetch_rows(table_name: String) -> Array:
 	for row_dict in _db.query_result:
 		var row: Array = []
 		for h in headers:
-			row.append(str(row_dict.get(h, "")))
+			var val = row_dict.get(h)
+			row.append("NULL" if val == null else str(val))
 		rows.append(row)
 	return rows
 

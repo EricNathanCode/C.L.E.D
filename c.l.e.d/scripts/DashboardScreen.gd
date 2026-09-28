@@ -999,8 +999,8 @@ func _toggle_glossary() -> void:
 const SIM_FOLDERS: Array = [
 	["all",       "Your Progress",         "Runs problems from every lesson you've unlocked so far."],
 	["basic",     "Basic SQL",             "SELECT, INSERT, WHERE, UPDATE, DELETE."],
-	["filtering", "Filtering Rows",        "Coming soon."],
-	["sorting",   "Sorting & Aggregates",  "Coming soon."],
+	["filtering", "Filtering Rows",        "IS NULL, DISTINCT, AND/OR, BETWEEN, LIKE, IN."],
+	["sorting",   "Sorting & Aggregates",  "ORDER BY, LIMIT, GROUP BY, COUNT/SUM/AVG, HAVING, AS."],
 ]
 
 const SIM_BASIC_LESSONS: Array = [
@@ -1009,6 +1009,24 @@ const SIM_BASIC_LESSONS: Array = [
 	[3, "SELECT WHERE", "Look up one specific record."],
 	[4, "UPDATE SET",   "Fix a wrong value on an existing record."],
 	[5, "DELETE",       "Remove a record."],
+]
+
+const SIM_FILTERING_LESSONS: Array = [
+	[6,  "IS NULL",  "Find rows with a missing value."],
+	[7,  "DISTINCT", "List each unique value once."],
+	[8,  "AND / OR", "Combine two filter conditions."],
+	[9,  "BETWEEN",  "Filter within an inclusive range."],
+	[10, "LIKE",     "Match a text pattern."],
+	[11, "IN",       "Match any value in a list."],
+]
+
+const SIM_SORTING_LESSONS: Array = [
+	[12, "ORDER BY",            "Sort results ascending or descending."],
+	[13, "LIMIT",               "Cap how many rows come back."],
+	[14, "GROUP BY",            "Group rows and count each bucket."],
+	[15, "COUNT / SUM / AVG",   "Collapse rows into one calculated value."],
+	[16, "HAVING",              "Filter groups after they're formed."],
+	[17, "AS (Alias)",          "Give a calculated column a readable name."],
 ]
 
 func _build_sim_picker() -> void:
@@ -1086,7 +1104,7 @@ func _show_sim_folder_list() -> void:
 		var key: String = entry[0]
 		var title: String = entry[1]
 		var desc: String = entry[2]
-		var locked: bool = (key == "filtering" or key == "sorting")
+		var locked: bool = (key == "filtering" or key == "sorting") and GameManager.world != "hotel"
 		var pair: Array = _build_sim_picker_row(title, desc, locked)
 		var btn: Button = pair[0]
 		var best_lbl: Label = pair[1]
@@ -1095,6 +1113,10 @@ func _show_sim_folder_list() -> void:
 			best_lbl.text = "Best: %d" % GameManager.get_sim_best(score_key)
 			if key == "basic":
 				btn.pressed.connect(_show_sim_basic_lesson_list)
+			elif key == "filtering":
+				btn.pressed.connect(_show_sim_filtering_lesson_list)
+			elif key == "sorting":
+				btn.pressed.connect(_show_sim_sorting_lesson_list)
 			else:
 				btn.pressed.connect(_start_simulation.bind(key, 0))
 		_sim_picker_body.add_child(btn)
@@ -1126,6 +1148,64 @@ func _show_sim_basic_lesson_list() -> void:
 		var best_lbl: Label = pair[1]
 		best_lbl.text = "Best: %d" % GameManager.get_sim_best(GameManager.world + "_basic_" + str(idx))
 		btn.pressed.connect(_start_simulation.bind("basic", idx))
+		_sim_picker_body.add_child(btn)
+
+func _show_sim_filtering_lesson_list() -> void:
+	_sim_picker_title_lbl.text = "Filtering Rows"
+	for c in _sim_picker_body.get_children():
+		c.queue_free()
+
+	var back_btn := Button.new()
+	back_btn.text = "← Back"
+	_style_btn(back_btn, "ghost", 13)
+	back_btn.pressed.connect(_show_sim_folder_list)
+	_sim_picker_body.add_child(back_btn)
+
+	var all_pair: Array = _build_sim_picker_row("All of Filtering Rows", "Mixes every concept you've unlocked in this folder.", false)
+	var all_btn: Button = all_pair[0]
+	var all_best: Label = all_pair[1]
+	all_best.text = "Best: %d" % GameManager.get_sim_best(GameManager.world + "_filtering")
+	all_btn.pressed.connect(_start_simulation.bind("filtering", 0))
+	_sim_picker_body.add_child(all_btn)
+
+	for entry in SIM_FILTERING_LESSONS:
+		var idx: int = entry[0]
+		var title: String = entry[1]
+		var desc: String = entry[2]
+		var pair: Array = _build_sim_picker_row(title, desc, false)
+		var btn: Button = pair[0]
+		var best_lbl: Label = pair[1]
+		best_lbl.text = "Best: %d" % GameManager.get_sim_best(GameManager.world + "_filtering_" + str(idx))
+		btn.pressed.connect(_start_simulation.bind("filtering", idx))
+		_sim_picker_body.add_child(btn)
+
+func _show_sim_sorting_lesson_list() -> void:
+	_sim_picker_title_lbl.text = "Sorting & Aggregates"
+	for c in _sim_picker_body.get_children():
+		c.queue_free()
+
+	var back_btn := Button.new()
+	back_btn.text = "← Back"
+	_style_btn(back_btn, "ghost", 13)
+	back_btn.pressed.connect(_show_sim_folder_list)
+	_sim_picker_body.add_child(back_btn)
+
+	var all_pair: Array = _build_sim_picker_row("All of Sorting & Aggregates", "Mixes every concept you've unlocked in this folder.", false)
+	var all_btn: Button = all_pair[0]
+	var all_best: Label = all_pair[1]
+	all_best.text = "Best: %d" % GameManager.get_sim_best(GameManager.world + "_sorting")
+	all_btn.pressed.connect(_start_simulation.bind("sorting", 0))
+	_sim_picker_body.add_child(all_btn)
+
+	for entry in SIM_SORTING_LESSONS:
+		var idx: int = entry[0]
+		var title: String = entry[1]
+		var desc: String = entry[2]
+		var pair: Array = _build_sim_picker_row(title, desc, false)
+		var btn: Button = pair[0]
+		var best_lbl: Label = pair[1]
+		best_lbl.text = "Best: %d" % GameManager.get_sim_best(GameManager.world + "_sorting_" + str(idx))
+		btn.pressed.connect(_start_simulation.bind("sorting", idx))
 		_sim_picker_body.add_child(btn)
 
 # Builds one picker row: a styled Button containing a title/description
