@@ -297,12 +297,14 @@ func _cell(txt: String, is_header: bool, min_w: float) -> PanelContainer:
 	pc.custom_minimum_size   = Vector2(min_w, 0)
 	var s: StyleBoxFlat = StyleBoxFlat.new()
 	s.bg_color = Color(0.05, 0.09, 0.16) if is_header else Color(0.08, 0.13, 0.2)
+	if txt == "NULL" and not is_header: s.bg_color = Color(0.18, 0.07, 0.07)
 	s.border_color = Color(0.22, 0.32, 0.45);  s.set_border_width_all(1)
 	s.content_margin_left = 10;  s.content_margin_right  = 10
 	s.content_margin_top  = 5;   s.content_margin_bottom = 5
 	pc.add_theme_stylebox_override("panel", s)
 	var lbl: Label = Label.new();  lbl.text = txt
 	if is_header: lbl.modulate = Color(0.96, 0.75, 0.30)
+	elif txt == "NULL": lbl.modulate = Color(0.80, 0.35, 0.35)
 	pc.add_child(lbl);  return pc
 
 func _style_btn(btn: Button, bg: Color, fg: Color) -> void:

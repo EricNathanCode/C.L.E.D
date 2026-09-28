@@ -77,7 +77,8 @@ var _story:           Array      = []
 var _step:            int        = 0
 var _current_gm:      Node       = null
 var _dlg_line:        ColorRect  = null
-var _failed_step:     Dictionary = {}
+var _saved_story:     Array      = []   # story to resume once the "fail" dialogue's retry step fires
+var _saved_step:      int        = 0
 
 func _ready() -> void:
 	$SceneBG.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
@@ -85,6 +86,21 @@ func _ready() -> void:
 	$DialogueArea/DialogueButtons/NextButton.pressed.connect(_on_next)
 	$DialogueArea/DialogueButtons/BackButton.pressed.connect(_on_back)
 	$SQLOverlay/CenterContainer/PanelContainer/OuterVBox/BackToDialogueButton.pressed.connect(_on_back)
+
+	# Shown only at the "did you want to retry?" choice after a wrong answer.
+	var retry_btn := Button.new()
+	retry_btn.name = "RetryChallengeButton"
+	retry_btn.text = "↺  Retry Challenge"
+	retry_btn.visible = false
+	retry_btn.pressed.connect(_on_retry_challenge)
+	$DialogueArea/DialogueButtons.add_child(retry_btn)
+
+	var retry_dash_btn := Button.new()
+	retry_dash_btn.name = "RetryDashboardButton"
+	retry_dash_btn.text = "← Back to Dashboard"
+	retry_dash_btn.visible = false
+	retry_dash_btn.pressed.connect(_on_back_to_hub)
+	$DialogueArea/DialogueButtons.add_child(retry_dash_btn)
 
 	# Top bar dark strip
 	var tb_bg := ColorRect.new()
@@ -129,6 +145,9 @@ func _ready() -> void:
 	_style_btn($DialogueArea/DialogueButtons/BackButton, "ghost", 15)
 	_style_btn($DialogueArea/DialogueButtons/NextButton, "primary", 15)
 	$DialogueArea/DialogueButtons/NextButton.text = "Next  →"
+
+	_style_btn($DialogueArea/DialogueButtons/RetryChallengeButton, "primary", 15)
+	_style_btn($DialogueArea/DialogueButtons/RetryDashboardButton, "ghost", 15)
 
 	_style_btn($SQLOverlay/CenterContainer/PanelContainer/OuterVBox/BackToDialogueButton, "secondary", 14)
 	$SQLOverlay/CenterContainer/PanelContainer/OuterVBox/BackToDialogueButton.text = "← Dialogue"
@@ -357,6 +376,8 @@ func _run_step() -> void:
 	_update_progress()
 	var s: Dictionary = _story[_step]
 	$DialogueArea/DialogueButtons/BackButton.visible = _step > 0
+	$DialogueArea/DialogueButtons/RetryChallengeButton.visible = false
+	$DialogueArea/DialogueButtons/RetryDashboardButton.visible = false
 
 	match s["type"]:
 		"dialogue":
@@ -382,11 +403,16 @@ func _run_step() -> void:
 			_go_complete()
 
 		"retry":
-			var main := get_tree().root.get_node("Main")
-			if main.has_method("show_failed"):
-				main.show_failed()
-			else:
-				main.show_screen("failed")
+			# Let the player choose instead of silently dropping them back
+			# into the challenge or forcing them out of the lesson.
+			GameManager.stop_speaking()
+			_finish_typewriter()
+			$DialogueArea/CharacterName.text = ""
+			$DialogueArea/DialogueText.text  = "Ready to try that one again?"
+			$DialogueArea/DialogueButtons/NextButton.visible          = false
+			$DialogueArea/DialogueButtons/BackButton.visible          = false
+			$DialogueArea/DialogueButtons/RetryChallengeButton.visible = true
+			$DialogueArea/DialogueButtons/RetryDashboardButton.visible = true
 
 # ── SQL Terminal ──────────────────────────────────────
 func _show_challenge(step: Dictionary, gm_key: String) -> void:
@@ -433,19 +459,14 @@ func _on_gm_wrong() -> void:
 	# Only count as a wrong attempt when a fail path actually branches
 	GameManager.record_wrong()
 
-	_failed_step = current_step
-
 	var fail_story: Array = fail_steps.duplicate(true)
 	fail_story.append({ "type": "retry" })
 
-	var saved_story: Array = _story
-	var saved_step:  int   = _step
+	_saved_story = _story
+	_saved_step  = _step
 	_story = fail_story
 	_step  = 0
 	_close_overlay()
-
-	set_meta("_saved_story", saved_story)
-	set_meta("_saved_step",  saved_step)
 	_run_step()
 
 func _on_gm_correct() -> void:
@@ -469,6 +490,14 @@ func _on_back() -> void:
 	_finish_typewriter()
 	_close_overlay()
 	_step = max(0, _step - 1)
+	_run_step()
+
+# Resume the real lesson at the exact challenge that was missed, so the
+# player retries it fresh instead of the lesson silently restarting or ending.
+func _on_retry_challenge() -> void:
+	GameManager.stop_speaking()
+	_story = _saved_story
+	_step  = _saved_step
 	_run_step()
 
 func _on_back_to_hub() -> void:

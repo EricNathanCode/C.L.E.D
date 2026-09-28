@@ -57,7 +57,7 @@ const SORTING_LESSON_NAMES: Dictionary = {
 }
 
 # Worlds whose *SimData.gd has real Filtering Rows / Sorting & Aggregates
-# templates built out. Other worlds still show "Coming soon" for those folders.
+# templates built out. A future world without them yet would show "Coming soon".
 const FILTERING_SORTING_READY_WORLDS: Array = ["hotel", "cafe", "airport", "library"]
 
 const SQL_KEYWORDS: Array = [
