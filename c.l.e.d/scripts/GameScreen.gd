@@ -44,7 +44,9 @@ const GM_SCENES: Dictionary = {
 	"sql_blank":        "res://gamemode/scene/GM_SqlBlank.tscn",
 }
 
-const BG_HOTEL   := "res://images/backgrounds/BG_hotel.png"
+const ChallengeSplit = preload("res://scripts/ChallengeSplit.gd")
+
+const BG_HOTEL   :="res://images/backgrounds/BG_hotel.png"
 const BG_CAFE    := "res://images/backgrounds/BG_cafe.png"
 const BG_AIRPORT := "res://images/backgrounds/BG_airport.png"
 const BG_LIBRARY := "res://images/backgrounds/BG_library.png"
@@ -266,7 +268,7 @@ func _unhandled_input(event: InputEvent) -> void:
 					_current_gm._on_hint()
 			KEY_RIGHT:
 				if _current_gm and is_instance_valid(_current_gm):
-					var cb: Button = _current_gm.get_node_or_null("ContinueButton")
+					var cb: Button = _current_gm.get_node_or_null("%ContinueButton")
 					if cb and cb.visible:
 						_current_gm._on_continue()
 	else:
@@ -432,11 +434,19 @@ func _show_challenge(step: Dictionary, gm_key: String) -> void:
 	_clear_gm()
 	var packed: PackedScene = load(path)
 	_current_gm = packed.instantiate()
-	$SQLOverlay/CenterContainer/PanelContainer/OuterVBox/ScrollContainer/GMContainer.add_child(_current_gm)
+
+	# The table and the terminal show as two separate windows, like Simulation Mode
+	$SQLOverlay/CenterContainer.visible = false
+	$SQLOverlay.add_child(_current_gm)
 	_current_gm.on_correct.connect(_on_gm_correct)
 	if _current_gm.has_signal("on_wrong"):
 		_current_gm.on_wrong.connect(_on_gm_wrong)
 	_current_gm.setup(step)
+	var back_btn := Button.new()
+	back_btn.text = "← Dialogue"
+	back_btn.pressed.connect(_on_back)
+	_style_btn(back_btn, "secondary", 14)
+	ChallengeSplit.apply(_current_gm, back_btn)
 
 	$SceneBG.visible      = false
 	$NPCSprite.visible    = false

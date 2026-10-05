@@ -9,60 +9,60 @@ var _step_data: Dictionary = {}
 var _blank:     LineEdit   = null
 
 func _ready() -> void:
-	_apply_terminal_style($SQLTerminal)
-	$QueryLabel.add_theme_color_override("font_color", Color("#4fc3f7"))
-	$ButtonRow/ExecuteButton.pressed.connect(_on_execute)
-	$ButtonRow/HintButton.pressed.connect(_on_hint)
-	$ContinueButton.pressed.connect(_on_continue)
-	_style_btn($ButtonRow/ExecuteButton, Color("#F59E0B"), Color("#1A1008"))
-	_style_btn_outline($ButtonRow/HintButton, Color("#4fc3f7"))
-	_style_btn($ContinueButton, Color("#16A34A"), Color.WHITE)
-	$HintLabel.add_theme_color_override("font_color", Color("#4fc3f7"))
+	_apply_terminal_style(%SQLTerminal)
+	%QueryLabel.add_theme_color_override("font_color", Color("#4fc3f7"))
+	%ExecuteButton.pressed.connect(_on_execute)
+	%HintButton.pressed.connect(_on_hint)
+	%ContinueButton.pressed.connect(_on_continue)
+	_style_btn(%ExecuteButton, Color("#F59E0B"), Color("#1A1008"))
+	_style_btn_outline(%HintButton, Color("#4fc3f7"))
+	_style_btn(%ContinueButton, Color("#16A34A"), Color.WHITE)
+	%HintLabel.add_theme_color_override("font_color", Color("#4fc3f7"))
 
-func _on_hint()     -> void: $HintLabel.visible = true
+func _on_hint()     -> void: %HintLabel.visible = true
 func _on_continue() -> void: on_correct.emit()
 
 func setup(data: Dictionary) -> void:
 	_step_data = data; _answer = data.get("answer","COUNT")
-	$Description.text = data.get("desc",""); $HintLabel.text = "Hint: " + data.get("hint","")
-	$TableLabel.text  = "TABLE: " + data.get("table","[table]")
-	$HintLabel.visible = false; $ResultBox.visible = false; $ContinueButton.visible = false
+	%Description.text = data.get("desc",""); %HintLabel.text = "Hint: " + data.get("hint","")
+	%TableLabel.text  = "TABLE: " + data.get("table","[table]")
+	%HintLabel.visible = false; %ResultBox.visible = false; %ContinueButton.visible = false
 	var gc: String = data.get("group_col","col"); var tbl: String = data.get("table","table")
-	for ch in $SQLTerminal/SQLBlock.get_children(): ch.queue_free()
+	for ch in %SQLBlock.get_children(): ch.queue_free()
 	var line1 := HBoxContainer.new(); line1.add_theme_constant_override("separation", 0)
-	$SQLTerminal/SQLBlock.add_child(line1)
+	%SQLBlock.add_child(line1)
 	var l1_kw1 := Label.new(); l1_kw1.text = "SELECT "; _style_keyword_label(l1_kw1); line1.add_child(l1_kw1)
 	var l1_col := Label.new(); l1_col.text = gc; _style_identifier_label(l1_col); line1.add_child(l1_col)
 	var l1_mid := Label.new(); l1_mid.text = ",  "; _style_code_label(l1_mid); line1.add_child(l1_mid)
 	var l1_kw2 := Label.new(); l1_kw2.text = "COUNT"; _style_keyword_label(l1_kw2); line1.add_child(l1_kw2)
 	var l1_tail := Label.new(); l1_tail.text = "(*)"; _style_code_label(l1_tail); line1.add_child(l1_tail)
 	var line2 := HBoxContainer.new(); line2.add_theme_constant_override("separation", 0)
-	$SQLTerminal/SQLBlock.add_child(line2)
+	%SQLBlock.add_child(line2)
 	var l2_kw1 := Label.new(); l2_kw1.text = "FROM "; _style_keyword_label(l2_kw1); line2.add_child(l2_kw1)
 	var l2_tbl := Label.new(); l2_tbl.text = tbl; _style_identifier_label(l2_tbl); line2.add_child(l2_tbl)
 	var l2_mid := Label.new(); l2_mid.text = "  "; _style_code_label(l2_mid); line2.add_child(l2_mid)
 	var l2_kw2 := Label.new(); l2_kw2.text = "GROUP BY "; _style_keyword_label(l2_kw2); line2.add_child(l2_kw2)
 	var l2_col := Label.new(); l2_col.text = gc; _style_identifier_label(l2_col); line2.add_child(l2_col)
 	var row := HBoxContainer.new(); row.add_theme_constant_override("separation", 4)
-	$SQLTerminal/SQLBlock.add_child(row)
+	%SQLBlock.add_child(row)
 	var pre := Label.new(); pre.text = "HAVING  "; _style_keyword_label(pre); row.add_child(pre)
 	_blank = LineEdit.new(); _blank.placeholder_text = "function"
 	_blank.custom_minimum_size = Vector2(100, 0); _blank.max_length = 5
 	_blank.text_submitted.connect(func(_t): _on_execute()); _style_input(_blank); _wire_grow(_blank); row.add_child(_blank)
 	var suf := Label.new(); suf.text = "(*)  >  1;"; _style_code_label(suf); row.add_child(suf)
-	_fill_table($DataTable, data.get("table_headers",[]), data.get("table_rows",[]))
+	_fill_table(%DataTable, data.get("table_headers",[]), data.get("table_rows",[]))
 	_blank.grab_focus()
 
 func _on_execute() -> void:
 	if _blank == null: return
 	var val: String = _blank.text.strip_edges()
-	if val.is_empty(): _fill_error($ResultBox, "Type the aggregate function used in HAVING."); return
+	if val.is_empty(): _fill_error(%ResultBox, "Type the aggregate function used in HAVING."); return
 	if val.to_upper() == _answer.to_upper():
 		_blank.text = _answer
 		_fit_grow(_blank, _answer)
-		_fill_result($ResultBox, _step_data.get("result_headers",[]), _step_data.get("result_rows",[]), _step_data.get("result_msg",""))
+		_fill_result(%ResultBox, _step_data.get("result_headers",[]), _step_data.get("result_rows",[]), _step_data.get("result_msg",""))
 	else:
-		on_wrong.emit(); _fill_error($ResultBox, "'" + val + "' is not correct. HAVING uses COUNT here.")
+		on_wrong.emit(); _fill_error(%ResultBox, "'" + val + "' is not correct. HAVING uses COUNT here.")
 
 func _apply_terminal_style(panel: PanelContainer) -> void:
 	var s := StyleBoxFlat.new()
@@ -115,7 +115,7 @@ func _add_code_line(txt: String) -> void:
 	var lbl := Label.new()
 	lbl.text = txt
 	_style_code_label(lbl)
-	$SQLTerminal/SQLBlock.add_child(lbl)
+	%SQLBlock.add_child(lbl)
 
 func _fill_table(c: Node, headers: Array, rows: Array) -> void:
 	for ch in c.get_children(): ch.queue_free()
@@ -134,7 +134,7 @@ func _fill_result(c: Node, headers: Array, rows: Array, msg: String) -> void:
 		ml.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		ml.add_theme_color_override("font_color", Color(0.80, 0.85, 0.95))
 		c.add_child(ml)
-	c.visible = true;  $ContinueButton.visible = true
+	c.visible = true;  %ContinueButton.visible = true
 
 func _fill_error(c: Node, msg: String) -> void:
 	for ch in c.get_children(): ch.queue_free()

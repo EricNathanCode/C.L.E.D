@@ -9,27 +9,27 @@ var _step_data: Dictionary = {}
 var _blank:     LineEdit   = null
 
 func _ready() -> void:
-	_apply_terminal_style($SQLTerminal)
-	$QueryLabel.add_theme_color_override("font_color", Color("#4fc3f7"))
-	$ButtonRow/ExecuteButton.pressed.connect(_on_execute)
-	$ButtonRow/HintButton.pressed.connect(_on_hint)
-	$ContinueButton.pressed.connect(_on_continue)
-	_style_btn($ButtonRow/ExecuteButton, Color("#F59E0B"), Color("#1A1008"))
-	_style_btn_outline($ButtonRow/HintButton, Color("#4fc3f7"))
-	_style_btn($ContinueButton, Color("#16A34A"), Color.WHITE)
-	$HintLabel.add_theme_color_override("font_color", Color("#4fc3f7"))
+	_apply_terminal_style(%SQLTerminal)
+	%QueryLabel.add_theme_color_override("font_color", Color("#4fc3f7"))
+	%ExecuteButton.pressed.connect(_on_execute)
+	%HintButton.pressed.connect(_on_hint)
+	%ContinueButton.pressed.connect(_on_continue)
+	_style_btn(%ExecuteButton, Color("#F59E0B"), Color("#1A1008"))
+	_style_btn_outline(%HintButton, Color("#4fc3f7"))
+	_style_btn(%ContinueButton, Color("#16A34A"), Color.WHITE)
+	%HintLabel.add_theme_color_override("font_color", Color("#4fc3f7"))
 
-func _on_hint()     -> void: $HintLabel.visible = true
+func _on_hint()     -> void: %HintLabel.visible = true
 func _on_continue() -> void: on_correct.emit()
 
 func setup(data: Dictionary) -> void:
 	_step_data = data; _answer = data.get("answer","alias")
-	$Description.text = data.get("desc",""); $HintLabel.text = "Hint: " + data.get("hint","")
-	$TableLabel.text  = "TABLE: " + data.get("table","[table]")
-	$HintLabel.visible = false; $ResultBox.visible = false; $ContinueButton.visible = false
-	for ch in $SQLTerminal/SQLBlock.get_children(): ch.queue_free()
+	%Description.text = data.get("desc",""); %HintLabel.text = "Hint: " + data.get("hint","")
+	%TableLabel.text  = "TABLE: " + data.get("table","[table]")
+	%HintLabel.visible = false; %ResultBox.visible = false; %ContinueButton.visible = false
+	for ch in %SQLBlock.get_children(): ch.queue_free()
 	var row := HBoxContainer.new(); row.add_theme_constant_override("separation", 4)
-	$SQLTerminal/SQLBlock.add_child(row)
+	%SQLBlock.add_child(row)
 	# col_expr is always a computed expression in the real lesson data
 	# (e.g. "price * 0.9", "ticket_price * 1.12"), never a bare column
 	# name, so it stays neutral rather than amber.
@@ -44,19 +44,19 @@ func setup(data: Dictionary) -> void:
 	var suf_kw := Label.new(); suf_kw.text = "  FROM  "; _style_keyword_label(suf_kw); suf.add_child(suf_kw)
 	var suf_tbl := Label.new(); suf_tbl.text = data.get("table","table"); _style_identifier_label(suf_tbl); suf.add_child(suf_tbl)
 	var suf_punct := Label.new(); suf_punct.text = ";"; _style_code_label(suf_punct); suf.add_child(suf_punct)
-	_fill_table($DataTable, data.get("table_headers",[]), data.get("table_rows",[]))
+	_fill_table(%DataTable, data.get("table_headers",[]), data.get("table_rows",[]))
 	_blank.grab_focus()
 
 func _on_execute() -> void:
 	if _blank == null: return
 	var val: String = _blank.text.strip_edges()
-	if val.is_empty(): _fill_error($ResultBox, "Type the alias name for this column."); return
+	if val.is_empty(): _fill_error(%ResultBox, "Type the alias name for this column."); return
 	if val.to_lower() == _answer.to_lower():
 		_blank.text = _answer
 		_fit_grow(_blank, _answer)
-		_fill_result($ResultBox, _step_data.get("result_headers",[]), _step_data.get("result_rows",[]), _step_data.get("result_msg",""))
+		_fill_result(%ResultBox, _step_data.get("result_headers",[]), _step_data.get("result_rows",[]), _step_data.get("result_msg",""))
 	else:
-		on_wrong.emit(); _fill_error($ResultBox, "'" + val + "' is not correct. The alias is: " + _answer)
+		on_wrong.emit(); _fill_error(%ResultBox, "'" + val + "' is not correct. The alias is: " + _answer)
 
 func _apply_terminal_style(panel: PanelContainer) -> void:
 	var s := StyleBoxFlat.new()
@@ -109,7 +109,7 @@ func _add_code_line(txt: String) -> void:
 	var lbl := Label.new()
 	lbl.text = txt
 	_style_code_label(lbl)
-	$SQLTerminal/SQLBlock.add_child(lbl)
+	%SQLBlock.add_child(lbl)
 
 func _fill_table(c: Node, headers: Array, rows: Array) -> void:
 	for ch in c.get_children(): ch.queue_free()
@@ -128,7 +128,7 @@ func _fill_result(c: Node, headers: Array, rows: Array, msg: String) -> void:
 		ml.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		ml.add_theme_color_override("font_color", Color(0.80, 0.85, 0.95))
 		c.add_child(ml)
-	c.visible = true;  $ContinueButton.visible = true
+	c.visible = true;  %ContinueButton.visible = true
 
 func _fill_error(c: Node, msg: String) -> void:
 	for ch in c.get_children(): ch.queue_free()

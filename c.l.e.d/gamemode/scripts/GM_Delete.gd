@@ -8,42 +8,42 @@ var _answer_id: String     = ""
 var _step_data: Dictionary = {}
 
 func _ready() -> void:
-	_apply_terminal_style($SQLTerminal)
-	_style_input($SQLTerminal/SQLBlock/Line2/Blank1)
-	_wire_grow($SQLTerminal/SQLBlock/Line2/Blank1)
-	$QueryLabel.add_theme_color_override("font_color", Color("#4fc3f7"))
-	$ButtonRow/ExecuteButton.pressed.connect(_on_execute)
-	$ButtonRow/HintButton.pressed.connect(_on_hint)
-	$ContinueButton.pressed.connect(_on_continue)
-	$SQLTerminal/SQLBlock/Line2/Blank1.text_submitted.connect(func(_t): _on_execute())
-	_style_btn($ButtonRow/ExecuteButton, Color("#F59E0B"), Color("#1A1008"))
-	_style_btn_outline($ButtonRow/HintButton, Color("#4fc3f7"))
-	_style_btn($ContinueButton,          Color("#16A34A"), Color.WHITE)
-	$HintLabel.add_theme_color_override("font_color", Color("#4fc3f7"))
+	_apply_terminal_style(%SQLTerminal)
+	_style_input(%SQLBlock/Line2/Blank1)
+	_wire_grow(%SQLBlock/Line2/Blank1)
+	%QueryLabel.add_theme_color_override("font_color", Color("#4fc3f7"))
+	%ExecuteButton.pressed.connect(_on_execute)
+	%HintButton.pressed.connect(_on_hint)
+	%ContinueButton.pressed.connect(_on_continue)
+	%SQLBlock/Line2/Blank1.text_submitted.connect(func(_t): _on_execute())
+	_style_btn(%ExecuteButton, Color("#F59E0B"), Color("#1A1008"))
+	_style_btn_outline(%HintButton, Color("#4fc3f7"))
+	_style_btn(%ContinueButton,          Color("#16A34A"), Color.WHITE)
+	%HintLabel.add_theme_color_override("font_color", Color("#4fc3f7"))
 
 func setup(data: Dictionary) -> void:
 	_step_data = data;  _answer_id = str(data.get("answer_id", ""))
-	$Description.text                         = data.get("desc", "")
-	$HintLabel.text                           = "Hint: " + data.get("hint", "")
-	$TableLabel.text                          = "TABLE: " + data.get("table", "[table]")
-	$SQLTerminal/SQLBlock/Line1.text          = "[color=#6BB0E8]DELETE FROM[/color] [color=#F5BF4D]" + data.get("table", "[table]") + "[/color]"
-	$SQLTerminal/SQLBlock/Line2/Blank1.text   = ""
-	$HintLabel.visible = false;  $ResultBox.visible = false;  $ContinueButton.visible = false
-	_fill_table($DataTable, data.get("table_headers", []), data.get("table_rows", []))
-	$SQLTerminal/SQLBlock/Line2/Blank1.grab_focus()
+	%Description.text                         = data.get("desc", "")
+	%HintLabel.text                           = "Hint: " + data.get("hint", "")
+	%TableLabel.text                          = "TABLE: " + data.get("table", "[table]")
+	%SQLBlock/Line1.text          = "[color=#6BB0E8]DELETE FROM[/color] [color=#F5BF4D]" + data.get("table", "[table]") + "[/color]"
+	%SQLBlock/Line2/Blank1.text   = ""
+	%HintLabel.visible = false;  %ResultBox.visible = false;  %ContinueButton.visible = false
+	_fill_table(%DataTable, data.get("table_headers", []), data.get("table_rows", []))
+	%SQLBlock/Line2/Blank1.grab_focus()
 
 func _on_execute() -> void:
-	var inp: LineEdit = $SQLTerminal/SQLBlock/Line2/Blank1
+	var inp: LineEdit = %SQLBlock/Line2/Blank1
 	var val: String = inp.text.strip_edges()
-	if val.is_empty(): _fill_error($ResultBox, "Please type the record id to delete."); return
+	if val.is_empty(): _fill_error(%ResultBox, "Please type the record id to delete."); return
 	if val == _answer_id:
-		_fill_result($ResultBox, _step_data.get("result_headers",[]),
+		_fill_result(%ResultBox, _step_data.get("result_headers",[]),
 			_step_data.get("result_rows",[]), _step_data.get("result_msg",""))
 	else:
 		on_wrong.emit()
-		_fill_error($ResultBox, "id = " + val + " is not the correct record. Try again.")
+		_fill_error(%ResultBox, "id = " + val + " is not the correct record. Try again.")
 
-func _on_hint() -> void:    $HintLabel.visible = true
+func _on_hint() -> void:    %HintLabel.visible = true
 func _on_continue() -> void: on_correct.emit()
 
 func _fill_table(c: Node, headers: Array, rows: Array) -> void:
@@ -56,7 +56,7 @@ func _fill_result(c: Node, headers: Array, rows: Array, msg: String) -> void:
 	var ok: Label = Label.new(); ok.text = "Query executed successfully."; c.add_child(ok)
 	if not headers.is_empty(): c.add_child(_build_table(headers, rows))
 	if not msg.is_empty(): var ml: Label = Label.new(); ml.text = msg; c.add_child(ml)
-	c.visible = true;  $ContinueButton.visible = true
+	c.visible = true;  %ContinueButton.visible = true
 
 func _fill_error(c: Node, msg: String) -> void:
 	for ch in c.get_children(): ch.queue_free()

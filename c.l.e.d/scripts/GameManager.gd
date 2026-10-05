@@ -109,17 +109,31 @@ func report_sim_score(world: String, score: int) -> bool:
 
 # ── Accounts ───────────────────────────────────────────
 # Plain local credential store — offline single-PC use only, no server.
-func account_exists(username: String) -> bool:
+# Windows treats save files "Alice.cfg" and "alice.cfg" as the same file, so
+# usernames that differ only by case must count as the same account. An exact
+# match always wins; otherwise the stored spelling with the same letters is used.
+func _find_account(username: String) -> String:
 	var cfg := ConfigFile.new()
-	if cfg.load(ACCOUNTS_PATH) != OK:
-		return false
-	return cfg.has_section_key("accounts", username)
+	if cfg.load(ACCOUNTS_PATH) != OK or not cfg.has_section("accounts"):
+		return ""
+	if cfg.has_section_key("accounts", username):
+		return username
+	var lower: String = username.to_lower()
+	for key in cfg.get_section_keys("accounts"):
+		if key.to_lower() == lower:
+			return key
+	return ""
+
+func account_exists(username: String) -> bool:
+	return _find_account(username) != ""
 
 func check_password(username: String, password: String) -> bool:
-	var cfg := ConfigFile.new()
-	if cfg.load(ACCOUNTS_PATH) != OK:
+	var key: String = _find_account(username)
+	if key.is_empty():
 		return false
-	return cfg.get_value("accounts", username, null) == password
+	var cfg := ConfigFile.new()
+	cfg.load(ACCOUNTS_PATH)
+	return cfg.get_value("accounts", key, null) == password
 
 func create_account(username: String, password: String) -> void:
 	var cfg := ConfigFile.new()
@@ -128,9 +142,10 @@ func create_account(username: String, password: String) -> void:
 	cfg.save(ACCOUNTS_PATH)
 
 func login(username: String) -> void:
-	current_user = username
+	var stored: String = _find_account(username)
+	current_user = stored if not stored.is_empty() else username
 	load_game()
-	_remember_session(username)
+	_remember_session(current_user)
 
 # ── Session (remember the last signed-in user across launches) ──
 # Set automatically on every login. Only cleared on an explicit

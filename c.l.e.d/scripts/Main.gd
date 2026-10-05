@@ -51,7 +51,11 @@ func _play_bgm(key: String) -> void:
 # Called live as the Music slider is dragged.
 func set_music_volume(v: float) -> void:
 	GameManager.music_volume = v
-	$BGM.volume_db = linear_to_db(v)
+	# Login/World Select build their sliders before this node's own _ready()
+	# has created the BGM player, so it may not exist yet at startup.
+	var bgm: AudioStreamPlayer = get_node_or_null("BGM")
+	if bgm != null:
+		bgm.volume_db = linear_to_db(v)
 	GameManager.save_settings()
 
 func _build_dark_overlay() -> void:

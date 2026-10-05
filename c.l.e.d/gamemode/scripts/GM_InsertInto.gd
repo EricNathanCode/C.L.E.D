@@ -10,37 +10,37 @@ var _step_data: Dictionary = {}
 
 func _ready() -> void:
 	_blanks = [
-		$SQLTerminal/SQLBlock/Line2/Blank1, $SQLTerminal/SQLBlock/Line2/Blank2,
-		$SQLTerminal/SQLBlock/Line2/Blank3, $SQLTerminal/SQLBlock/Line2/Blank4,
+		%SQLBlock/Line2/Blank1, %SQLBlock/Line2/Blank2,
+		%SQLBlock/Line2/Blank3, %SQLBlock/Line2/Blank4,
 	]
-	_apply_terminal_style($SQLTerminal)
+	_apply_terminal_style(%SQLTerminal)
 	for b in _blanks: _style_input(b as LineEdit)
 	for b in _blanks: _wire_grow(b as LineEdit)
-	$QueryLabel.add_theme_color_override("font_color", Color("#4fc3f7"))
-	$ButtonRow/ExecuteButton.pressed.connect(_on_execute)
-	$ButtonRow/HintButton.pressed.connect(_on_hint)
-	$ContinueButton.pressed.connect(_on_continue)
+	%QueryLabel.add_theme_color_override("font_color", Color("#4fc3f7"))
+	%ExecuteButton.pressed.connect(_on_execute)
+	%HintButton.pressed.connect(_on_hint)
+	%ContinueButton.pressed.connect(_on_continue)
 	for b in _blanks: (b as LineEdit).text_submitted.connect(func(_t): _on_execute())
-	_style_btn($ButtonRow/ExecuteButton, Color("#F59E0B"), Color("#1A1008"))
-	_style_btn_outline($ButtonRow/HintButton, Color("#4fc3f7"))
-	_style_btn($ContinueButton,          Color("#16A34A"), Color.WHITE)
-	$HintLabel.add_theme_color_override("font_color", Color("#4fc3f7"))
+	_style_btn(%ExecuteButton, Color("#F59E0B"), Color("#1A1008"))
+	_style_btn_outline(%HintButton, Color("#4fc3f7"))
+	_style_btn(%ContinueButton,          Color("#16A34A"), Color.WHITE)
+	%HintLabel.add_theme_color_override("font_color", Color("#4fc3f7"))
 
 func setup(data: Dictionary) -> void:
 	_step_data = data;  _answers = data.get("answers", [])
-	$Description.text                 = data.get("desc", "")
-	$HintLabel.text                   = "Hint: " + data.get("hint", "")
-	$TableLabel.text                  = "TABLE: " + data.get("table", "[table]")
-	$SQLTerminal/SQLBlock/Line1.text  = "[color=#6BB0E8]INSERT INTO[/color] [color=#F5BF4D]" + data.get("table", "[table]") + \
+	%Description.text                 = data.get("desc", "")
+	%HintLabel.text                   = "Hint: " + data.get("hint", "")
+	%TableLabel.text                  = "TABLE: " + data.get("table", "[table]")
+	%SQLBlock/Line1.text  = "[color=#6BB0E8]INSERT INTO[/color] [color=#F5BF4D]" + data.get("table", "[table]") + \
 		"[/color] (" + ", ".join(data.get("columns", [])) + ")"
-	$HintLabel.visible = false;  $ResultBox.visible = false;  $ContinueButton.visible = false
-	var seps := [$SQLTerminal/SQLBlock/Line2/Sep1,
-				 $SQLTerminal/SQLBlock/Line2/Sep2,
-				 $SQLTerminal/SQLBlock/Line2/Sep3]
+	%HintLabel.visible = false;  %ResultBox.visible = false;  %ContinueButton.visible = false
+	var seps := [%SQLBlock/Line2/Sep1,
+				 %SQLBlock/Line2/Sep2,
+				 %SQLBlock/Line2/Sep3]
 	for i in range(_blanks.size()):
 		var le: LineEdit = _blanks[i];  le.text = "";  le.visible = i < _answers.size()
 	for i in range(seps.size()): (seps[i] as Label).visible = i < (_answers.size() - 1)
-	_fill_table($DataTable, data.get("table_headers", []), data.get("table_rows", []))
+	_fill_table(%DataTable, data.get("table_headers", []), data.get("table_rows", []))
 	if _answers.size() > 0: (_blanks[0] as LineEdit).grab_focus()
 
 func _on_execute() -> void:
@@ -51,13 +51,13 @@ func _on_execute() -> void:
 		if inp.text.strip_edges().to_lower() != exp.to_lower(): all_ok = false
 		else: inp.text = exp; _fit_grow(inp, exp)
 	if all_ok:
-		_fill_result($ResultBox, _step_data.get("result_headers",[]),
+		_fill_result(%ResultBox, _step_data.get("result_headers",[]),
 			_step_data.get("result_rows",[]), _step_data.get("result_msg",""))
 	else:
 		on_wrong.emit()
-		_fill_error($ResultBox, "Some values are wrong. Check the dialogue and try again.")
+		_fill_error(%ResultBox, "Some values are wrong. Check the dialogue and try again.")
 
-func _on_hint() -> void:    $HintLabel.visible = true
+func _on_hint() -> void:    %HintLabel.visible = true
 func _on_continue() -> void: on_correct.emit()
 
 func _fill_table(c: Node, headers: Array, rows: Array) -> void:
@@ -70,7 +70,7 @@ func _fill_result(c: Node, headers: Array, rows: Array, msg: String) -> void:
 	var ok: Label = Label.new(); ok.text = "Query executed successfully."; c.add_child(ok)
 	if not headers.is_empty(): c.add_child(_build_table(headers, rows))
 	if not msg.is_empty(): var ml: Label = Label.new(); ml.text = msg; c.add_child(ml)
-	c.visible = true;  $ContinueButton.visible = true
+	c.visible = true;  %ContinueButton.visible = true
 
 func _fill_error(c: Node, msg: String) -> void:
 	for ch in c.get_children(): ch.queue_free()
