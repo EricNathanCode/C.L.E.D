@@ -327,7 +327,7 @@ func build_lessons() -> void:
 
 			var btn := Button.new()
 			btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-			btn.text_overrun_behavior = TextServer.OVERRUN_NO_TRIMMING
+			btn.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
 
 			if is_locked:
@@ -345,16 +345,21 @@ func build_lessons() -> void:
 
 			row.add_child(btn)
 
+			# Stars sit on top of the finished lesson, so they never take row width
+			var item := VBoxContainer.new()
+			item.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			item.add_theme_constant_override("separation", 0)
 			var stars: int = GameManager.get_stars(GameManager.world, captured_id)
 			if stars > 0:
 				var star_lbl := Label.new()
 				star_lbl.text = "★".repeat(stars) + "☆".repeat(3 - stars)
-				star_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+				star_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 				star_lbl.add_theme_font_size_override("font_size", 14)
 				star_lbl.add_theme_color_override("font_color", Color("#F59E0B"))
-				row.add_child(star_lbl)
+				item.add_child(star_lbl)
+			item.add_child(row)
 
-			box.add_child(row)
+			box.add_child(item)
 
 		# ── Folder challenge button (every folder, including the last) ────
 		if not folder_locked:
@@ -381,6 +386,7 @@ func build_lessons() -> void:
 
 			var qbtn := Button.new()
 			qbtn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			qbtn.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			qbtn.alignment = HORIZONTAL_ALIGNMENT_LEFT
 
 			if quiz_done:

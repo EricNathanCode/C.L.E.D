@@ -28,7 +28,7 @@ offset_top = 52.0
 theme_override_constants/separation = 0
 
 [node name="LeftPanel" type="VBoxContainer" parent="ContentRow"]
-custom_minimum_size = Vector2(400, 0)
+custom_minimum_size = Vector2(440, 0)
 size_flags_horizontal = 0
 size_flags_vertical = 3
 theme_override_constants/separation = 10
@@ -56,6 +56,7 @@ theme_override_constants/margin_bottom = 20
 [node name="ScrollContainer" type="ScrollContainer" parent="ContentRow/LeftPanel/ListPad"]
 size_flags_horizontal = 3
 size_flags_vertical = 3
+horizontal_scroll_mode = 0
 
 [node name="LessonList" type="VBoxContainer" parent="ContentRow/LeftPanel/ListPad/ScrollContainer"]
 size_flags_horizontal = 3
