@@ -31,6 +31,12 @@ var music_volume: float = 1.0:
 		music_volume = clamp(value, 0.0, 1.0)
 		music_enabled = music_volume > 0.0
 
+# Volume of the sound effects: the mouse click on buttons (0 = off). Separate from the
+# music so muting one does not mute the other.
+var sfx_volume: float = 1.0:
+	set(value):
+		sfx_volume = clamp(value, 0.0, 1.0)
+
 # ── Progress & scoring ────────────────────────────────
 var completed_lessons:       Dictionary = {}   # "world_lid"  → star_count (1–3)
 var completed_folder_quizzes: Dictionary = {}  # "world_fi"   → true
@@ -47,6 +53,146 @@ const SETTINGS_PATH := "user://settings.cfg"
 
 func _ready() -> void:
 	load_settings()
+	_setup_click_sound()
+	_setup_answer_sounds()
+
+# ── Mouse click sound ─────────────────────────────────
+# Every button in the game (any BaseButton added to the tree) plays this when
+# pressed down. Volume follows the "Sound Effects" setting.
+const CLICK_SOUND_PATH := "res://audio/sfx/click.wav"
+const CLICK_BASE_DB: float = -9.0
+const CLICK_VOICES: int = 3   # overlapping clicks when clicking fast
+
+var _click_stream: AudioStream = null
+var _click_players: Array = []
+var _click_next: int = 0
+
+# Hover tick: a soft sound when the mouse moves onto an enabled button.
+const HOVER_SOUND_PATH := "res://audio/sfx/hover.wav"
+const HOVER_BASE_DB: float = -13.0
+const HOVER_MIN_GAP_MS: int = 45         # ignore hovers that follow too quickly
+const HOVER_AFTER_CLICK_MS: int = 250    # a new screen appearing under the mouse isn't a hover
+
+var _hover_player: AudioStreamPlayer = null
+var _last_hover_ms: int = -1000
+var _last_click_ms: int = -1000
+
+func _setup_click_sound() -> void:
+	_click_stream = load(CLICK_SOUND_PATH)
+	_hover_player = AudioStreamPlayer.new()
+	_hover_player.bus = "Master"
+	_hover_player.stream = load(HOVER_SOUND_PATH)
+	add_child(_hover_player)
+	for i in CLICK_VOICES:
+		var player := AudioStreamPlayer.new()
+		player.bus = "Master"
+		add_child(player)
+		_click_players.append(player)
+	get_tree().node_added.connect(_on_node_added)
+	# At startup this autoload becomes ready AFTER the main scene's screens are
+	# already in the tree, so node_added never announced their buttons. Hook the
+	# ones that already exist (Enter World, Exit, arrows, gear, Next/Back, ...).
+	_hook_existing_buttons(get_tree().root)
+
+func _hook_existing_buttons(node: Node) -> void:
+	_on_node_added(node)
+	for child in node.get_children():
+		_hook_existing_buttons(child)
+
+func _on_node_added(node: Node) -> void:
+	# node_added fires again when a button is moved within the tree (e.g. into a
+	# challenge window), so only connect once.
+	if node is BaseButton and not node.button_down.is_connected(_play_click):
+		node.button_down.connect(_play_click)
+		node.mouse_entered.connect(_play_hover.bind(node))
+		# A disabled (locked) button never emits button_down, so listen for the
+		# raw press to give it its own "locked" sound instead of silence.
+		node.gui_input.connect(_on_button_gui_input.bind(node))
+
+func _play_hover(button: BaseButton) -> void:
+	if sfx_volume <= 0.0 or _hover_player == null or _hover_player.stream == null:
+		return
+	if button.disabled:
+		return
+	var now: int = Time.get_ticks_msec()
+	if now - _last_hover_ms < HOVER_MIN_GAP_MS or now - _last_click_ms < HOVER_AFTER_CLICK_MS:
+		return
+	_last_hover_ms = now
+	_hover_player.pitch_scale = randf_range(0.97, 1.03)
+	_hover_player.volume_db = HOVER_BASE_DB + linear_to_db(sfx_volume)
+	_hover_player.play()
+
+func _on_button_gui_input(event: InputEvent, button: BaseButton) -> void:
+	if button.disabled and event is InputEventMouseButton \
+			and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		play_locked()
+
+func _play_click() -> void:
+	_last_click_ms = Time.get_ticks_msec()
+	if sfx_volume <= 0.0 or _click_stream == null or _click_players.is_empty():
+		return
+	var player: AudioStreamPlayer = _click_players[_click_next]
+	_click_next = (_click_next + 1) % _click_players.size()
+	player.stream = _click_stream
+	player.pitch_scale = randf_range(0.96, 1.04)
+	player.volume_db = CLICK_BASE_DB + linear_to_db(sfx_volume)
+	player.play()
+
+# One sample click: previews the Sound Effects slider, and is played by
+# keyboard shortcuts that do the same job as a button (arrows, Enter, Esc).
+func play_click_preview() -> void:
+	_play_click()
+
+func play_click() -> void:
+	_play_click()
+
+# ── Answer feedback sounds ────────────────────────────
+# A chime when an SQL answer is right, a low buzz when it is wrong. Used by the
+# lesson SQL challenges, the Folder Challenge, and Simulation Mode.
+const CORRECT_SOUND_PATH := "res://audio/sfx/correct.wav"
+const WRONG_SOUND_PATH   := "res://audio/sfx/wrong.wav"
+const CORRECT_BASE_DB: float = -8.0
+const WRONG_BASE_DB:   float = -9.0
+
+var _correct_player: AudioStreamPlayer = null
+var _wrong_player:   AudioStreamPlayer = null
+
+# Played when the player presses a locked (disabled) button.
+const LOCKED_SOUND_PATH := "res://audio/sfx/locked.wav"
+const LOCKED_BASE_DB: float = -6.0
+var _locked_player: AudioStreamPlayer = null
+
+func _setup_answer_sounds() -> void:
+	_correct_player = _make_sfx_player(CORRECT_SOUND_PATH)
+	_wrong_player   = _make_sfx_player(WRONG_SOUND_PATH)
+	_locked_player  = _make_sfx_player(LOCKED_SOUND_PATH)
+
+func play_locked() -> void:
+	if sfx_volume <= 0.0 or _locked_player == null or _locked_player.stream == null:
+		return
+	_locked_player.volume_db = LOCKED_BASE_DB + linear_to_db(sfx_volume)
+	_locked_player.play()
+
+func _make_sfx_player(path: String) -> AudioStreamPlayer:
+	var player := AudioStreamPlayer.new()
+	player.bus = "Master"
+	player.stream = load(path)
+	add_child(player)
+	return player
+
+func play_correct() -> void:
+	_play_answer_sound(_correct_player, CORRECT_BASE_DB)
+
+func play_wrong() -> void:
+	_play_answer_sound(_wrong_player, WRONG_BASE_DB)
+
+func _play_answer_sound(player: AudioStreamPlayer, base_db: float) -> void:
+	if sfx_volume <= 0.0 or player == null or player.stream == null:
+		return
+	_correct_player.stop()
+	_wrong_player.stop()
+	player.volume_db = base_db + linear_to_db(sfx_volume)
+	player.play()
 
 func load_settings() -> void:
 	var cfg := ConfigFile.new()
@@ -55,12 +201,14 @@ func load_settings() -> void:
 	# Assigning through the setters above also refreshes tts_enabled/music_enabled.
 	tts_volume           = cfg.get_value("settings", "tts_volume",           1.0)
 	music_volume         = cfg.get_value("settings", "music_volume",         1.0)
+	sfx_volume           = cfg.get_value("settings", "sfx_volume",           1.0)
 	dark_overlay_enabled = cfg.get_value("settings", "dark_overlay_enabled", false)
 
 func save_settings() -> void:
 	var cfg := ConfigFile.new()
 	cfg.set_value("settings", "tts_volume",           tts_volume)
 	cfg.set_value("settings", "music_volume",         music_volume)
+	cfg.set_value("settings", "sfx_volume",           sfx_volume)
 	cfg.set_value("settings", "dark_overlay_enabled", dark_overlay_enabled)
 	cfg.save(SETTINGS_PATH)
 

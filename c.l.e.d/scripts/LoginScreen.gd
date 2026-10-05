@@ -28,6 +28,8 @@ const USERNAME_REGEX_PATTERN := "^[A-Za-z0-9_]{3,20}$"
 @onready var _tts_toggle:      HSlider = $SettingsOverlay/SettingsPanel/VBox/TTSRow/TTSToggle
 @onready var _music_label:     Label   = $SettingsOverlay/SettingsPanel/VBox/MusicRow/MusicLabel
 @onready var _tts_label:       Label   = $SettingsOverlay/SettingsPanel/VBox/TTSRow/TTSLabel
+@onready var _sfx_toggle:      HSlider = $SettingsOverlay/SettingsPanel/VBox/SFXRow/SFXToggle
+@onready var _sfx_label:       Label   = $SettingsOverlay/SettingsPanel/VBox/SFXRow/SFXLabel
 @onready var _dark_toggle:     Button = $SettingsOverlay/SettingsPanel/VBox/DarkToggle
 
 var _username_regex := RegEx.new()
@@ -52,14 +54,15 @@ func _ready() -> void:
 	_style_settings_panel()
 	_music_label.add_theme_color_override("font_color", Color(0.85, 0.87, 0.92))
 	_tts_label.add_theme_color_override("font_color", Color(0.85, 0.87, 0.92))
+	_sfx_label.add_theme_color_override("font_color", Color(0.85, 0.87, 0.92))
 	_style_btn(_dark_toggle,  "secondary")
 
 	_password_input.secret = true
 	_confirm_input.secret  = true
 
-	_username_input.text_submitted.connect(func(_t): _on_submit())
-	_password_input.text_submitted.connect(func(_t): _on_submit())
-	_confirm_input.text_submitted.connect(func(_t): _on_submit())
+	_username_input.text_submitted.connect(func(_t): GameManager.play_click(); _on_submit())
+	_password_input.text_submitted.connect(func(_t): GameManager.play_click(); _on_submit())
+	_confirm_input.text_submitted.connect(func(_t): GameManager.play_click(); _on_submit())
 	_submit_button.pressed.connect(_on_submit)
 	_toggle_button.pressed.connect(_on_toggle_mode)
 	_exit_button.pressed.connect(_on_exit)
@@ -72,6 +75,9 @@ func _ready() -> void:
 	$SettingsOverlay/SettingsPanel/VBox/TitleRow/CloseButton.pressed.connect(_on_settings_close)
 	_music_toggle.value_changed.connect(_on_music_changed)
 	_tts_toggle.value_changed.connect(_on_tts_changed)
+	_sfx_toggle.value = GameManager.sfx_volume
+	_sfx_toggle.value_changed.connect(_on_sfx_changed)
+	_sfx_toggle.drag_ended.connect(func(_changed): GameManager.play_click_preview())
 	_dark_toggle.pressed.connect(_on_dark_toggle)
 
 	_update_music_button()
@@ -173,6 +179,10 @@ func _on_tts_changed(value: float) -> void:
 	GameManager.tts_volume = value
 	if not GameManager.tts_enabled:
 		GameManager.stop_speaking()
+	GameManager.save_settings()
+
+func _on_sfx_changed(value: float) -> void:
+	GameManager.sfx_volume = value
 	GameManager.save_settings()
 
 func _on_dark_toggle() -> void:

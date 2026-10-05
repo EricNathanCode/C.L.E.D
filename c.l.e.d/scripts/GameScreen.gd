@@ -256,30 +256,38 @@ func _unhandled_input(event: InputEvent) -> void:
 
 	var sql_open: bool = $SQLOverlay.visible
 
+	# Each shortcut plays the same click as the button it stands in for.
 	if sql_open:
 		match event.keycode:
 			KEY_LEFT:
+				GameManager.play_click()
 				_on_back()
 			KEY_ENTER, KEY_KP_ENTER:
 				if _current_gm and is_instance_valid(_current_gm) and _current_gm.has_method("_on_execute"):
+					GameManager.play_click()
 					_current_gm._on_execute()
 			KEY_H:
 				if _current_gm and is_instance_valid(_current_gm) and _current_gm.has_method("_on_hint"):
+					GameManager.play_click()
 					_current_gm._on_hint()
 			KEY_RIGHT:
 				if _current_gm and is_instance_valid(_current_gm):
 					var cb: Button = _current_gm.get_node_or_null("%ContinueButton")
 					if cb and cb.visible:
+						GameManager.play_click()
 						_current_gm._on_continue()
 	else:
 		match event.keycode:
 			KEY_RIGHT:
 				if $DialogueArea/DialogueButtons/NextButton.visible:
+					GameManager.play_click()
 					_on_next()
 			KEY_LEFT:
 				if $DialogueArea/DialogueButtons/BackButton.visible:
+					GameManager.play_click()
 					_on_back()
 			KEY_ESCAPE:
+				GameManager.play_click()
 				_on_back_to_hub()
 
 # ── Texture loading ───────────────────────────────────
@@ -448,6 +456,16 @@ func _show_challenge(step: Dictionary, gm_key: String) -> void:
 	_style_btn(back_btn, "secondary", 14)
 	ChallengeSplit.apply(_current_gm, back_btn)
 
+	# Chime once when the answer is right: the Continue button only appears then
+	var cont: Button = _current_gm.get_node_or_null("%ContinueButton")
+	if cont != null:
+		var chimed: Array = [false]
+		cont.visibility_changed.connect(func():
+			if cont.visible and cont.is_visible_in_tree() and not chimed[0]:
+				chimed[0] = true
+				GameManager.play_correct()
+		)
+
 	$SceneBG.visible      = false
 	$NPCSprite.visible    = false
 	$DialogueBG.visible   = false
@@ -456,6 +474,7 @@ func _show_challenge(step: Dictionary, gm_key: String) -> void:
 	$SQLOverlay.visible   = true
 
 func _on_gm_wrong() -> void:
+	GameManager.play_wrong()
 	GameManager.stop_speaking()
 	if _current_gm and is_instance_valid(_current_gm):
 		if _current_gm.on_wrong.is_connected(_on_gm_wrong):

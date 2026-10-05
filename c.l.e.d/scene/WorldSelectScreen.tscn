@@ -183,6 +183,23 @@ max_value = 1.0
 step = 0.01
 value = 1.0
 
+[node name="SFXRow" type="HBoxContainer" parent="SettingsOverlay/SettingsPanel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="SFXLabel" type="Label" parent="SettingsOverlay/SettingsPanel/VBox/SFXRow"]
+layout_mode = 2
+text = "Sound Effects"
+
+[node name="SFXToggle" type="HSlider" parent="SettingsOverlay/SettingsPanel/VBox/SFXRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+min_value = 0.0
+max_value = 1.0
+step = 0.01
+value = 1.0
+
 [node name="ExitConfirmOverlay" type="Control" parent="."]
 visible = false
 layout_mode = 0

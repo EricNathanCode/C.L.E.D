@@ -27,6 +27,8 @@ var _index: int = 0
 @onready var _tts_slider    := $SettingsOverlay/SettingsPanel/VBox/TTSRow/TTSToggle
 @onready var _music_label   := $SettingsOverlay/SettingsPanel/VBox/MusicRow/MusicLabel
 @onready var _tts_label     := $SettingsOverlay/SettingsPanel/VBox/TTSRow/TTSLabel
+@onready var _sfx_slider    := $SettingsOverlay/SettingsPanel/VBox/SFXRow/SFXToggle
+@onready var _sfx_label     := $SettingsOverlay/SettingsPanel/VBox/SFXRow/SFXLabel
 var _dark_btn: Button = null
 var _reset_btn: Button = null
 var _reset_armed: bool = false
@@ -48,6 +50,9 @@ func _ready() -> void:
 	$SettingsOverlay/SettingsPanel/VBox/TitleRow/CloseButton.pressed.connect(_on_settings_close)
 	_music_slider.value_changed.connect(_on_music_changed)
 	_tts_slider.value_changed.connect(_on_tts_changed)
+	_sfx_slider.value = GameManager.sfx_volume
+	_sfx_slider.value_changed.connect(_on_sfx_changed)
+	_sfx_slider.drag_ended.connect(func(_changed): GameManager.play_click_preview())
 
 	$ExitConfirmOverlay/DimBG.gui_input.connect(_on_exit_dim_input)
 	$ExitConfirmOverlay/ConfirmPanel/VBox/LogoutExitButton.pressed.connect(_on_exit_logout)
@@ -71,6 +76,7 @@ func _ready() -> void:
 	_style_btn($SettingsOverlay/SettingsPanel/VBox/TitleRow/CloseButton, "ghost", 15)
 	_music_label.add_theme_color_override("font_color", Color(0.85, 0.87, 0.92))
 	_tts_label.add_theme_color_override("font_color", Color(0.85, 0.87, 0.92))
+	_sfx_label.add_theme_color_override("font_color", Color(0.85, 0.87, 0.92))
 	_style_btn(_dark_btn,  "secondary", 15)
 	_style_settings_btn($SettingsButton)
 
@@ -257,6 +263,10 @@ func _on_tts_changed(value: float) -> void:
 	GameManager.tts_volume = value
 	if not GameManager.tts_enabled:
 		GameManager.stop_speaking()
+	GameManager.save_settings()
+
+func _on_sfx_changed(value: float) -> void:
+	GameManager.sfx_volume = value
 	GameManager.save_settings()
 
 func _on_music_changed(value: float) -> void:

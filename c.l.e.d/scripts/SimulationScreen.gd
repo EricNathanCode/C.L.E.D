@@ -455,12 +455,14 @@ func _on_execute() -> void:
 		_update_score_label()
 		_terminal_status.modulate = Color(0.55, 0.9, 0.55)
 		_terminal_status.text = "Correct."
+		GameManager.play_correct()
 		_refresh_table_window(_current_template["table"])
 		await get_tree().create_timer(0.5).timeout
 		_walk_out_then_advance()
 	else:
 		_terminal_status.modulate = Color(0.95, 0.5, 0.5)
 		_terminal_status.text = "That's not right — the run ends here."
+		GameManager.play_wrong()
 		await get_tree().create_timer(0.9).timeout
 		_end_run()
 

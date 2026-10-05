@@ -480,6 +480,7 @@ func _on_submit(text: String) -> void:
 		_result_lbl.add_theme_color_override("font_color", Color(0.40, 0.95, 0.60))
 		_result_lbl.text = "✓  Correct!"
 		panel.visible    = true
+		GameManager.play_correct()
 		_current_q += 1
 		await get_tree().create_timer(0.75).timeout
 		_show_question()
@@ -488,6 +489,7 @@ func _on_submit(text: String) -> void:
 		_result_lbl.add_theme_color_override("font_color", Color(1.0, 0.45, 0.45))
 		_result_lbl.text = "✗  Wrong answer check the hint and try again."
 		panel.visible    = true
+		GameManager.play_wrong()
 		_input.select_all()
 		_shake(panel)
 
