@@ -1,5 +1,6 @@
 ﻿extends Control
 const Comic = preload("res://scripts/ComicStyle.gd")
+const Fx = preload("res://scripts/ComicFx.gd")
 # ═══════════════════════════════════════════════════════
 #  FOLDER QUIZ SCREEN  |  scripts/FolderQuizScreen.gd
 # ═══════════════════════════════════════════════════════
@@ -225,6 +226,7 @@ func start_quiz() -> void:
 	_questions.shuffle()
 	_current_q    = 0
 	_hint_visible = false
+	_v2_refresh()
 	# Rebuild question widgets fresh
 	for child in _container.get_children():
 		child.queue_free()
@@ -291,6 +293,8 @@ func _build_static_ui() -> void:
 	_container = VBoxContainer.new()
 	_container.add_theme_constant_override("separation", 18)
 	panel.add_child(_container)
+
+	_apply_v2(bg, back_btn, panel)
 
 # ── Question widgets (rebuilt per quiz) ──────────────────
 func _build_question_widgets() -> void:
@@ -459,6 +463,7 @@ func _on_submit(text: String) -> void:
 		_result_lbl.add_theme_color_override("font_color", Color("#1E8E4F"))
 		_result_lbl.text = "✓  Correct!"
 		panel.visible    = true
+		_v2_pop_correct(panel)
 		GameManager.play_correct()
 		_current_q += 1
 		await get_tree().create_timer(0.75).timeout
@@ -535,3 +540,72 @@ func _style_primary(btn: Button) -> void:
 # Cream secondary button (kept under its old name so every call site still works)
 func _style_ghost(btn: Button) -> void:
 	Comic.apply_button(btn, "secondary", 20, true, 16, 7)
+
+# ── Comic v2: a "CORRECT!" burst pops beside the feedback box ──
+func _v2_pop_correct(panel: Control) -> void:
+	var b := Fx.sticker("CORRECT!", "", Comic.YELLOW, Comic.RED, Vector2(190, 110), 36, 14, 8.0)
+	b.position = panel.global_position - global_position + Vector2(panel.size.x - 40.0, -56.0)
+	b.z_index = 30
+	add_child(b)
+	Fx.pop(b)
+	var tw := b.create_tween()
+	tw.tween_interval(0.7)
+	tw.tween_callback(b.queue_free)
+
+# ── Comic v2 look (decoration only) ───────────────────────
+const V2_CHAR: Dictionary = {
+	"hotel": "adult_1", "cafe": "adult_3", "airport": "adult_2", "library": "adult_7",
+}
+var _v2_char: TextureRect = null
+
+func _apply_v2(bg: ColorRect, back_btn: Button, panel: PanelContainer) -> void:
+	var rays := Fx.rays_rect(Comic.PAPER, Color("#FBE7B5"), Color(0.9, 0.25, 0.18, 0.22), Vector2(0.5, 0.56))
+	bg.material = rays.material
+	rays.free()
+	Fx.red_shadow(back_btn)
+
+	# The world's character cheering the player on, with a speech bubble
+	_v2_char = TextureRect.new()
+	_v2_char.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_v2_char.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	Fx.place_right(_v2_char, Rect2(1000, 150, 300, 680))
+	_v2_char.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_v2_char.z_index = -5
+	add_child(_v2_char)
+
+	var bubble := Fx.Bubble.new()
+	bubble.radius = 26
+	bubble.outline = 4.0
+	bubble.shadow = 5.0
+	bubble.tail_side = "bottom"
+	bubble.tail_at = 0.62
+	bubble.tail_width = 26.0
+	bubble.tail_rel = Vector2(0.86, 1.0)
+	bubble.tail_px = Vector2(0.0, 34.0)
+	bubble.add_theme_constant_override("margin_left", 14)
+	bubble.add_theme_constant_override("margin_right", 14)
+	bubble.add_theme_constant_override("margin_top", 10)
+	bubble.add_theme_constant_override("margin_bottom", 12)
+	Fx.place_right(bubble, Rect2(1016, 84, 0, 0))
+	var say := Label.new()
+	say.text = "Boss fight! Clear every question to unlock the next chapter."
+	say.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	say.custom_minimum_size = Vector2(200, 0)
+	Comic.body(say, 16, Comic.INK)
+	bubble.add_child(say)
+	bubble.z_index = -4
+	add_child(bubble)
+
+	# "BOSS FIGHT!" burst pinned to the panel's top-left corner
+	var boss := Fx.sticker("BOSS FIGHT!", "", Comic.RED, Color.WHITE, Vector2(200, 100), 30, 14, -8.0)
+	add_child(boss)
+	var pin := func():
+		boss.global_position = panel.global_position + Vector2(-96, -62)
+	panel.item_rect_changed.connect(pin)
+	pin.call()
+
+func _v2_refresh() -> void:
+	if _v2_char == null:
+		return
+	var path: String = "res://images/characters/NPC_adults/%s/talk.png" % V2_CHAR.get(GameManager.world, "adult_1")
+	_v2_char.texture = load(path) if ResourceLoader.exists(path) else null

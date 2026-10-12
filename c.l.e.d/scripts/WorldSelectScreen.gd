@@ -1,5 +1,6 @@
 extends Control
 const Comic = preload("res://scripts/ComicStyle.gd")
+const Fx = preload("res://scripts/ComicFx.gd")
 # ═══════════════════════════════════════════════════════
 #  WORLD SELECT SCREEN  |  scripts/WorldSelectScreen.gd
 # ═══════════════════════════════════════════════════════
@@ -134,6 +135,7 @@ func _ready() -> void:
 			_update_logout_button()
 	)
 
+	_apply_v2()
 	_preload_backgrounds()
 	_update_display()
 	_update_tts_button()
@@ -263,6 +265,7 @@ func _update_display() -> void:
 	$SceneBG.texture = _bg_cache.get(world, null)
 	if _completion_lbl:
 		_completion_lbl.text = _completion_text(world)
+	_refresh_v2()
 
 # ── Completion % ──────────────────────────────────────
 func _count_done(world: String) -> int:
@@ -327,3 +330,180 @@ func _style_settings_btn(btn: Button) -> void:
 	btn.offset_top = 14.0
 	btn.offset_bottom = 62.0
 	Comic.apply_button(btn, "dark", 26, true, 16, 6)
+
+# ═══════════════════════════════════════════════════════
+#  COMIC V2 LOOK (decoration only)
+# ═══════════════════════════════════════════════════════
+var _v2_logo: Control = null
+var _v2_world_tag: Label = null
+var _v2_count_tag: Label = null
+var _v2_bar: ProgressBar = null
+var _v2_bar_lbl: Label = null
+
+func _apply_v2() -> void:
+	var at: int = $Title.get_index()
+	var decor: Array = []
+
+	$DarkOverlay.color = Color(1.0, 0.96, 0.84, 0.32)
+
+	var lines := Fx.SpeedLines.new()
+	lines.set_anchors_preset(Control.PRESET_FULL_RECT)
+	lines.center = Vector2(0.5, 0.46)
+	decor.append(lines)
+	decor.append(Fx.dots_rect(Color(0.18, 0.55, 0.92, 0.45), Vector2(0.0, 1.0), 0.38))
+	decor.append(Fx.dots_rect(Color(0.90, 0.25, 0.18, 0.40), Vector2(1.0, 0.0), 0.32))
+
+	# "Chapter select" caption box, top-left
+	var cap := PanelContainer.new()
+	var cap_s := Comic.box(Comic.YELLOW, Comic.INK, 4, 2, 6, 16, 10)
+	cap.add_theme_stylebox_override("panel", cap_s)
+	cap.position = Vector2(28, 24)
+	cap.custom_minimum_size = Vector2(350, 0)
+	cap.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var cap_box := VBoxContainer.new()
+	cap_box.add_theme_constant_override("separation", 2)
+	cap.add_child(cap_box)
+	var cap_head := Label.new()
+	cap_head.text = $Title.text
+	Comic.heading(cap_head, 22, Comic.RED)
+	cap_box.add_child(cap_head)
+	var cap_text := Label.new()
+	cap_text.text = "Pick a world, rookie: every world is a new SQL case to crack!"
+	cap_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	cap_text.custom_minimum_size = Vector2(318, 0)
+	Comic.body(cap_text, 18, Comic.INK)
+	cap_box.add_child(cap_text)
+	decor.append(cap)
+	$Title.visible = false
+
+	# Burst + 3D world name in the middle
+	var burst := Fx.Burst.new()
+	Fx.place_centered(burst, Rect2(250, 186, 780, 290))
+	burst.spikes = 24
+	burst.inner = 0.84
+	burst.seed_value = 4
+	burst.shadow = 10.0
+	decor.append(burst)
+
+	var logo := Fx.Logo.new()
+	Fx.place_centered(logo, Rect2(270, 236, 740, 180))
+	logo.pivot_offset = Vector2(370, 90)
+	logo.rotation_degrees = -3.0
+	logo.font_size = 104
+	logo.depth = 10
+	logo.outline = 14
+	decor.append(logo)
+	_v2_logo = logo
+	$WorldName.self_modulate = Color(1, 1, 1, 0)
+
+	_v2_world_tag = Label.new()
+	_v2_world_tag.anchor_left = 0.5
+	_v2_world_tag.anchor_right = 0.5
+	_v2_world_tag.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	_v2_world_tag.anchor_top = 0.5
+	_v2_world_tag.anchor_bottom = 0.5
+	_v2_world_tag.offset_top = 164.0 - 360.0
+	_v2_world_tag.offset_bottom = 164.0 - 360.0
+	Fx.tag(_v2_world_tag, Comic.INK, Color.WHITE, 22)
+	decor.append(_v2_world_tag)
+
+	# Progress: lessons tag + chunky meter
+	_v2_count_tag = Label.new()
+	Fx.place_centered(_v2_count_tag, Rect2(372, 484, 0, 0))
+	Fx.tag(_v2_count_tag, Comic.PAPER_HI, Comic.INK, 24)
+	decor.append(_v2_count_tag)
+
+	_v2_bar = ProgressBar.new()
+	_v2_bar.show_percentage = false
+	Fx.place_centered(_v2_bar, Rect2(592, 488, 310, 38))
+	_v2_bar.max_value = 1.0
+	var bar_bg := Comic.box(Comic.PAPER_HI, Comic.INK, 4, 18, 4, 0, 0)
+	var bar_fill := Comic.box(Comic.YELLOW, Comic.INK, 4, 18, 0, 0, 0)
+	_v2_bar.add_theme_stylebox_override("background", bar_bg)
+	_v2_bar.add_theme_stylebox_override("fill", bar_fill)
+	_v2_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_v2_bar_lbl = Label.new()
+	_v2_bar_lbl.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_v2_bar_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_v2_bar_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	Comic.heading(_v2_bar_lbl, 23, Comic.INK)
+	_v2_bar.add_child(_v2_bar_lbl)
+	decor.append(_v2_bar)
+	if _completion_lbl:
+		_completion_lbl.visible = false
+
+	for i in decor.size():
+		add_child(decor[i])
+		move_child(decor[i], at + i)
+	Fx.tilt(cap, -2.0)
+	Fx.tilt(_v2_world_tag, -3.0)
+	Fx.tilt(_v2_count_tag, -2.0)
+
+	# Round blue arrow buttons
+	for pair in [[$UpButton, -508.0, "◀", -6.0], [$DownButton, 418.0, "▶", 6.0]]:
+		var b: Button = pair[0]
+		b.offset_left = pair[1]
+		b.offset_right = pair[1] + 90.0
+		b.anchor_top = 0.5
+		b.anchor_bottom = 0.5
+		b.offset_top = 284.0 - 360.0
+		b.offset_bottom = 374.0 - 360.0
+		b.text = pair[2]
+		Comic.apply_button(b, "info", 36, false, 0, 0)
+		for st in ["normal", "hover", "pressed", "hover_pressed", "focus"]:
+			var sb = b.get_theme_stylebox(st)
+			if sb is StyleBoxFlat:
+				var c: StyleBoxFlat = sb.duplicate()
+				c.set_corner_radius_all(45)
+				if st != "focus":
+					c.set_border_width_all(5)
+					c.shadow_offset = Vector2(6, 6) if not st.contains("pressed") else Vector2(2, 2)
+				b.add_theme_stylebox_override(st, c)
+		Fx.tilt(b, pair[3])
+
+	# Enter World: the hero button, with a GO! sticker
+	var enter: Button = $EnterButton
+	Fx.place_centered(enter, Rect2(410, 548, 460, 86))
+	enter.text = "Enter World!  →"
+	Fx.hero_button(enter, "primary", 50, 30, 6)
+	Fx.tilt(enter, -1.5)
+	var go := Fx.sticker("GO!", "", Comic.RED, Color.WHITE, Vector2(110, 100), 34, 12, 12.0)
+	Fx.place_centered(go, Rect2(820, 512, 110, 100))
+	add_child(go)
+	move_child(go, enter.get_index() + 1)
+
+	var exit_btn: Button = $ExitButton
+	Fx.place_centered(exit_btn, Rect2(540, 652, 200, 50))
+	Comic.apply_button(exit_btn, "secondary", 26, true, 16, 4)
+
+	# Settings: ink pill with a red print shadow
+	var sbtn: Button = $SettingsButton
+	sbtn.offset_left = -196.0
+	sbtn.offset_right = -24.0
+	sbtn.offset_top = 22.0
+	sbtn.offset_bottom = 70.0
+	Comic.apply_button(sbtn, "dark", 26, true, 18, 4)
+	for st in ["normal", "hover", "pressed", "hover_pressed"]:
+		var sb2 = sbtn.get_theme_stylebox(st)
+		if sb2 is StyleBoxFlat:
+			var c2: StyleBoxFlat = sb2.duplicate()
+			c2.set_corner_radius_all(24)
+			c2.shadow_color = Comic.RED
+			c2.shadow_offset = Vector2(5, 5) if not st.contains("pressed") else Vector2(2, 2)
+			sbtn.add_theme_stylebox_override(st, c2)
+	Fx.tilt(sbtn, 2.0)
+
+func _refresh_v2() -> void:
+	if _v2_logo == null:
+		return
+	var world: String = WORLDS[_index]
+	_v2_logo.text = WORLD_NAMES[world].to_upper()
+	_v2_world_tag.text = "WORLD %d OF %d" % [_index + 1, WORLDS.size()]
+	var done: int = _count_done(world)
+	var ratio: float = float(done) / float(LESSONS_PER_WORLD)
+	_v2_count_tag.text = "★ %d / %d LESSONS" % [done, LESSONS_PER_WORLD]
+	_v2_bar.value = ratio
+	_v2_bar_lbl.text = "%d%% COMPLETE" % int(round(ratio * 100.0))
+	# A 0% fill would still draw its rounded ink ends, so hide it until there is progress
+	_v2_bar.get_theme_stylebox("fill").draw_center = ratio > 0.0
+	_v2_bar.get_theme_stylebox("fill").border_color = Comic.INK if ratio > 0.0 else Color(0, 0, 0, 0)

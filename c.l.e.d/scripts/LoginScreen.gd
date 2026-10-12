@@ -1,5 +1,6 @@
 extends Control
 const Comic = preload("res://scripts/ComicStyle.gd")
+const Fx = preload("res://scripts/ComicFx.gd")
 # ═══════════════════════════════════════════════════════
 #  LOGIN SCREEN  |  scripts/LoginScreen.gd
 #
@@ -54,6 +55,7 @@ func _ready() -> void:
 	_style_settings_btn(_settings_button)
 	_style_settings_panel()
 	_style_btn(_dark_toggle,  "secondary")
+	_apply_v2()
 
 	_password_input.secret = true
 	_confirm_input.secret  = true
@@ -239,3 +241,80 @@ func _style_settings_btn(btn: Button) -> void:
 
 func _style_btn(btn: Button, variant: String = "secondary") -> void:
 	Comic.apply_button(btn, variant, 19, true, 18, 9)
+
+# ═══════════════════════════════════════════════════════
+#  COMIC V2 LOOK (decoration only): cover-page rays, 3D logo,
+#  a host character greeting the player, sticker buttons.
+# ═══════════════════════════════════════════════════════
+func _apply_v2() -> void:
+	var rays := Fx.rays_rect(Color("#FFD85A"), Color("#FFC21A"), Color(0.9, 0.25, 0.18, 0.42), Vector2(0.5, 0.5))
+	$FullBG.material = rays.material
+	rays.free()
+
+	var host := TextureRect.new()
+	host.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	host.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	var tex_path := "res://images/characters/NPC_adults/adult_1/talk.png"
+	if ResourceLoader.exists(tex_path):
+		host.texture = load(tex_path)
+	Fx.place_right(host, Rect2(900, 40, 380, 800))
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(host)
+	move_child(host, $FullBG.get_index() + 1)
+
+	var bubble := Fx.Bubble.new()
+	bubble.radius = 30
+	bubble.outline = 4.0
+	bubble.shadow = 5.0
+	bubble.tail_width = 26.0
+	bubble.tail_at = 0.32
+	bubble.add_theme_constant_override("margin_left", 16)
+	bubble.add_theme_constant_override("margin_right", 16)
+	bubble.add_theme_constant_override("margin_top", 10)
+	bubble.add_theme_constant_override("margin_bottom", 12)
+	Fx.place_right(bubble, Rect2(846, 112, 0, 0))
+	bubble.custom_minimum_size = Vector2(170, 0)
+	var hello := Label.new()
+	hello.text = "Welcome, rookie! Ready to crack some SQL?"
+	hello.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	hello.custom_minimum_size = Vector2(150, 0)
+	Comic.body(hello, 17, Comic.INK)
+	bubble.add_child(hello)
+	add_child(bubble)
+	move_child(bubble, host.get_index() + 1)
+	bubble.tail_rel = Vector2(1.0, 0.62)
+	bubble.tail_px = Vector2(46.0, 0.0)
+
+	# 3D logo lettering for the title (the label keeps its text, just hidden)
+	var title: Label = $CenterContainer/CardPanel/VBox/TitleLabel
+	title.custom_minimum_size = Vector2(0, 104)
+	title.self_modulate = Color(1, 1, 1, 0)
+	var logo := Fx.Logo.new()
+	logo.text = title.text
+	logo.set_anchors_preset(Control.PRESET_FULL_RECT)
+	logo.font_size = 92
+	logo.depth = 9
+	logo.outline = 13
+	logo.rotation_degrees = -3.0
+	title.add_child(logo)
+	title.resized.connect(func(): logo.pivot_offset = logo.size / 2.0)
+
+	Comic.apply_panel($CenterContainer/CardPanel, Comic.PAPER_HI, 18, 10, 34, 26, 5)
+	Fx.hero_button(_submit_button, "primary", 32, 20, 4)
+
+	# Settings: ink pill with a red print shadow
+	var sbtn: Button = _settings_button
+	sbtn.offset_left = -196.0
+	sbtn.offset_right = -24.0
+	sbtn.offset_top = 22.0
+	sbtn.offset_bottom = 70.0
+	Comic.apply_button(sbtn, "dark", 26, true, 18, 4)
+	for st in ["normal", "hover", "pressed", "hover_pressed"]:
+		var sb = sbtn.get_theme_stylebox(st)
+		if sb is StyleBoxFlat:
+			var c: StyleBoxFlat = sb.duplicate()
+			c.set_corner_radius_all(24)
+			c.shadow_color = Comic.RED
+			c.shadow_offset = Vector2(5, 5) if not st.contains("pressed") else Vector2(2, 2)
+			sbtn.add_theme_stylebox_override(st, c)
+	Fx.tilt(sbtn, 2.0)

@@ -1,5 +1,6 @@
 extends Control
 const Comic = preload("res://scripts/ComicStyle.gd")
+const Fx = preload("res://scripts/ComicFx.gd")
 # ═══════════════════════════════════════════════════════
 #  GAME SCREEN  |  scripts/GameScreen.gd
 # ═══════════════════════════════════════════════════════
@@ -198,6 +199,8 @@ func _ready() -> void:
 	_style_sql_panel()
 	_load_all_textures()
 	_style_progress_bar()
+
+	_apply_v2()
 
 	# Read the NPC's actual base offsets so bob is always relative to them
 	_npc_base_top    = $NPCSprite.offset_top
@@ -440,6 +443,7 @@ func _run_step() -> void:
 			$DialogueArea/DialogueButtons/BackButton.visible          = false
 			$DialogueArea/DialogueButtons/RetryChallengeButton.visible = true
 			$DialogueArea/DialogueButtons/RetryDashboardButton.visible = true
+	_apply_speech_style()
 
 # ── SQL Terminal ──────────────────────────────────────
 func _show_challenge(step: Dictionary, gm_key: String) -> void:
@@ -614,3 +618,185 @@ func _style_progress_bar() -> void:
 func _style_btn(btn: Button, variant: String = "primary", font_size: int = 16) -> void:
 	var pad_h: int = 26 if variant == "primary" else 18
 	Comic.apply_button(btn, variant, font_size, true, pad_h, 8)
+
+# ═══════════════════════════════════════════════════════
+#  COMIC V2 LOOK (decoration only)
+#  The scene sits in one big comic panel; the NPC stands on the right and
+#  talks in a speech bubble whose tail points at their mouth. Narration uses
+#  a yellow caption box, the player's own lines get a bubble pointing off-panel.
+#  Everything is laid out from the screen size, so wider windows still fit.
+# ═══════════════════════════════════════════════════════
+const V2_NPC_W: float   = 560.0
+const V2_NPC_TOP: float = 104.0
+const V2_NPC_H: float   = 1100.0
+const V2_BUBBLE_X: float = 60.0
+const V2_BUBBLE_W: float = 720.0
+
+var _v2_bubble = null
+var _v2_frame = null
+var _v2_dots: ColorRect = null
+var _v2_mode: String = "scene"
+var _v2_h: float = 150.0
+
+func _apply_v2() -> void:
+	# NPC stands on the right side of the panel (x is set in _v2_layout)
+	var npc: TextureRect = $NPCSprite
+	npc.anchor_left = 0.0
+	npc.anchor_right = 0.0
+	npc.anchor_top = 0.0
+	npc.anchor_bottom = 0.0
+	npc.offset_top = V2_NPC_TOP
+	npc.offset_bottom = V2_NPC_TOP + V2_NPC_H
+
+	# DialogueBG becomes a transparent full-screen layer holding the frame + bubble
+	var dbg: ColorRect = $DialogueBG
+	for c in dbg.get_children():
+		c.queue_free()
+	dbg.material = null
+	dbg.color = Color(0, 0, 0, 0)
+	dbg.anchor_top = 0.0
+	dbg.offset_top = 0.0
+	dbg.offset_bottom = 0.0
+	_dlg_line.color = Color(0, 0, 0, 0)
+
+	_v2_dots = Fx.dots_rect(Color(1.0, 0.76, 0.10, 0.35), Vector2(0.0, 0.5), 0.35, 12.0)
+	_v2_dots.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	dbg.add_child(_v2_dots)
+
+	_v2_frame = Fx.Frame.new()
+	_v2_frame.set_anchors_preset(Control.PRESET_FULL_RECT)
+	dbg.add_child(_v2_frame)
+
+	_v2_bubble = Fx.Bubble.new()
+	_v2_bubble.radius = 44
+	_v2_bubble.tail_width = 56.0
+	dbg.add_child(_v2_bubble)
+
+	# Dialogue text sits inside the bubble; the name tag pokes out of its top edge
+	var area: VBoxContainer = $DialogueArea
+	area.anchor_top = 0.0
+	area.anchor_bottom = 0.0
+	area.anchor_right = 0.0
+	area.offset_left = V2_BUBBLE_X + 34.0
+	area.offset_right = V2_BUBBLE_X + V2_BUBBLE_W - 34.0
+	area.add_theme_constant_override("separation", 10)
+
+	var name_lbl: Label = $DialogueArea/CharacterName
+	name_lbl.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	Fx.tag(name_lbl, Comic.RED, Color.WHITE, 26)
+	Fx.tilt(name_lbl, -3.0)
+
+	var text_lbl: Label = $DialogueArea/DialogueText
+	Comic.body(text_lbl, 25, Comic.INK)
+	text_lbl.add_theme_constant_override("line_spacing", 4)
+
+	var row: HBoxContainer = $DialogueArea/DialogueButtons
+	row.add_theme_constant_override("separation", 18)
+	var next_btn: Button = $DialogueArea/DialogueButtons/NextButton
+	next_btn.text = "Next  ▶"
+	Fx.hero_button(next_btn, "primary", 34, 24, 2)
+	Fx.tilt(next_btn, -2.0)
+	_style_btn($DialogueArea/DialogueButtons/BackButton, "secondary", 24)
+	$DialogueArea/DialogueButtons/BackButton.text = "◀  Back"
+	Fx.hero_button($DialogueArea/DialogueButtons/RetryChallengeButton, "primary", 28, 20, 2)
+
+	# Top strip: bigger lesson lettering, film-strip progress, red-shadow Hub
+	Comic.heading($TopBar/LessonLabel, 34, Comic.YELLOW)
+	Fx.red_shadow($TopBar/BackToHubButton)
+	var pb: ProgressBar = $ProgressBar
+	pb.anchor_left = 0.33
+	pb.anchor_right = 0.67
+	pb.offset_top = 16.0
+	pb.offset_bottom = 44.0
+	pb.add_theme_stylebox_override("background", StyleBoxEmpty.new())
+	pb.add_theme_stylebox_override("fill", StyleBoxEmpty.new())
+	var film := Fx.Film.new()
+	film.set_anchors_preset(Control.PRESET_FULL_RECT)
+	pb.add_child(film)
+	film.watch(pb)
+
+	resized.connect(_v2_layout)
+	_v2_layout()
+
+func _v2_npc_rect() -> Rect2:
+	return Rect2($NPCSprite.offset_left, V2_NPC_TOP, V2_NPC_W, V2_NPC_H)
+
+# Positions that depend on the screen size and the current bubble height
+func _v2_layout() -> void:
+	if _v2_bubble == null:
+		return
+	var w: float = size.x if size.x > 0.0 else 1280.0
+	var h: float = size.y if size.y > 0.0 else 720.0
+	var panel := Rect2(16, 84, w - 32.0, h - 100.0)
+	_v2_frame.panel_rect = panel
+	_v2_frame.queue_redraw()
+	_v2_dots.position = panel.position + Vector2(6, 6)
+	_v2_dots.size = panel.size - Vector2(12, 12)
+
+	var npc: TextureRect = $NPCSprite
+	npc.offset_left = w - 550.0
+	npc.offset_right = w - 550.0 + V2_NPC_W
+
+	var bottom: float = h - 196.0
+	var top: float = bottom - _v2_h
+	_v2_bubble.position = Vector2(V2_BUBBLE_X, top)
+	_v2_bubble.size = Vector2(V2_BUBBLE_W, _v2_h)
+	$DialogueArea.offset_top = top - 24.0
+	$DialogueArea.offset_bottom = bottom + 74.0
+	if _v2_mode == "you":
+		_v2_bubble.tail_tip = Vector2(70, _v2_h + 62)
+	elif _v2_mode == "npc":
+		var mouth: Vector2 = Fx.mouth_point(npc, _v2_npc_rect())
+		_v2_bubble.tail_tip = mouth - Vector2(16, 0) - _v2_bubble.position
+	_v2_bubble.queue_redraw()
+
+func _apply_speech_style() -> void:
+	if _v2_bubble == null:
+		return
+	var mode: String = "npc"
+	if _step >= 0 and _step < _story.size():
+		var s: Dictionary = _story[_step]
+		var t: String = s.get("type", "")
+		if t == "retry":
+			mode = "retry"
+		elif t == "dialogue":
+			var ck: String = s.get("char", "scene")
+			if ck == "scene":
+				mode = "scene"
+			elif ck == "you":
+				mode = "you"
+	_v2_mode = mode
+	var name_lbl: Label = $DialogueArea/CharacterName
+	match mode:
+		"scene":
+			_v2_bubble.fill = Comic.YELLOW
+			_v2_bubble.square = true
+			_v2_bubble.tail_side = "none"
+			Fx.tag(name_lbl, Comic.INK, Comic.YELLOW, 24, true, Comic.RED)
+		"you":
+			_v2_bubble.fill = Color.WHITE
+			_v2_bubble.square = false
+			_v2_bubble.tail_at = 0.08
+			_v2_bubble.tail_side = "bottom"
+			Fx.tag(name_lbl, Comic.BLUE, Color.WHITE, 26)
+		"retry":
+			_v2_bubble.fill = Color.WHITE
+			_v2_bubble.square = false
+			_v2_bubble.tail_side = "none"
+		_:
+			_v2_bubble.fill = Color.WHITE
+			_v2_bubble.square = false
+			_v2_bubble.tail_at = 0.0
+			_v2_bubble.tail_side = "right"
+			Fx.tag(name_lbl, Comic.RED, Color.WHITE, 26)
+	name_lbl.self_modulate.a = 0.0 if name_lbl.text.strip_edges().is_empty() else 1.0
+
+	# Size the bubble to its text; its bottom (and the buttons) never move
+	var text: String = $DialogueArea/DialogueText.text if mode == "retry" else _full_text
+	var f: Font = Comic.body_font()
+	var inner_w: float = V2_BUBBLE_W - 68.0
+	var text_h: float = f.get_multiline_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, inner_w, 25).y
+	var lines: int = maxi(1, int(round(text_h / f.get_height(25))))
+	text_h += lines * 4.0
+	_v2_h = clampf(text_h + 70.0, 150.0, 430.0)
+	_v2_layout()

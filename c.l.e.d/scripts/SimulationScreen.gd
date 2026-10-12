@@ -1,5 +1,6 @@
 extends Control
 const Comic = preload("res://scripts/ComicStyle.gd")
+const Fx = preload("res://scripts/ComicFx.gd")
 # ═══════════════════════════════════════════════════════
 #  SIMULATION SCREEN  |  scripts/SimulationScreen.gd
 #  Papers Please-style endless mode: NPCs walk in, state a
@@ -608,7 +609,7 @@ func _spawn_table_window(table_name: String) -> void:
 	win.set_meta("grid", grid)
 
 	var idx: int = _table_windows.size()
-	var pos := Vector2(520.0 + float(idx % 3) * 36.0, 70.0 + float(idx % 3) * 36.0)
+	var pos := Vector2(890.0 - float(idx % 3) * 36.0, 84.0 + float(idx % 3) * 36.0)
 	win.place_at(pos, Vector2(360, 220))
 	_table_windows[table_name] = win
 
@@ -881,6 +882,7 @@ func _style_screen_chrome() -> void:
 	Comic.apply_panel($DialogueBox, Comic.PAPER_HI, 18, 7, 34, 14, 5)
 	Comic.heading($DialogueBox/DialogueVBox/NPCNameLabel, 28, Comic.RED)
 	Comic.body($DialogueBox/DialogueVBox/ProblemLabel, 23, Comic.INK)
+	_apply_v2()
 
 	# "Run over" pop-up
 	Comic.apply_dim($GameOverOverlay/DimBG, 0.78)
@@ -897,3 +899,51 @@ func _style_screen_chrome() -> void:
 	cq.add_theme_font_size_override("normal_font_size", 20)
 	Comic.apply_button(vb.get_node("RetryButton"), "primary", 30, true, 22, 10)
 	Comic.apply_button(vb.get_node("BackButton"), "secondary", 24, true, 22, 8)
+
+# ── Comic v2 look (decoration only) ───────────────────
+# The customer's line becomes a speech bubble pointing up at them.
+func _apply_v2() -> void:
+	var line := ColorRect.new()
+	line.color = Comic.YELLOW
+	line.anchor_right = 1.0
+	line.offset_top = 62.0
+	line.offset_bottom = 67.0
+	line.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(line)
+	move_child(line, $TopBarBG.get_index() + 1)
+	Fx.red_shadow($TopBar/EndButton)
+
+	var dbox: PanelContainer = $DialogueBox
+	var empty := StyleBoxEmpty.new()
+	empty.content_margin_left = 40
+	empty.content_margin_right = 40
+	empty.content_margin_top = 14
+	empty.content_margin_bottom = 16
+	dbox.add_theme_stylebox_override("panel", empty)
+	dbox.offset_left = 20.0
+	dbox.offset_right = -20.0
+	dbox.offset_top = -164.0
+	dbox.offset_bottom = -14.0
+
+	var bub := Fx.Bubble.new()
+	bub.anchor_top = 1.0
+	bub.anchor_bottom = 1.0
+	bub.anchor_right = 1.0
+	bub.offset_left = 20.0
+	bub.offset_right = -20.0
+	bub.offset_top = -164.0
+	bub.offset_bottom = -14.0
+	bub.radius = 44
+	bub.tail_side = "top"
+	bub.tail_at = 0.47
+	bub.tail_width = 50.0
+	bub.tail_rel = Vector2(0.5, 0.0)
+	bub.tail_px = Vector2(10.0, -64.0)
+	add_child(bub)
+	move_child(bub, dbox.get_index())
+	dbox.visibility_changed.connect(func(): bub.visible = dbox.visible)
+
+	var name_lbl: Label = $DialogueBox/DialogueVBox/NPCNameLabel
+	name_lbl.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	Fx.tag(name_lbl, Comic.RED, Color.WHITE, 22)
+	Fx.tilt(name_lbl, -2.0)

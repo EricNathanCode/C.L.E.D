@@ -1,5 +1,6 @@
 extends Control
 const Comic = preload("res://scripts/ComicStyle.gd")
+const Fx = preload("res://scripts/ComicFx.gd")
 
 # ── Data script paths for comic-strip previews ────────────
 const _DATA_PATHS: Dictionary = {
@@ -222,6 +223,8 @@ func _ready() -> void:
 	divider.color = Comic.INK
 	divider.custom_minimum_size = Vector2(5, 0)
 
+	_apply_v2()
+
 
 func _on_change_world() -> void:
 	get_tree().root.get_node("Main").show_screen("world_select")
@@ -422,6 +425,7 @@ func build_lessons() -> void:
 
 	# Show placeholder until hover
 	_reset_preview()
+	_decorate_v2()
 
 # ── Comic panel preview ───────────────────────────────────
 func _reset_preview() -> void:
@@ -578,9 +582,10 @@ func _show_preview(lesson_id) -> void:
 	# ── CTA strip at bottom ───────────────────────────────
 	var cta := Label.new()
 	cta.text = "Click to start  ▶"
-	cta.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	Comic.title(cta, 26, Comic.YELLOW, 7)
+	cta.size_flags_horizontal = Control.SIZE_SHRINK_END
+	Fx.tag(cta, Comic.YELLOW, Comic.INK, 28, true, Comic.RED, 18, 4)
 	_comic_strip.add_child(cta)
+	Fx.tilt(cta, -1.5)
 
 func _build_comic_panel(frame: Dictionary, stretch: float, full_width: bool = false) -> Control:
 	var is_scene: bool  = frame.get("is_scene", false)
@@ -630,16 +635,17 @@ func _build_comic_panel(frame: Dictionary, stretch: float, full_width: bool = fa
 	img_area.add_child(overlay)
 
 	# NPC sprite | fills width, extends below panel so only upper half is visible (close-up crop)
+	var npc_node: TextureRect = null
 	if npc_raw != "":
 		var npc_tex := TextureRect.new()
 		# TextureRect spans 1.6× the panel height starting from top.
 		# CENTERED keeps aspect ratio and auto-pads | character scales to fit the width,
 		# extends below the panel boundary, clip_contents cuts the lower half so we see
 		# the upper body (head → waist) naturally without aggressive zoom.
-		npc_tex.anchor_left   = 0.05
-		npc_tex.anchor_right  = 0.95
+		npc_tex.anchor_left   = 0.05 if is_scene else 0.46
+		npc_tex.anchor_right  = 0.95 if is_scene else 1.04
 		npc_tex.anchor_top    = 0.0
-		npc_tex.anchor_bottom = 1.6
+		npc_tex.anchor_bottom = 1.6 if is_scene else 1.9
 		npc_tex.expand_mode   = TextureRect.EXPAND_IGNORE_SIZE
 		npc_tex.stretch_mode  = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		var parts := npc_raw.split("/")
@@ -652,22 +658,48 @@ func _build_comic_panel(frame: Dictionary, stretch: float, full_width: bool = fa
 		if npc_t:
 			npc_tex.texture = npc_t
 		img_area.add_child(npc_tex)
+		npc_node = npc_tex
 
-	# ── Caption strip (dark bar at bottom) ────────────────
-	var cap_panel := PanelContainer.new()
-	cap_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	cap_panel.custom_minimum_size   = Vector2(0, 52)
-	# Narration boxes are yellow, speech boxes are white (like a real comic)
-	var cap_s := StyleBoxFlat.new()
-	cap_s.bg_color             = Comic.YELLOW if is_scene else Comic.PAPER_HI
-	cap_s.border_color         = Comic.INK
-	cap_s.border_width_top     = 4
-	cap_s.content_margin_left  = 10
-	cap_s.content_margin_right = 10
-	cap_s.content_margin_top   = 5
-	cap_s.content_margin_bottom= 5
-	cap_panel.add_theme_stylebox_override("panel", cap_s)
-	vbox.add_child(cap_panel)
+	# ── Caption box (narration) or speech bubble (NPC) over the art ──
+	var cap_panel: Container
+	if is_scene:
+		# Narration caption sits along the bottom so it never covers a face
+		cap_panel = PanelContainer.new()
+		cap_panel.add_theme_stylebox_override("panel", Comic.box(Comic.YELLOW, Comic.INK, 3, 2, 4, 9, 5))
+		cap_panel.anchor_top = 1.0
+		cap_panel.anchor_bottom = 1.0
+		cap_panel.anchor_right = 0.78
+		cap_panel.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	else:
+		var bub := Fx.Bubble.new()
+		bub.radius = 22
+		bub.outline = 3.0
+		bub.shadow = 4.0
+		bub.tail_width = 18.0
+		bub.tail_at = 0.18
+		bub.add_theme_constant_override("margin_left", 10)
+		bub.add_theme_constant_override("margin_right", 10)
+		bub.add_theme_constant_override("margin_top", 6)
+		bub.add_theme_constant_override("margin_bottom", 8)
+		bub.anchor_right = 0.52
+		# Tail ends just left of the speaker's mouth
+		var npc_ref: TextureRect = npc_node
+		var aim := func():
+			var target := Vector2(img_area.size.x * 0.66, img_area.size.y * 0.17)
+			if npc_ref != null and is_instance_valid(npc_ref):
+				target = Fx.mouth_point(npc_ref) - Vector2(5, 0)
+			bub.tail_tip = target - bub.position
+		bub.resized.connect(aim)
+		img_area.resized.connect(aim)
+		if npc_ref != null:
+			npc_ref.resized.connect(aim)
+		cap_panel = bub
+	cap_panel.offset_left = 8.0
+	cap_panel.offset_top = -8.0 if is_scene else 8.0
+	cap_panel.offset_bottom = -8.0 if is_scene else 0.0
+	cap_panel.offset_right = 0.0
+	cap_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	img_area.add_child(cap_panel)
 
 	var cap_vbox := VBoxContainer.new()
 	cap_vbox.add_theme_constant_override("separation", 2)
@@ -683,9 +715,9 @@ func _build_comic_panel(frame: Dictionary, stretch: float, full_width: bool = fa
 	var dial_lbl := Label.new()
 	var raw: String  = frame["text"]
 	var max_ch: int  = 85 if (stretch >= 2.0 or full_width) else 52
-	var trunc: String = raw.substr(0, max_ch) + ("..." if raw.length() > max_ch else "")
 	if not is_scene:
-		trunc = "\"" + trunc + "\""
+		max_ch = 70 if (stretch >= 2.0 or full_width) else 40
+	var trunc: String = raw.substr(0, max_ch) + ("..." if raw.length() > max_ch else "")
 	dial_lbl.text              = trunc
 	dial_lbl.autowrap_mode     = TextServer.AUTOWRAP_WORD_SMART
 	dial_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -1137,3 +1169,223 @@ func _build_sim_picker_row(title: String, desc: String, locked: bool) -> Array:
 
 	btn.add_child(row)
 	return [btn, best_lbl]
+
+# ═══════════════════════════════════════════════════════
+#  COMIC V2 LOOK (decoration only)
+#  Comic-book masthead, 3D world logo, "issue" tags and lesson cards with a
+#  number badge, stars, a PLAY tag / NEW! sticker and caution tape on locks.
+# ═══════════════════════════════════════════════════════
+const V2_ISSUE: Dictionary = { "hotel": 1, "cafe": 2, "airport": 3, "library": 4 }
+var _v2_logo = null
+var _v2_issue_tag: Label = null
+var _v2_count_tag: Label = null
+
+func _apply_v2() -> void:
+	# Masthead: mini logo at the left of the ink bar, red print shadows on nav
+	var mini := Fx.Logo.new()
+	mini.text = "C.L.E.D."
+	mini.font_size = 40
+	mini.depth = 4
+	mini.outline = 7
+	mini.align_left = true
+	mini.custom_minimum_size = Vector2(132, 48)
+	$TopBar.add_child(mini)
+	$TopBar.move_child(mini, 0)
+	Comic.heading(_screen_lbl, 22, Comic.PAPER)
+	for b in $TopBar.get_children():
+		if b is Button:
+			Fx.red_shadow(b)
+
+	# World name as 3D logo lettering (the label keeps its text, just hidden)
+	_world_title.custom_minimum_size = Vector2(0, 92)
+	_v2_logo = Fx.Logo.new()
+	_v2_logo.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_v2_logo.font_size = 66
+	_v2_logo.depth = 7
+	_v2_logo.outline = 11
+	_v2_logo.align_left = true
+	_v2_logo.rotation_degrees = -2.0
+	_world_title.add_child(_v2_logo)
+
+	# "Issue" + lesson count tags under the logo
+	var tags_pad := MarginContainer.new()
+	tags_pad.add_theme_constant_override("margin_left", 24)
+	tags_pad.add_theme_constant_override("margin_top", 0)
+	tags_pad.add_theme_constant_override("margin_bottom", 6)
+	var tags := HBoxContainer.new()
+	tags.add_theme_constant_override("separation", 14)
+	tags_pad.add_child(tags)
+	_v2_issue_tag = Label.new()
+	Fx.tag(_v2_issue_tag, Comic.RED, Color.WHITE, 20)
+	tags.add_child(_v2_issue_tag)
+	_v2_count_tag = Label.new()
+	Fx.tag(_v2_count_tag, Comic.PAPER_HI, Comic.INK, 20)
+	tags.add_child(_v2_count_tag)
+	$ContentRow/LeftPanel.add_child(tags_pad)
+	$ContentRow/LeftPanel.move_child(tags_pad, 1)
+	Fx.tilt(_v2_issue_tag, -2.0)
+
+func _decorate_v2() -> void:
+	if _v2_logo == null:
+		return
+	var world: String = GameManager.world
+	_world_title.self_modulate = Color(1, 1, 1, 0)
+	_v2_logo.text = _world_title.text.to_upper()
+	_v2_issue_tag.text = "ISSUE #%d" % V2_ISSUE.get(world, 1)
+	var done: int = 0
+	var total: int = 0
+	for c in _lesson_list.get_children():
+		if c.is_queued_for_deletion():
+			continue
+		if c is Button:
+			# Chapter ribbons: ink with a yellow print shadow
+			if not c.disabled:
+				for st in ["normal", "hover", "pressed", "hover_pressed"]:
+					var sb = c.get_theme_stylebox(st)
+					if sb is StyleBoxFlat:
+						var cp: StyleBoxFlat = sb.duplicate()
+						cp.shadow_color = Comic.YELLOW
+						cp.shadow_offset = Vector2(5, 5) if not st.contains("pressed") else Vector2(2, 2)
+						c.add_theme_stylebox_override(st, cp)
+			continue
+		if not (c is VBoxContainer):
+			continue
+		for item in c.get_children():
+			if not (item is VBoxContainer):
+				continue
+			var star_lbl: Label = null
+			var btn: Button = null
+			for k in item.get_children():
+				if k is Label:
+					star_lbl = k
+				elif k is HBoxContainer:
+					for kk in k.get_children():
+						if kk is Button:
+							btn = kk
+			if btn == null:
+				continue
+			var stars: int = 0
+			if star_lbl != null:
+				stars = star_lbl.text.count("★")
+				star_lbl.visible = false
+			total += 1
+			if stars > 0:
+				done += 1
+			_card_v2(btn, stars)
+	_v2_count_tag.text = "★ %d / %d LESSONS" % [done, total]
+
+# Turns one lesson button into a comic card (text moves into child labels)
+func _card_v2(btn: Button, stars: int) -> void:
+	var raw: String = btn.text
+	var locked: bool = btn.disabled
+	var current: bool = not locked and stars == 0
+	raw = raw.replace("🔒", "").strip_edges()
+	var num: String = raw.substr(0, 2)
+	var rest: String = raw.substr(2).strip_edges()
+	var parts: PackedStringArray = rest.split(" | ", false, 1)
+	var title: String = parts[0]
+	var sub: String = parts[1] if parts.size() > 1 else ""
+	btn.text = ""
+	btn.tooltip_text = rest
+	btn.custom_minimum_size = Vector2(0, 58)
+	var variant: String = "locked" if locked else ("primary" if current else "secondary")
+	Comic.apply_button(btn, variant, 17, false, 10, 4)
+	for st in ["normal", "hover", "pressed", "hover_pressed", "disabled"]:
+		var sb = btn.get_theme_stylebox(st)
+		if sb is StyleBoxFlat:
+			var cp: StyleBoxFlat = sb.duplicate()
+			cp.set_border_width_all(4)
+			cp.set_corner_radius_all(10)
+			if not locked:
+				cp.shadow_offset = Vector2(5, 5) if not st.contains("pressed") else Vector2(2, 2)
+			btn.add_theme_stylebox_override(st, cp)
+
+	var ink: Color = Comic.GREY_TEXT if locked else Comic.INK
+	var row := HBoxContainer.new()
+	row.set_anchors_preset(Control.PRESET_FULL_RECT)
+	row.offset_left = 8.0
+	row.offset_right = -10.0
+	row.add_theme_constant_override("separation", 10)
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	btn.add_child(row)
+
+	var badge := Label.new()
+	badge.text = num
+	badge.custom_minimum_size = Vector2(38, 38)
+	badge.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	badge.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	badge.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	var bs := Comic.box(Comic.GREY if locked else Comic.PAPER_HI, Comic.GREY_TEXT if locked else Comic.INK, 3, 19, 0, 0, 0)
+	badge.add_theme_stylebox_override("normal", bs)
+	Comic.heading(badge, 19, ink)
+	badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_child(badge)
+
+	var col := VBoxContainer.new()
+	col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	col.alignment = BoxContainer.ALIGNMENT_CENTER
+	col.add_theme_constant_override("separation", -2)
+	col.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_child(col)
+	var t := Label.new()
+	t.text = title
+	t.clip_text = true
+	Comic.body(t, 17, ink)
+	col.add_child(t)
+	if sub != "":
+		var s := Label.new()
+		s.text = sub
+		s.clip_text = true
+		s.add_theme_font_override("font", Comic.body_regular_font())
+		s.add_theme_font_size_override("font_size", 14)
+		s.add_theme_color_override("font_color", Comic.GREY_TEXT if locked else Comic.INK_SOFT)
+		col.add_child(s)
+
+	if locked:
+		var tape := Fx.Tape.new()
+		tape.anchor_left = 1.0
+		tape.anchor_right = 1.0
+		tape.offset_left = -150.0
+		tape.offset_right = -4.0
+		tape.offset_top = 15.0
+		tape.offset_bottom = 41.0
+		tape.pivot_offset = Vector2(73, 13)
+		tape.rotation_degrees = -8.0
+		btn.add_child(tape)
+		var lk := Label.new()
+		lk.text = "LOCKED"
+		Fx.tag(lk, Comic.INK, Color.WHITE, 16, true, Comic.INK, 8, 0)
+		lk.anchor_left = 1.0
+		lk.anchor_right = 1.0
+		lk.offset_left = -112.0
+		lk.offset_top = 14.0
+		lk.rotation_degrees = -8.0
+		lk.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		btn.add_child(lk)
+	elif current:
+		var play := Label.new()
+		play.text = "PLAY ▶"
+		play.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		play.add_theme_stylebox_override("normal", Comic.box(Comic.INK, Comic.INK, 0, 6, 0, 10, 2))
+		Comic.heading(play, 19, Comic.YELLOW)
+		play.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		row.add_child(play)
+		var new_s := Fx.sticker("NEW!", "", Comic.RED, Color.WHITE, Vector2(80, 54), 19, 10, -10.0)
+		new_s.shadow = 3.0
+		new_s.outline = 3.0
+		new_s.inner = 0.7
+		new_s.anchor_left = 1.0
+		new_s.anchor_right = 1.0
+		new_s.offset_left = -134.0
+		new_s.offset_top = -28.0
+		new_s.offset_right = -54.0
+		new_s.offset_bottom = 26.0
+		btn.add_child(new_s)
+	else:
+		var st_row := Fx.Stars.new()
+		st_row.filled = stars
+		st_row.outline = 2.5
+		st_row.shadow = 2.0
+		st_row.custom_minimum_size = Vector2(76, 26)
+		st_row.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		row.add_child(st_row)
