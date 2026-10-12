@@ -1,4 +1,5 @@
 extends Control
+const Comic = preload("res://scripts/ComicStyle.gd")
 # ═══════════════════════════════════════════════════════
 #  SIMULATION SCREEN  |  scripts/SimulationScreen.gd
 #  Papers Please-style endless mode: NPCs walk in, state a
@@ -105,7 +106,7 @@ func _ready() -> void:
 	_terminal_win = $WindowLayer/TerminalWindow
 	_build_terminal_ui()
 
-	$TopBar/RunLabel.add_theme_color_override("font_color", Color(0.70, 0.75, 0.85))
+	_style_screen_chrome()
 
 	$TopBar/EndButton.pressed.connect(_on_end_button)
 	$GameOverOverlay/CenterContainer/ResultPanel/ResultVBox/RetryButton.pressed.connect(_on_retry_pressed)
@@ -158,7 +159,7 @@ func start_run(world: String, folder: String = "all", lesson_index: int = 0) -> 
 
 	_terminal_win.visible = true
 	_terminal_win.set_minimized(false)
-	_terminal_win.place_at(Vector2(60, 360), Vector2(420, 260))
+	_terminal_win.place_at(Vector2(24, 150), Vector2(480, 380))
 	_terminal_status.text = ""
 	_terminal_input.text = ""
 
@@ -453,14 +454,14 @@ func _on_execute() -> void:
 	if correct:
 		_score += 1
 		_update_score_label()
-		_terminal_status.modulate = Color(0.55, 0.9, 0.55)
+		_terminal_status.modulate = Color("#1E8E4F")
 		_terminal_status.text = "Correct."
 		GameManager.play_correct()
 		_refresh_table_window(_current_template["table"])
 		await get_tree().create_timer(0.5).timeout
 		_walk_out_then_advance()
 	else:
-		_terminal_status.modulate = Color(0.95, 0.5, 0.5)
+		_terminal_status.modulate = Comic.RED
 		_terminal_status.text = "That's not right — the run ends here."
 		GameManager.play_wrong()
 		await get_tree().create_timer(0.9).timeout
@@ -591,7 +592,8 @@ func _resolve_npc_path(npc_base: String, expr: String) -> String:
 func _spawn_table_window(table_name: String) -> void:
 	var win: FloatingWindow = preload("res://scene/FloatingWindow.tscn").instantiate()
 	$WindowLayer.add_child(win)
-	win.window_title = table_name.capitalize()
+	win.window_title = table_name
+	win.use_plain_title_font()
 
 	var scroll := ScrollContainer.new()
 	scroll.custom_minimum_size = Vector2(320, 150)
@@ -630,19 +632,20 @@ func _make_cell(text: String, is_header: bool) -> PanelContainer:
 	var panel := PanelContainer.new()
 	panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var style := StyleBoxFlat.new()
-	style.bg_color = Color(0.14, 0.17, 0.24, 1.0) if is_header else Color(0.09, 0.11, 0.16, 1.0)
-	style.border_color = Color(0.30, 0.36, 0.48)
-	style.set_border_width_all(1)
+	style.bg_color = Comic.YELLOW if is_header else (Color("#FFD9D3") if text == "NULL" else Comic.PAPER_HI)
+	style.border_color = Comic.INK
+	style.set_border_width_all(2)
 	style.content_margin_left   = 8
 	style.content_margin_right  = 8
-	style.content_margin_top    = 4
-	style.content_margin_bottom = 4
+	style.content_margin_top    = 3
+	style.content_margin_bottom = 3
 	panel.add_theme_stylebox_override("panel", style)
 
 	var lbl := Label.new()
 	lbl.text = text
-	lbl.add_theme_font_size_override("font_size", 13)
-	lbl.add_theme_color_override("font_color", Color(0.55, 0.82, 1.0) if is_header else Color(0.85, 0.88, 0.94))
+	lbl.add_theme_font_override("font", Comic.body_font() if is_header else Comic.body_font())
+	lbl.add_theme_font_size_override("font_size", 16)
+	lbl.add_theme_color_override("font_color", Comic.RED if (text == "NULL" and not is_header) else Comic.INK)
 	panel.add_child(lbl)
 	return panel
 
@@ -657,8 +660,7 @@ func _build_terminal_ui() -> void:
 	var hint := Label.new()
 	hint.text = "Type the full SQL query and press Execute."
 	hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	hint.add_theme_font_size_override("font_size", 12)
-	hint.add_theme_color_override("font_color", Color(0.70, 0.75, 0.85))
+	Comic.body(hint, 17, Comic.INK_SOFT)
 	vbox.add_child(hint)
 
 	_terminal_input = CodeEdit.new()
@@ -667,17 +669,13 @@ func _build_terminal_ui() -> void:
 	_terminal_input.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_terminal_input.wrap_mode = TextEdit.LINE_WRAPPING_BOUNDARY
 	_terminal_input.scroll_fit_content_height = false
-	var tes := StyleBoxFlat.new()
-	tes.bg_color = Color(0.04, 0.05, 0.08, 1.0)
-	tes.border_color = Color(0.30, 0.36, 0.48)
-	tes.set_border_width_all(1)
-	tes.content_margin_left   = 8; tes.content_margin_right  = 8
-	tes.content_margin_top    = 6; tes.content_margin_bottom = 6
+	var tes: StyleBoxFlat = Comic.box(Color("#211B16"), Comic.INK, 4, 8, 0, 12, 8)
 	_terminal_input.add_theme_stylebox_override("normal", tes)
-	var tesf := tes.duplicate() as StyleBoxFlat
-	tesf.border_color = Color("#F59E0B")
-	_terminal_input.add_theme_stylebox_override("focus", tesf)
-	_terminal_input.add_theme_color_override("font_color", Color(0.85, 0.90, 0.95))
+	_terminal_input.add_theme_stylebox_override("focus", Comic.box(Color("#2A221B"), Comic.YELLOW, 4, 8, 0, 12, 8))
+	_terminal_input.add_theme_color_override("font_color", Color(0.95, 0.92, 0.85))
+	_terminal_input.add_theme_color_override("caret_color", Comic.YELLOW)
+	_terminal_input.add_theme_font_override("font", Comic.body_font())
+	_terminal_input.add_theme_font_size_override("font_size", 19)
 	_terminal_input.gui_input.connect(func(event: InputEvent):
 		if event is InputEventKey and event.pressed and event.keycode == KEY_ENTER and event.ctrl_pressed:
 			_on_execute()
@@ -690,19 +688,19 @@ func _build_terminal_ui() -> void:
 
 	var run_hint := Label.new()
 	run_hint.text = "Ctrl+Enter to run, or press Execute below."
-	run_hint.add_theme_font_size_override("font_size", 10)
-	run_hint.add_theme_color_override("font_color", Color(0.45, 0.50, 0.60))
+	Comic.body(run_hint, 15, Comic.GREY_TEXT)
 	vbox.add_child(run_hint)
 
 	var execute_btn := Button.new()
 	execute_btn.text = "Execute"
 	execute_btn.pressed.connect(_on_execute)
+	Comic.apply_button(execute_btn, "primary", 26, true, 20, 8)
 	vbox.add_child(execute_btn)
 
 	_terminal_status = Label.new()
 	_terminal_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_terminal_status.custom_minimum_size = Vector2(360, 0)
-	_terminal_status.add_theme_font_size_override("font_size", 13)
+	Comic.heading(_terminal_status, 24, Color.WHITE)
 	vbox.add_child(_terminal_status)
 
 func _build_sql_highlighter() -> CodeHighlighter:
@@ -867,3 +865,35 @@ func _load_texture(res_path: String) -> Texture2D:
 	if tex != null:
 		_tex_cache[res_path] = tex
 	return tex
+
+# ── Comic look for the screen chrome ───────────────────
+func _style_screen_chrome() -> void:
+	$BGTint.color = Color(1.0, 0.96, 0.84, 0.28)
+	$TopBarBG.color = Comic.INK
+	$TopBarBG.offset_bottom = 62.0
+	$TopBar.offset_top = 7.0
+	$TopBar.offset_bottom = 55.0
+	$TopBar.offset_right = -14.0
+	Comic.heading($TopBar/RunLabel, 26, Comic.YELLOW)
+	Comic.apply_button($TopBar/EndButton, "secondary", 20, true, 16, 6)
+
+	# Customer speech box along the bottom
+	Comic.apply_panel($DialogueBox, Comic.PAPER_HI, 18, 7, 34, 14, 5)
+	Comic.heading($DialogueBox/DialogueVBox/NPCNameLabel, 28, Comic.RED)
+	Comic.body($DialogueBox/DialogueVBox/ProblemLabel, 23, Comic.INK)
+
+	# "Run over" pop-up
+	Comic.apply_dim($GameOverOverlay/DimBG, 0.78)
+	var panel: PanelContainer = $GameOverOverlay/CenterContainer/ResultPanel
+	Comic.apply_panel(panel, Comic.PAPER, 22, 10, 44, 34, 5)
+	var vb: VBoxContainer = panel.get_node("ResultVBox")
+	Comic.title(vb.get_node("TitleLabel"), 64, Comic.RED_HI, 12)
+	Comic.heading(vb.get_node("ScoreLabel"), 32, Comic.INK)
+	Comic.title(vb.get_node("BestLabel"), 34, Comic.YELLOW, 9)
+	var cq: RichTextLabel = vb.get_node("CorrectQueryLabel")
+	cq.add_theme_stylebox_override("normal", Comic.box(Color("#211B16"), Comic.INK, 4, 10, 0, 18, 12))
+	cq.add_theme_color_override("default_color", Color(0.95, 0.92, 0.85))
+	cq.add_theme_font_override("normal_font", Comic.body_font())
+	cq.add_theme_font_size_override("normal_font_size", 20)
+	Comic.apply_button(vb.get_node("RetryButton"), "primary", 30, true, 22, 10)
+	Comic.apply_button(vb.get_node("BackButton"), "secondary", 24, true, 22, 8)

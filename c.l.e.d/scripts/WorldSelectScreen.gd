@@ -1,4 +1,5 @@
 extends Control
+const Comic = preload("res://scripts/ComicStyle.gd")
 # ═══════════════════════════════════════════════════════
 #  WORLD SELECT SCREEN  |  scripts/WorldSelectScreen.gd
 # ═══════════════════════════════════════════════════════
@@ -69,46 +70,42 @@ func _ready() -> void:
 	$SettingsOverlay.z_index = 20
 
 	# Button hierarchy: primary CTA, secondary nav, ghost tertiary
-	_style_btn($UpButton,    "secondary", 20)
-	_style_btn($DownButton,  "secondary", 20)
-	_style_btn($EnterButton, "primary",   22)
-	_style_btn($ExitButton,  "ghost",     15)
-	_style_btn($SettingsOverlay/SettingsPanel/VBox/TitleRow/CloseButton, "ghost", 15)
-	_music_label.add_theme_color_override("font_color", Color(0.85, 0.87, 0.92))
-	_tts_label.add_theme_color_override("font_color", Color(0.85, 0.87, 0.92))
-	_sfx_label.add_theme_color_override("font_color", Color(0.85, 0.87, 0.92))
-	_style_btn(_dark_btn,  "secondary", 15)
+	_style_btn($UpButton,    "info",      30)
+	_style_btn($DownButton,  "info",      30)
+	_style_btn($EnterButton, "primary",   40)
+	_style_btn($ExitButton,  "secondary", 24)
+	$EnterButton.offset_bottom = 572.0
+	$ExitButton.offset_top = 600.0
+	$ExitButton.offset_bottom = 656.0
+	_style_btn(_dark_btn,  "secondary", 20)
 	_style_settings_btn($SettingsButton)
 
-	# Title | small caps label
-	$Title.add_theme_font_size_override("font_size", 13)
-	$Title.add_theme_color_override("font_color", Color(0.65, 0.70, 0.80))
-	$Title.add_theme_constant_override("outline_size", 1)
-	$Title.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.7))
+	# A light paper wash instead of the heavy dark veil, so the line art reads like a comic page
+	$DarkOverlay.color = Color(1.0, 0.95, 0.80, 0.40)
+
+	# Title | comic caption lettering over the art
+	Comic.title($Title, 34, Comic.YELLOW, 8)
 
 	# World name | large hero text
-	$WorldName.add_theme_font_size_override("font_size", 46)
-	$WorldName.add_theme_color_override("font_color", Color.WHITE)
+	Comic.title($WorldName, 66, Color.WHITE, 12)
+	$UpButton.offset_left = -360.0;  $UpButton.offset_right = -300.0
+	$DownButton.offset_left = 300.0; $DownButton.offset_right = 360.0
 	$WorldName.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	$WorldName.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
-	$WorldName.add_theme_constant_override("outline_size", 2)
-	$WorldName.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.85))
 
-	# Settings panel dark card
+	# Settings pop-up and exit confirmation
 	_style_settings_panel()
 	_style_exit_confirm_panel()
 
 	var title_lbl := $SettingsOverlay/SettingsPanel/VBox/TitleRow/TitleLabel
 	title_lbl.text = "Settings"
-	title_lbl.add_theme_font_size_override("font_size", 17)
-	title_lbl.add_theme_color_override("font_color", Color.WHITE)
 
 	# Reset Progress button | danger action, lives at the bottom of Settings
 	$SettingsOverlay/SettingsPanel/VBox.add_child(HSeparator.new())
 	_reset_btn = Button.new()
 	_reset_btn.pressed.connect(_on_reset_pressed)
 	$SettingsOverlay/SettingsPanel/VBox.add_child(_reset_btn)
-	_style_btn(_reset_btn, "secondary", 15)
+	_style_btn(_reset_btn, "danger", 20)
 	_reset_btn.text = "Reset Progress"
 
 	# Log Out | switches back to the Login Screen so another
@@ -117,20 +114,17 @@ func _ready() -> void:
 	_logout_btn = Button.new()
 	_logout_btn.pressed.connect(_on_logout_pressed)
 	$SettingsOverlay/SettingsPanel/VBox.add_child(_logout_btn)
-	_style_btn(_logout_btn, "secondary", 15)
+	_style_btn(_logout_btn, "secondary", 20)
 	_update_logout_button()
 
 	# Completion % label under the world name
 	_completion_lbl = Label.new()
 	_completion_lbl.anchor_left = 0.0
 	_completion_lbl.anchor_right = 1.0
-	_completion_lbl.offset_top = 453.0
-	_completion_lbl.offset_bottom = 485.0
+	_completion_lbl.offset_top = 440.0
+	_completion_lbl.offset_bottom = 476.0
 	_completion_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_completion_lbl.add_theme_font_size_override("font_size", 16)
-	_completion_lbl.add_theme_color_override("font_color", Color("#F59E0B"))
-	_completion_lbl.add_theme_constant_override("outline_size", 2)
-	_completion_lbl.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.85))
+	Comic.title(_completion_lbl, 26, Comic.YELLOW, 8)
 	add_child(_completion_lbl)
 
 	# Refresh completion % whenever this screen becomes visible again
@@ -147,40 +141,22 @@ func _ready() -> void:
 	_update_dark_button()
 
 func _style_settings_panel() -> void:
-	var s := StyleBoxFlat.new()
-	s.bg_color = Color(0.10, 0.12, 0.17, 0.98)
-	s.border_color = Color(0.28, 0.33, 0.46)
-	s.set_border_width_all(2)
-	s.set_corner_radius_all(14)
-	s.content_margin_left   = 22
-	s.content_margin_right  = 22
-	s.content_margin_top    = 20
-	s.content_margin_bottom = 20
-	_panel.add_theme_stylebox_override("panel", s)
+	Comic.apply_dim($SettingsOverlay/DimBG)
+	Comic.apply_settings_panel(
+		_panel,
+		$SettingsOverlay/SettingsPanel/VBox/TitleRow/TitleLabel,
+		$SettingsOverlay/SettingsPanel/VBox/TitleRow/CloseButton,
+		[_music_label, _tts_label, _sfx_label])
 
 func _style_exit_confirm_panel() -> void:
-	var s := StyleBoxFlat.new()
-	s.bg_color = Color(0.10, 0.12, 0.17, 0.98)
-	s.border_color = Color(0.28, 0.33, 0.46)
-	s.set_border_width_all(2)
-	s.set_corner_radius_all(14)
-	s.content_margin_left   = 22
-	s.content_margin_right  = 22
-	s.content_margin_top    = 20
-	s.content_margin_bottom = 20
-	$ExitConfirmOverlay/ConfirmPanel.add_theme_stylebox_override("panel", s)
+	Comic.apply_dim($ExitConfirmOverlay/DimBG)
+	Comic.apply_panel($ExitConfirmOverlay/ConfirmPanel, Comic.PAPER, 16, 8, 26, 22, 4)
+	Comic.heading($ExitConfirmOverlay/ConfirmPanel/VBox/TitleLabel, 30)
+	Comic.body($ExitConfirmOverlay/ConfirmPanel/VBox/MessageLabel, 17)
 
-	var title_lbl := $ExitConfirmOverlay/ConfirmPanel/VBox/TitleLabel
-	title_lbl.add_theme_font_size_override("font_size", 18)
-	title_lbl.add_theme_color_override("font_color", Color.WHITE)
-
-	var msg_lbl := $ExitConfirmOverlay/ConfirmPanel/VBox/MessageLabel
-	msg_lbl.add_theme_font_size_override("font_size", 14)
-	msg_lbl.add_theme_color_override("font_color", Color(0.70, 0.74, 0.82))
-
-	_style_btn($ExitConfirmOverlay/ConfirmPanel/VBox/LogoutExitButton,    "secondary", 15)
-	_style_btn($ExitConfirmOverlay/ConfirmPanel/VBox/StaySignedInButton, "primary",   15)
-	_style_btn($ExitConfirmOverlay/ConfirmPanel/VBox/CancelButton,       "ghost",     14)
+	_style_btn($ExitConfirmOverlay/ConfirmPanel/VBox/LogoutExitButton,    "secondary", 20)
+	_style_btn($ExitConfirmOverlay/ConfirmPanel/VBox/StaySignedInButton, "primary",   20)
+	_style_btn($ExitConfirmOverlay/ConfirmPanel/VBox/CancelButton,       "ghost",     18)
 
 func _preload_backgrounds() -> void:
 	for world in WORLDS:
@@ -333,73 +309,21 @@ func _load_texture(res_path: String) -> Texture2D:
 		return ImageTexture.create_from_image(img2)
 	return null
 
-# ── 3-variant button style ────────────────────────────
-# primary   | amber fill, dark text  (main CTAs)
-# secondary | dark panel, light text (nav / toggles)
-# ghost     | transparent, dim border (exit / close)
+# ── Buttons (comic look, from ComicStyle) ─────────────
+# primary   | yellow, inked outline  (main CTAs)
+# secondary | cream paper            (nav / toggles)
+# info      | blue                   (world arrows)
+# danger    | red                    (destructive)
+# ghost     | text only              (cancel / close)
 func _style_btn(btn: Button, variant: String = "primary", font_size: int = 18) -> void:
-	btn.add_theme_font_size_override("font_size", font_size)
-	var s := StyleBoxFlat.new()
-	s.set_corner_radius_all(8)
-
-	match variant:
-		"primary":
-			btn.add_theme_color_override("font_color", Color(0.10, 0.06, 0.00))
-			s.bg_color     = Color("#F59E0B")
-			s.border_color = Color("#D97706")
-			s.set_border_width_all(0)
-			s.content_margin_left   = 28; s.content_margin_right  = 28
-			s.content_margin_top    = 12; s.content_margin_bottom = 12
-		"secondary":
-			btn.add_theme_color_override("font_color", Color(0.88, 0.90, 0.95))
-			s.bg_color     = Color(0.13, 0.15, 0.21, 0.95)
-			s.border_color = Color(0.30, 0.35, 0.46)
-			s.set_border_width_all(2)
-			s.content_margin_left   = 20; s.content_margin_right  = 20
-			s.content_margin_top    = 10; s.content_margin_bottom = 10
-		"ghost":
-			btn.add_theme_color_override("font_color", Color(0.55, 0.60, 0.70))
-			s.bg_color     = Color(0, 0, 0, 0)
-			s.border_color = Color(0.32, 0.37, 0.48)
-			s.set_border_width_all(2)
-			s.content_margin_left   = 20; s.content_margin_right  = 20
-			s.content_margin_top    = 10; s.content_margin_bottom = 10
-
-	var h := s.duplicate() as StyleBoxFlat
-	var p := s.duplicate() as StyleBoxFlat
-
-	match variant:
-		"primary":
-			h.bg_color = Color("#FBBF24")
-			p.bg_color = Color("#D97706")
-		"secondary":
-			h.bg_color     = Color(0.20, 0.23, 0.32, 0.95)
-			h.border_color = Color("#F59E0B")
-			p.bg_color     = Color(0.09, 0.11, 0.16, 0.95)
-		"ghost":
-			h.bg_color     = Color(0.14, 0.17, 0.23, 0.50)
-			h.border_color = Color(0.55, 0.60, 0.72)
-			p.bg_color     = Color(0.09, 0.11, 0.16, 0.50)
-
-	btn.add_theme_stylebox_override("normal",  s)
-	btn.add_theme_stylebox_override("hover",   h)
-	btn.add_theme_stylebox_override("pressed", p)
+	var pad_h: int = 28 if variant == "primary" else 20
+	var pad_v: int = 12 if variant == "primary" else 8
+	Comic.apply_button(btn, variant, font_size, variant != "ghost", pad_h, pad_v)
 
 func _style_settings_btn(btn: Button) -> void:
-	btn.add_theme_font_size_override("font_size", 20)
-	btn.add_theme_color_override("font_color", Color(0.82, 0.86, 0.93))
-	var s := StyleBoxFlat.new()
-	s.bg_color     = Color(0.10, 0.12, 0.18, 0.88)
-	s.border_color = Color(0.28, 0.33, 0.45)
-	s.set_border_width_all(2)
-	s.set_corner_radius_all(8)
-	s.content_margin_left   = 10; s.content_margin_right  = 10
-	s.content_margin_top    = 10; s.content_margin_bottom = 10
-	btn.add_theme_stylebox_override("normal", s)
-	var h := s.duplicate() as StyleBoxFlat
-	h.bg_color     = Color(0.18, 0.21, 0.30, 0.95)
-	h.border_color = Color("#F59E0B")
-	btn.add_theme_stylebox_override("hover", h)
-	var p := s.duplicate() as StyleBoxFlat
-	p.bg_color = Color(0.08, 0.10, 0.15, 0.95)
-	btn.add_theme_stylebox_override("pressed", p)
+	btn.text = "SETTINGS"
+	btn.offset_left = -170.0
+	btn.offset_right = -14.0
+	btn.offset_top = 14.0
+	btn.offset_bottom = 62.0
+	Comic.apply_button(btn, "dark", 26, true, 16, 6)

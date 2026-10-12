@@ -1,4 +1,5 @@
 extends Control
+const Comic = preload("res://scripts/ComicStyle.gd")
 
 const Dashboard = preload("res://scripts/DashboardScreen.gd")
 
@@ -12,32 +13,19 @@ const Dashboard = preload("res://scripts/DashboardScreen.gd")
 func _ready() -> void:
 	_hub_btn.pressed.connect(_on_back)
 	_world_btn.pressed.connect(_on_change_world)
+	_vbox.add_theme_constant_override("separation", 10)
 
-	# Card panel dark styling
-	var card := StyleBoxFlat.new()
-	card.bg_color = Color(0.10, 0.12, 0.17, 0.97)
-	card.border_color = Color(0.26, 0.31, 0.44)
-	card.set_border_width_all(2)
-	card.set_corner_radius_all(16)
-	card.content_margin_left   = 36
-	card.content_margin_right  = 36
-	card.content_margin_top    = 32
-	card.content_margin_bottom = 32
-	$CenterContainer/CardPanel.add_theme_stylebox_override("panel", card)
+	# Celebration page: yellow halftone burst behind an ink-outlined card
+	Comic.apply_halftone($FullBG, Comic.PAPER, Comic.YELLOW_HI, 18.0, 0.10, 0.46)
+	Comic.apply_panel($CenterContainer/CardPanel, Comic.PAPER_HI, 22, 10, 40, 20, 5)
+	$CenterContainer/CardPanel.custom_minimum_size = Vector2(460, 0)
 
-	# Icon | large result symbol
-	_icon_lbl.add_theme_font_size_override("font_size", 52)
+	# Sub label
+	Comic.heading(_sub_lbl, 26, Comic.INK_SOFT)
 
-	# Title
-	_title_lbl.add_theme_font_size_override("font_size", 26)
-
-	# Sub label | muted
-	_sub_lbl.add_theme_font_size_override("font_size", 15)
-	_sub_lbl.add_theme_color_override("font_color", Color(0.60, 0.65, 0.75))
-
-	# Buttons | ghost secondary (the dynamic "next step" button, when present, is the primary CTA)
-	_style_btn(_hub_btn,   "ghost", 16)
-	_style_btn(_world_btn, "ghost", 15)
+	# Buttons (the dynamic "next step" button, when present, is the primary CTA)
+	_style_btn(_hub_btn,   "secondary", 24)
+	_style_btn(_world_btn, "ghost", 22)
 
 func set_mode(mode: String) -> void:
 	# Remove any dynamic nodes from a previous call immediately (not deferred)
@@ -48,16 +36,16 @@ func set_mode(mode: String) -> void:
 
 	if mode == "failed":
 		_icon_lbl.text = "✗"
-		_icon_lbl.add_theme_color_override("font_color", Color("#EF4444"))
+		Comic.title(_icon_lbl, 64, Comic.RED, 12)
 		_title_lbl.text = "Lesson Failed"
-		_title_lbl.add_theme_color_override("font_color", Color("#EF4444"))
+		Comic.title(_title_lbl, 54, Comic.RED_HI, 10)
 		_sub_lbl.text = "Review the material and try again."
 		_add_replay_btn()
 	else:
 		_icon_lbl.text = "✓"
-		_icon_lbl.add_theme_color_override("font_color", Color("#4ADE80"))
+		Comic.title(_icon_lbl, 64, Comic.GREEN_HI, 12)
 		_title_lbl.text = "Lesson Complete!"
-		_title_lbl.add_theme_color_override("font_color", Color.WHITE)
+		Comic.title(_title_lbl, 54, Comic.YELLOW, 10)
 		_sub_lbl.text = "Lesson  " + str(GameManager.lesson_id)
 		_add_complete_extras()
 
@@ -74,7 +62,7 @@ func _add_replay_btn() -> void:
 	replay_btn.pressed.connect(func():
 		get_tree().root.get_node("Main").show_screen("game")
 	)
-	_style_btn(replay_btn, "ghost", 15)
+	_style_btn(replay_btn, "secondary", 22)
 	_vbox.add_child(replay_btn)
 	_vbox.move_child(replay_btn, _sub_lbl.get_index() + 1)
 
@@ -94,11 +82,10 @@ func _add_complete_extras() -> void:
 	for i in range(3):
 		var s := Label.new()
 		s.text = "★"
-		s.add_theme_font_size_override("font_size", 32)
-		if i < star_count:
-			s.add_theme_color_override("font_color", Color("#F59E0B"))
-		else:
-			s.add_theme_color_override("font_color", Color(0.22, 0.25, 0.35))
+		s.add_theme_font_size_override("font_size", 46)
+		s.add_theme_color_override("font_color", Comic.YELLOW if i < star_count else Comic.PAPER_DARK)
+		s.add_theme_color_override("font_outline_color", Comic.INK)
+		s.add_theme_constant_override("outline_size", 10)
 		stars_row.add_child(s)
 
 	# ── SQL Recap box ─────────────────────────────────
@@ -112,16 +99,7 @@ func _add_complete_extras() -> void:
 		insert_idx += 1
 
 		var recap_panel := PanelContainer.new()
-		var rps := StyleBoxFlat.new()
-		rps.bg_color = Color(0.07, 0.08, 0.12, 0.95)
-		rps.border_color = Color(0.22, 0.27, 0.40)
-		rps.set_border_width_all(1)
-		rps.set_corner_radius_all(6)
-		rps.content_margin_left   = 14
-		rps.content_margin_right  = 14
-		rps.content_margin_top    = 10
-		rps.content_margin_bottom = 10
-		recap_panel.add_theme_stylebox_override("panel", rps)
+		recap_panel.add_theme_stylebox_override("panel", Comic.box(Comic.PAPER, Comic.INK, 3, 10, 0, 16, 10))
 		recap_box.add_child(recap_panel)
 
 		var inner := VBoxContainer.new()
@@ -130,15 +108,13 @@ func _add_complete_extras() -> void:
 
 		var rt := Label.new()
 		rt.text = "SQL Commands in this Lesson"
-		rt.add_theme_font_size_override("font_size", 11)
-		rt.add_theme_color_override("font_color", Color(0.45, 0.50, 0.65))
+		Comic.heading(rt, 22, Comic.RED)
 		inner.add_child(rt)
 
 		for cmd in recap:
 			var cl := Label.new()
 			cl.text = "  " + cmd
-			cl.add_theme_font_size_override("font_size", 13)
-			cl.add_theme_color_override("font_color", Color("#4ADE80"))
+			Comic.body(cl, 20, Color("#1E8E4F"))
 			inner.add_child(cl)
 
 	# ── Next step button (Next Lesson / Folder Challenge) ──
@@ -159,7 +135,7 @@ func _add_complete_extras() -> void:
 				GameManager.lesson_id = cap_lid
 				get_tree().root.get_node("Main").show_screen("game")
 			)
-		_style_btn(next_btn, "primary", 16)
+		_style_btn(next_btn, "primary", 32)
 		_vbox.add_child(next_btn)
 		_vbox.move_child(next_btn, insert_idx)
 		insert_idx += 1
@@ -222,40 +198,7 @@ func _next_step_data() -> Dictionary:
 
 	return {}
 
-# ── 3-variant button style ────────────────────────────
+# ── Button styles (comic look, from ComicStyle) ──────
 func _style_btn(btn: Button, variant: String = "primary", font_size: int = 16) -> void:
-	btn.add_theme_font_size_override("font_size", font_size)
-	var s := StyleBoxFlat.new()
-	s.set_corner_radius_all(8)
-
-	match variant:
-		"primary":
-			btn.add_theme_color_override("font_color", Color(0.10, 0.06, 0.00))
-			s.bg_color     = Color("#F59E0B")
-			s.border_color = Color("#D97706")
-			s.set_border_width_all(0)
-			s.content_margin_left   = 24; s.content_margin_right  = 24
-			s.content_margin_top    = 12; s.content_margin_bottom = 12
-		"ghost":
-			btn.add_theme_color_override("font_color", Color(0.52, 0.57, 0.68))
-			s.bg_color     = Color(0, 0, 0, 0)
-			s.border_color = Color(0.30, 0.35, 0.46)
-			s.set_border_width_all(2)
-			s.content_margin_left   = 24; s.content_margin_right  = 24
-			s.content_margin_top    = 10; s.content_margin_bottom = 10
-
-	var h := s.duplicate() as StyleBoxFlat
-	var p := s.duplicate() as StyleBoxFlat
-
-	match variant:
-		"primary":
-			h.bg_color = Color("#FBBF24")
-			p.bg_color = Color("#D97706")
-		"ghost":
-			h.bg_color     = Color(0.13, 0.16, 0.22, 0.50)
-			h.border_color = Color(0.52, 0.58, 0.70)
-			p.bg_color     = Color(0.08, 0.10, 0.14, 0.50)
-
-	btn.add_theme_stylebox_override("normal",  s)
-	btn.add_theme_stylebox_override("hover",   h)
-	btn.add_theme_stylebox_override("pressed", p)
+	var pad_h: int = 26 if variant == "primary" else 22
+	Comic.apply_button(btn, variant, font_size, true, pad_h, 10)

@@ -1,4 +1,5 @@
 extends Control
+const Comic = preload("res://scripts/ComicStyle.gd")
 # ═══════════════════════════════════════════════════════
 #  GAME SCREEN  |  scripts/GameScreen.gd
 # ═══════════════════════════════════════════════════════
@@ -104,32 +105,32 @@ func _ready() -> void:
 	retry_dash_btn.pressed.connect(_on_back_to_hub)
 	$DialogueArea/DialogueButtons.add_child(retry_dash_btn)
 
-	# Top bar dark strip
+	# Top bar: solid ink strip
 	var tb_bg := ColorRect.new()
-	tb_bg.color         = Color(0.04, 0.05, 0.08, 0.94)
+	tb_bg.color         = Comic.INK
 	tb_bg.anchor_right  = 1.0
-	tb_bg.offset_bottom = 42.0
+	tb_bg.offset_bottom = 60.0
 	tb_bg.mouse_filter  = Control.MOUSE_FILTER_IGNORE
 	tb_bg.z_index       = 2
 	add_child(tb_bg)
 
-	# Top bar amber accent line
+	# Top bar yellow edge
 	var tb_line := ColorRect.new()
-	tb_line.color         = Color("#F59E0B")
+	tb_line.color         = Comic.YELLOW
 	tb_line.anchor_right  = 1.0
-	tb_line.offset_top    = 41.0
-	tb_line.offset_bottom = 43.0
+	tb_line.offset_top    = 60.0
+	tb_line.offset_bottom = 65.0
 	tb_line.mouse_filter  = Control.MOUSE_FILTER_IGNORE
 	tb_line.z_index       = 2
 	add_child(tb_line)
 
-	# Amber accent line at dialogue box top edge
+	# Ink rule along the top edge of the dialogue area
 	_dlg_line = ColorRect.new()
-	_dlg_line.color         = Color("#F59E0B")
+	_dlg_line.color         = Comic.INK
 	_dlg_line.anchor_top    = 1.0
 	_dlg_line.anchor_right  = 1.0
 	_dlg_line.anchor_bottom = 1.0
-	_dlg_line.offset_top    = -222.0
+	_dlg_line.offset_top    = -224.0
 	_dlg_line.offset_bottom = -218.0
 	_dlg_line.mouse_filter  = Control.MOUSE_FILTER_IGNORE
 	_dlg_line.z_index       = 3
@@ -138,31 +139,50 @@ func _ready() -> void:
 	$TopBar.z_index    = 3
 	$ProgressBar.z_index = 3
 
-	$TopBar/LessonLabel.add_theme_font_size_override("font_size", 14)
-	$TopBar/LessonLabel.add_theme_color_override("font_color", Color(0.60, 0.65, 0.76))
+	# Room in the bar for the buttons' hard shadows
+	$TopBar.offset_top    = 7.0
+	$TopBar.offset_bottom = 55.0
+	$TopBar.offset_right  = -14.0
+	$TopBar.offset_left   = 14.0
+	Comic.heading($TopBar/LessonLabel, 28, Comic.YELLOW)
 
-	_style_btn($TopBar/BackToHubButton, "secondary", 13)
+	_style_btn($TopBar/BackToHubButton, "secondary", 20)
 	$TopBar/BackToHubButton.text = "← Hub"
 
-	_style_btn($DialogueArea/DialogueButtons/BackButton, "ghost", 15)
-	_style_btn($DialogueArea/DialogueButtons/NextButton, "primary", 15)
+	# A paper-wash instead of a dark tint, so the ink line art stays crisp
+	$BGTint.color = Color(1.0, 0.96, 0.84, 0.22)
+
+	# Comic speech box: halftone gutter with a cream, ink-outlined panel on top
+	Comic.apply_halftone($DialogueBG)
+	var speech := Panel.new()
+	speech.set_anchors_preset(Control.PRESET_FULL_RECT)
+	speech.offset_left   = 12.0
+	speech.offset_right  = -12.0
+	speech.offset_top    = 16.0
+	speech.offset_bottom = -12.0
+	speech.mouse_filter  = Control.MOUSE_FILTER_IGNORE
+	speech.add_theme_stylebox_override("panel", Comic.box(Comic.PAPER_HI, Comic.INK, 5, 18, 7, 0, 0))
+	$DialogueBG.add_child(speech)
+	$DialogueArea.offset_left   = 44.0
+	$DialogueArea.offset_right  = -44.0
+	$DialogueArea.offset_top    = -184.0
+	$DialogueArea.offset_bottom = -26.0
+
+	_style_btn($DialogueArea/DialogueButtons/BackButton, "secondary", 22)
+	_style_btn($DialogueArea/DialogueButtons/NextButton, "primary", 30)
 	$DialogueArea/DialogueButtons/NextButton.text = "Next  →"
 
-	_style_btn($DialogueArea/DialogueButtons/RetryChallengeButton, "primary", 15)
-	_style_btn($DialogueArea/DialogueButtons/RetryDashboardButton, "ghost", 15)
+	_style_btn($DialogueArea/DialogueButtons/RetryChallengeButton, "primary", 26)
+	_style_btn($DialogueArea/DialogueButtons/RetryDashboardButton, "secondary", 22)
 
-	_style_btn($SQLOverlay/CenterContainer/PanelContainer/OuterVBox/BackToDialogueButton, "secondary", 14)
+	_style_btn($SQLOverlay/CenterContainer/PanelContainer/OuterVBox/BackToDialogueButton, "secondary", 18)
 	$SQLOverlay/CenterContainer/PanelContainer/OuterVBox/BackToDialogueButton.text = "← Dialogue"
 
-	# Character name | amber, readable
-	$DialogueArea/CharacterName.add_theme_font_size_override("font_size", 14)
-	$DialogueArea/CharacterName.add_theme_color_override("font_color", Color("#F59E0B"))
-	$DialogueArea/CharacterName.add_theme_constant_override("outline_size", 1)
-	$DialogueArea/CharacterName.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.7))
+	# Character name | bold comic lettering in red
+	Comic.heading($DialogueArea/CharacterName, 30, Comic.RED)
 
-	# Dialogue text | larger for legibility
-	$DialogueArea/DialogueText.add_theme_font_size_override("font_size", 18)
-	$DialogueArea/DialogueText.add_theme_color_override("font_color", Color(0.93, 0.94, 0.97))
+	# Dialogue text | big and readable
+	Comic.body($DialogueArea/DialogueText, 23, Comic.INK)
 
 	# Let clicks pass through the overlay containers to the TopBar.
 	# Only the PanelContainer (the actual panel) and its children keep STOP.
@@ -184,12 +204,9 @@ func _ready() -> void:
 	_npc_base_bottom = $NPCSprite.offset_bottom
 
 func _style_sql_panel() -> void:
-	var ps := StyleBoxFlat.new()
-	ps.bg_color     = Color(0.08, 0.10, 0.15, 0.98)
-	ps.border_color = Color(0.24, 0.30, 0.42)
-	ps.set_border_width_all(2)
-	ps.set_corner_radius_all(12)
-	$SQLOverlay/CenterContainer/PanelContainer.add_theme_stylebox_override("panel", ps)
+	# The challenge windows float over a halftone comic page
+	Comic.apply_halftone($SQLOverlay/SQLBackground)
+	Comic.apply_panel($SQLOverlay/CenterContainer/PanelContainer, Comic.PAPER, 12, 6, 14, 12, 4)
 
 # ── Per-frame: bob + typewriter ───────────────────────
 func _process(delta: float) -> void:
@@ -586,63 +603,14 @@ func _update_progress() -> void:
 
 func _style_progress_bar() -> void:
 	var pb: ProgressBar = $ProgressBar
-	var bg := StyleBoxFlat.new()
-	bg.bg_color     = Color(0.10, 0.11, 0.16, 0.90)
-	bg.border_color = Color(0.22, 0.27, 0.38)
-	bg.set_border_width_all(1)
-	bg.set_corner_radius_all(10)
-	pb.add_theme_stylebox_override("background", bg)
-	var fill := StyleBoxFlat.new()
-	fill.bg_color = Color("#F59E0B")
-	fill.set_corner_radius_all(10)
-	pb.add_theme_stylebox_override("fill", fill)
+	pb.offset_top = 15.0
+	pb.offset_bottom = 43.0
+	pb.add_theme_stylebox_override("background", Comic.box(Comic.PAPER_HI, Comic.PAPER_HI, 3, 12, 0, 0, 0))
+	pb.add_theme_stylebox_override("fill", Comic.box(Comic.YELLOW, Comic.PAPER_HI, 3, 12, 0, 0, 0))
 	pb.value = 0.0
 
-# ── 3-variant button style ────────────────────────────
+# ── Button styles (comic look, from ComicStyle) ──────
+# primary | yellow   secondary | cream   ghost | text only
 func _style_btn(btn: Button, variant: String = "primary", font_size: int = 16) -> void:
-	btn.add_theme_font_size_override("font_size", font_size)
-	var s := StyleBoxFlat.new()
-	s.set_corner_radius_all(7)
-
-	match variant:
-		"primary":
-			btn.add_theme_color_override("font_color", Color(0.10, 0.06, 0.00))
-			s.bg_color     = Color("#F59E0B")
-			s.border_color = Color("#D97706")
-			s.set_border_width_all(0)
-			s.content_margin_left   = 22; s.content_margin_right  = 22
-			s.content_margin_top    = 8;  s.content_margin_bottom = 8
-		"secondary":
-			btn.add_theme_color_override("font_color", Color(0.85, 0.88, 0.94))
-			s.bg_color     = Color(0.13, 0.15, 0.21, 0.95)
-			s.border_color = Color(0.28, 0.33, 0.44)
-			s.set_border_width_all(2)
-			s.content_margin_left   = 16; s.content_margin_right  = 16
-			s.content_margin_top    = 6;  s.content_margin_bottom = 6
-		"ghost":
-			btn.add_theme_color_override("font_color", Color(0.55, 0.60, 0.70))
-			s.bg_color     = Color(0, 0, 0, 0)
-			s.border_color = Color(0.30, 0.35, 0.46)
-			s.set_border_width_all(2)
-			s.content_margin_left   = 16; s.content_margin_right  = 16
-			s.content_margin_top    = 6;  s.content_margin_bottom = 6
-
-	var h := s.duplicate() as StyleBoxFlat
-	var p := s.duplicate() as StyleBoxFlat
-
-	match variant:
-		"primary":
-			h.bg_color = Color("#FBBF24")
-			p.bg_color = Color("#D97706")
-		"secondary":
-			h.bg_color     = Color(0.19, 0.22, 0.30, 0.95)
-			h.border_color = Color("#F59E0B")
-			p.bg_color     = Color(0.09, 0.11, 0.16, 0.95)
-		"ghost":
-			h.bg_color     = Color(0.12, 0.15, 0.21, 0.50)
-			h.border_color = Color(0.50, 0.56, 0.68)
-			p.bg_color     = Color(0.08, 0.10, 0.14, 0.50)
-
-	btn.add_theme_stylebox_override("normal",  s)
-	btn.add_theme_stylebox_override("hover",   h)
-	btn.add_theme_stylebox_override("pressed", p)
+	var pad_h: int = 26 if variant == "primary" else 18
+	Comic.apply_button(btn, variant, font_size, true, pad_h, 8)

@@ -22,6 +22,10 @@ config/features=PackedStringArray("4.7", "GL Compatibility")
 
 GameManager="*res://scripts/GameManager.gd"
 
+[gui]
+
+theme/custom="res://theme/comic_theme.tres"
+
 [display]
 
 window/size/viewport_width=1280

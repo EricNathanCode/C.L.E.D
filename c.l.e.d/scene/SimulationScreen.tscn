@@ -49,8 +49,8 @@ text = "← End Run"
 
 [node name="NPCSprite" type="TextureRect" parent="."]
 layout_mode = 0
-offset_top = 60.0
-offset_bottom = 620.0
+offset_top = 78.0
+offset_bottom = 640.0
 custom_minimum_size = Vector2(420, 0)
 expand_mode = 1
 stretch_mode = 5

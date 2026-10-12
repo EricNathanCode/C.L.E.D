@@ -1,5 +1,6 @@
 extends Control
 class_name FloatingWindow
+const Comic = preload("res://scripts/ComicStyle.gd")
 # ═══════════════════════════════════════════════════════
 #  FLOATING WINDOW  |  scripts/FloatingWindow.gd
 #  Reusable draggable / minimizable panel used by the
@@ -96,57 +97,28 @@ func _on_resize_input(event: InputEvent) -> void:
 		custom_minimum_size = new_size
 
 func _style_resize_handle() -> void:
-	_resize_handle.add_theme_font_size_override("font_size", 14)
-	_resize_handle.add_theme_color_override("font_color", Color(0.45, 0.52, 0.65))
+	_resize_handle.add_theme_font_size_override("font_size", 18)
+	_resize_handle.add_theme_color_override("font_color", Comic.INK)
 
 func _style_panel() -> void:
-	var s := StyleBoxFlat.new()
-	s.bg_color = Color(0.07, 0.09, 0.13, 0.98)
-	s.border_color = Color(0.30, 0.36, 0.48)
-	s.set_border_width_all(2)
-	s.set_corner_radius_all(10)
-	_panel.add_theme_stylebox_override("panel", s)
+	# A comic panel: cream body, thick ink outline, hard shadow; ink title bar
+	_panel.add_theme_stylebox_override("panel", Comic.box(Comic.PAPER, Comic.INK, 4, 14, 6, 0, 0))
 
-	var bar_s := StyleBoxFlat.new()
-	bar_s.bg_color = Color(0.11, 0.13, 0.19, 1.0)
-	bar_s.border_color = Color(0.30, 0.36, 0.48)
-	bar_s.border_width_bottom = 1
-	bar_s.corner_radius_top_left  = 8
-	bar_s.corner_radius_top_right = 8
-	bar_s.content_margin_left   = 12
-	bar_s.content_margin_right  = 8
-	bar_s.content_margin_top    = 6
-	bar_s.content_margin_bottom = 6
+	var bar_s: StyleBoxFlat = Comic.box(Comic.INK, Comic.INK, 0, 0, 0, 14, 6)
+	bar_s.corner_radius_top_left  = 10
+	bar_s.corner_radius_top_right = 10
 	_title_bar.add_theme_stylebox_override("panel", bar_s)
 
-	_title_lbl.add_theme_font_size_override("font_size", 13)
-	_title_lbl.add_theme_color_override("font_color", Color(0.85, 0.88, 0.94))
+	Comic.heading(_title_lbl, 24, Comic.YELLOW)
 
-	_min_btn.add_theme_font_size_override("font_size", 14)
-	_min_btn.add_theme_color_override("font_color", Color(0.70, 0.75, 0.85))
-	var mb := StyleBoxFlat.new()
-	mb.bg_color = Color(0, 0, 0, 0)
-	mb.set_corner_radius_all(4)
-	mb.content_margin_left = 8; mb.content_margin_right  = 8
-	mb.content_margin_top  = 2; mb.content_margin_bottom = 2
-	_min_btn.add_theme_stylebox_override("normal", mb)
-	var mbh := mb.duplicate() as StyleBoxFlat
-	mbh.bg_color = Color(1, 1, 1, 0.12)
-	_min_btn.add_theme_stylebox_override("hover", mbh)
-	_min_btn.add_theme_stylebox_override("pressed", mbh)
+	# Minimise: a small red comic button
+	Comic.apply_button(_min_btn, "danger", 20, false, 9, 0)
 
 func _style_chip() -> void:
-	_chip.add_theme_font_size_override("font_size", 13)
-	_chip.add_theme_color_override("font_color", Color(0.85, 0.88, 0.94))
-	var s := StyleBoxFlat.new()
-	s.bg_color = Color(0.11, 0.13, 0.19, 0.98)
-	s.border_color = Color(0.30, 0.36, 0.48)
-	s.set_border_width_all(2)
-	s.set_corner_radius_all(8)
-	s.content_margin_left = 12; s.content_margin_right  = 12
-	s.content_margin_top  = 8;  s.content_margin_bottom = 8
-	_chip.add_theme_stylebox_override("normal", s)
-	var h := s.duplicate() as StyleBoxFlat
-	h.bg_color = Color(0.16, 0.19, 0.27, 0.98)
-	_chip.add_theme_stylebox_override("hover", h)
-	_chip.add_theme_stylebox_override("pressed", h)
+	Comic.apply_button(_chip, "dark", 20, true, 14, 6)
+
+# For windows titled with a real table name: keep the name lowercase (the comic
+# display font draws everything in capitals).
+func use_plain_title_font() -> void:
+	Comic.body(_title_lbl, 22, Comic.YELLOW)
+	_chip.add_theme_font_override("font", Comic.body_font())

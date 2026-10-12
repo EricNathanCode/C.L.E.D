@@ -1,4 +1,5 @@
 ﻿extends Control
+const Comic = preload("res://scripts/ComicStyle.gd")
 # ═══════════════════════════════════════════════════════
 #  FOLDER QUIZ SCREEN  |  scripts/FolderQuizScreen.gd
 # ═══════════════════════════════════════════════════════
@@ -234,42 +235,43 @@ func start_quiz() -> void:
 # ── Static outer shell (built once) ──────────────────────
 func _build_static_ui() -> void:
 	var bg := ColorRect.new()
-	bg.color = Color(0.07, 0.08, 0.11, 1.0)
+	Comic.apply_halftone(bg)
 	bg.anchor_right = 1.0; bg.anchor_bottom = 1.0
 	bg.mouse_filter  = Control.MOUSE_FILTER_IGNORE
 	bg.z_index = -10
 	add_child(bg)
 
 	var tb := ColorRect.new()
-	tb.color = Color(0.05, 0.06, 0.09, 1.0)
-	tb.anchor_right = 1.0; tb.offset_bottom = 50.0
+	tb.color = Comic.INK
+	tb.anchor_right = 1.0; tb.offset_bottom = 62.0
 	tb.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(tb)
 
 	var tb_line := ColorRect.new()
-	tb_line.color = Color("#F59E0B")
+	tb_line.color = Comic.YELLOW
 	tb_line.anchor_right = 1.0
-	tb_line.offset_top = 49.0; tb_line.offset_bottom = 51.0
+	tb_line.offset_top = 62.0; tb_line.offset_bottom = 67.0
 	tb_line.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(tb_line)
 
 	var hdr_lbl := Label.new()
 	hdr_lbl.text = "FOLDER CHALLENGE"
-	hdr_lbl.add_theme_font_size_override("font_size", 13)
-	hdr_lbl.add_theme_color_override("font_color", Color(0.50, 0.55, 0.65))
+	Comic.heading(hdr_lbl, 30, Comic.YELLOW)
+	hdr_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	hdr_lbl.set_anchors_and_offsets_preset(Control.PRESET_LEFT_WIDE)
+	hdr_lbl.anchor_bottom = 0.0
 	hdr_lbl.offset_left   = 20
-	hdr_lbl.offset_bottom = 50
+	hdr_lbl.offset_bottom = 62
 	add_child(hdr_lbl)
 
 	# Back to Dashboard button | top right
 	var back_btn := Button.new()
 	back_btn.text = "← Dashboard"
 	back_btn.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
-	back_btn.offset_left   = -160
-	back_btn.offset_right  = -12
-	back_btn.offset_top    = 8
-	back_btn.offset_bottom = 42
+	back_btn.offset_left   = -230
+	back_btn.offset_right  = -14
+	back_btn.offset_top    = 7
+	back_btn.offset_bottom = 55
 	_style_ghost(back_btn)
 	back_btn.pressed.connect(func():
 		get_tree().root.get_node("Main").show_screen("dashboard")
@@ -278,19 +280,12 @@ func _build_static_ui() -> void:
 
 	var center := CenterContainer.new()
 	center.anchor_right = 1.0; center.anchor_bottom = 1.0
-	center.offset_top   = 52.0
+	center.offset_top   = 76.0
 	add_child(center)
 
 	var panel := PanelContainer.new()
 	panel.custom_minimum_size = Vector2(700, 0)
-	var ps := StyleBoxFlat.new()
-	ps.bg_color = Color(0.09, 0.10, 0.15, 1.0)
-	ps.border_color = Color("#F59E0B")
-	ps.set_border_width_all(2)
-	ps.set_corner_radius_all(10)
-	ps.content_margin_left = 44; ps.content_margin_right  = 44
-	ps.content_margin_top  = 38; ps.content_margin_bottom = 38
-	panel.add_theme_stylebox_override("panel", ps)
+	Comic.apply_panel(panel, Comic.PAPER_HI, 20, 9, 46, 38, 5)
 	center.add_child(panel)
 
 	_container = VBoxContainer.new()
@@ -300,33 +295,25 @@ func _build_static_ui() -> void:
 # ── Question widgets (rebuilt per quiz) ──────────────────
 func _build_question_widgets() -> void:
 	_progress_lbl = Label.new()
-	_progress_lbl.add_theme_font_size_override("font_size", 12)
-	_progress_lbl.add_theme_color_override("font_color", Color(0.40, 0.45, 0.58))
+	Comic.heading(_progress_lbl, 26, Comic.RED)
 	_container.add_child(_progress_lbl)
 
 	_desc_lbl = Label.new()
 	_desc_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_desc_lbl.add_theme_font_size_override("font_size", 17)
-	_desc_lbl.add_theme_color_override("font_color", Color(0.90, 0.92, 0.97))
+	Comic.body(_desc_lbl, 22, Comic.INK)
 	_container.add_child(_desc_lbl)
 
 	# SQL code block
 	var code_panel := PanelContainer.new()
-	var cps := StyleBoxFlat.new()
-	cps.bg_color = Color(0.04, 0.05, 0.09, 1.0)
-	cps.border_color = Color(0.22, 0.27, 0.38)
-	cps.set_border_width_all(2)
-	cps.set_corner_radius_all(6)
-	cps.content_margin_left = 20; cps.content_margin_right  = 20
-	cps.content_margin_top  = 14; cps.content_margin_bottom = 14
-	code_panel.add_theme_stylebox_override("panel", cps)
+	code_panel.add_theme_stylebox_override("panel", Comic.box(Color("#211B16"), Comic.INK, 4, 10, 0, 24, 16))
 	_container.add_child(code_panel)
 
 	_code_lbl = RichTextLabel.new()
 	_code_lbl.bbcode_enabled = true
 	_code_lbl.fit_content    = true
 	_code_lbl.scroll_active  = false
-	_code_lbl.add_theme_font_size_override("normal_font_size", 16)
+	_code_lbl.add_theme_font_override("normal_font", Comic.body_font())
+	_code_lbl.add_theme_font_size_override("normal_font_size", 21)
 	code_panel.add_child(_code_lbl)
 
 	# Input row
@@ -337,23 +324,14 @@ func _build_question_widgets() -> void:
 	_input = LineEdit.new()
 	_input.placeholder_text = "Type your answer here..."
 	_input.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_input.custom_minimum_size = Vector2(0, 46)
-	_input.add_theme_font_size_override("font_size", 16)
-	_input.add_theme_color_override("font_color", Color(0.95, 0.97, 1.0))
-	var ins := StyleBoxFlat.new()
-	ins.bg_color = Color(0.04, 0.07, 0.13, 1.0)
-	ins.border_color = Color("#F59E0B")
-	ins.border_width_bottom = 2
-	ins.content_margin_left = 12; ins.content_margin_right  = 12
-	ins.content_margin_top  = 8;  ins.content_margin_bottom = 8
-	_input.add_theme_stylebox_override("normal", ins)
-	_input.add_theme_stylebox_override("focus",  ins)
+	_input.custom_minimum_size = Vector2(0, 54)
+	Comic.apply_input(_input, 21)
 	_input.text_submitted.connect(_on_submit)
 	input_row.add_child(_input)
 
 	var submit_btn := Button.new()
 	submit_btn.text = "Submit"
-	submit_btn.custom_minimum_size = Vector2(120, 46)
+	submit_btn.custom_minimum_size = Vector2(150, 54)
 	_style_primary(submit_btn)
 	submit_btn.pressed.connect(func(): _on_submit(_input.text))
 	input_row.add_child(submit_btn)
@@ -362,7 +340,9 @@ func _build_question_widgets() -> void:
 	var result_panel := PanelContainer.new()
 	result_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var rps := StyleBoxFlat.new()
-	rps.set_corner_radius_all(6)
+	rps.set_corner_radius_all(10)
+	rps.set_border_width_all(3)
+	rps.border_color = Comic.INK
 	rps.content_margin_left = 14; rps.content_margin_right  = 14
 	rps.content_margin_top  = 10; rps.content_margin_bottom = 10
 	result_panel.add_theme_stylebox_override("panel", rps)
@@ -371,7 +351,7 @@ func _build_question_widgets() -> void:
 
 	_result_lbl = Label.new()
 	_result_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_result_lbl.add_theme_font_size_override("font_size", 16)
+	Comic.heading(_result_lbl, 26, Comic.INK)
 	result_panel.add_child(_result_lbl)
 
 	# Store panel ref so we can tint it on wrong/correct
@@ -392,8 +372,7 @@ func _build_question_widgets() -> void:
 	_hint_lbl = Label.new()
 	_hint_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_hint_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_hint_lbl.add_theme_font_size_override("font_size", 13)
-	_hint_lbl.add_theme_color_override("font_color", Color(0.78, 0.68, 0.30))
+	Comic.body(_hint_lbl, 18, Color("#8A5A00"))
 	_hint_lbl.visible = false
 	hint_row.add_child(_hint_lbl)
 
@@ -476,8 +455,8 @@ func _on_submit(text: String) -> void:
 	var sbox:  StyleBoxFlat   = _result_lbl.get_meta("style")
 
 	if given == correct:
-		sbox.bg_color = Color(0.08, 0.28, 0.14, 0.90)
-		_result_lbl.add_theme_color_override("font_color", Color(0.40, 0.95, 0.60))
+		sbox.bg_color = Color("#CDEFD8")
+		_result_lbl.add_theme_color_override("font_color", Color("#1E8E4F"))
 		_result_lbl.text = "✓  Correct!"
 		panel.visible    = true
 		GameManager.play_correct()
@@ -485,8 +464,8 @@ func _on_submit(text: String) -> void:
 		await get_tree().create_timer(0.75).timeout
 		_show_question()
 	else:
-		sbox.bg_color = Color(0.28, 0.07, 0.07, 0.90)
-		_result_lbl.add_theme_color_override("font_color", Color(1.0, 0.45, 0.45))
+		sbox.bg_color = Color("#FFD9D3")
+		_result_lbl.add_theme_color_override("font_color", Comic.RED)
 		_result_lbl.text = "✗  Wrong answer check the hint and try again."
 		panel.visible    = true
 		GameManager.play_wrong()
@@ -521,21 +500,19 @@ func _show_complete() -> void:
 	var icon_lbl := Label.new()
 	icon_lbl.text = "⚡"
 	icon_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	icon_lbl.add_theme_font_size_override("font_size", 48)
+	Comic.title(icon_lbl, 80, Comic.YELLOW, 12)
 	_container.add_child(icon_lbl)
 
 	var done_lbl := Label.new()
 	done_lbl.text = "Folder Challenge Complete!"
 	done_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	done_lbl.add_theme_font_size_override("font_size", 26)
-	done_lbl.add_theme_color_override("font_color", Color("#F59E0B"))
+	Comic.title(done_lbl, 50, Comic.YELLOW, 10)
 	_container.add_child(done_lbl)
 
 	var sub_lbl := Label.new()
 	sub_lbl.text = "The next chapter is now unlocked."
 	sub_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	sub_lbl.add_theme_font_size_override("font_size", 15)
-	sub_lbl.add_theme_color_override("font_color", Color(0.55, 0.60, 0.72))
+	Comic.heading(sub_lbl, 26, Comic.INK_SOFT)
 	_container.add_child(sub_lbl)
 
 	var spacer := Control.new()
@@ -544,42 +521,17 @@ func _show_complete() -> void:
 
 	var back_btn := Button.new()
 	back_btn.text = "← Back to Dashboard"
-	back_btn.custom_minimum_size = Vector2(280, 52)
+	back_btn.custom_minimum_size = Vector2(340, 62)
 	_style_primary(back_btn)
 	back_btn.pressed.connect(func():
 		get_tree().root.get_node("Main").show_screen("dashboard")
 	)
 	_container.add_child(back_btn)
 
-# ── Button styles ─────────────────────────────────────────
+# ── Button styles (comic look, from ComicStyle) ───────────
 func _style_primary(btn: Button) -> void:
-	btn.add_theme_font_size_override("font_size", 15)
-	btn.add_theme_color_override("font_color", Color(0.10, 0.06, 0.00))
-	var s := StyleBoxFlat.new()
-	s.bg_color = Color("#F59E0B")
-	s.set_corner_radius_all(8)
-	s.set_border_width_all(0)
-	s.content_margin_left = 24; s.content_margin_right  = 24
-	s.content_margin_top  = 12; s.content_margin_bottom = 12
-	var h := s.duplicate() as StyleBoxFlat
-	h.bg_color = Color("#FBBF24")
-	var p := s.duplicate() as StyleBoxFlat
-	p.bg_color = Color("#D97706")
-	btn.add_theme_stylebox_override("normal",  s)
-	btn.add_theme_stylebox_override("hover",   h)
-	btn.add_theme_stylebox_override("pressed", p)
+	Comic.apply_button(btn, "primary", 26, true, 26, 10)
 
+# Cream secondary button (kept under its old name so every call site still works)
 func _style_ghost(btn: Button) -> void:
-	btn.add_theme_font_size_override("font_size", 13)
-	btn.add_theme_color_override("font_color", Color(0.55, 0.60, 0.70))
-	var s := StyleBoxFlat.new()
-	s.bg_color     = Color(0, 0, 0, 0)
-	s.border_color = Color(0.30, 0.35, 0.46)
-	s.set_border_width_all(2)
-	s.set_corner_radius_all(6)
-	s.content_margin_left = 12; s.content_margin_right  = 12
-	s.content_margin_top  = 6;  s.content_margin_bottom = 6
-	btn.add_theme_stylebox_override("normal",  s)
-	btn.add_theme_stylebox_override("hover",   s)
-	btn.add_theme_stylebox_override("pressed", s)
-
+	Comic.apply_button(btn, "secondary", 20, true, 16, 7)

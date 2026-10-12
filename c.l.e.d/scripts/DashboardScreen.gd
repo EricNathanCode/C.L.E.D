@@ -1,4 +1,5 @@
 extends Control
+const Comic = preload("res://scripts/ComicStyle.gd")
 
 # ── Data script paths for comic-strip previews ────────────
 const _DATA_PATHS: Dictionary = {
@@ -166,36 +167,38 @@ var _sim_picker_title_lbl: Label = null
 var _sim_picker_body: VBoxContainer = null
 
 func _ready() -> void:
-	# Full dark background
-	var bg := ColorRect.new()
-	bg.color        = Color(0.07, 0.08, 0.11, 1.0)
-	bg.anchor_right  = 1.0
-	bg.anchor_bottom = 1.0
-	bg.mouse_filter  = Control.MOUSE_FILTER_IGNORE
-	bg.z_index       = -10
+	# Halftone comic page behind everything
+	var bg := Comic.make_halftone()
+	bg.z_index = -10
 	add_child(bg)
 
-	# Top bar bg strip
+	# Ink title bar with a yellow edge
 	var tb_bg := ColorRect.new()
-	tb_bg.color         = Color(0.05, 0.06, 0.09, 1.0)
+	tb_bg.color         = Comic.INK
 	tb_bg.anchor_right  = 1.0
-	tb_bg.offset_bottom = 50.0
+	tb_bg.offset_bottom = 62.0
 	tb_bg.mouse_filter  = Control.MOUSE_FILTER_IGNORE
 	tb_bg.z_index       = -1
 	add_child(tb_bg)
 
-	# Top bar amber accent line
 	var tb_line := ColorRect.new()
-	tb_line.color         = Color("#F59E0B")
+	tb_line.color         = Comic.YELLOW
 	tb_line.anchor_right  = 1.0
-	tb_line.offset_top    = 49.0
-	tb_line.offset_bottom = 51.0
+	tb_line.offset_top    = 62.0
+	tb_line.offset_bottom = 67.0
 	tb_line.mouse_filter  = Control.MOUSE_FILTER_IGNORE
 	tb_line.z_index       = -1
 	add_child(tb_line)
 
+	# Room around the bar buttons for their hard shadows
+	$TopBar.offset_top    = 7.0
+	$TopBar.offset_bottom = 55.0
+	$TopBar.offset_right  = -14.0
+	$TopBar.add_theme_constant_override("separation", 12)
+	$ContentRow.offset_top = 74.0
+
 	_back_btn.pressed.connect(_on_change_world)
-	_style_btn(_back_btn, "ghost", 14)
+	_style_btn(_back_btn, "secondary", 20)
 	_back_btn.text = "← Worlds"
 
 	_build_glossary()
@@ -203,18 +206,21 @@ func _ready() -> void:
 	var sim_btn := Button.new()
 	sim_btn.text = "🎮  Simulation"
 	sim_btn.pressed.connect(_toggle_sim_picker)
-	_style_btn(sim_btn, "secondary", 13)
+	_style_btn(sim_btn, "primary", 20)
 	$TopBar.add_child(sim_btn)
 
 	_build_sim_picker()
 
-	_screen_lbl.add_theme_font_size_override("font_size", 13)
-	_screen_lbl.add_theme_color_override("font_color", Color(0.50, 0.55, 0.65))
+	Comic.heading(_screen_lbl, 26, Comic.YELLOW)
 
 	# Preview title styling
-	_preview_title.add_theme_font_size_override("font_size", 11)
-	_preview_title.add_theme_color_override("font_color", Color(0.40, 0.45, 0.58))
+	Comic.heading(_preview_title, 24, Comic.INK)
 	_preview_title.add_theme_constant_override("outline_size", 0)
+
+	# Chunky ink divider between the lesson list and the preview
+	var divider: ColorRect = $ContentRow/Divider
+	divider.color = Comic.INK
+	divider.custom_minimum_size = Vector2(5, 0)
 
 
 func _on_change_world() -> void:
@@ -230,8 +236,7 @@ func build_lessons() -> void:
 	for child in _lesson_list.get_children():
 		child.queue_free()
 
-	_world_title.add_theme_font_size_override("font_size", 22)
-	_world_title.add_theme_color_override("font_color", Color("#F59E0B"))
+	Comic.title(_world_title, 50, Comic.YELLOW, 10)
 
 	var world_label: String = WORLD_DISPLAY.get(GameManager.world, GameManager.world.capitalize()).to_upper()
 	_screen_lbl.text = "  " + world_label + "   ·   LESSONS"
@@ -354,8 +359,10 @@ func build_lessons() -> void:
 				var star_lbl := Label.new()
 				star_lbl.text = "★".repeat(stars) + "☆".repeat(3 - stars)
 				star_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-				star_lbl.add_theme_font_size_override("font_size", 14)
-				star_lbl.add_theme_color_override("font_color", Color("#F59E0B"))
+				star_lbl.add_theme_font_size_override("font_size", 24)
+				star_lbl.add_theme_color_override("font_color", Comic.YELLOW)
+				star_lbl.add_theme_color_override("font_outline_color", Comic.INK)
+				star_lbl.add_theme_constant_override("outline_size", 6)
 				item.add_child(star_lbl)
 			item.add_child(row)
 
@@ -424,12 +431,7 @@ func _reset_preview() -> void:
 	var wrap := PanelContainer.new()
 	wrap.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	wrap.size_flags_vertical   = Control.SIZE_EXPAND_FILL
-	var ws := StyleBoxFlat.new()
-	ws.bg_color = Color(0.08, 0.09, 0.13, 1.0)
-	ws.border_color = Color(0.22, 0.27, 0.38)
-	ws.set_border_width_all(2)
-	ws.set_corner_radius_all(4)
-	wrap.add_theme_stylebox_override("panel", ws)
+	wrap.add_theme_stylebox_override("panel", Comic.box(Comic.PAPER_HI, Comic.INK, 5, 6, 8, 12, 12))
 	var ph := Label.new()
 	ph.text = "Hover a lesson\nto preview its story"
 	ph.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -437,8 +439,7 @@ func _reset_preview() -> void:
 	ph.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	ph.size_flags_vertical   = Control.SIZE_EXPAND_FILL
 	ph.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	ph.add_theme_font_size_override("font_size", 15)
-	ph.add_theme_color_override("font_color", Color(0.28, 0.32, 0.44))
+	Comic.heading(ph, 30, Comic.INK_SOFT)
 	wrap.add_child(ph)
 	_comic_strip.add_child(wrap)
 
@@ -526,16 +527,8 @@ func _show_preview(lesson_id) -> void:
 	var page := PanelContainer.new()
 	page.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	page.size_flags_vertical   = Control.SIZE_EXPAND_FILL
-	var page_s := StyleBoxFlat.new()
-	page_s.bg_color = Color(0.06, 0.07, 0.10, 1.0)
-	page_s.border_color = Color(0.30, 0.36, 0.50)
-	page_s.set_border_width_all(3)
-	page_s.set_corner_radius_all(6)
-	page_s.content_margin_left   = 8
-	page_s.content_margin_right  = 8
-	page_s.content_margin_top    = 8
-	page_s.content_margin_bottom = 8
-	page.add_theme_stylebox_override("panel", page_s)
+	# A comic page: cream gutters, thick ink frame, hard shadow
+	page.add_theme_stylebox_override("panel", Comic.box(Comic.PAPER_HI, Comic.INK, 5, 6, 8, 9, 9))
 	_comic_strip.add_child(page)
 
 	var rows := VBoxContainer.new()
@@ -586,8 +579,7 @@ func _show_preview(lesson_id) -> void:
 	var cta := Label.new()
 	cta.text = "Click to start  ▶"
 	cta.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	cta.add_theme_font_size_override("font_size", 11)
-	cta.add_theme_color_override("font_color", Color("#F59E0B"))
+	Comic.title(cta, 26, Comic.YELLOW, 7)
 	_comic_strip.add_child(cta)
 
 func _build_comic_panel(frame: Dictionary, stretch: float, full_width: bool = false) -> Control:
@@ -601,14 +593,8 @@ func _build_comic_panel(frame: Dictionary, stretch: float, full_width: bool = fa
 	outer.size_flags_vertical   = Control.SIZE_EXPAND_FILL
 	if not full_width:
 		outer.size_flags_stretch_ratio = stretch
-	var ps := StyleBoxFlat.new()
-	ps.bg_color     = Color(0.04, 0.04, 0.06, 1.0)
-	ps.border_color = Color(0.82, 0.86, 0.94)
-	ps.set_border_width_all(3)
-	ps.set_corner_radius_all(0)
-	ps.content_margin_left = 0; ps.content_margin_right  = 0
-	ps.content_margin_top  = 0; ps.content_margin_bottom = 0
-	outer.add_theme_stylebox_override("panel", ps)
+	# Hard square comic-panel border
+	outer.add_theme_stylebox_override("panel", Comic.box(Comic.INK, Comic.INK, 4, 0, 0, 0, 0))
 
 	var vbox := VBoxContainer.new()
 	vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -635,11 +621,11 @@ func _build_comic_panel(frame: Dictionary, stretch: float, full_width: bool = fa
 		bg_tex.texture = bg_t
 	img_area.add_child(bg_tex)
 
-	# Dark overlay so NPC pops
+	# Soft paper wash so the ink lines stay crisp
 	var overlay := ColorRect.new()
 	overlay.anchor_right  = 1.0
 	overlay.anchor_bottom = 1.0
-	overlay.color         = Color(0.0, 0.0, 0.0, 0.30)
+	overlay.color         = Color(1.0, 0.96, 0.84, 0.30)
 	overlay.mouse_filter  = Control.MOUSE_FILTER_IGNORE
 	img_area.add_child(overlay)
 
@@ -671,10 +657,11 @@ func _build_comic_panel(frame: Dictionary, stretch: float, full_width: bool = fa
 	var cap_panel := PanelContainer.new()
 	cap_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	cap_panel.custom_minimum_size   = Vector2(0, 52)
+	# Narration boxes are yellow, speech boxes are white (like a real comic)
 	var cap_s := StyleBoxFlat.new()
-	cap_s.bg_color             = Color(0.05, 0.06, 0.09, 0.95)
-	cap_s.border_color         = Color(0.82, 0.86, 0.94)
-	cap_s.border_width_top     = 2
+	cap_s.bg_color             = Comic.YELLOW if is_scene else Comic.PAPER_HI
+	cap_s.border_color         = Comic.INK
+	cap_s.border_width_top     = 4
 	cap_s.content_margin_left  = 10
 	cap_s.content_margin_right = 10
 	cap_s.content_margin_top   = 5
@@ -689,8 +676,7 @@ func _build_comic_panel(frame: Dictionary, stretch: float, full_width: bool = fa
 	# Character name
 	var name_lbl := Label.new()
 	name_lbl.text = frame["name"]
-	name_lbl.add_theme_font_size_override("font_size", 10)
-	name_lbl.add_theme_color_override("font_color", Color("#F59E0B"))
+	Comic.heading(name_lbl, 15, Comic.INK if is_scene else Comic.RED)
 	cap_vbox.add_child(name_lbl)
 
 	# Dialogue text
@@ -703,119 +689,40 @@ func _build_comic_panel(frame: Dictionary, stretch: float, full_width: bool = fa
 	dial_lbl.text              = trunc
 	dial_lbl.autowrap_mode     = TextServer.AUTOWRAP_WORD_SMART
 	dial_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	dial_lbl.add_theme_font_size_override("font_size", 11)
-	dial_lbl.add_theme_color_override("font_color", Color(0.90, 0.92, 0.97))
+	Comic.body(dial_lbl, 13, Comic.INK)
 	cap_vbox.add_child(dial_lbl)
 
 	return outer
 
 # ── Locked folder header style ──────────────────────────
 func _style_folder_btn_locked(btn: Button) -> void:
-	btn.add_theme_font_size_override("font_size", 13)
-	btn.add_theme_color_override("font_color", Color(0.28, 0.31, 0.38))
-	var s := StyleBoxFlat.new()
-	s.bg_color     = Color(0.07, 0.08, 0.12, 0.55)
-	s.border_color = Color(0.16, 0.19, 0.26)
-	s.border_width_bottom = 2
-	s.set_corner_radius_all(6)
-	s.content_margin_left   = 12; s.content_margin_right  = 12
-	s.content_margin_top    = 9;  s.content_margin_bottom = 9
-	btn.add_theme_stylebox_override("normal",   s)
-	btn.add_theme_stylebox_override("hover",    s)
-	btn.add_theme_stylebox_override("pressed",  s)
-	btn.add_theme_stylebox_override("disabled", s)
+	btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	Comic.apply_button(btn, "locked", 19, true, 14, 8)
 
 # ── Folder header button style ───────────────────────────
+# An ink ribbon with yellow lettering, like a comic chapter banner.
 func _style_folder_btn(btn: Button) -> void:
-	btn.add_theme_font_size_override("font_size", 13)
-	btn.add_theme_color_override("font_color", Color("#F59E0B"))
-	var s := StyleBoxFlat.new()
-	s.bg_color     = Color(0.09, 0.11, 0.17, 0.90)
-	s.border_color = Color(0.28, 0.33, 0.46)
-	s.border_width_bottom = 2
-	s.set_corner_radius_all(6)
-	s.content_margin_left   = 12; s.content_margin_right  = 12
-	s.content_margin_top    = 9;  s.content_margin_bottom = 9
-	var h := s.duplicate() as StyleBoxFlat
-	h.bg_color     = Color(0.14, 0.17, 0.25, 0.95)
-	h.border_color = Color("#F59E0B")
-	h.border_width_bottom = 2
-	var p := s.duplicate() as StyleBoxFlat
-	p.bg_color = Color(0.07, 0.08, 0.13, 0.95)
-	btn.add_theme_stylebox_override("normal",  s)
-	btn.add_theme_stylebox_override("hover",   h)
-	btn.add_theme_stylebox_override("pressed", p)
+	btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	Comic.apply_button(btn, "dark", 21, true, 14, 8)
 
-# ── 3-variant button style ────────────────────────────────
+# ── Button styles (comic look, from ComicStyle) ──────────
+# primary | yellow  secondary | cream  ghost | text only
+# locked  | grey    quiz      | red
 func _style_btn(btn: Button, variant: String = "primary", font_size: int = 16) -> void:
-	btn.add_theme_font_size_override("font_size", font_size)
-	var s := StyleBoxFlat.new()
-	s.set_corner_radius_all(8)
-
+	if font_size < 17:
+		font_size = 17   # comic lettering needs a little more size to stay readable
+	var display: bool = variant == "primary" or variant == "quiz" or font_size >= 19
 	match variant:
 		"primary":
-			btn.add_theme_color_override("font_color", Color(0.10, 0.06, 0.00))
-			s.bg_color     = Color("#F59E0B")
-			s.border_color = Color("#D97706")
-			s.set_border_width_all(0)
-			s.content_margin_left   = 24; s.content_margin_right  = 24
-			s.content_margin_top    = 12; s.content_margin_bottom = 12
-		"secondary":
-			btn.add_theme_color_override("font_color", Color(0.85, 0.88, 0.93))
-			s.bg_color     = Color(0.12, 0.14, 0.20, 0.95)
-			s.border_color = Color(0.26, 0.31, 0.42)
-			s.set_border_width_all(2)
-			s.content_margin_left   = 16; s.content_margin_right  = 16
-			s.content_margin_top    = 11; s.content_margin_bottom = 11
-		"ghost":
-			btn.add_theme_color_override("font_color", Color(0.55, 0.60, 0.70))
-			s.bg_color     = Color(0, 0, 0, 0)
-			s.border_color = Color(0.30, 0.35, 0.46)
-			s.set_border_width_all(2)
-			s.content_margin_left   = 14; s.content_margin_right  = 14
-			s.content_margin_top    = 8;  s.content_margin_bottom = 8
-		"locked":
-			btn.add_theme_color_override("font_color", Color(0.30, 0.33, 0.40))
-			s.bg_color     = Color(0.08, 0.09, 0.13, 0.50)
-			s.border_color = Color(0.16, 0.19, 0.26)
-			s.set_border_width_all(2)
-			s.content_margin_left   = 16; s.content_margin_right  = 16
-			s.content_margin_top    = 11; s.content_margin_bottom = 11
+			Comic.apply_button(btn, "primary", font_size, true, 22, 10)
 		"quiz":
-			btn.add_theme_color_override("font_color", Color(0.08, 0.05, 0.00))
-			s.bg_color     = Color("#D97706")
-			s.border_color = Color("#F59E0B")
-			s.set_border_width_all(2)
-			s.set_corner_radius_all(8)
-			s.content_margin_left   = 16; s.content_margin_right  = 16
-			s.content_margin_top    = 10; s.content_margin_bottom = 10
-
-	var h := s.duplicate() as StyleBoxFlat
-	var p := s.duplicate() as StyleBoxFlat
-
-	match variant:
-		"primary":
-			h.bg_color = Color("#FBBF24")
-			p.bg_color = Color("#D97706")
-		"secondary":
-			h.bg_color     = Color(0.18, 0.22, 0.30, 0.95)
-			h.border_color = Color("#F59E0B")
-			p.bg_color     = Color(0.08, 0.10, 0.15, 0.95)
+			Comic.apply_button(btn, "quiz", font_size, true, 14, 9)
 		"ghost":
-			h.bg_color     = Color(0.12, 0.15, 0.21, 0.50)
-			h.border_color = Color(0.52, 0.58, 0.70)
-			p.bg_color     = Color(0.08, 0.10, 0.14, 0.50)
+			Comic.apply_button(btn, "ghost", font_size, false, 12, 6)
 		"locked":
-			h.bg_color = s.bg_color
-			p.bg_color = s.bg_color
-		"quiz":
-			h.bg_color = Color("#F59E0B")
-			h.border_color = Color("#FBBF24")
-			p.bg_color = Color("#B45309")
-
-	btn.add_theme_stylebox_override("normal",  s)
-	btn.add_theme_stylebox_override("hover",   h)
-	btn.add_theme_stylebox_override("pressed", p)
+			Comic.apply_button(btn, "locked", font_size, false, 14, 9)
+		_:
+			Comic.apply_button(btn, "secondary", font_size, display, 14, 9)
 
 # ── SQL Glossary overlay ──────────────────────────────
 # Lives on the Dashboard (not in a lesson) so it can't be used as a
@@ -825,7 +732,7 @@ func _build_glossary() -> void:
 	var gloss_btn := Button.new()
 	gloss_btn.text = "📖  Glossary"
 	gloss_btn.pressed.connect(_toggle_glossary)
-	_style_btn(gloss_btn, "secondary", 13)
+	_style_btn(gloss_btn, "secondary", 20)
 	$TopBar.add_child(gloss_btn)
 
 	# Full-screen overlay | added last so it's on top of all scene children
@@ -836,10 +743,10 @@ func _build_glossary() -> void:
 	_glossary_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
 	add_child(_glossary_overlay)
 
-	# Dark backdrop
+	# Ink-tinted backdrop
 	var backdrop := ColorRect.new()
 	backdrop.set_anchors_preset(Control.PRESET_FULL_RECT)
-	backdrop.color = Color(0.0, 0.0, 0.0, 0.80)
+	Comic.apply_dim(backdrop, 0.72)
 	backdrop.mouse_filter = Control.MOUSE_FILTER_STOP
 	_glossary_overlay.add_child(backdrop)
 
@@ -849,21 +756,12 @@ func _build_glossary() -> void:
 	_glossary_overlay.add_child(center)
 
 	var panel := PanelContainer.new()
-	panel.custom_minimum_size = Vector2(520, 560)
-	var ps := StyleBoxFlat.new()
-	ps.bg_color = Color(0.09, 0.11, 0.16, 0.98)
-	ps.border_color = Color("#F59E0B")
-	ps.set_border_width_all(2)
-	ps.set_corner_radius_all(12)
-	ps.content_margin_left   = 24
-	ps.content_margin_right  = 24
-	ps.content_margin_top    = 20
-	ps.content_margin_bottom = 20
-	panel.add_theme_stylebox_override("panel", ps)
+	panel.custom_minimum_size = Vector2(560, 580)
+	Comic.apply_panel(panel, Comic.PAPER, 16, 8, 28, 22, 5)
 	center.add_child(panel)
 
 	var vbox := VBoxContainer.new()
-	vbox.add_theme_constant_override("separation", 8)
+	vbox.add_theme_constant_override("separation", 10)
 	vbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	panel.add_child(vbox)
 
@@ -873,19 +771,18 @@ func _build_glossary() -> void:
 	var header_lbl := Label.new()
 	header_lbl.text = "SQL Glossary"
 	header_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	header_lbl.add_theme_font_size_override("font_size", 18)
-	header_lbl.add_theme_color_override("font_color", Color("#F59E0B"))
+	Comic.title(header_lbl, 38, Comic.YELLOW, 8)
 	header_row.add_child(header_lbl)
 	var close_btn := Button.new()
 	close_btn.text = "✕"
 	close_btn.pressed.connect(_toggle_glossary)
-	_style_btn(close_btn, "ghost", 16)
+	Comic.apply_icon_button(close_btn, "danger", 22)
 	header_row.add_child(close_btn)
 
 	# Divider
 	var sep := ColorRect.new()
-	sep.custom_minimum_size = Vector2(0, 1)
-	sep.color = Color(0.25, 0.30, 0.42)
+	sep.custom_minimum_size = Vector2(0, 4)
+	sep.color = Comic.INK
 	vbox.add_child(sep)
 
 	# Filter search bar
@@ -893,24 +790,8 @@ func _build_glossary() -> void:
 	filter_box.placeholder_text = "🔍  Filter terms..."
 	filter_box.clear_button_enabled = true
 	filter_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	var fns := StyleBoxFlat.new()
-	fns.bg_color = Color(0.04, 0.07, 0.13, 1.0)
-	fns.border_color = Color(1.0, 0.78, 0.0)
-	fns.border_width_bottom = 2
-	fns.content_margin_left = 8; fns.content_margin_right  = 8
-	fns.content_margin_top  = 5; fns.content_margin_bottom = 5
-	filter_box.add_theme_stylebox_override("normal", fns)
-	var ffs := fns.duplicate() as StyleBoxFlat; ffs.border_width_bottom = 3
-	filter_box.add_theme_stylebox_override("focus", ffs)
-	filter_box.add_theme_color_override("font_color", Color(1.0, 0.78, 0.0))
-	filter_box.add_theme_color_override("font_placeholder_color", Color(1.0, 0.78, 0.0, 0.3))
-	filter_box.add_theme_font_size_override("font_size", 13)
+	Comic.apply_input(filter_box, 17)
 	vbox.add_child(filter_box)
-
-	var sep2 := ColorRect.new()
-	sep2.custom_minimum_size = Vector2(0, 1)
-	sep2.color = Color(0.25, 0.30, 0.42)
-	vbox.add_child(sep2)
 
 	# Scrollable entries area
 	var scroll := ScrollContainer.new()
@@ -918,10 +799,14 @@ func _build_glossary() -> void:
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	vbox.add_child(scroll)
 
+	var entry_pad := MarginContainer.new()
+	entry_pad.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	entry_pad.add_theme_constant_override("margin_right", 22)
+	scroll.add_child(entry_pad)
 	var entry_list := VBoxContainer.new()
-	entry_list.add_theme_constant_override("separation", 6)
+	entry_list.add_theme_constant_override("separation", 12)
 	entry_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	scroll.add_child(entry_list)
+	entry_pad.add_child(entry_list)
 
 	# entries_meta filled below | lambda captures array reference so filtering works
 	var entries_meta: Array = []
@@ -935,55 +820,48 @@ func _build_glossary() -> void:
 	for entry in SQL_GLOSSARY:
 		# Wrapper column so example panel sits below the row
 		var entry_col := VBoxContainer.new()
-		entry_col.add_theme_constant_override("separation", 4)
+		entry_col.add_theme_constant_override("separation", 6)
 		entry_list.add_child(entry_col)
 		entries_meta.append([entry_col, (entry[0] + " " + entry[1]).to_lower()])
 
 		# Main info row
 		var row := HBoxContainer.new()
-		row.add_theme_constant_override("separation", 10)
+		row.add_theme_constant_override("separation", 12)
 		entry_col.add_child(row)
 
 		var cmd_lbl := Label.new()
 		cmd_lbl.text = entry[0]
-		cmd_lbl.custom_minimum_size = Vector2(120, 0)
-		cmd_lbl.add_theme_font_size_override("font_size", 14)
-		cmd_lbl.add_theme_color_override("font_color", Color("#F59E0B"))
+		cmd_lbl.custom_minimum_size = Vector2(150, 0)
+		cmd_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		Comic.heading(cmd_lbl, 21, Comic.RED)
 		row.add_child(cmd_lbl)
 
 		var def_lbl := Label.new()
 		def_lbl.text = entry[1]
 		def_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		def_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		def_lbl.add_theme_font_size_override("font_size", 13)
-		def_lbl.add_theme_color_override("font_color", Color(0.80, 0.83, 0.90))
+		Comic.body(def_lbl, 16, Comic.INK)
 		row.add_child(def_lbl)
 
 		# Example toggle button
 		var ex_btn := Button.new()
 		ex_btn.text = "{ }"
 		ex_btn.tooltip_text = "Show example"
-		_style_btn(ex_btn, "ghost", 12)
+		Comic.apply_button(ex_btn, "secondary", 16, false, 10, 4)
 		row.add_child(ex_btn)
 
-		# Collapsible syntax panel (hidden by default)
+		# Collapsible syntax panel (hidden by default): a dark code box
 		var snippet_panel := PanelContainer.new()
 		snippet_panel.visible = false
-		var sp := StyleBoxFlat.new()
-		sp.bg_color = Color(0.04, 0.05, 0.08, 1.0)
-		sp.border_color = Color("#F59E0B")
-		sp.border_width_left = 3
-		sp.content_margin_left  = 12
-		sp.content_margin_right = 12
-		sp.content_margin_top   = 8
-		sp.content_margin_bottom = 8
+		var sp := Comic.box(Comic.INK, Comic.INK, 3, 6, 0, 14, 9)
+		sp.border_width_left = 8
+		sp.border_color = Comic.INK
 		snippet_panel.add_theme_stylebox_override("panel", sp)
 		entry_col.add_child(snippet_panel)
 
 		var snippet_lbl := Label.new()
 		snippet_lbl.text = entry[2]
-		snippet_lbl.add_theme_font_size_override("font_size", 13)
-		snippet_lbl.add_theme_color_override("font_color", Color("#4ADE80"))
+		Comic.body(snippet_lbl, 15, Comic.GREEN_HI)
 		snippet_panel.add_child(snippet_lbl)
 
 		# Toggle visibility on button press
@@ -991,6 +869,12 @@ func _build_glossary() -> void:
 			snippet_panel.visible = not snippet_panel.visible
 			ex_btn.text = "▲" if snippet_panel.visible else "{ }"
 		)
+
+		# A thin ink rule between entries
+		var rule := ColorRect.new()
+		rule.custom_minimum_size = Vector2(0, 2)
+		rule.color = Color(Comic.INK, 0.25)
+		entry_col.add_child(rule)
 
 func _toggle_glossary() -> void:
 	if _glossary_overlay:
@@ -1049,7 +933,7 @@ func _build_sim_picker() -> void:
 
 	var backdrop := ColorRect.new()
 	backdrop.set_anchors_preset(Control.PRESET_FULL_RECT)
-	backdrop.color = Color(0.0, 0.0, 0.0, 0.80)
+	Comic.apply_dim(backdrop, 0.72)
 	backdrop.mouse_filter = Control.MOUSE_FILTER_STOP
 	_sim_picker_overlay.add_child(backdrop)
 
@@ -1058,21 +942,12 @@ func _build_sim_picker() -> void:
 	_sim_picker_overlay.add_child(center)
 
 	var panel := PanelContainer.new()
-	panel.custom_minimum_size = Vector2(440, 0)
-	var ps := StyleBoxFlat.new()
-	ps.bg_color = Color(0.09, 0.11, 0.16, 0.98)
-	ps.border_color = Color("#F59E0B")
-	ps.set_border_width_all(2)
-	ps.set_corner_radius_all(12)
-	ps.content_margin_left   = 24
-	ps.content_margin_right  = 24
-	ps.content_margin_top    = 20
-	ps.content_margin_bottom = 20
-	panel.add_theme_stylebox_override("panel", ps)
+	panel.custom_minimum_size = Vector2(500, 0)
+	Comic.apply_panel(panel, Comic.PAPER, 16, 8, 28, 22, 5)
 	center.add_child(panel)
 
 	var vbox := VBoxContainer.new()
-	vbox.add_theme_constant_override("separation", 10)
+	vbox.add_theme_constant_override("separation", 12)
 	panel.add_child(vbox)
 
 	var header_row := HBoxContainer.new()
@@ -1080,22 +955,21 @@ func _build_sim_picker() -> void:
 	_sim_picker_title_lbl = Label.new()
 	_sim_picker_title_lbl.text = "Simulation Mode"
 	_sim_picker_title_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_sim_picker_title_lbl.add_theme_font_size_override("font_size", 18)
-	_sim_picker_title_lbl.add_theme_color_override("font_color", Color("#F59E0B"))
+	Comic.title(_sim_picker_title_lbl, 38, Comic.YELLOW, 8)
 	header_row.add_child(_sim_picker_title_lbl)
 	var close_btn := Button.new()
 	close_btn.text = "✕"
 	close_btn.pressed.connect(_toggle_sim_picker)
-	_style_btn(close_btn, "ghost", 16)
+	Comic.apply_icon_button(close_btn, "danger", 22)
 	header_row.add_child(close_btn)
 
 	var sep := ColorRect.new()
-	sep.custom_minimum_size = Vector2(0, 1)
-	sep.color = Color(0.25, 0.30, 0.42)
+	sep.custom_minimum_size = Vector2(0, 4)
+	sep.color = Comic.INK
 	vbox.add_child(sep)
 
 	_sim_picker_body = VBoxContainer.new()
-	_sim_picker_body.add_theme_constant_override("separation", 10)
+	_sim_picker_body.add_theme_constant_override("separation", 12)
 	vbox.add_child(_sim_picker_body)
 
 func _toggle_sim_picker() -> void:
@@ -1223,7 +1097,7 @@ func _show_sim_sorting_lesson_list() -> void:
 # so the caller can set the score text and connect the press handler.
 func _build_sim_picker_row(title: String, desc: String, locked: bool) -> Array:
 	var btn := Button.new()
-	btn.custom_minimum_size = Vector2(0, 56)
+	btn.custom_minimum_size = Vector2(0, 74)
 	if locked:
 		btn.disabled = true
 		_style_btn(btn, "locked", 14)
@@ -1242,13 +1116,14 @@ func _build_sim_picker_row(title: String, desc: String, locked: bool) -> Array:
 	text_col.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var title_lbl := Label.new()
 	title_lbl.text = title
-	title_lbl.add_theme_color_override("font_color", Color(0.30, 0.33, 0.40) if locked else Color(0.90, 0.92, 0.96))
+	Comic.heading(title_lbl, 21, Comic.GREY_TEXT if locked else Comic.INK)
 	title_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var desc_lbl := Label.new()
 	desc_lbl.text = desc
-	desc_lbl.add_theme_font_size_override("font_size", 11)
-	desc_lbl.add_theme_color_override("font_color", Color(0.30, 0.33, 0.40) if locked else Color(0.55, 0.60, 0.70))
+	Comic.body(desc_lbl, 13, Comic.GREY_TEXT if locked else Comic.INK_SOFT)
 	desc_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	desc_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	desc_lbl.custom_minimum_size.x = 120
 	text_col.add_child(title_lbl)
 	text_col.add_child(desc_lbl)
 	row.add_child(text_col)
@@ -1256,8 +1131,7 @@ func _build_sim_picker_row(title: String, desc: String, locked: bool) -> Array:
 	var best_lbl: Label = null
 	if not locked:
 		best_lbl = Label.new()
-		best_lbl.add_theme_font_size_override("font_size", 13)
-		best_lbl.add_theme_color_override("font_color", Color("#F59E0B"))
+		Comic.title(best_lbl, 19, Comic.YELLOW, 5)
 		best_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		row.add_child(best_lbl)
 

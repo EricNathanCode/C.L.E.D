@@ -8,9 +8,9 @@ const FLOATING_WINDOW: PackedScene = preload("res://scene/FloatingWindow.tscn")
 const TABLE_NODES: Array = ["TableLabel", "DataTable"]
 const TERMINAL_NODES: Array = ["Description", "QueryLabel", "SQLTerminal", "HintLabel", "ResultBox", "ButtonRow", "ContinueButton"]
 
-const TOP_MARGIN: float = 56.0
-const WIN_Y: float = 44.0
-const WIN_H: float = 590.0
+const TOP_MARGIN: float = 72.0
+const WIN_Y: float = 52.0
+const WIN_H: float = 570.0
 
 # gm must already be a child of the GameScreen's SQLOverlay and set up.
 static func apply(gm: Control, back_btn: Button) -> void:

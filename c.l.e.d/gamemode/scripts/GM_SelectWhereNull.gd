@@ -1,4 +1,5 @@
 extends VBoxContainer
+const Comic = preload("res://scripts/ComicStyle.gd")
 
 signal on_correct
 signal on_wrong
@@ -9,9 +10,14 @@ var _step_data: Dictionary = {}
 
 func _ready() -> void:
 	_apply_terminal_style(%SQLTerminal)
+	Comic.body(%Description, 20, Comic.INK)
+	Comic.body(%TableLabel, 22, Comic.INK)
 	_style_input(%SQLBlock/Line2/Blank1)
 	_wire_grow(%SQLBlock/Line2/Blank1)
-	%QueryLabel.add_theme_color_override("font_color", Color("#4fc3f7"))
+	Comic.heading(%QueryLabel, 26, Comic.BLUE)
+	for _l in %SQLBlock.find_children("*", "Label", true, false):
+		if not _l.has_theme_color_override("font_color"):
+			Comic.body(_l as Label, 18, Color(0.78, 0.85, 0.95))
 	%ExecuteButton.pressed.connect(_on_execute)
 	%HintButton.pressed.connect(_on_hint)
 	%ContinueButton.pressed.connect(_on_continue)
@@ -19,7 +25,7 @@ func _ready() -> void:
 	_style_btn(%ExecuteButton, Color("#F59E0B"), Color("#1A1008"))
 	_style_btn_outline(%HintButton, Color("#4fc3f7"))
 	_style_btn(%ContinueButton,          Color("#16A34A"), Color.WHITE)
-	%HintLabel.add_theme_color_override("font_color", Color("#4fc3f7"))
+	Comic.body(%HintLabel, 18, Color("#1F66C4"))
 
 func setup(data: Dictionary) -> void:
 	_step_data = data
@@ -70,24 +76,28 @@ func _fill_table(c: Node, headers: Array, rows: Array) -> void:
 
 func _fill_result(c: Node, headers: Array, rows: Array, msg: String) -> void:
 	for ch in c.get_children(): ch.queue_free()
-	var ok: Label = Label.new(); ok.text = "Query executed successfully."; c.add_child(ok)
+	var ok: Label = Label.new()
+	ok.text = "Query executed successfully."
+	Comic.heading(ok, 24, Color("#1E8E4F"))
+	c.add_child(ok)
 	if not headers.is_empty(): c.add_child(_build_table(headers, rows))
-	if not msg.is_empty(): var ml: Label = Label.new(); ml.text = msg; c.add_child(ml)
+	if not msg.is_empty():
+		var ml: Label = Label.new(); ml.text = msg
+		ml.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		Comic.body(ml, 17, Comic.INK_SOFT)
+		c.add_child(ml)
 	c.visible = true;  %ContinueButton.visible = true
 
 func _fill_error(c: Node, msg: String) -> void:
 	for ch in c.get_children(): ch.queue_free()
 	var lbl: Label = Label.new()
 	lbl.text = "ERROR: " + msg;  lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	Comic.body(lbl, 18, Comic.RED)
 	c.add_child(lbl);  c.visible = true
 
 func _apply_terminal_style(panel: PanelContainer) -> void:
-	var s := StyleBoxFlat.new()
-	s.bg_color = Color(0.04, 0.07, 0.13)
-	s.border_color = Color(0.22, 0.32, 0.45)
-	s.set_border_width_all(1);  s.border_width_left = 4
-	s.content_margin_left = 14;  s.content_margin_right  = 14
-	s.content_margin_top  = 10;  s.content_margin_bottom = 10
+	var s: StyleBoxFlat = Comic.box(Color("#211B16"), Comic.INK, 4, 8, 0, 18, 12)
+	s.border_width_left = 10
 	panel.add_theme_stylebox_override("panel", s)
 
 func _fit_grow(le: LineEdit, text: String) -> void:
@@ -95,38 +105,39 @@ func _fit_grow(le: LineEdit, text: String) -> void:
 	if font == null: font = ThemeDB.fallback_font
 	var fsize: int = le.get_theme_font_size("font_size")
 	if fsize <= 0: fsize = ThemeDB.fallback_font_size
-	var base_w: float = max(font.get_string_size(le.placeholder_text, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize).x + 14.0, 30.0)
+	var base_w: float = max(font.get_string_size(le.placeholder_text, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize).x + 36.0, 50.0)
 	var text_w: float = font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize).x
-	le.custom_minimum_size.x = clamp(text_w + 14.0, base_w, base_w + 320.0)
+	le.custom_minimum_size.x = clamp(text_w + 36.0, base_w, base_w + 320.0)
 
 func _wire_grow(le: LineEdit) -> void:
 	_fit_grow(le, le.text)
 	le.text_changed.connect(func(new_text: String): _fit_grow(le, new_text))
 
 func _style_input(inp: LineEdit) -> void:
-	var ns := StyleBoxFlat.new()
-	ns.bg_color = Color(0.04, 0.07, 0.13, 1.0)
-	ns.border_color = Color(1.0, 0.78, 0.0);  ns.border_width_bottom = 2
-	ns.content_margin_left = 6;  ns.content_margin_right  = 6
-	ns.content_margin_top  = 3;  ns.content_margin_bottom = 3
+	var ns: StyleBoxFlat = Comic.box(Color("#3A2F26"), Comic.YELLOW, 3, 6, 0, 10, 4)
 	inp.add_theme_stylebox_override("normal", ns)
-	var fs := ns.duplicate() as StyleBoxFlat;  fs.border_width_bottom = 3
+	var fs: StyleBoxFlat = Comic.box(Color("#4A3C30"), Comic.YELLOW_HI, 4, 6, 0, 10, 3)
 	inp.add_theme_stylebox_override("focus", fs)
-	inp.add_theme_color_override("font_color", Color(1.0, 0.78, 0.0))
-	inp.add_theme_color_override("font_placeholder_color", Color(1.0, 0.78, 0.0, 0.3))
-	inp.add_theme_font_size_override("font_size", 14)
+	inp.add_theme_color_override("font_color", Comic.YELLOW_HI)
+	inp.add_theme_color_override("font_placeholder_color", Color(Comic.YELLOW, 0.45))
+	inp.add_theme_color_override("caret_color", Color.WHITE)
+	inp.add_theme_color_override("selection_color", Color(Comic.YELLOW, 0.35))
+	inp.add_theme_font_override("font", Comic.body_font())
+	inp.add_theme_font_size_override("font_size", 18)
 
 func _build_table(headers: Array, rows: Array) -> VBoxContainer:
 	var all_rows: Array = [headers] + rows
-	var font: Font = ThemeDB.fallback_font;  var fsize: int = ThemeDB.fallback_font_size
+	var font: Font = Comic.body_font();  var fsize: int = 17
+	var hfont: Font = Comic.body_font();  var hsize: int = 17
 	var col_min: Array = []
 	for c in range(headers.size()):
 		var max_w: float = 0.0
-		for r in all_rows:
+		for ri in range(all_rows.size()):
+			var r: Array = all_rows[ri]
 			if c < r.size():
-				var w: float = font.get_string_size(str(r[c]), HORIZONTAL_ALIGNMENT_LEFT, -1, fsize).x
+				var w: float = (hfont if ri == 0 else font).get_string_size(str(r[c]), HORIZONTAL_ALIGNMENT_LEFT, -1, hsize if ri == 0 else fsize).x
 				if w > max_w: max_w = w
-		col_min.append(max_w + 24.0)
+		col_min.append(max_w + 28.0)
 	var wrap: VBoxContainer = VBoxContainer.new()
 	wrap.add_theme_constant_override("separation", 0)
 	wrap.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -145,47 +156,24 @@ func _cell(txt: String, is_header: bool, min_w: float) -> PanelContainer:
 	var pc: PanelContainer = PanelContainer.new()
 	pc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	pc.custom_minimum_size   = Vector2(min_w, 0)
+	var is_null: bool = txt == "NULL" and not is_header
 	var s: StyleBoxFlat = StyleBoxFlat.new()
-	s.bg_color = Color(0.05, 0.09, 0.16) if is_header else Color(0.08, 0.13, 0.2)
-	# Highlight NULL cells in a dimmer red so players can spot them instantly
-	if txt == "NULL" and not is_header:
-		s.bg_color = Color(0.18, 0.07, 0.07)
-	s.border_color = Color(0.22, 0.32, 0.45);  s.set_border_width_all(1)
+	s.bg_color = Comic.YELLOW if is_header else (Color("#FFD9D3") if is_null else Comic.PAPER_HI)
+	s.border_color = Comic.INK;  s.set_border_width_all(2)
 	s.content_margin_left = 10;  s.content_margin_right  = 10
-	s.content_margin_top  = 5;   s.content_margin_bottom = 5
+	s.content_margin_top  = 4;   s.content_margin_bottom = 4
 	pc.add_theme_stylebox_override("panel", s)
 	var lbl: Label = Label.new();  lbl.text = txt
 	if is_header:
-		lbl.modulate = Color(0.96, 0.75, 0.30)
-	elif txt == "NULL":
-		lbl.modulate = Color(0.80, 0.35, 0.35)
+		lbl.add_theme_font_override("font", Comic.body_font());  lbl.add_theme_font_size_override("font_size", 17)
+	else:
+		lbl.add_theme_font_override("font", Comic.body_font());  lbl.add_theme_font_size_override("font_size", 17)
+	lbl.add_theme_color_override("font_color", Comic.RED if is_null else Comic.INK)
 	pc.add_child(lbl);  return pc
 
 func _style_btn(btn: Button, bg: Color, fg: Color) -> void:
-	btn.add_theme_color_override("font_color", fg)
-	var s := StyleBoxFlat.new()
-	s.bg_color = bg
-	s.border_color = Color(0, 0, 0, 0.5)
-	s.set_border_width_all(2)
-	s.set_corner_radius_all(6)
-	s.content_margin_left = 14; s.content_margin_right  = 14
-	s.content_margin_top  = 6;  s.content_margin_bottom = 6
-	btn.add_theme_stylebox_override("normal", s)
-	var h := s.duplicate() as StyleBoxFlat; h.bg_color = bg.lightened(0.15)
-	btn.add_theme_stylebox_override("hover", h)
-	var p := s.duplicate() as StyleBoxFlat; p.bg_color = bg.darkened(0.15)
-	btn.add_theme_stylebox_override("pressed", p)
+	# Amber Execute -> yellow, green Continue -> green (comic look)
+	Comic.apply_button(btn, "success" if bg.g > bg.r else "primary", 22, true, 20, 7)
 
 func _style_btn_outline(btn: Button, col: Color) -> void:
-	btn.add_theme_color_override("font_color", col)
-	var s := StyleBoxFlat.new()
-	s.bg_color = Color(0, 0, 0, 0)
-	s.border_color = col
-	s.set_border_width_all(2)
-	s.set_corner_radius_all(6)
-	s.content_margin_left = 14; s.content_margin_right  = 14
-	s.content_margin_top  = 6;  s.content_margin_bottom = 6
-	btn.add_theme_stylebox_override("normal", s)
-	var h := s.duplicate() as StyleBoxFlat; h.bg_color = Color(col.r, col.g, col.b, 0.1)
-	btn.add_theme_stylebox_override("hover", h)
-	btn.add_theme_stylebox_override("pressed", h)
+	Comic.apply_button(btn, "info", 22, true, 20, 7)

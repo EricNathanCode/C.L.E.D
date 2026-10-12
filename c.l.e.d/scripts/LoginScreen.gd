@@ -1,4 +1,5 @@
 extends Control
+const Comic = preload("res://scripts/ComicStyle.gd")
 # ═══════════════════════════════════════════════════════
 #  LOGIN SCREEN  |  scripts/LoginScreen.gd
 #
@@ -52,9 +53,6 @@ func _ready() -> void:
 	_style_eye_btn(_confirm_toggle)
 	_style_settings_btn(_settings_button)
 	_style_settings_panel()
-	_music_label.add_theme_color_override("font_color", Color(0.85, 0.87, 0.92))
-	_tts_label.add_theme_color_override("font_color", Color(0.85, 0.87, 0.92))
-	_sfx_label.add_theme_color_override("font_color", Color(0.85, 0.87, 0.92))
 	_style_btn(_dark_toggle,  "secondary")
 
 	_password_input.secret = true
@@ -200,131 +198,44 @@ func _update_tts_button() -> void:
 func _update_dark_button() -> void:
 	_dark_toggle.text = "🌙  Dark Mode: ON" if GameManager.dark_overlay_enabled else "🌙  Dark Mode: OFF"
 
-# ── Styling (matches the rest of the app's dark/amber theme) ──
+# ── Styling (comic look, from ComicStyle) ─────────────
 func _style_panel() -> void:
-	var s := StyleBoxFlat.new()
-	s.bg_color     = Color(0.10, 0.12, 0.17, 0.98)
-	s.border_color = Color(0.28, 0.33, 0.46)
-	s.set_border_width_all(2)
-	s.set_corner_radius_all(14)
-	s.content_margin_left   = 32
-	s.content_margin_right  = 32
-	s.content_margin_top    = 28
-	s.content_margin_bottom = 28
-	$CenterContainer/CardPanel.add_theme_stylebox_override("panel", s)
+	Comic.apply_halftone($FullBG)
+	Comic.apply_panel($CenterContainer/CardPanel, Comic.PAPER_HI, 18, 9, 34, 28, 4)
+	$CenterContainer/CardPanel/VBox/PasswordRow.add_theme_constant_override("separation", 8)
+	$CenterContainer/CardPanel/VBox/ConfirmPasswordRow.add_theme_constant_override("separation", 8)
+	Comic.title($CenterContainer/CardPanel/VBox/TitleLabel, 60, Comic.YELLOW, 10)
+	Comic.heading(_subtitle_label, 26)
+	Comic.body(_error_label, 17, Comic.RED)
 
 func _style_settings_panel() -> void:
-	var s := StyleBoxFlat.new()
-	s.bg_color = Color(0.10, 0.12, 0.17, 0.98)
-	s.border_color = Color(0.28, 0.33, 0.46)
-	s.set_border_width_all(2)
-	s.set_corner_radius_all(14)
-	s.content_margin_left   = 22
-	s.content_margin_right  = 22
-	s.content_margin_top    = 20
-	s.content_margin_bottom = 20
-	$SettingsOverlay/SettingsPanel.add_theme_stylebox_override("panel", s)
-	var title_lbl := $SettingsOverlay/SettingsPanel/VBox/TitleRow/TitleLabel
-	title_lbl.add_theme_font_size_override("font_size", 17)
-	title_lbl.add_theme_color_override("font_color", Color.WHITE)
-	_style_ghost($SettingsOverlay/SettingsPanel/VBox/TitleRow/CloseButton)
+	Comic.apply_dim($SettingsOverlay/DimBG)
+	Comic.apply_settings_panel(
+		$SettingsOverlay/SettingsPanel,
+		$SettingsOverlay/SettingsPanel/VBox/TitleRow/TitleLabel,
+		$SettingsOverlay/SettingsPanel/VBox/TitleRow/CloseButton,
+		[_music_label, _tts_label, _sfx_label])
 
 func _style_input(inp: LineEdit) -> void:
-	var ns := StyleBoxFlat.new()
-	ns.bg_color = Color(0.04, 0.07, 0.13, 1.0)
-	ns.border_color = Color(1.0, 0.78, 0.0)
-	ns.border_width_bottom = 2
-	ns.content_margin_left = 10; ns.content_margin_right  = 10
-	ns.content_margin_top  = 8;  ns.content_margin_bottom = 8
-	inp.add_theme_stylebox_override("normal", ns)
-	var fs := ns.duplicate() as StyleBoxFlat
-	fs.border_width_bottom = 3
-	inp.add_theme_stylebox_override("focus", fs)
-	inp.add_theme_color_override("font_color", Color(1.0, 0.78, 0.0))
-	inp.add_theme_color_override("font_placeholder_color", Color(1.0, 0.78, 0.0, 0.35))
+	Comic.apply_input(inp, 19)
 
 func _style_eye_btn(btn: Button) -> void:
-	btn.custom_minimum_size = Vector2(58, 0)
-	btn.add_theme_font_size_override("font_size", 13)
-	btn.add_theme_color_override("font_color", Color(1.0, 0.78, 0.0))
-	# Sits flush against the LineEdit to its left, so no left border/margin —
-	# reads as one continuous field with a "Show/Hide" tab on the end.
-	var s := StyleBoxFlat.new()
-	s.bg_color = Color(0.04, 0.07, 0.13, 1.0)
-	s.border_color = Color(1.0, 0.78, 0.0)
-	s.border_width_bottom = 2
-	s.content_margin_left  = 4
-	s.content_margin_right = 4
-	btn.add_theme_stylebox_override("normal",  s)
-	var h := s.duplicate() as StyleBoxFlat
-	h.bg_color = Color(0.07, 0.11, 0.19, 1.0)
-	btn.add_theme_stylebox_override("hover",   h)
-	var p := s.duplicate() as StyleBoxFlat
-	p.bg_color = Color(0.02, 0.04, 0.08, 1.0)
-	btn.add_theme_stylebox_override("pressed", p)
-	btn.add_theme_stylebox_override("focus",   s)
+	btn.custom_minimum_size = Vector2(72, 0)
+	Comic.apply_button(btn, "secondary", 15, false, 8, 8)
 
 func _style_primary(btn: Button) -> void:
-	btn.add_theme_font_size_override("font_size", 16)
-	btn.add_theme_color_override("font_color", Color(0.10, 0.06, 0.00))
-	var s := StyleBoxFlat.new()
-	s.bg_color = Color("#F59E0B")
-	s.set_corner_radius_all(8)
-	s.content_margin_left   = 20; s.content_margin_right  = 20
-	s.content_margin_top    = 10; s.content_margin_bottom = 10
-	var h := s.duplicate() as StyleBoxFlat; h.bg_color = Color("#FBBF24")
-	var p := s.duplicate() as StyleBoxFlat; p.bg_color = Color("#D97706")
-	btn.add_theme_stylebox_override("normal",  s)
-	btn.add_theme_stylebox_override("hover",   h)
-	btn.add_theme_stylebox_override("pressed", p)
+	Comic.apply_button(btn, "primary", 28, true, 20, 10)
 
 func _style_ghost(btn: Button) -> void:
-	btn.add_theme_font_size_override("font_size", 13)
-	btn.add_theme_color_override("font_color", Color(0.55, 0.60, 0.70))
-	var s := StyleBoxFlat.new()
-	s.bg_color     = Color(0, 0, 0, 0)
-	s.border_color = Color(0.30, 0.35, 0.46)
-	s.set_border_width_all(0)
-	s.content_margin_top    = 6
-	s.content_margin_bottom = 6
-	btn.add_theme_stylebox_override("normal",  s)
-	btn.add_theme_stylebox_override("hover",   s)
-	btn.add_theme_stylebox_override("pressed", s)
+	Comic.apply_button(btn, "ghost", 17, false, 10, 6)
 
 func _style_settings_btn(btn: Button) -> void:
-	btn.add_theme_font_size_override("font_size", 20)
-	btn.add_theme_color_override("font_color", Color(0.82, 0.86, 0.93))
-	var s := StyleBoxFlat.new()
-	s.bg_color     = Color(0.10, 0.12, 0.18, 0.88)
-	s.border_color = Color(0.28, 0.33, 0.45)
-	s.set_border_width_all(2)
-	s.set_corner_radius_all(8)
-	s.content_margin_left   = 10; s.content_margin_right  = 10
-	s.content_margin_top    = 10; s.content_margin_bottom = 10
-	var h := s.duplicate() as StyleBoxFlat
-	h.bg_color     = Color(0.18, 0.21, 0.30, 0.95)
-	h.border_color = Color("#F59E0B")
-	var p := s.duplicate() as StyleBoxFlat
-	p.bg_color = Color(0.08, 0.10, 0.15, 0.95)
-	btn.add_theme_stylebox_override("normal", s)
-	btn.add_theme_stylebox_override("hover",  h)
-	btn.add_theme_stylebox_override("pressed", p)
+	btn.text = "SETTINGS"
+	btn.offset_left = -170.0
+	btn.offset_right = -14.0
+	btn.offset_top = 14.0
+	btn.offset_bottom = 62.0
+	Comic.apply_button(btn, "dark", 26, true, 16, 6)
 
 func _style_btn(btn: Button, variant: String = "secondary") -> void:
-	btn.add_theme_font_size_override("font_size", 15)
-	var s := StyleBoxFlat.new()
-	s.set_corner_radius_all(8)
-	btn.add_theme_color_override("font_color", Color(0.88, 0.90, 0.95))
-	s.bg_color     = Color(0.13, 0.15, 0.21, 0.95)
-	s.border_color = Color(0.30, 0.35, 0.46)
-	s.set_border_width_all(2)
-	s.content_margin_left   = 20; s.content_margin_right  = 20
-	s.content_margin_top    = 10; s.content_margin_bottom = 10
-	var h := s.duplicate() as StyleBoxFlat
-	h.bg_color     = Color(0.20, 0.23, 0.32, 0.95)
-	h.border_color = Color("#F59E0B")
-	var p := s.duplicate() as StyleBoxFlat
-	p.bg_color = Color(0.09, 0.11, 0.16, 0.95)
-	btn.add_theme_stylebox_override("normal",  s)
-	btn.add_theme_stylebox_override("hover",   h)
-	btn.add_theme_stylebox_override("pressed", p)
+	Comic.apply_button(btn, variant, 19, true, 18, 9)
