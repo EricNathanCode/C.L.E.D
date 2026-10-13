@@ -556,9 +556,16 @@ func _style_ghost(btn: Button) -> void:
 # ── Comic v2: a "CORRECT!" burst pops beside the feedback box ──
 func _v2_pop_correct(panel: Control) -> void:
 	var b := Fx.sticker("CORRECT!", "", Comic.YELLOW, Comic.RED, Vector2(190, 110), 36, 14, 8.0)
-	b.position = panel.global_position - global_position + Vector2(panel.size.x - 40.0, -56.0)
 	b.z_index = 30
+	b.visible = false
 	add_child(b)
+	# The feedback bar was hidden until now: wait one frame so it has its real
+	# position, then sit the burst on its right end (clear of the question text).
+	await get_tree().process_frame
+	if not is_instance_valid(b) or not is_instance_valid(panel):
+		return
+	b.position = panel.global_position - global_position + Vector2(panel.size.x - 170.0, (panel.size.y - 110.0) * 0.5)
+	b.visible = true
 	Fx.pop(b)
 	var tw := b.create_tween()
 	tw.tween_interval(0.7)
