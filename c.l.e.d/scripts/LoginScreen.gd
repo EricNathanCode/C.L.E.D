@@ -62,6 +62,9 @@ func _ready() -> void:
 	Fx.set_icon(_dark_toggle, "moon", 24)
 	_apply_v2()
 	_build_terms_ui()
+	# No Exit in the web version: a browser game can't close itself.
+	if OS.has_feature("web"):
+		_exit_button.visible = false
 
 	_password_input.secret = true
 	_confirm_input.secret  = true
@@ -133,6 +136,8 @@ func _on_toggle_mode() -> void:
 	_set_mode("signup" if _mode == "login" else "login")
 
 func _on_exit() -> void:
+	if OS.has_feature("web"):
+		return
 	get_tree().quit()
 
 # ── Password visibility ───────────────────────────────

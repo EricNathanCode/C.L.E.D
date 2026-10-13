@@ -154,6 +154,10 @@ func _ready() -> void:
 	)
 
 	_apply_v2()
+	# A browser game can't close itself (it would just freeze on the last
+	# frame), so the web version has no Exit button: players close the tab.
+	if OS.has_feature("web"):
+		$ExitButton.visible = false
 	_preload_backgrounds()
 	_update_display()
 	_update_tts_button()
@@ -201,6 +205,8 @@ func _on_enter() -> void:
 	get_tree().root.get_node("Main").show_screen("dashboard")
 
 func _on_exit() -> void:
+	if OS.has_feature("web"):
+		return
 	$ExitConfirmOverlay.visible = true
 
 # ── Exit confirmation (log out or stay signed in) ─────
