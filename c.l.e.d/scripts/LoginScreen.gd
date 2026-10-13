@@ -55,6 +55,7 @@ func _ready() -> void:
 	_style_settings_btn(_settings_button)
 	_style_settings_panel()
 	_style_btn(_dark_toggle,  "secondary")
+	Fx.set_icon(_dark_toggle, "moon", 24)
 	_apply_v2()
 
 	_password_input.secret = true
@@ -198,7 +199,7 @@ func _update_tts_button() -> void:
 	_tts_toggle.value = GameManager.tts_volume
 
 func _update_dark_button() -> void:
-	_dark_toggle.text = "🌙  Dark Mode: ON" if GameManager.dark_overlay_enabled else "🌙  Dark Mode: OFF"
+	_dark_toggle.text = "Dark Mode: ON" if GameManager.dark_overlay_enabled else "Dark Mode: OFF"
 
 # ── Styling (comic look, from ComicStyle) ─────────────
 func _style_panel() -> void:
@@ -217,6 +218,10 @@ func _style_settings_panel() -> void:
 		$SettingsOverlay/SettingsPanel/VBox/TitleRow/TitleLabel,
 		$SettingsOverlay/SettingsPanel/VBox/TitleRow/CloseButton,
 		[_music_label, _tts_label, _sfx_label])
+	var gear := Fx.icon_rect("gear", 32)
+	var title_row: Node = $SettingsOverlay/SettingsPanel/VBox/TitleRow
+	title_row.add_child(gear)
+	title_row.move_child(gear, 0)
 
 func _style_input(inp: LineEdit) -> void:
 	Comic.apply_input(inp, 19)

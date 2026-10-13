@@ -26,7 +26,7 @@ offset_left = -62.0
 offset_top = 10.0
 offset_right = -10.0
 offset_bottom = 62.0
-text = "⚙︎"
+text = "Settings"
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 anchors_preset = 15
@@ -153,7 +153,7 @@ theme_override_constants/separation = 8
 [node name="TitleLabel" type="Label" parent="SettingsOverlay/SettingsPanel/VBox/TitleRow"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "⚙  Settings"
+text = "Settings"
 
 [node name="CloseButton" type="Button" parent="SettingsOverlay/SettingsPanel/VBox/TitleRow"]
 layout_mode = 2
@@ -216,4 +216,4 @@ value = 1.0
 [node name="DarkToggle" type="Button" parent="SettingsOverlay/SettingsPanel/VBox"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "🌙  Dark Mode: OFF"
+text = "Dark Mode: OFF"

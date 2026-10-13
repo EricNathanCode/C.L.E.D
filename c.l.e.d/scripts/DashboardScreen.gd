@@ -166,6 +166,7 @@ var _glossary_overlay: Control = null
 var _sim_picker_overlay: Control = null
 var _sim_picker_title_lbl: Label = null
 var _sim_picker_body: VBoxContainer = null
+var _sim_picker_scroll: ScrollContainer = null
 
 func _ready() -> void:
 	# Halftone comic page behind everything
@@ -205,9 +206,10 @@ func _ready() -> void:
 	_build_glossary()
 
 	var sim_btn := Button.new()
-	sim_btn.text = "🎮  Simulation"
+	sim_btn.text = "Simulation"
 	sim_btn.pressed.connect(_toggle_sim_picker)
 	_style_btn(sim_btn, "primary", 20)
+	Fx.set_icon(sim_btn, "gamepad", 30)
 	$TopBar.add_child(sim_btn)
 
 	_build_sim_picker()
@@ -289,9 +291,11 @@ func build_lessons() -> void:
 		hdr.alignment = HORIZONTAL_ALIGNMENT_LEFT
 
 		if folder_locked:
-			hdr.text = "🔒  " + folder_name + badge
+			hdr.text = folder_name + badge
 			hdr.disabled = true
 			_style_folder_btn_locked(hdr)
+			Fx.set_icon(hdr, "lock", 24)
+			hdr.add_theme_color_override("icon_disabled_color", Color(1, 1, 1, 0.8))
 		else:
 			hdr.text = "▶  " + folder_name + badge
 			_style_folder_btn(hdr)
@@ -339,7 +343,7 @@ func build_lessons() -> void:
 			btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
 
 			if is_locked:
-				btn.text = "🔒  %02d  " % num + names.get(fid, "Lesson " + str(fid))
+				btn.text = "%02d  " % num + names.get(fid, "Lesson " + str(fid))
 				btn.disabled = true
 				_style_btn(btn, "locked", 14)
 			else:
@@ -401,7 +405,8 @@ func build_lessons() -> void:
 
 			if quiz_done:
 				var cap_fi2 := fi
-				qbtn.text = "✓  Folder Challenge - Redo"
+				qbtn.text = "Folder Challenge - Redo"
+				Fx.set_icon(qbtn, "check", 22)
 				qbtn.pressed.connect(func():
 					GameManager.current_quiz_folder_idx = cap_fi2
 					get_tree().root.get_node("Main").show_screen("folder_quiz")
@@ -409,14 +414,17 @@ func build_lessons() -> void:
 				_style_btn(qbtn, "ghost", 13)
 			elif all_lessons_done:
 				var cap_fi := fi
-				qbtn.text = "⚡  FOLDER CHALLENGE - Final Test" if is_last_folder else "⚡  FOLDER CHALLENGE - Unlock Next Chapter"
+				qbtn.text = "FOLDER CHALLENGE - Final Test" if is_last_folder else "FOLDER CHALLENGE - Unlock Next Chapter"
+				Fx.set_icon(qbtn, "bolt", 24)
 				qbtn.pressed.connect(func():
 					GameManager.current_quiz_folder_idx = cap_fi
 					get_tree().root.get_node("Main").show_screen("folder_quiz")
 				)
 				_style_btn(qbtn, "quiz", 13)
 			else:
-				qbtn.text = "🔒  Folder Challenge - Complete all lessons first"
+				qbtn.text = "Folder Challenge - Complete all lessons first"
+				Fx.set_icon(qbtn, "lock", 22)
+				qbtn.add_theme_color_override("icon_disabled_color", Color(1, 1, 1, 0.8))
 				qbtn.disabled = true
 				_style_btn(qbtn, "locked", 13)
 
@@ -762,9 +770,10 @@ func _style_btn(btn: Button, variant: String = "primary", font_size: int = 16) -
 func _build_glossary() -> void:
 	# Glossary toggle button in TopBar, right after "← Worlds"
 	var gloss_btn := Button.new()
-	gloss_btn.text = "📖  Glossary"
+	gloss_btn.text = "Glossary"
 	gloss_btn.pressed.connect(_toggle_glossary)
 	_style_btn(gloss_btn, "secondary", 20)
+	Fx.set_icon(gloss_btn, "book", 30)
 	$TopBar.add_child(gloss_btn)
 
 	# Full-screen overlay | added last so it's on top of all scene children
@@ -819,7 +828,8 @@ func _build_glossary() -> void:
 
 	# Filter search bar
 	var filter_box := LineEdit.new()
-	filter_box.placeholder_text = "🔍  Filter terms..."
+	filter_box.placeholder_text = "Filter terms..."
+	filter_box.right_icon = Fx.icon("search", 24)
 	filter_box.clear_button_enabled = true
 	filter_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	Comic.apply_input(filter_box, 17)
@@ -1000,9 +1010,31 @@ func _build_sim_picker() -> void:
 	sep.color = Comic.INK
 	vbox.add_child(sep)
 
+	# The rows scroll inside the pop-up, so a long list never runs off-screen
+	_sim_picker_scroll = ScrollContainer.new()
+	_sim_picker_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	vbox.add_child(_sim_picker_scroll)
+	var body_pad := MarginContainer.new()
+	body_pad.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	body_pad.add_theme_constant_override("margin_right", 20)
+	body_pad.add_theme_constant_override("margin_bottom", 8)
+	_sim_picker_scroll.add_child(body_pad)
+
 	_sim_picker_body = VBoxContainer.new()
 	_sim_picker_body.add_theme_constant_override("separation", 12)
-	vbox.add_child(_sim_picker_body)
+	_sim_picker_body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	body_pad.add_child(_sim_picker_body)
+	_sim_picker_body.minimum_size_changed.connect(_fit_sim_picker, CONNECT_DEFERRED)
+	resized.connect(_fit_sim_picker)
+
+# Scroll area is as tall as its rows, but never taller than the screen allows
+func _fit_sim_picker() -> void:
+	if _sim_picker_scroll == null:
+		return
+	var want: float = _sim_picker_body.get_combined_minimum_size().y + 8.0
+	var room: float = maxf(200.0, size.y - 190.0)
+	_sim_picker_scroll.custom_minimum_size.y = minf(want, room)
+	_sim_picker_scroll.scroll_vertical = 0
 
 func _toggle_sim_picker() -> void:
 	if not _sim_picker_overlay:
@@ -1129,7 +1161,7 @@ func _show_sim_sorting_lesson_list() -> void:
 # so the caller can set the score text and connect the press handler.
 func _build_sim_picker_row(title: String, desc: String, locked: bool) -> Array:
 	var btn := Button.new()
-	btn.custom_minimum_size = Vector2(0, 74)
+	btn.custom_minimum_size = Vector2(0, 66)
 	if locked:
 		btn.disabled = true
 		_style_btn(btn, "locked", 14)
@@ -1163,10 +1195,17 @@ func _build_sim_picker_row(title: String, desc: String, locked: bool) -> Array:
 	var best_lbl: Label = null
 	if not locked:
 		best_lbl = Label.new()
-		Comic.title(best_lbl, 19, Comic.YELLOW, 5)
+		best_lbl.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		Fx.tag(best_lbl, Comic.INK, Comic.YELLOW, 18, true, Comic.INK, 10, 2)
 		best_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		row.add_child(best_lbl)
 
+	# Grow the card when the description wraps onto a second line
+	desc_lbl.resized.connect(func():
+		var need: float = text_col.get_combined_minimum_size().y + 14.0
+		if absf(btn.custom_minimum_size.y - maxf(66.0, need)) > 0.5:
+			btn.custom_minimum_size.y = maxf(66.0, need)
+	)
 	btn.add_child(row)
 	return [btn, best_lbl]
 
@@ -1279,7 +1318,7 @@ func _card_v2(btn: Button, stars: int) -> void:
 	var raw: String = btn.text
 	var locked: bool = btn.disabled
 	var current: bool = not locked and stars == 0
-	raw = raw.replace("🔒", "").strip_edges()
+	raw = raw.strip_edges()
 	var num: String = raw.substr(0, 2)
 	var rest: String = raw.substr(2).strip_edges()
 	var parts: PackedStringArray = rest.split(" | ", false, 1)

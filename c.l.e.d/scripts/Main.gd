@@ -48,6 +48,11 @@ func _play_bgm(key: String) -> void:
 	$BGM.volume_db = linear_to_db(GameManager.music_volume)
 	$BGM.play()
 
+func stop_bgm() -> void:
+	var bgm: AudioStreamPlayer = get_node_or_null("BGM")
+	if bgm != null:
+		bgm.stop()
+
 # Called live as the Music slider is dragged.
 func set_music_volume(v: float) -> void:
 	GameManager.music_volume = v
@@ -87,7 +92,11 @@ func show_screen(name: String) -> void:
 			_play_bgm("menu")
 		"game", "dashboard", "folder_quiz", "simulation":
 			_play_bgm(GameManager.world)
-		"complete", "failed":
+		"complete":
+			# The win fanfare plays alone, without the music under it.
+			# The music starts again when the player leaves this page.
+			stop_bgm()
+		"failed":
 			pass
 
 	if name == "dashboard":

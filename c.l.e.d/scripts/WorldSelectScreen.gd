@@ -79,6 +79,7 @@ func _ready() -> void:
 	$ExitButton.offset_top = 600.0
 	$ExitButton.offset_bottom = 656.0
 	_style_btn(_dark_btn,  "secondary", 20)
+	Fx.set_icon(_dark_btn, "moon", 24)
 	_style_settings_btn($SettingsButton)
 
 	# A light paper wash instead of the heavy dark veil, so the line art reads like a comic page
@@ -149,6 +150,10 @@ func _style_settings_panel() -> void:
 		$SettingsOverlay/SettingsPanel/VBox/TitleRow/TitleLabel,
 		$SettingsOverlay/SettingsPanel/VBox/TitleRow/CloseButton,
 		[_music_label, _tts_label, _sfx_label])
+	var gear := Fx.icon_rect("gear", 32)
+	var title_row: Node = $SettingsOverlay/SettingsPanel/VBox/TitleRow
+	title_row.add_child(gear)
+	title_row.move_child(gear, 0)
 
 func _style_exit_confirm_panel() -> void:
 	Comic.apply_dim($ExitConfirmOverlay/DimBG)

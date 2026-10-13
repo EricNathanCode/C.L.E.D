@@ -17,7 +17,6 @@ const CHAR_BY_WORLD: Dictionary = {
 }
 var _rays: ShaderMaterial = null
 var _char: TextureRect = null
-var _sfx = null
 var _burst = null
 var _logo = null
 var _stars = null
@@ -47,12 +46,6 @@ func _build_page() -> void:
 	_char.size = Vector2(470, 900)
 	_char.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_char)
-
-	_sfx = Fx.sfx("WOO-HOO!", 66, Color.WHITE, Comic.BLUE, -12.0)
-	_sfx.position = Vector2(24, 40)
-	_sfx.size = Vector2(300, 110)
-	_sfx.pivot_offset = _sfx.size / 2.0
-	add_child(_sfx)
 
 	_burst = Fx.Burst.new()
 	Fx.place_centered(_burst, Rect2(280, 20, 880, 470))
@@ -128,6 +121,7 @@ func set_mode(mode: String) -> void:
 		_sub_lbl.text = "Lesson  " + str(GameManager.lesson_id)
 		_dress("complete", world)
 		_add_complete_extras()
+		GameManager.play_complete()
 
 # Colours, pose and lettering for the two moods of the page
 func _dress(mode: String, world: String) -> void:
@@ -136,9 +130,6 @@ func _dress(mode: String, world: String) -> void:
 	_logo.fill = Comic.RED_HI if failed else Comic.YELLOW
 	_logo.extrude = Comic.INK_SOFT if failed else Comic.RED
 	_logo.queue_redraw()
-	_sfx.text = "OOPS!" if failed else "WOO-HOO!"
-	_sfx.fill = Comic.RED_HI if failed else Color.WHITE
-	_sfx.queue_redraw()
 	if failed:
 		_rays.set_shader_parameter("color_a", Color("#D7EBFC"))
 		_rays.set_shader_parameter("color_b", Color("#B4D8F8"))
@@ -233,6 +224,8 @@ func _add_complete_extras() -> void:
 		_btn_row.add_child(next_btn)
 		_btn_row.move_child(next_btn, 0)
 		Fx.hero_button(next_btn, "primary", 40, 26, 6)
+		if next_data["action"] == "quiz":
+			Fx.set_icon(next_btn, "bolt", 40)
 		Fx.tilt(next_btn, -1.5)
 
 # ── Determine what comes after the just-completed lesson ──
@@ -267,7 +260,7 @@ func _next_step_data() -> Dictionary:
 	if is_last_in_folder and not GameManager.is_folder_quiz_done(world, folder_idx):
 		var is_final: bool = folder_idx == folders.size() - 1
 		return {
-			"label":  "⚡  Final Test  →" if is_final else "⚡  Folder Challenge  →",
+			"label":  "Final Test  →" if is_final else "Folder Challenge  →",
 			"action": "quiz",
 			"folder_idx": folder_idx,
 		}

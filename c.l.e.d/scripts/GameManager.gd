@@ -59,8 +59,8 @@ func _ready() -> void:
 # ── Mouse click sound ─────────────────────────────────
 # Every button in the game (any BaseButton added to the tree) plays this when
 # pressed down. Volume follows the "Sound Effects" setting.
-const CLICK_SOUND_PATH := "res://audio/sfx/click.wav"
-const CLICK_BASE_DB: float = -9.0
+const CLICK_SOUND_PATH := "res://audio/sfx/click.ogg"
+const CLICK_BASE_DB: float = -7.0
 const CLICK_VOICES: int = 3   # overlapping clicks when clicking fast
 
 var _click_stream: AudioStream = null
@@ -68,8 +68,8 @@ var _click_players: Array = []
 var _click_next: int = 0
 
 # Hover tick: a soft sound when the mouse moves onto an enabled button.
-const HOVER_SOUND_PATH := "res://audio/sfx/hover.wav"
-const HOVER_BASE_DB: float = -13.0
+const HOVER_SOUND_PATH := "res://audio/sfx/hover.ogg"
+const HOVER_BASE_DB: float = -8.0
 const HOVER_MIN_GAP_MS: int = 45         # ignore hovers that follow too quickly
 const HOVER_AFTER_CLICK_MS: int = 250    # a new screen appearing under the mouse isn't a hover
 
@@ -147,18 +147,28 @@ func play_click() -> void:
 	_play_click()
 
 # ── Answer feedback sounds ────────────────────────────
-# A chime when an SQL answer is right, a low buzz when it is wrong. Used by the
-# lesson SQL challenges, the Folder Challenge, and Simulation Mode.
-const CORRECT_SOUND_PATH := "res://audio/sfx/correct.wav"
-const WRONG_SOUND_PATH   := "res://audio/sfx/wrong.wav"
-const CORRECT_BASE_DB: float = -8.0
-const WRONG_BASE_DB:   float = -9.0
+# A rising chime when an SQL answer is right, a falling pluck when it is wrong.
+# Used by the lesson SQL challenges, the Folder Challenge, and Simulation Mode.
+# Sounds are CC0 by Kenney (see audio/sfx/LICENSE_Kenney.txt).
+const CORRECT_SOUND_PATH := "res://audio/sfx/correct.ogg"
+const WRONG_SOUND_PATH   := "res://audio/sfx/wrong.ogg"
+const CORRECT_BASE_DB: float = -6.0
+const WRONG_BASE_DB:   float = -5.0
+
+# The win fanfare on the Lesson Complete and Folder Challenge Complete pages:
+# the same victory jingle on plucked strings and steel drums, played together.
+const COMPLETE_SOUND_PATH := "res://audio/sfx/complete.ogg"
+const COMPLETE_LAYER_PATH := "res://audio/sfx/complete_steel.ogg"
+const COMPLETE_BASE_DB: float = -3.0
+const COMPLETE_LAYER_DB: float = -5.0
+var _complete_player: AudioStreamPlayer = null
+var _complete_layer: AudioStreamPlayer = null
 
 var _correct_player: AudioStreamPlayer = null
 var _wrong_player:   AudioStreamPlayer = null
 
 # Played when the player presses a locked (disabled) button.
-const LOCKED_SOUND_PATH := "res://audio/sfx/locked.wav"
+const LOCKED_SOUND_PATH := "res://audio/sfx/locked.ogg"
 const LOCKED_BASE_DB: float = -6.0
 var _locked_player: AudioStreamPlayer = null
 
@@ -166,6 +176,8 @@ func _setup_answer_sounds() -> void:
 	_correct_player = _make_sfx_player(CORRECT_SOUND_PATH)
 	_wrong_player   = _make_sfx_player(WRONG_SOUND_PATH)
 	_locked_player  = _make_sfx_player(LOCKED_SOUND_PATH)
+	_complete_player = _make_sfx_player(COMPLETE_SOUND_PATH)
+	_complete_layer  = _make_sfx_player(COMPLETE_LAYER_PATH)
 
 func play_locked() -> void:
 	if sfx_volume <= 0.0 or _locked_player == null or _locked_player.stream == null:
@@ -186,11 +198,18 @@ func play_correct() -> void:
 func play_wrong() -> void:
 	_play_answer_sound(_wrong_player, WRONG_BASE_DB)
 
+func play_complete() -> void:
+	_play_answer_sound(_complete_player, COMPLETE_BASE_DB)
+	if sfx_volume > 0.0 and _complete_layer != null and _complete_layer.stream != null:
+		_complete_layer.volume_db = COMPLETE_LAYER_DB + linear_to_db(sfx_volume)
+		_complete_layer.play()
+
 func _play_answer_sound(player: AudioStreamPlayer, base_db: float) -> void:
 	if sfx_volume <= 0.0 or player == null or player.stream == null:
 		return
-	_correct_player.stop()
-	_wrong_player.stop()
+	for p in [_correct_player, _wrong_player, _complete_player, _complete_layer]:
+		if p != null:
+			p.stop()
 	player.volume_db = base_db + linear_to_db(sfx_volume)
 	player.play()
 

@@ -1,0 +1,11 @@
+Sound effects in this folder are by Kenney (www.kenney.nl), licensed CC0 1.0
+(public domain): http://creativecommons.org/publicdomain/zero/1.0/
+
+  click.ogg     <- Interface Sounds / select_002.ogg
+  hover.ogg     <- UI Audio / rollover2.ogg
+  correct.ogg   <- Interface Sounds / confirmation_001.ogg
+  wrong.ogg     <- Music Jingles / Pizzicato jingles / jingles_PIZZI11.ogg
+  locked.ogg    <- Interface Sounds / error_004.ogg
+  complete.ogg  <- Music Jingles / Pizzicato jingles / jingles_PIZZI10.ogg
+  complete_steel.ogg <- Music Jingles / Steel jingles / jingles_STEEL10.ogg
+                  (played together with complete.ogg as the win fanfare)

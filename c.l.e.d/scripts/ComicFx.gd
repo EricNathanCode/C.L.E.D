@@ -669,3 +669,50 @@ static func place_right(ctrl: Control, rect: Rect2) -> void:
 	ctrl.offset_right = rect.end.x - 1280.0
 	ctrl.offset_top = rect.position.y
 	ctrl.offset_bottom = rect.end.y
+
+# ── Comic icons (res://images/icons/*.svg) ─────────────
+# Returns the icon scaled to `px` pixels square (cached).
+static var _icon_cache: Dictionary = {}
+
+static func icon(name: String, px: int = 26) -> Texture2D:
+	var key: String = name + "@" + str(px)
+	if _icon_cache.has(key):
+		return _icon_cache[key]
+	var path: String = "res://images/icons/%s.svg" % name
+	var img: Image = null
+	if ResourceLoader.exists(path):
+		var tex: Texture2D = load(path)
+		if tex != null:
+			img = tex.get_image()
+	if img == null:
+		# Not imported yet: rasterise the SVG directly
+		var f := FileAccess.open(path, FileAccess.READ)
+		if f != null:
+			img = Image.new()
+			if img.load_svg_from_buffer(f.get_buffer(f.get_length()), px / 128.0) != OK:
+				img = null
+	if img == null:
+		return null
+	img = img.duplicate()
+	if img.is_compressed():
+		img.decompress()
+	if img.get_width() != px:
+		img.resize(px, px, Image.INTERPOLATE_LANCZOS)
+	var out := ImageTexture.create_from_image(img)
+	_icon_cache[key] = out
+	return out
+
+# Put an icon on a button, left of its text.
+static func set_icon(btn: Button, name: String, px: int = 26) -> void:
+	btn.icon = icon(name, px)
+	btn.add_theme_constant_override("h_separation", 10)
+
+# A centred icon as its own control (for labels and headers).
+static func icon_rect(name: String, px: int = 26) -> TextureRect:
+	var r := TextureRect.new()
+	r.texture = icon(name, px)
+	r.stretch_mode = TextureRect.STRETCH_KEEP_CENTERED
+	r.custom_minimum_size = Vector2(px, px)
+	r.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	r.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return r

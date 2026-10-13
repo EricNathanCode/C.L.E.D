@@ -353,10 +353,18 @@ func _build_question_widgets() -> void:
 	result_panel.visible = false
 	_container.add_child(result_panel)
 
+	var result_row := HBoxContainer.new()
+	result_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	result_row.add_theme_constant_override("separation", 10)
+	result_panel.add_child(result_row)
+	var result_icon := Fx.icon_rect("check", 30)
+	result_row.add_child(result_icon)
+
 	_result_lbl = Label.new()
 	_result_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	Comic.heading(_result_lbl, 26, Comic.INK)
-	result_panel.add_child(_result_lbl)
+	result_row.add_child(_result_lbl)
+	_result_lbl.set_meta("icon", result_icon)
 
 	# Store panel ref so we can tint it on wrong/correct
 	_result_lbl.set_meta("panel", result_panel)
@@ -368,8 +376,9 @@ func _build_question_widgets() -> void:
 	_container.add_child(hint_row)
 
 	_hint_btn = Button.new()
-	_hint_btn.text = "💡  Show Hint"
+	_hint_btn.text = "Show Hint"
 	_style_ghost(_hint_btn)
+	Fx.set_icon(_hint_btn, "bulb", 26)
 	_hint_btn.pressed.connect(_on_hint)
 	hint_row.add_child(_hint_btn)
 
@@ -445,7 +454,7 @@ func _show_question() -> void:
 		(_result_lbl.get_meta("panel") as Control).visible = false
 	_hint_lbl.visible   = false
 	_hint_visible       = false
-	_hint_btn.text      = "💡  Show Hint"
+	_hint_btn.text      = "Show Hint"
 	_hint_lbl.text      = "Hint: " + q.get("hint", "")
 
 # ── Answer submission ─────────────────────────────────────
@@ -461,7 +470,8 @@ func _on_submit(text: String) -> void:
 	if given == correct:
 		sbox.bg_color = Color("#CDEFD8")
 		_result_lbl.add_theme_color_override("font_color", Color("#1E8E4F"))
-		_result_lbl.text = "✓  Correct!"
+		_result_lbl.text = "Correct!"
+		(_result_lbl.get_meta("icon") as TextureRect).texture = Fx.icon("check", 30)
 		panel.visible    = true
 		_v2_pop_correct(panel)
 		GameManager.play_correct()
@@ -471,7 +481,8 @@ func _on_submit(text: String) -> void:
 	else:
 		sbox.bg_color = Color("#FFD9D3")
 		_result_lbl.add_theme_color_override("font_color", Comic.RED)
-		_result_lbl.text = "✗  Wrong answer check the hint and try again."
+		_result_lbl.text = "Wrong answer check the hint and try again."
+		(_result_lbl.get_meta("icon") as TextureRect).texture = Fx.icon("cross", 30)
 		panel.visible    = true
 		GameManager.play_wrong()
 		_input.select_all()
@@ -492,21 +503,22 @@ func _shake(node: Control) -> void:
 func _on_hint() -> void:
 	_hint_visible      = not _hint_visible
 	_hint_lbl.visible  = _hint_visible
-	_hint_btn.text     = ("💡  Hide Hint" if _hint_visible else "💡  Show Hint")
+	_hint_btn.text     = ("Hide Hint" if _hint_visible else "Show Hint")
 
 # ── Completion screen ─────────────────────────────────────
 func _show_complete() -> void:
 	GameManager.complete_folder_quiz(GameManager.world, GameManager.current_quiz_folder_idx)
+	# Win fanfare without the music under it; music resumes on the Dashboard
+	get_tree().root.get_node("Main").stop_bgm()
+	GameManager.play_complete()
 
 	for child in _container.get_children():
 		child.queue_free()
 	await get_tree().process_frame
 
-	var icon_lbl := Label.new()
-	icon_lbl.text = "⚡"
-	icon_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	Comic.title(icon_lbl, 80, Comic.YELLOW, 12)
-	_container.add_child(icon_lbl)
+	var icon_img := Fx.icon_rect("bolt", 110)
+	icon_img.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	_container.add_child(icon_img)
 
 	var done_lbl := Label.new()
 	done_lbl.text = "Folder Challenge Complete!"
@@ -557,6 +569,13 @@ const V2_CHAR: Dictionary = {
 	"hotel": "adult_1", "cafe": "adult_3", "airport": "adult_2", "library": "adult_7",
 }
 var _v2_char: TextureRect = null
+var _v2_bubble = null
+
+func _v2_aim() -> void:
+	if _v2_bubble == null or _v2_char == null:
+		return
+	_v2_bubble.tail_tip = Fx.mouth_point(_v2_char) - Vector2(4, 0) - _v2_bubble.position
+	_v2_bubble.queue_redraw()
 
 func _apply_v2(bg: ColorRect, back_btn: Button, panel: PanelContainer) -> void:
 	var rays := Fx.rays_rect(Comic.PAPER, Color("#FBE7B5"), Color(0.9, 0.25, 0.18, 0.22), Vector2(0.5, 0.56))
@@ -578,15 +597,13 @@ func _apply_v2(bg: ColorRect, back_btn: Button, panel: PanelContainer) -> void:
 	bubble.outline = 4.0
 	bubble.shadow = 5.0
 	bubble.tail_side = "bottom"
-	bubble.tail_at = 0.62
+	bubble.tail_at = 0.12
 	bubble.tail_width = 26.0
-	bubble.tail_rel = Vector2(0.86, 1.0)
-	bubble.tail_px = Vector2(0.0, 34.0)
 	bubble.add_theme_constant_override("margin_left", 14)
 	bubble.add_theme_constant_override("margin_right", 14)
 	bubble.add_theme_constant_override("margin_top", 10)
 	bubble.add_theme_constant_override("margin_bottom", 12)
-	Fx.place_right(bubble, Rect2(1016, 84, 0, 0))
+	Fx.place_right(bubble, Rect2(944, 76, 0, 0))
 	var say := Label.new()
 	say.text = "Boss fight! Clear every question to unlock the next chapter."
 	say.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -595,6 +612,10 @@ func _apply_v2(bg: ColorRect, back_btn: Button, panel: PanelContainer) -> void:
 	bubble.add_child(say)
 	bubble.z_index = -4
 	add_child(bubble)
+	_v2_bubble = bubble
+	# Tail ends just left of the character's mouth
+	bubble.item_rect_changed.connect(_v2_aim)
+	_v2_char.item_rect_changed.connect(_v2_aim)
 
 	# "BOSS FIGHT!" burst pinned to the panel's top-left corner
 	var boss := Fx.sticker("BOSS FIGHT!", "", Comic.RED, Color.WHITE, Vector2(200, 100), 30, 14, -8.0)
@@ -609,3 +630,4 @@ func _v2_refresh() -> void:
 		return
 	var path: String = "res://images/characters/NPC_adults/%s/talk.png" % V2_CHAR.get(GameManager.world, "adult_1")
 	_v2_char.texture = load(path) if ResourceLoader.exists(path) else null
+	_v2_aim()
