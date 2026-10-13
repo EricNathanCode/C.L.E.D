@@ -360,6 +360,63 @@ func reset_progress() -> void:
 	completed_folder_quizzes = {}
 	save_game()
 
+# ── Deleting data (Settings → Delete My Account / Delete All Data) ──
+# Web version note: the browser copy of user:// is only updated when the game
+# writes a file, and it misses a file that is just emptied (no bytes written).
+# So an empty file is deleted instead of saved, and every delete ends by
+# writing the session file, which makes the browser save all the changes.
+const LEGACY_SAVE_PATH := "user://cled_save.cfg"   # single-player save from before accounts existed
+
+func account_count() -> int:
+	var cfg := ConfigFile.new()
+	if cfg.load(ACCOUNTS_PATH) != OK or not cfg.has_section("accounts"):
+		return 0
+	return cfg.get_section_keys("accounts").size()
+
+# Removes one account: its password entry, its save file (progress, stars,
+# Simulation scores) and the remembered sign-in if it was this account.
+# Other accounts on the device are not touched. Returns false if not found.
+func delete_account(username: String) -> bool:
+	var key: String = _find_account(username)
+	if key.is_empty():
+		return false
+	var save_file: String = SAVES_DIR + key + ".cfg"
+	if FileAccess.file_exists(save_file):
+		DirAccess.remove_absolute(save_file)
+	var remembered: String = get_remembered_user()
+	var cfg := ConfigFile.new()
+	cfg.load(ACCOUNTS_PATH)
+	cfg.erase_section_key("accounts", key)
+	if cfg.has_section("accounts"):
+		cfg.save(ACCOUNTS_PATH)
+	else:
+		DirAccess.remove_absolute(ACCOUNTS_PATH)   # that was the last account
+	if current_user.to_lower() == key.to_lower():
+		logout()   # also forgets the session
+	elif remembered.to_lower() == key.to_lower():
+		_forget_session()
+	else:
+		_remember_session(remembered)   # unchanged; written so the web copy saves
+	return true
+
+# Removes every account, every save and the settings on this device, like a
+# fresh install. Settings go back to their defaults straight away.
+func delete_all_data() -> void:
+	var d := DirAccess.open(SAVES_DIR)
+	if d != null:
+		for f in d.get_files():
+			d.remove(f)
+		DirAccess.remove_absolute(SAVES_DIR)
+	for f in [ACCOUNTS_PATH, SETTINGS_PATH, LEGACY_SAVE_PATH, SESSION_PATH]:
+		if FileAccess.file_exists(f):
+			DirAccess.remove_absolute(f)
+	tts_volume           = 1.0
+	music_volume         = 1.0
+	sfx_volume           = 1.0
+	dark_overlay_enabled = false
+	stop_speaking()
+	logout()   # signs out and writes an empty session file (see note above)
+
 func start_lesson() -> void:
 	_wrongs_this_lesson       = 0
 	_sql_commands_this_lesson = []

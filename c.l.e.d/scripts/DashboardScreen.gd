@@ -1222,7 +1222,7 @@ var _v2_count_tag: Label = null
 func _apply_v2() -> void:
 	# Masthead: mini logo at the left of the ink bar, red print shadows on nav
 	var mini := Fx.Logo.new()
-	mini.text = "C.L.I.D."
+	mini.text = "C.L.I.D"
 	mini.font_size = 40
 	mini.depth = 4
 	mini.outline = 7

@@ -1,6 +1,8 @@
 extends Control
 const Comic = preload("res://scripts/ComicStyle.gd")
 const Fx = preload("res://scripts/ComicFx.gd")
+const TermsOverlay = preload("res://scripts/TermsOverlay.gd")
+const ConfirmOverlay = preload("res://scripts/ConfirmOverlay.gd")
 # ═══════════════════════════════════════════════════════
 #  LOGIN SCREEN  |  scripts/LoginScreen.gd
 #
@@ -36,6 +38,8 @@ const USERNAME_REGEX_PATTERN := "^[A-Za-z0-9_]{3,20}$"
 
 var _username_regex := RegEx.new()
 var _mode: String = "login"   # "login" or "signup"
+var _agree_row: HBoxContainer = null
+var _agree_box: CheckBox = null
 
 const SHOW_LABEL := "Show"  # shown when the field is hidden — click to reveal
 const HIDE_LABEL := "Hide"  # shown when the field is visible — click to hide it again
@@ -57,6 +61,7 @@ func _ready() -> void:
 	_style_btn(_dark_toggle,  "secondary")
 	Fx.set_icon(_dark_toggle, "moon", 24)
 	_apply_v2()
+	_build_terms_ui()
 
 	_password_input.secret = true
 	_confirm_input.secret  = true
@@ -87,23 +92,40 @@ func _ready() -> void:
 
 	_set_mode("login")
 
+	# Coming back here (Log Out, Delete My Account) always shows a clean,
+	# empty Log In form, never the previous player's name or old messages.
+	visibility_changed.connect(func():
+		if visible:
+			_set_mode("login")
+	)
+
 func _set_mode(mode: String) -> void:
 	_mode = mode
 	_error_label.visible = false
 	_username_input.text = ""
 	_password_input.text = ""
 	_confirm_input.text  = ""
+	# Passwords start hidden again
+	_password_input.secret = true
+	_confirm_input.secret  = true
+	_password_toggle.text  = SHOW_LABEL
+	_confirm_toggle.text   = SHOW_LABEL
 
 	if _mode == "login":
 		_subtitle_label.text   = "Log in to continue"
 		_confirm_row.visible   = false
 		_submit_button.text    = "Log In"
 		_toggle_button.text    = "Need an account?  Sign Up"
+		if _agree_row:
+			_agree_row.visible = false
 	else:
 		_subtitle_label.text   = "Create a new account"
 		_confirm_row.visible   = true
 		_submit_button.text    = "Create Account"
 		_toggle_button.text    = "Already have an account?  Log In"
+		if _agree_row:
+			_agree_row.visible = true
+			_agree_box.button_pressed = false
 
 	_username_input.grab_focus()
 
@@ -140,6 +162,9 @@ func _on_submit() -> void:
 		if GameManager.account_exists(username):
 			_show_error("That username is already taken.")
 			return
+		if _agree_box and not _agree_box.button_pressed:
+			_show_error("Please agree to the Terms & Privacy to create an account.")
+			return
 		GameManager.create_account(username, password)
 		GameManager.login(username)
 		_enter_app()
@@ -157,6 +182,13 @@ func _enter_app() -> void:
 	get_tree().root.get_node("Main").show_screen("world_select")
 
 func _show_error(msg: String) -> void:
+	_error_label.add_theme_color_override("font_color", Comic.RED)
+	_error_label.text    = msg
+	_error_label.visible = true
+
+# Same spot as errors, in green, for good news ("All data deleted").
+func _show_info(msg: String) -> void:
+	_error_label.add_theme_color_override("font_color", Color("#1E8E4F"))
 	_error_label.text    = msg
 	_error_label.visible = true
 
@@ -308,9 +340,12 @@ func _apply_v2() -> void:
 	Fx.hero_button(_submit_button, "primary", 32, 20, 4)
 
 	# Settings: ink pill with a red print shadow
+	# Top-LEFT corner, so it never covers the host character's face on the right
 	var sbtn: Button = _settings_button
-	sbtn.offset_left = -196.0
-	sbtn.offset_right = -24.0
+	sbtn.anchor_left = 0.0
+	sbtn.anchor_right = 0.0
+	sbtn.offset_left = 24.0
+	sbtn.offset_right = 196.0
 	sbtn.offset_top = 22.0
 	sbtn.offset_bottom = 70.0
 	Comic.apply_button(sbtn, "dark", 26, true, 18, 4)
@@ -322,4 +357,98 @@ func _apply_v2() -> void:
 			c.shadow_color = Comic.RED
 			c.shadow_offset = Vector2(5, 5) if not st.contains("pressed") else Vector2(2, 2)
 			sbtn.add_theme_stylebox_override(st, c)
-	Fx.tilt(sbtn, 2.0)
+	Fx.tilt(sbtn, -2.0)
+
+# ── Terms of Use & Privacy ────────────────────────────
+# A link on the card and in Settings, plus an "I agree" box that is only
+# shown (and required) when creating a new account.
+func _build_terms_ui() -> void:
+	var vbox: VBoxContainer = $CenterContainer/CardPanel/VBox
+
+	_agree_row = HBoxContainer.new()
+	_agree_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	_agree_row.add_theme_constant_override("separation", 2)
+	_agree_box = CheckBox.new()
+	_agree_box.text = "I agree to the"
+	_agree_box.add_theme_icon_override("unchecked", Fx.icon("checkbox_off", 26))
+	_agree_box.add_theme_icon_override("checked", Fx.icon("checkbox_on", 26))
+	_agree_box.add_theme_constant_override("h_separation", 8)
+	_agree_box.add_theme_font_override("font", Comic.body_font())
+	_agree_box.add_theme_font_size_override("font_size", 16)
+	for c in ["font_color", "font_hover_color", "font_pressed_color", "font_hover_pressed_color", "font_focus_color"]:
+		_agree_box.add_theme_color_override(c, Comic.INK)
+	_agree_box.toggled.connect(func(_on): _error_label.visible = false)
+	var plain := StyleBoxEmpty.new()
+	for st in ["normal", "hover", "pressed", "hover_pressed", "focus", "disabled"]:
+		_agree_box.add_theme_stylebox_override(st, plain)
+	_agree_row.add_child(_agree_box)
+	_agree_row.add_child(_make_terms_link(16))
+	_agree_row.visible = false
+	vbox.add_child(_agree_row)
+	vbox.move_child(_agree_row, _submit_button.get_index())
+
+	var card_link := _make_terms_link(15)
+	card_link.text = "Terms of Use & Privacy"
+	card_link.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	vbox.add_child(card_link)
+
+	var settings_link := Button.new()
+	settings_link.text = "Terms & Privacy"
+	settings_link.pressed.connect(_open_terms)
+	_style_btn(settings_link, "secondary")
+	$SettingsOverlay/SettingsPanel/VBox.add_child(settings_link)
+
+	# Delete All Data | wipes every account, save and setting on this device
+	$SettingsOverlay/SettingsPanel/VBox.add_child(HSeparator.new())
+	var wipe_btn := Button.new()
+	wipe_btn.text = "Delete All Data"
+	wipe_btn.pressed.connect(_on_delete_all_pressed)
+	_style_btn(wipe_btn, "danger")
+	$SettingsOverlay/SettingsPanel/VBox.add_child(wipe_btn)
+
+# Underlined-looking blue text button that opens the pop-up
+func _make_terms_link(size: int) -> Button:
+	var b := Button.new()
+	b.text = "Terms & Privacy"
+	b.flat = true
+	b.focus_mode = Control.FOCUS_NONE
+	b.pressed.connect(_open_terms)
+	b.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	b.add_theme_font_override("font", Comic.body_font())
+	b.add_theme_font_size_override("font_size", size)
+	for c in ["font_color", "font_pressed_color", "font_focus_color"]:
+		b.add_theme_color_override(c, Comic.BLUE)
+	b.add_theme_color_override("font_hover_color", Color("#1F66C4"))
+	b.add_theme_color_override("font_hover_pressed_color", Color("#1F66C4"))
+	var empty := StyleBoxEmpty.new()
+	empty.content_margin_left = 2
+	empty.content_margin_right = 2
+	for st in ["normal", "hover", "pressed", "hover_pressed", "focus"]:
+		b.add_theme_stylebox_override(st, empty)
+	return b
+
+func _open_terms() -> void:
+	TermsOverlay.open(self)
+
+func _on_delete_all_pressed() -> void:
+	var n: int = GameManager.account_count()
+	var accounts: String = "the 1 account" if n == 1 else "all %d accounts" % n
+	if n == 0:
+		accounts = "all saved data"
+	ConfirmOverlay.open(self, "Delete All Data?",
+		"This permanently deletes %s on this device, with all progress, stars, Simulation scores and settings.\n\nEveryone who uses this computer (or this browser) will lose their account. This can't be undone." % accounts,
+		"Delete Everything", _delete_all_data)
+
+func _delete_all_data() -> void:
+	GameManager.delete_all_data()
+	# Put the default settings back into effect (music, sliders, dark mode)
+	var main := get_tree().root.get_node("Main")
+	main.set_music_volume(GameManager.music_volume)
+	main.apply_dark_overlay()
+	_music_toggle.set_value_no_signal(GameManager.music_volume)
+	_tts_toggle.set_value_no_signal(GameManager.tts_volume)
+	_sfx_toggle.set_value_no_signal(GameManager.sfx_volume)
+	_update_dark_button()
+	_on_settings_close()
+	_set_mode("login")
+	_show_info("All data on this device was deleted.")

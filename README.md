@@ -1,10 +1,10 @@
-﻿# C.L.I.D.
+﻿# C.L.I.D
 
-**C.L.I.D.** (Capstone) is a 2D story-driven learning game built in **Godot 4.6** that teaches SQL through role-play scenarios. Instead of memorizing syntax from a slide deck, players step into everyday jobs — hotel receptionist, café barista, airport check-in agent, librarian — and write real SQL queries to solve the problems each character brings them.
+**C.L.I.D** (Capstone) is a 2D story-driven learning game built in **Godot 4.6** that teaches SQL through role-play scenarios. Instead of memorizing syntax from a slide deck, players step into everyday jobs — hotel receptionist, café barista, airport check-in agent, librarian — and write real SQL queries to solve the problems each character brings them.
 
 ## Goals
 
-C.L.I.D. is built to reinforce the SQL querying and data-manipulation skills covered in **DCIT 24 (Information Management)** — specifically the `SELECT`/`INSERT`/`UPDATE`/`DELETE` practice and the WHERE-filtering, sorting, and aggregate skills that support it. It's a **supplementary drill tool**, not a substitute for the course's database-design theory, ER modeling, or GUI database-builder (LibreOffice Base) instruction — the goal is repetition and immediate feedback on query syntax, framed through a story so practice doesn't feel like a worksheet.
+C.L.I.D is built to reinforce the SQL querying and data-manipulation skills covered in **DCIT 24 (Information Management)** — specifically the `SELECT`/`INSERT`/`UPDATE`/`DELETE` practice and the WHERE-filtering, sorting, and aggregate skills that support it. It's a **supplementary drill tool**, not a substitute for the course's database-design theory, ER modeling, or GUI database-builder (LibreOffice Base) instruction — the goal is repetition and immediate feedback on query syntax, framed through a story so practice doesn't feel like a worksheet.
 
 ## Concept
 

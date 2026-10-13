@@ -14,19 +14,17 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 [application]
 
-config/name="C.L.I.D."
+config/name="C.L.I.D"
+run/main_scene="res://scene/Main.tscn"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="Godot/app_userdata/C.L.E.D"
-run/main_scene="res://scene/Main.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
+config/icon="res://images/app_icon.png"
+config/windows_native_icon="res://images/app_icon.ico"
 
 [autoload]
 
 GameManager="*res://scripts/GameManager.gd"
-
-[gui]
-
-theme/custom="res://theme/comic_theme.tres"
 
 [display]
 
@@ -38,6 +36,10 @@ window/stretch/aspect="expand"
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/godot-sqlite/plugin.cfg")
+
+[gui]
+
+theme/custom="res://theme/comic_theme.tres"
 
 [rendering]
 

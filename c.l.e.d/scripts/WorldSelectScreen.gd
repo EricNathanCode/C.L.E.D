@@ -1,6 +1,8 @@
 extends Control
 const Comic = preload("res://scripts/ComicStyle.gd")
 const Fx = preload("res://scripts/ComicFx.gd")
+const TermsOverlay = preload("res://scripts/TermsOverlay.gd")
+const ConfirmOverlay = preload("res://scripts/ConfirmOverlay.gd")
 # ═══════════════════════════════════════════════════════
 #  WORLD SELECT SCREEN  |  scripts/WorldSelectScreen.gd
 # ═══════════════════════════════════════════════════════
@@ -119,6 +121,20 @@ func _ready() -> void:
 	_style_btn(_logout_btn, "secondary", 20)
 	_update_logout_button()
 
+	# Delete My Account | removes only this player's account and progress
+	var delete_btn := Button.new()
+	delete_btn.text = "Delete My Account"
+	delete_btn.pressed.connect(_on_delete_account_pressed)
+	$SettingsOverlay/SettingsPanel/VBox.add_child(delete_btn)
+	_style_btn(delete_btn, "danger", 18)
+
+	# Terms of Use & Privacy pop-up
+	var terms_btn := Button.new()
+	terms_btn.text = "Terms & Privacy"
+	terms_btn.pressed.connect(func(): TermsOverlay.open(self))
+	$SettingsOverlay/SettingsPanel/VBox.add_child(terms_btn)
+	_style_btn(terms_btn, "ghost", 18)
+
 	# Completion % label under the world name
 	_completion_lbl = Label.new()
 	_completion_lbl.anchor_left = 0.0
@@ -134,6 +150,7 @@ func _ready() -> void:
 		if visible:
 			_update_display()
 			_update_logout_button()
+			_refresh_setting_sliders()
 	)
 
 	_apply_v2()
@@ -232,6 +249,24 @@ func _disarm_reset() -> void:
 func _update_logout_button() -> void:
 	if _logout_btn:
 		_logout_btn.text = "Log Out (" + GameManager.current_user + ")"
+
+# Settings can be wiped from the Login screen (Delete All Data), so show the
+# current values whenever this screen opens, without re-saving them.
+func _refresh_setting_sliders() -> void:
+	_music_slider.set_value_no_signal(GameManager.music_volume)
+	_tts_slider.set_value_no_signal(GameManager.tts_volume)
+	_sfx_slider.set_value_no_signal(GameManager.sfx_volume)
+	_update_dark_button()
+
+func _on_delete_account_pressed() -> void:
+	var who: String = GameManager.current_user
+	ConfirmOverlay.open(self, "Delete Account?",
+		"This permanently deletes the account \"%s\" and all of its progress, stars and Simulation scores from this device.\n\nOther accounts on this device are not affected. This can't be undone." % who,
+		"Delete", func():
+			GameManager.delete_account(who)
+			_on_settings_close()
+			get_tree().root.get_node("Main").show_screen("login")
+	)
 
 func _on_logout_pressed() -> void:
 	GameManager.logout()
