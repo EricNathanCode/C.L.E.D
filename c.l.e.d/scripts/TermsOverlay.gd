@@ -44,6 +44,7 @@ We may update these terms when the game is updated. The date at the top shows th
 
 [b]Where your data is stored[/b]
   • Windows app: in your user folder, under AppData\\Roaming\\Godot\\app_userdata\\C.L.E.D
+  • Linux app: in your home folder, under .local/share/Godot/app_userdata/C.L.E.D
   • Web version: in your browser's storage for the itch.io website. The itch.io website itself is run by itch.io and follows its own privacy policy.
 
 [b]Removing your data[/b]
@@ -53,6 +54,7 @@ We may update these terms when the game is updated. The date at the top shows th
 
 [b]Removing the game[/b]
   • Windows app: delete the folder you unzipped the game into (it holds CLID.exe), or uninstall it in the itch.io app if you installed it there. Use Delete All Data first if you also want your saved data gone.
+  • Linux app: delete the folder you extracted the game into (it holds CLID.x86_64). Use Delete All Data first if you also want your saved data gone.
   • Web version: nothing is installed. Use Delete All Data, or clear your browser's site data for itch.io.
 
 [b]Younger players[/b]
