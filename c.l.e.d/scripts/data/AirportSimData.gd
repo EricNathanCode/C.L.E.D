@@ -68,7 +68,7 @@ const TEMPLATES: Array = [
 			[1, "Liam", "Cruz", "12A"], [2, "Nora", "Santos", "14C"],
 			[3, "Ben", "Torres", "7B"], [4, "Iris", "Reyes", "22F"],
 		],
-		"problem_template": "Checking in — {first_name} {last_name}. I was assigned seat {seat_no}.",
+		"problem_template": "Checking in: {first_name} {last_name}. I was assigned seat {seat_no}.",
 		"variables": {
 			"first_name_male":   ["Marco", "Diego"],
 			"first_name_female": ["Elena", "Sofia", "Grace"],
@@ -107,7 +107,7 @@ const TEMPLATES: Array = [
 			[1, "Liam", "Cruz", "12A"], [2, "Nora", "Santos", "14C"],
 			[3, "Ben", "Torres", "7B"], [4, "Iris", "Reyes", "22F"],
 		],
-		"problem_template": "I lost my boarding pass — my last name is {value}, can you confirm my seat?",
+		"problem_template": "I lost my boarding pass. My last name is {value}, can you confirm my seat?",
 		"pick_from_column": "last_name",
 	},
 	{
@@ -149,7 +149,7 @@ const TEMPLATES: Array = [
 			[1, "Liam", "Cruz", "12A"], [2, "Nora", "Santos", "14C"],
 			[3, "Ben", "Torres", "7B"], [4, "Iris", "Reyes", "22F"],
 		],
-		"problem_template": "Passenger id {target_id}'s last name was misspelled — it should be {new_value}.",
+		"problem_template": "Passenger id {target_id}'s last name was misspelled. It should be {new_value}.",
 		"set_column": "last_name",
 		"pick_id_from": "id",
 		"new_value_pool": ["Cruzz", "Santoz", "Torress", "Reyess"],
@@ -240,7 +240,7 @@ const TEMPLATES: Array = [
 			[5, 5, "Cebu", "PR202"], [6, 6, "Manila", "PR101"],
 		],
 		"column": "destination",
-		"problem": "For the schedule board, list each destination we fly today once — nothing repeated.",
+		"problem": "For the schedule board, list each destination we fly today once, nothing repeated.",
 		"role": "staff",
 	},
 
@@ -256,7 +256,7 @@ const TEMPLATES: Array = [
 			[5, "Linda", "Economy", "No"],
 		],
 		"col1": "seat_class", "val1": "Business", "col2": "checked_in", "val2": "Yes", "connector": "AND",
-		"problem": "I need passengers who are Business class AND already checked in. Not just one or the other — both must apply.",
+		"problem": "I need passengers who are Business class AND already checked in. Not just one or the other: both must apply.",
 		"role": "staff",
 	},
 	{
@@ -270,7 +270,7 @@ const TEMPLATES: Array = [
 			[5, "Linda", "Economy", "No"],
 		],
 		"col1": "seat_class", "val1": "Business", "col2": "checked_in", "val2": "Yes", "connector": "OR",
-		"problem": "Now show me every passenger who is Business class OR already checked in — either one gets priority boarding.",
+		"problem": "Now show me every passenger who is Business class OR already checked in. Either one gets priority boarding.",
 		"role": "staff",
 	},
 
@@ -330,7 +330,7 @@ const TEMPLATES: Array = [
 		],
 		"column": "last_name",
 		"letter_pool": ["D", "B", "G"],
-		"problem_template": "A family group is asking — pull every passenger whose last name starts with {letter}.",
+		"problem_template": "A family group is asking: pull every passenger whose last name starts with {letter}.",
 		"role": "staff",
 	},
 
@@ -346,7 +346,7 @@ const TEMPLATES: Array = [
 		],
 		"column": "destination",
 		"value_pool": ["Manila", "Cebu", "Davao"],
-		"problem_template": "I need bookings to {val1} and {val2} only — instead of writing two OR conditions, use a list.",
+		"problem_template": "I need bookings to {val1} and {val2} only. Instead of writing two OR conditions, use a list.",
 		"role": "staff",
 	},
 	{
@@ -392,7 +392,7 @@ const TEMPLATES: Array = [
 			[7, "Sofia", "Torres", "20B"], [8, "Ana", "Villanueva", "5D"],
 		],
 		"column": "last_name", "direction": "DESC",
-		"problem": "For the printed handout, flip that — sort passengers Z to A by last name this time.",
+		"problem": "For the printed handout, flip that: sort passengers Z to A by last name this time.",
 		"role": "staff",
 	},
 
@@ -483,7 +483,7 @@ const TEMPLATES: Array = [
 			[4, "Manila", 180], [5, "Davao", 410], [6, "Singapore", 1100],
 		],
 		"func": "SUM", "column": "ticket_price",
-		"problem": "I need today's total ticket revenue — add up every ticket_price across all bookings.",
+		"problem": "I need today's total ticket revenue. Add up every ticket_price across all bookings.",
 		"role": "staff",
 	},
 
@@ -500,7 +500,7 @@ const TEMPLATES: Array = [
 		],
 		"group_col": "destination",
 		"threshold_pool": [1, 2],
-		"problem_template": "I need destinations with more than {threshold} booking(s) — a quick overbooking check. WHERE can't filter on a group count.",
+		"problem_template": "I need destinations with more than {threshold} booking(s): a quick overbooking check. WHERE can't filter on a group count.",
 		"role": "staff",
 	},
 	{
@@ -541,7 +541,7 @@ const TEMPLATES: Array = [
 			[1, "Manila", 200], [2, "Cebu", 300], [3, "Davao", 400],
 		],
 		"base_col": "ticket_price", "multiplier": "2", "alias": "round_trip_price",
-		"problem": "For a round-trip quote, double the one-way fare — but label the column 'round_trip_price'.",
+		"problem": "For a round-trip quote, double the one-way fare, but label the column 'round_trip_price'.",
 		"role": "staff",
 	},
 ]

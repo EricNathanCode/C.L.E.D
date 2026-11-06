@@ -51,6 +51,10 @@ var _sql_commands_this_lesson: Array = []
 # is signed in.
 const SETTINGS_PATH := "user://settings.cfg"
 
+# ── Class Ranking on the local network (see LanRank.gd) ──
+var lan_share_enabled: bool = true   # share my username and scores with classmates on this Wi-Fi
+var lan_device_id:     String = ""   # random id, made once, so classmates' games can tell PCs apart
+
 func _ready() -> void:
 	load_settings()
 	_setup_click_sound()
@@ -222,6 +226,8 @@ func load_settings() -> void:
 	music_volume         = cfg.get_value("settings", "music_volume",         1.0)
 	sfx_volume           = cfg.get_value("settings", "sfx_volume",           1.0)
 	dark_overlay_enabled = cfg.get_value("settings", "dark_overlay_enabled", false)
+	lan_share_enabled    = cfg.get_value("settings", "lan_share_enabled",    true)
+	lan_device_id        = cfg.get_value("settings", "lan_device_id",        "")
 
 func save_settings() -> void:
 	var cfg := ConfigFile.new()
@@ -229,6 +235,8 @@ func save_settings() -> void:
 	cfg.set_value("settings", "music_volume",         music_volume)
 	cfg.set_value("settings", "sfx_volume",           sfx_volume)
 	cfg.set_value("settings", "dark_overlay_enabled", dark_overlay_enabled)
+	cfg.set_value("settings", "lan_share_enabled",    lan_share_enabled)
+	cfg.set_value("settings", "lan_device_id",        lan_device_id)
 	cfg.save(SETTINGS_PATH)
 
 # ── Save / load ───────────────────────────────────────
@@ -414,6 +422,8 @@ func delete_all_data() -> void:
 	music_volume         = 1.0
 	sfx_volume           = 1.0
 	dark_overlay_enabled = false
+	lan_share_enabled    = true
+	lan_device_id        = ""
 	stop_speaking()
 	logout()   # signs out and writes an empty session file (see note above)
 
@@ -445,6 +455,16 @@ func finish_lesson() -> int:
 
 func get_stars(w: String, lid) -> int:
 	return completed_lessons.get(w + "_" + str(lid), 0)
+
+# All the stars earned in one world's lessons (the Class Ranking's lesson
+# board). 17 lessons × 3 stars = 51 at most.
+func world_star_total(w: String) -> int:
+	var total: int = 0
+	var prefix: String = w + "_"
+	for key in completed_lessons:
+		if str(key).begins_with(prefix):
+			total += clampi(int(completed_lessons[key]), 0, 3)
+	return total
 
 func is_folder_quiz_done(w: String, fi: int) -> bool:
 	return completed_folder_quizzes.get(w + "_" + str(fi), false)

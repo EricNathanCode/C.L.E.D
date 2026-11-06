@@ -43,7 +43,7 @@ const TEMPLATES: Array = [
 			[1, "Alex", "Santos", "101"], [2, "Maya", "Dela Cruz", "204"],
 			[3, "Jose", "Hernandez", "312"], [4, "Carlos", "Garcia", "412"],
 		],
-		"problem_template": "I don't need everything — just show me everyone's {column}.",
+		"problem_template": "I don't need everything. Just show me everyone's {column}.",
 		"pick_from_columns": ["first_name", "last_name", "room_no"],
 		"role": "staff",
 	},
@@ -89,7 +89,7 @@ const TEMPLATES: Array = [
 			[1, "Alex", "Santos", "101"], [2, "Maya", "Dela Cruz", "204"],
 			[3, "Jose", "Hernandez", "312"], [4, "Carlos", "Garcia", "412"],
 		],
-		"problem_template": "Checking in — {first_name} {last_name}. They put me in room {room_no}.",
+		"problem_template": "Checking in: {first_name} {last_name}. They put me in room {room_no}.",
 		"variables": {
 			"first_name_male":   ["Diego", "Paolo"],
 			"first_name_female": ["Elena", "Grace", "Rosa"],
@@ -151,7 +151,7 @@ const TEMPLATES: Array = [
 			[1, "Alex", "Santos", "101"], [2, "Maya", "Dela Cruz", "204"],
 			[3, "Jose", "Hernandez", "312"], [4, "Carlos", "Garcia", "412"],
 		],
-		"problem_template": "Guest id {target_id} says their last name got misspelled — it should be {new_value}.",
+		"problem_template": "Guest id {target_id} says their last name got misspelled. It should be {new_value}.",
 		"set_column": "last_name",
 		"pick_id_from": "id",
 		"new_value_pool": ["Santoz", "DelaCruz", "Hernandes", "Garciah"],
@@ -181,7 +181,7 @@ const TEMPLATES: Array = [
 			[1, "Alex", "Santos", "101"], [2, "Maya", "Dela Cruz", "204"],
 			[3, "Jose", "Hernandez", "312"], [4, "Carlos", "Garcia", "412"],
 		],
-		"problem_template": "Front office needs record id {target_id} deleted — duplicate entry.",
+		"problem_template": "Front office needs record id {target_id} deleted. It's a duplicate entry.",
 		"pick_id_from": "id",
 		"role": "staff",
 	},
@@ -228,7 +228,7 @@ const TEMPLATES: Array = [
 			[5, 5, "Deluxe", "June 6"], [6, 6, "Standard", "June 7"],
 		],
 		"column": "room_type",
-		"problem": "Our bookings table has hundreds of rows but only a few room types. Can you list each type once — no duplicates?",
+		"problem": "Our bookings table has hundreds of rows but only a few room types. Can you list each type once, with no duplicates?",
 		"role": "staff",
 	},
 	{
@@ -242,7 +242,7 @@ const TEMPLATES: Array = [
 			[5, 5, "Deluxe", "June 6"], [6, 6, "Standard", "June 7"],
 		],
 		"column": "room_type",
-		"problem": "I'm preparing the availability report — give me the unique room types, nothing repeated.",
+		"problem": "I'm preparing the availability report. Give me the unique room types, nothing repeated.",
 		"role": "staff",
 	},
 
@@ -258,7 +258,7 @@ const TEMPLATES: Array = [
 			[5, "Linda", "Regular", "No"],
 		],
 		"col1": "status", "val1": "VIP", "col2": "has_booking", "val2": "Yes", "connector": "AND",
-		"problem": "I need guests who are VIP status AND have a booking. Not just one or the other — both must apply.",
+		"problem": "I need guests who are VIP status AND have a booking. Not just one or the other: both must apply.",
 		"role": "staff",
 	},
 	{
@@ -272,7 +272,7 @@ const TEMPLATES: Array = [
 			[5, "Linda", "Regular", "No"],
 		],
 		"col1": "status", "val1": "VIP", "col2": "has_booking", "val2": "Yes", "connector": "OR",
-		"problem": "Now show me every guest who is VIP status OR has a booking — either one qualifies for the priority list.",
+		"problem": "Now show me every guest who is VIP status OR has a booking. Either one qualifies for the priority list.",
 		"role": "staff",
 	},
 
@@ -332,7 +332,7 @@ const TEMPLATES: Array = [
 		],
 		"column": "last_name",
 		"letter_pool": ["S", "H", "D", "R"],
-		"problem_template": "A reunion group is checking in — pull every guest whose last name starts with {letter}.",
+		"problem_template": "A reunion group is checking in: pull every guest whose last name starts with {letter}.",
 		"role": "staff",
 	},
 
@@ -348,7 +348,7 @@ const TEMPLATES: Array = [
 		],
 		"column": "room_type",
 		"value_pool": ["Standard", "Deluxe", "Suite"],
-		"problem_template": "I need bookings for {val1} and {val2} rooms only — instead of writing two OR conditions, use a list.",
+		"problem_template": "I need bookings for {val1} and {val2} rooms only. Instead of writing two OR conditions, use a list.",
 		"role": "staff",
 	},
 	{
@@ -378,7 +378,7 @@ const TEMPLATES: Array = [
 			[5, "Linda", "Lim", "205"], [6, "Marco", "Reyes", "108"],
 		],
 		"column": "last_name", "direction": "ASC",
-		"problem": "I need all current guests sorted alphabetically by last name — A to Z, please.",
+		"problem": "I need all current guests sorted alphabetically by last name, A to Z, please.",
 		"role": "staff",
 	},
 	{
@@ -392,7 +392,7 @@ const TEMPLATES: Array = [
 			[5, "Linda", "Lim", "205"], [6, "Marco", "Reyes", "108"],
 		],
 		"column": "last_name", "direction": "DESC",
-		"problem": "For the printed handout, flip that — sort guests Z to A by last name this time.",
+		"problem": "For the printed handout, flip that: sort guests Z to A by last name this time.",
 		"role": "staff",
 	},
 
@@ -424,7 +424,7 @@ const TEMPLATES: Array = [
 			[7, "Ana", "Torres", "ana@mail.com"], [8, "Sofia", "Villanueva", "sofia@mail.com"],
 		],
 		"count_pool": [3, 5, 7],
-		"problem_template": "For the quick preview, cap it at the first {n} rows only — no need for the whole table.",
+		"problem_template": "For the quick preview, cap it at the first {n} rows only. No need for the whole table.",
 		"role": "staff",
 	},
 
@@ -440,7 +440,7 @@ const TEMPLATES: Array = [
 			[7, "Sofia", "Standard"], [8, "Ana", "Deluxe"], [9, "Miguel", "Suite"], [10, "Rosa", "Standard"],
 		],
 		"column": "room_type",
-		"problem": "I need a breakdown for the board meeting — how many bookings do we have per room type?",
+		"problem": "I need a breakdown for the board meeting. How many bookings do we have per room type?",
 		"role": "staff",
 	},
 	{
@@ -454,7 +454,7 @@ const TEMPLATES: Array = [
 			[7, "Sofia", "Standard"], [8, "Ana", "Deluxe"], [9, "Miguel", "Suite"], [10, "Rosa", "Standard"],
 		],
 		"column": "room_type",
-		"problem": "Quarter-end report — group the bookings by room type and show me the count for each.",
+		"problem": "Quarter-end report: group the bookings by room type and show me the count for each.",
 		"role": "staff",
 	},
 
@@ -482,7 +482,7 @@ const TEMPLATES: Array = [
 			[4, "Standard", 95], [5, "Deluxe", 220], [6, "Suite", 400], [7, "Standard", 110],
 		],
 		"func": "SUM", "column": "price_per_night",
-		"problem": "I need our total revenue — add up every price_per_night across all bookings.",
+		"problem": "I need our total revenue. Add up every price_per_night across all bookings.",
 		"role": "staff",
 	},
 
@@ -538,7 +538,7 @@ const TEMPLATES: Array = [
 			[1, "Standard", 100], [2, "Deluxe", 200], [3, "Suite", 300],
 		],
 		"base_col": "price_per_night", "multiplier": "2", "alias": "two_night_total",
-		"problem": "For a two-night quote, double the nightly rate — but label the column 'two_night_total'.",
+		"problem": "For a two-night quote, double the nightly rate, but label the column 'two_night_total'.",
 		"role": "staff",
 	},
 ]

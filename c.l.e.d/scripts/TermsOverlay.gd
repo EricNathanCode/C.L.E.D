@@ -7,16 +7,16 @@ const Fx = preload("res://scripts/ComicFx.gd")
 #  and from the Settings panels:  TermsOverlay.open(self)
 # ═══════════════════════════════════════════════════════
 
-const LAST_UPDATED := "October 13, 2026"
+const LAST_UPDATED := "November 6, 2026"
 
 const TERMS_BBCODE := """[h]TERMS OF USE[/h]
 [small]Last updated: {date}[/small]
 
-[b]1. About C.L.I.D[/b]
-C.L.I.D is a free educational game for practicing SQL through story-based lessons. It was made as a student capstone project to support classroom learning (such as DCIT 24 – Information Management). It does not replace your course, your teacher, or official course materials.
+[b]1. About CLID[/b]
+CLID is a free educational game for practicing SQL through story-based lessons. It was made as a student capstone project to support classroom learning (such as DCIT 24 – Information Management). It does not replace your course, your teacher, or official course materials.
 
 [b]2. Using the game[/b]
-You may play C.L.I.D for free for personal and educational use. Please do not sell it, re-upload it as your own work, or remove its credits.
+You may play CLID for free for personal and educational use. Please do not sell it, re-upload it as your own work, or remove its credits.
 
 [b]3. Your account[/b]
 Your account exists only on this device (or in this web browser). There is no online server, so:
@@ -36,11 +36,17 @@ We may update these terms when the game is updated. The date at the top shows th
 [b]What the game saves (on your device only)[/b]
   • Your username and password
   • Your lesson progress, stars, Folder Challenge results and Simulation best scores
-  • Your settings (music, sound effects, text-to-speech, dark mode)
+  • Your settings (music, sound effects, text-to-speech, dark mode, Class Ranking sharing) and a random code that tells your computer apart in the Class Ranking
 
 [b]What the game does NOT do[/b]
-  • It does not send any of your information to us or to anyone else. It has no online accounts, no ads and no tracking.
+  • It does not send any of your information to us or over the internet. It has no online accounts, no ads and no tracking. The only thing it shares is the Class Ranking below, with players on your own Wi-Fi.
   • Text-to-speech uses the voices already built into your computer or browser.
+
+[b]Class Ranking (Windows and Linux apps only)[/b]
+  • While you are logged in, the game shares your [b]username[/b], your [b]lesson stars[/b] and your [b]Simulation best scores[/b] with other CLID players on the [b]same Wi-Fi or local network[/b], so classmates can see who is on top. Your password is never shared.
+  • This stays on your local network: it does not go over the internet or to us. Anyone on the same network who runs CLID can see these scores.
+  • To stop sharing, open [b]Rank[/b] on the lessons page and untick "Share my name and scores with classmates on this Wi-Fi". You can still see the ranking.
+  • The web version does not share anything.
 
 [b]Where your data is stored[/b]
   • Windows app: in your user folder, under AppData\\Roaming\\Godot\\app_userdata\\C.L.E.D
@@ -67,7 +73,7 @@ If you are under 18, please play with the guidance of a parent, guardian or teac
   • Fonts: Bangers and Comic Neue (SIL Open Font License), DejaVu Sans (free font license)
   • Sound effects: Kenney, kenney.nl (CC0 public domain)
 
-[b]Questions?[/b] Message the C.L.I.D team through the game's page on itch.io."""
+[b]Questions?[/b] Message the CLID team through the game's page on itch.io."""
 
 var _closed_cb: Callable = Callable()
 

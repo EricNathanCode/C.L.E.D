@@ -59,7 +59,7 @@ const LESSONS: Dictionary = {
 			["5", "Animal Farm",     "Orwell",  "Fiction"]
 		],
 		"answer": "*",
-		"hint": "There's a single symbol that means 'every column' — you won't need to type each column name out.",
+		"hint": "There's a single symbol that means 'every column', so you won't need to type each column name out.",
 		"fail": [
 			{ "type": "dialogue", "char": "visitor", "name": "COWORKER", "npc": "adult_7/shock", "text": "That's not right. To grab every column at once, use the wildcard character." },
 			{ "type": "dialogue", "char": "scene",    "name": "SCENE",    "npc": "adult_7/idle",  "text": "The coworker points at the terminal, waiting patiently." },
@@ -839,7 +839,7 @@ const LESSONS: Dictionary = {
 			["7", "Kim Santos",    "Cosmos",           "2"]
 		],
 		"answer_id": "3",
-		"hint": "The id you need was mentioned earlier in the conversation — scroll back if you lost track of the number.",
+		"hint": "The id you need was mentioned earlier in the conversation. Scroll back if you lost track of the number.",
 		"result_headers": ["STATUS"],
 		"result_rows": [["Record with id = 3 has been removed."]],
 		"result_msg": "1 record deleted from overdue.",
@@ -1023,7 +1023,7 @@ const LESSONS: Dictionary = {
 			["10", "Physics 101",      "Einstein",   "Science"]
 		],
 		"answer": "ASC",
-		"hint": "Alphabetical A-to-Z, or lowest-to-highest, is the 'normal' sort direction — one of the two keywords means exactly that.",
+		"hint": "Alphabetical A-to-Z, or lowest-to-highest, is the 'normal' sort direction. One of the two keywords means exactly that.",
 		"result_headers": ["id", "title", "author", "genre"],
 		"result_rows": [
 			["9",  "Animal Farm",      "Orwell",     "Fiction"],
@@ -1092,7 +1092,7 @@ const LESSONS: Dictionary = {
 			["10", "Physics 101",      "Einstein",   "Science"]
 		],
 		"answer": "DESC",
-		"hint": "This is the opposite direction from what you just used — the other keyword reverses the order.",
+		"hint": "This is the opposite direction from what you just used. The other keyword reverses the order.",
 		"result_headers": ["id", "title", "author", "genre"],
 		"result_rows": [
 			["2",  "The Universe",     "Hawking",    "Science"],
@@ -1281,7 +1281,7 @@ const LESSONS: Dictionary = {
 			["10", "Physics 101",      "Science"]
 		],
 		"answer": "genre",
-		"hint": "GROUP BY needs the column the librarian wants the counts broken down by — check what category the report is split into.",
+		"hint": "GROUP BY needs the column the librarian wants the counts broken down by. Check what category the report is split into.",
 		"result_headers": ["genre", "COUNT(*)"],
 		"result_rows": [
 			["Technology", "4"],
@@ -1486,7 +1486,7 @@ const LESSONS: Dictionary = {
 			["6", "Kim Park",      "Cosmos",          ""]
 		],
 		"answer": "NULL",
-		"hint": "A blank/missing value in SQL isn't an empty string — it has its own keyword you check for right after IS.",
+		"hint": "A blank/missing value in SQL isn't an empty string. It has its own keyword you check for right after IS.",
 		"result_headers": ["id", "borrower", "book", "return_date"],
 		"result_rows": [
 			["2", "Mr. Tan",      "The Universe", "NULL"],
@@ -1544,7 +1544,7 @@ const LESSONS: Dictionary = {
 			["6", "Kim Park",      "Cosmos",          ""]
 		],
 		"answer": "NOT NULL",
-		"hint": "You want the opposite of 'missing' this time — the phrasing for 'a value is actually present.'",
+		"hint": "You want the opposite of 'missing' this time: the phrasing for 'a value is actually present.'",
 		"result_headers": ["id", "borrower", "book", "return_date"],
 		"result_rows": [
 			["1", "Maria Santos", "SQL Basics",      "June 10"],
@@ -1674,7 +1674,7 @@ const LESSONS: Dictionary = {
 	  "column": "genre",
 	  "table_headers": ["id","title","author","genre"],
 	  "table_rows": [["1","Dune","Herbert","Sci-Fi"],["2","1984","Orwell","Fiction"],["3","Foundation","Asimov","Sci-Fi"],["4","Hamlet","Shakespeare","Drama"],["5","Neuromancer","Gibson","Sci-Fi"],["6","Macbeth","Shakespeare","Drama"]],
-	  "hint": "DISTINCT needs the column with repeated values — think about which column would show duplicates without it.",
+	  "hint": "DISTINCT needs the column with repeated values. Think about which column would show duplicates without it.",
 	  "result_headers": ["genre"],
 	  "result_rows": [["Sci-Fi"],["Fiction"],["Drama"]],
 	  "result_msg": "3 unique genres. DISTINCT collapsed 3 Sci-Fi and 2 Drama entries into one each.",
@@ -1792,7 +1792,7 @@ const LESSONS: Dictionary = {
 	  "answer": "OR",
 	  "table_headers": ["id","title","genre","status"],
 	  "table_rows": [["1","Dune","Sci-Fi","Available"],["2","1984","Fiction","Available"],["3","Foundation","Sci-Fi","Borrowed"],["4","Neuromancer","Sci-Fi","Available"],["5","Hamlet","Drama","Available"]],
-	  "hint": "This time only one of the two conditions needs to be true — the other logical connector fits that.",
+	  "hint": "This time only one of the two conditions needs to be true. The other logical connector fits that.",
 	  "result_headers": ["id","title","genre","status"],
 	  "result_rows": [["1","Dune","Sci-Fi","Available"],["2","1984","Fiction","Available"],["3","Foundation","Sci-Fi","Borrowed"],["4","Neuromancer","Sci-Fi","Available"]],
 	  "result_msg": "4 books match. OR only needs ONE condition true, so Sci-Fi and Fiction both count regardless of status.",
@@ -1866,7 +1866,7 @@ const LESSONS: Dictionary = {
 	  "answer": "BETWEEN",
 	  "table_headers": ["id","title","author","year_published"],
 	  "table_rows": [["1","Dune","Herbert","1965"],["2","Hamlet","Shakespeare","1603"],["3","1984","Orwell","1949"],["4","Foundation","Asimov","1951"],["5","Neuromancer","Gibson","1984"],["6","Brave New World","Huxley","1932"]],
-	  "hint": "There's a keyword built for 'anywhere within this range, inclusive on both ends' — it always pairs with AND.",
+	  "hint": "There's a keyword built for 'anywhere within this range, inclusive on both ends'. It always pairs with AND.",
 	  "result_headers": ["id","title","author","year_published"],
 	  "result_rows": [["1","Dune","Herbert","1965"],["4","Foundation","Asimov","1951"],["5","Neuromancer","Gibson","1984"]],
 	  "result_msg": "3 books found. 1984 (Orwell, 1949) and Hamlet (1603) and Brave New World (1932) are outside the range.",
@@ -1958,7 +1958,7 @@ const LESSONS: Dictionary = {
 	  "answer": "'The%'",
 	  "table_headers": ["id","title","author"],
 	  "table_rows": [["1","The Hobbit","Tolkien"],["2","Dune","Herbert"],["3","The Name of the Wind","Rothfuss"],["4","1984","Orwell"],["5","The Martian","Weir"],["6","Foundation","Asimov"]],
-	  "hint": "LIKE uses a wildcard symbol for 'anything after this point' — pair it with the starting word you're matching.",
+	  "hint": "LIKE uses a wildcard symbol for 'anything after this point'. Pair it with the starting word you're matching.",
 	  "result_headers": ["id","title","author"],
 	  "result_rows": [["1","The Hobbit","Tolkien"],["3","The Name of the Wind","Rothfuss"],["5","The Martian","Weir"]],
 	  "result_msg": "3 books found. Dune, 1984, and Foundation do not start with 'The'.",
@@ -2142,7 +2142,7 @@ const LESSONS: Dictionary = {
 	  "answer": "5",
 	  "table_headers": ["id","title","author","genre"],
 	  "table_rows": [["1","Dune","Herbert","Sci-Fi"],["2","1984","Orwell","Fiction"],["3","The Hobbit","Tolkien","Fantasy"],["4","Foundation","Asimov","Sci-Fi"],["5","Hamlet","Shakespeare","Drama"],["6","Neuromancer","Gibson","Sci-Fi"],["7","Sherlock Holmes","Doyle","Mystery"]],
-	  "hint": "The number goes right after the keyword that caps how many rows come back — reread how many were asked for.",
+	  "hint": "The number goes right after the keyword that caps how many rows come back. Reread how many were asked for.",
 	  "result_headers": ["id","title","author","genre"],
 	  "result_rows": [["1","Dune","Herbert","Sci-Fi"],["2","1984","Orwell","Fiction"],["3","The Hobbit","Tolkien","Fantasy"],["4","Foundation","Asimov","Sci-Fi"],["5","Hamlet","Shakespeare","Drama"]],
 	  "result_msg": "5 books shown. Neuromancer and Sherlock Holmes not fetched. LIMIT keeps queries fast.",
@@ -2258,7 +2258,7 @@ const LESSONS: Dictionary = {
 	  "answer": "AVG",
 	  "table_headers": ["id","title","author","year_published"],
 	  "table_rows": [["1","Dune","Herbert","1965"],["2","Hamlet","Shakespeare","1603"],["3","1984","Orwell","1949"],["4","Foundation","Asimov","1951"],["5","Neuromancer","Gibson","1984"],["6","Brave New World","Huxley","1932"]],
-	  "hint": "You need the aggregate function that finds the mean of a column's values — not the one that just counts or totals them.",
+	  "hint": "You need the aggregate function that finds the mean of a column's values, not the one that just counts or totals them.",
 	  "result_headers": ["AVG(year_published)"],
 	  "result_rows": [["1897.33"]],
 	  "result_msg": "Average publication year: 1897.33. AVG adds every value together and divides by the row count.",
@@ -2330,7 +2330,7 @@ const LESSONS: Dictionary = {
 	  "answer": "COUNT",
 	  "table_headers": ["id","title","genre"],
 	  "table_rows": [["1","Dune","Sci-Fi"],["2","Hamlet","Drama"],["3","Foundation","Sci-Fi"],["4","1984","Fiction"],["5","Neuromancer","Sci-Fi"],["6","Macbeth","Drama"]],
-	  "hint": "HAVING filters on a calculated number from the GROUP BY — think about which aggregate function produced group sizes.",
+	  "hint": "HAVING filters on a calculated number from the GROUP BY. Think about which aggregate function produced group sizes.",
 	  "result_headers": ["genre","COUNT(*)"],
 	  "result_rows": [["Sci-Fi","3"]],
 	  "result_msg": "Only Sci-Fi has more than 2 books. Drama has exactly 2 (not more). Fiction has 1.",
@@ -2422,7 +2422,7 @@ const LESSONS: Dictionary = {
 	  "answer": "late_fee",
 	  "table_headers": ["id","name","overdue_days"],
 	  "table_rows": [["1","Mendez","10"],["2","Santos","4"],["3","Reyes","0"]],
-	  "hint": "AS just needs a short, readable name for the calculated column — check what the request called it.",
+	  "hint": "AS just needs a short, readable name for the calculated column. Check what the request called it.",
 	  "result_headers": ["late_fee"],
 	  "result_rows": [["5.0"],["2.0"],["0.0"]],
 	  "result_msg": "Column displays as 'late_fee'. AS is cosmetic overdue_days is unchanged in the table.",

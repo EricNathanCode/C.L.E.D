@@ -1,6 +1,7 @@
 extends Control
 const Comic = preload("res://scripts/ComicStyle.gd")
 const Fx = preload("res://scripts/ComicFx.gd")
+const RankOverlay = preload("res://scripts/RankOverlay.gd")
 
 # ── Data script paths for comic-strip previews ────────────
 const _DATA_PATHS: Dictionary = {
@@ -163,6 +164,7 @@ const SQL_GLOSSARY: Array = [
 # from disk on every single hover.
 var _preview_tex_cache: Dictionary = {}
 var _glossary_overlay: Control = null
+var _rank_overlay: Control = null
 var _sim_picker_overlay: Control = null
 var _sim_picker_title_lbl: Label = null
 var _sim_picker_body: VBoxContainer = null
@@ -203,6 +205,14 @@ func _ready() -> void:
 	_style_btn(_back_btn, "secondary", 20)
 	_back_btn.text = "← Worlds"
 
+	# Class Ranking (classmates on the same Wi-Fi), between Worlds and Glossary
+	var rank_btn := Button.new()
+	rank_btn.text = "Rank"
+	rank_btn.pressed.connect(_open_rank)
+	_style_btn(rank_btn, "secondary", 20)
+	Fx.set_icon(rank_btn, "trophy", 30)
+	$TopBar.add_child(rank_btn)
+
 	_build_glossary()
 
 	var sim_btn := Button.new()
@@ -230,6 +240,10 @@ func _ready() -> void:
 
 func _on_change_world() -> void:
 	get_tree().root.get_node("Main").show_screen("world_select")
+
+func _open_rank() -> void:
+	if not is_instance_valid(_rank_overlay):
+		_rank_overlay = RankOverlay.open(self)
 
 func _start_simulation(folder: String, lesson_index: int = 0) -> void:
 	GameManager.sim_folder = folder
@@ -1222,7 +1236,7 @@ var _v2_count_tag: Label = null
 func _apply_v2() -> void:
 	# Masthead: mini logo at the left of the ink bar, red print shadows on nav
 	var mini := Fx.Logo.new()
-	mini.text = "C.L.I.D"
+	mini.text = "CLID"
 	mini.font_size = 40
 	mini.depth = 4
 	mini.outline = 7

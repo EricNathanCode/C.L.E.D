@@ -48,7 +48,7 @@ const LESSONS: Dictionary = {
 	  	["5", "Linda",  "Lim",       "3A"]
 	  ],
 	  "answer": "*",
-	  "hint": "There's a single symbol that means 'every column' — you won't need to type each column name out.",
+	  "hint": "There's a single symbol that means 'every column', so you won't need to type each column name out.",
 	  "fail": [
 		{ "type": "dialogue", "char": "passenger", "name": "COWORKER", "npc": "adult_2/shock", "text": "That's not right. To grab every column at once, use the wildcard character." },
 		{ "type": "dialogue", "char": "scene",     "name": "SCENE",    "npc": "adult_2/idle",  "text": "The coworker points at the terminal screen, waiting patiently." },
@@ -65,7 +65,7 @@ const LESSONS: Dictionary = {
 	  "result_msg": "5 passengers retrieved. SELECT * returns every column for every row in the table." },
 	{ "type": "dialogue", "char": "passenger", "name": "COWORKER",
 	  "npc": "adult_2/talk",
-	  "text": "Good instinct. Now let's slow down — I want you to know each piece of that line, not just the whole thing." },
+	  "text": "Good instinct. Now let's slow down. I want you to know each piece of that line, not just the whole thing." },
 	{ "type": "dialogue", "char": "passenger", "name": "COWORKER",
 	  "npc": "adult_2/talk",
 	  "text": "What's the very first word that tells the database 'go fetch me some rows'? Type just that word." },
@@ -132,7 +132,7 @@ const LESSONS: Dictionary = {
 	  "result_msg": "FROM tells the database which table to read the rows from." },
 	{ "type": "dialogue", "char": "passenger", "name": "COWORKER",
 	  "npc": "adult_2/talk",
-	  "text": "Last piece — which table are we actually pulling all these passengers from?" },
+	  "text": "Last piece: which table are we actually pulling all these passengers from?" },
 	{ "type": "sql_fill",
 	  "gamemode": "sql_blank",
 	  "recap": "SELECT",
@@ -215,7 +215,7 @@ const LESSONS: Dictionary = {
 	  "result_msg": "1 record inserted into passengers Elena is now passenger id 5." },
 	{ "type": "dialogue", "char": "passenger", "name": "ELENA",
 	  "npc": "adult_4/talk",
-	  "text": "Before you print it out — I'm curious, what does that command actually look like?" },
+	  "text": "Before you print it out, I'm curious. What does that command actually look like?" },
 	{ "type": "dialogue", "char": "you",       "name": "YOU",
 	  "npc": "adult_4/idle",
 	  "text": "Sure, let's break it down piece by piece. First, what's the keyword that adds a brand new row to a table?" },
@@ -489,7 +489,7 @@ const LESSONS: Dictionary = {
 	  "result_msg": "1 record updated." },
 	{ "type": "dialogue", "char": "passenger", "name": "MRS. FERNANDEZ",
 	  "npc": "adult_15/shock",
-	  "text": "Before you go — I want to know exactly what command you're running on my record." },
+	  "text": "Before you go, I want to know exactly what command you're running on my record." },
 	{ "type": "dialogue", "char": "you",       "name": "YOU",
 	  "npc": "adult_15/idle",
 	  "text": "Of course, ma'am. The first keyword tells the database we're changing an existing row." },
@@ -563,7 +563,7 @@ const LESSONS: Dictionary = {
 	  ],
 	  "code": "UPDATE passengers SET last_name = 'Fernandez' [BLANK] id = 3;",
 	  "answer": "WHERE",
-	  "hint": "Without this keyword, EVERY row's last_name would get overwritten — not just Mrs. Fernandez's.",
+	  "hint": "Without this keyword, EVERY row's last_name would get overwritten, not just Mrs. Fernandez's.",
 	  "fail": [
 		{ "type": "dialogue", "char": "passenger", "name": "MRS. FERNANDEZ", "npc": "adult_15/shock", "text": "That's the wrong keyword! Without it you'd rename EVERYONE, not just me!" },
 		{ "type": "dialogue", "char": "you",        "name": "YOU",           "npc": "adult_15/idle",  "text": "You're right the safety keyword is WHERE." }
@@ -587,7 +587,7 @@ const LESSONS: Dictionary = {
 "A5": [
 	{ "type": "dialogue", "char": "scene",     "name": "SCENE",
 	  "npc": "adult_18/idle",
-	  "text": "The counter phone rings. You pick it up — it's a passenger calling to cancel his flight." },
+	  "text": "The counter phone rings. You pick it up. It's a passenger calling to cancel his flight." },
 	{ "type": "dialogue", "char": "passenger", "name": "MR. TAN",
 	  "npc": "adult_18/confuse",
 	  "text": "Hello... I'm so sorry, but I need to cancel my flight. Something came up at work." },
@@ -616,7 +616,7 @@ const LESSONS: Dictionary = {
 	  	["8", "Ana",    "Villanueva", "5D"]
 	  ],
 	  "answer_id": "5",
-	  "hint": "The id you need was mentioned earlier in the conversation — scroll back if you lost track of the number.",
+	  "hint": "The id you need was mentioned earlier in the conversation. Scroll back if you lost track of the number.",
 	  "fail": [
 		{ "type": "dialogue", "char": "passenger", "name": "MR. TAN", "npc": "adult_18/confuse", "text": "That is the wrong record. That is someone else's booking!" },
 		{ "type": "dialogue", "char": "scene",      "name": "SCENE",  "npc": "adult_18/idle",   "text": "A long pause on the phone line. This could be a serious data error." },
@@ -627,7 +627,7 @@ const LESSONS: Dictionary = {
 	  "result_msg": "1 record deleted." },
 	{ "type": "dialogue", "char": "passenger", "name": "MR. TAN",
 	  "npc": "adult_18/confuse",
-	  "text": "Actually, before you hang up — what exactly does that command look like?" },
+	  "text": "Actually, before you hang up, what exactly does that command look like?" },
 	{ "type": "dialogue", "char": "you",       "name": "YOU",
 	  "npc": "adult_18/idle",
 	  "text": "Sure. The first keyword tells the database we're removing a row entirely." },
@@ -754,7 +754,7 @@ const LESSONS: Dictionary = {
 	  	["8", "Ana",    "Villanueva", "5D"]
 	  ],
 	  "answer": "ASC",
-	  "hint": "Alphabetical A-to-Z, or lowest-to-highest, is the 'normal' sort direction — one of the two keywords means exactly that.",
+	  "hint": "Alphabetical A-to-Z, or lowest-to-highest, is the 'normal' sort direction. One of the two keywords means exactly that.",
 	  "fail": [
 		{ "type": "dialogue", "char": "pilot",  "name": "CAPTAIN", "npc": "NPC_occupations/pilot/shock", "text": "This is sorted Z to A! That is backwards! We board in ten minutes!" },
 		{ "type": "dialogue", "char": "scene",  "name": "SCENE",   "npc": "NPC_occupations/pilot/idle",  "text": "The captain checks his watch. You feel your face go red." },
@@ -774,13 +774,13 @@ const LESSONS: Dictionary = {
 	  "result_msg": "Records sorted by last_name ASC." },
 	{ "type": "dialogue", "char": "you",   "name": "YOU",
 	  "npc": "NPC_occupations/pilot/idle",
-	  "text": "Here you go, Captain — the full manifest sorted A to Z by last name!" },
+	  "text": "Here you go, Captain: the full manifest sorted A to Z by last name!" },
 	{ "type": "dialogue", "char": "pilot", "name": "CAPTAIN",
 	  "npc": "NPC_occupations/pilot/think",
 	  "text": "Excellent. Bautista, Cruz, Fernandez. Perfect order. Well done." },
 	{ "type": "dialogue", "char": "pilot", "name": "CAPTAIN",
 	  "npc": "NPC_occupations/pilot/talk",
-	  "text": "Actually, flip that — Z to A. We're boarding back-of-alphabet passengers first this time." },
+	  "text": "Actually, flip that: Z to A. We're boarding back-of-alphabet passengers first this time." },
 	{ "type": "dialogue", "char": "you",   "name": "YOU",
 	  "npc": "NPC_occupations/pilot/idle",
 	  "text": "Z to A is Descending order. I'll change ASC to DESC." },
@@ -801,7 +801,7 @@ const LESSONS: Dictionary = {
 	  	["8", "Ana",    "Villanueva", "5D"]
 	  ],
 	  "answer": "DESC",
-	  "hint": "This is the opposite direction from what you just used — the other keyword reverses the order.",
+	  "hint": "This is the opposite direction from what you just used. The other keyword reverses the order.",
 	  "fail": [
 		{ "type": "dialogue", "char": "pilot",  "name": "CAPTAIN", "npc": "NPC_occupations/pilot/shock", "text": "This is still A to Z! I need it reversed for this boarding call!" },
 		{ "type": "dialogue", "char": "scene",  "name": "SCENE",   "npc": "NPC_occupations/pilot/idle",  "text": "The captain checks his watch again." },
@@ -897,7 +897,7 @@ const LESSONS: Dictionary = {
 	  "result_msg": "BY always follows ORDER, right before the column name." },
 	{ "type": "dialogue", "char": "you",   "name": "YOU",
 	  "npc": "NPC_occupations/pilot/idle",
-	  "text": "There you go, Captain — Villanueva, Torres, Reyes on top now." },
+	  "text": "There you go, Captain: Villanueva, Torres, Reyes on top now." },
 	{ "type": "dialogue", "char": "pilot", "name": "CAPTAIN",
 	  "npc": "NPC_occupations/pilot/talk",
 	  "text": "Perfect. ASC for A-to-Z, DESC for Z-to-A. Now you've got both directions down." },
@@ -936,7 +936,7 @@ const LESSONS: Dictionary = {
 	  	["10", "Rosario","Economy"]
 	  ],
 	  "answer": "seat_class",
-	  "hint": "GROUP BY needs the column the captain wants the counts broken down by — check what category the report is split into.",
+	  "hint": "GROUP BY needs the column the captain wants the counts broken down by. Check what category the report is split into.",
 	  "fail": [
 		{ "type": "dialogue", "char": "pilot",  "name": "CAPTAIN", "npc": "NPC_occupations/pilot/shock", "text": "What is this? These numbers are completely off. It is not grouped by seat class!" },
 		{ "type": "dialogue", "char": "scene",  "name": "SCENE",   "npc": "NPC_occupations/pilot/idle",  "text": "The captain sets down the report. We push back from the gate in ten minutes." },
@@ -1099,7 +1099,7 @@ const LESSONS: Dictionary = {
 			["6", "Miguel","Reyes",     ""]
 		],
 		"answer": "NULL",
-		"hint": "A blank/missing value in SQL isn't an empty string — it has its own keyword you check for right after IS.",
+		"hint": "A blank/missing value in SQL isn't an empty string. It has its own keyword you check for right after IS.",
 		"result_headers": ["id", "first_name", "last_name", "meal_pref"],
 		"result_rows": [
 			["2", "Marco",  "Bautista", "NULL"],
@@ -1141,7 +1141,7 @@ const LESSONS: Dictionary = {
 			["6", "Miguel","Reyes",     ""]
 		],
 		"answer": "NOT NULL",
-		"hint": "You want the opposite of 'missing' this time — the phrasing for 'a value is actually present.'",
+		"hint": "You want the opposite of 'missing' this time: the phrasing for 'a value is actually present.'",
 		"result_headers": ["id", "first_name", "last_name", "meal_pref"],
 		"result_rows": [
 			["1", "Elena", "Cruz",      "Vegetarian"],
@@ -1238,14 +1238,14 @@ const LESSONS: Dictionary = {
 	{ "type": "dialogue", "char": "pilot", "name": "CAPTAIN", "npc": "NPC_occupations/pilot/talk",
 	  "text": "We have dozens of bookings today, but I just want each destination listed once. No duplicates." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/pilot/idle",
-	  "text": "SELECT DISTINCT returns only unique values in a column — duplicates are automatically removed." },
+	  "text": "SELECT DISTINCT returns only unique values in a column. Duplicates are automatically removed." },
 	{ "type": "sql_fill", "gamemode": "select_distinct",
 	  "desc": "Return only the unique destinations from the bookings table. Fill in the column name after SELECT DISTINCT.",
 	  "table": "bookings",
 	  "column": "destination",
 	  "table_headers": ["id","passenger_id","destination","flight_no"],
 	  "table_rows": [["1","1","Manila","PR101"],["2","2","Cebu","PR202"],["3","3","Manila","PR101"],["4","4","Davao","PR303"],["5","5","Cebu","PR202"],["6","6","Manila","PR101"]],
-	  "hint": "DISTINCT needs the column with repeated values — think about which column would show duplicates without it.",
+	  "hint": "DISTINCT needs the column with repeated values. Think about which column would show duplicates without it.",
 	  "result_headers": ["destination"],
 	  "result_rows": [["Manila"],["Cebu"],["Davao"]],
 	  "result_msg": "3 unique destinations found. DISTINCT removed the duplicate 'Manila' and 'Cebu' entries.",
@@ -1325,9 +1325,9 @@ const LESSONS: Dictionary = {
 # ─────────────────────────────────────────────
 "A17": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/pilot/idle",
-	  "text": "The captain wants to find Business class passengers who have already checked in — both conditions must be true." },
+	  "text": "The captain wants to find Business class passengers who have already checked in. Both conditions must be true." },
 	{ "type": "dialogue", "char": "pilot", "name": "CAPTAIN", "npc": "NPC_occupations/pilot/talk",
-	  "text": "I need passengers who are Business class AND already checked in. Not just one or the other — both must apply." },
+	  "text": "I need passengers who are Business class AND already checked in. Not just one or the other: both must apply." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/pilot/idle",
 	  "text": "AND requires both conditions to be true at the same time. OR would include passengers with either condition." },
 	{ "type": "sql_fill", "gamemode": "where_and_or",
@@ -1348,11 +1348,11 @@ const LESSONS: Dictionary = {
 	  ]
 	},
 	{ "type": "dialogue", "char": "pilot", "name": "CAPTAIN", "npc": "NPC_occupations/pilot/talk",
-	  "text": "Only Elena and Carla — Business class and already checked in. AND is strict." },
+	  "text": "Only Elena and Carla: Business class and already checked in. AND is strict." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/pilot/idle",
 	  "text": "Right. OR would include Rosa, who is Business but not checked in, and Marco, who is checked in but Economy." },
 	{ "type": "dialogue", "char": "pilot", "name": "CAPTAIN", "npc": "NPC_occupations/pilot/talk",
-	  "text": "Now show me every passenger who is Business class OR already checked in — either one gets priority boarding." },
+	  "text": "Now show me every passenger who is Business class OR already checked in. Either one gets priority boarding." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/pilot/idle",
 	  "text": "That's OR instead of AND. OR only needs ONE condition to be true, so it'll return more passengers." },
 	{ "type": "sql_fill", "gamemode": "where_and_or",
@@ -1363,7 +1363,7 @@ const LESSONS: Dictionary = {
 	  "answer": "OR",
 	  "table_headers": ["id","first_name","seat_class","checked_in"],
 	  "table_rows": [["1","Elena","Business","Yes"],["2","Marco","Economy","Yes"],["3","Rosa","Business","No"],["4","Carla","Business","Yes"],["5","Linda","Economy","No"]],
-	  "hint": "This time only one of the two conditions needs to be true — the other logical connector fits that.",
+	  "hint": "This time only one of the two conditions needs to be true. The other logical connector fits that.",
 	  "result_headers": ["id","first_name","seat_class","checked_in"],
 	  "result_rows": [["1","Elena","Business","Yes"],["2","Marco","Economy","Yes"],["3","Rosa","Business","No"],["4","Carla","Business","Yes"]],
 	  "result_msg": "4 passengers match. OR only needs ONE condition true, so only Linda (neither Business nor checked in) is excluded.",
@@ -1424,7 +1424,7 @@ const LESSONS: Dictionary = {
 # ─────────────────────────────────────────────
 "A18": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/pilot/idle",
-	  "text": "The captain wants to review mid-range fares — not the cheapest seats, not the most expensive." },
+	  "text": "The captain wants to review mid-range fares, not the cheapest seats, not the most expensive." },
 	{ "type": "dialogue", "char": "pilot", "name": "CAPTAIN", "npc": "NPC_occupations/pilot/talk",
 	  "text": "I need bookings where the ticket price is between 200 and 500. Both 200 and 500 should be included." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/pilot/idle",
@@ -1437,10 +1437,10 @@ const LESSONS: Dictionary = {
 	  "answer": "BETWEEN",
 	  "table_headers": ["id","destination","ticket_price"],
 	  "table_rows": [["1","Manila","150"],["2","Cebu","320"],["3","Davao","650"],["4","Manila","180"],["5","Cebu","480"],["6","Davao","720"],["7","Manila","250"]],
-	  "hint": "There's a keyword built for 'anywhere within this range, inclusive on both ends' — it always pairs with AND.",
+	  "hint": "There's a keyword built for 'anywhere within this range, inclusive on both ends'. It always pairs with AND.",
 	  "result_headers": ["id","destination","ticket_price"],
 	  "result_rows": [["2","Cebu","320"],["5","Cebu","480"],["7","Manila","250"]],
-	  "result_msg": "3 bookings in the 200-500 range. BETWEEN is inclusive — 200 and 500 themselves would also match.",
+	  "result_msg": "3 bookings in the 200-500 range. BETWEEN is inclusive, so 200 and 500 themselves would also match.",
 	  "fail": [
 		{ "type": "dialogue", "char": "pilot", "name": "CAPTAIN", "npc": "NPC_occupations/pilot/shock", "text": "That is not the range keyword! I need BETWEEN to filter inclusive ranges." },
 		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/pilot/idle", "text": "The inclusive range keyword is BETWEEN." }
@@ -1529,7 +1529,7 @@ const LESSONS: Dictionary = {
 	  "answer": "'D%'",
 	  "table_headers": ["id","first_name","last_name"],
 	  "table_rows": [["1","Elena","Dizon"],["2","Marco","Bautista"],["3","Jose","Delacruz"],["4","Carla","Garcia"],["5","Linda","Diaz"],["6","Miguel","Reyes"]],
-	  "hint": "LIKE uses a wildcard symbol for 'anything after this point' — pair it with the first letter you're matching.",
+	  "hint": "LIKE uses a wildcard symbol for 'anything after this point'. Pair it with the first letter you're matching.",
 	  "result_headers": ["id","first_name","last_name"],
 	  "result_rows": [["1","Elena","Dizon"],["3","Jose","Delacruz"],["5","Linda","Diaz"]],
 	  "result_msg": "3 passengers found. 'D%' = starts with D, then anything. Dizon, Delacruz, and Diaz all match.",
@@ -1609,11 +1609,11 @@ const LESSONS: Dictionary = {
 # ─────────────────────────────────────────────
 "A20": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/pilot/idle",
-	  "text": "The captain wants bookings for the three domestic routes flown today only — no international routes in this report." },
+	  "text": "The captain wants bookings for the three domestic routes flown today only, no international routes in this report." },
 	{ "type": "dialogue", "char": "pilot", "name": "CAPTAIN", "npc": "NPC_occupations/pilot/talk",
 	  "text": "I need bookings to Manila, Cebu, or Davao. Instead of writing three OR conditions, is there a shorter way?" },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/pilot/idle",
-	  "text": "Yes — IN lets you check if a value matches any item in a list. It is cleaner than multiple OR conditions." },
+	  "text": "Yes. IN lets you check if a value matches any item in a list. It is cleaner than multiple OR conditions." },
 	{ "type": "sql_fill", "gamemode": "where_in",
 	  "desc": "Find bookings where destination is Manila, Cebu, or Davao. Fill in the list membership keyword.",
 	  "table": "bookings",
@@ -1702,7 +1702,7 @@ const LESSONS: Dictionary = {
 # ─────────────────────────────────────────────
 "A21": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/pilot/idle",
-	  "text": "The captain wants a quick preview of priority boarding passengers — not the whole manifest, just the first few." },
+	  "text": "The captain wants a quick preview of priority boarding passengers: not the whole manifest, just the first few." },
 	{ "type": "dialogue", "char": "pilot", "name": "CAPTAIN", "npc": "NPC_occupations/pilot/talk",
 	  "text": "I just need a sample of the passengers table to verify the data format. Show me only the first 5 rows." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/pilot/idle",
@@ -1713,7 +1713,7 @@ const LESSONS: Dictionary = {
 	  "answer": "5",
 	  "table_headers": ["id","first_name","last_name","seat_no"],
 	  "table_rows": [["1","Elena","Cruz","14A"],["2","Marco","Bautista","22C"],["3","Rosa","Fernandez","9B"],["4","Carla","Garcia","17D"],["5","Linda","Lim","3A"],["6","Miguel","Reyes","11C"],["7","Ana","Torres","20B"]],
-	  "hint": "The number goes right after the keyword that caps how many rows come back — reread how many were asked for.",
+	  "hint": "The number goes right after the keyword that caps how many rows come back. Reread how many were asked for.",
 	  "result_headers": ["id","first_name","last_name","seat_no"],
 	  "result_rows": [["1","Elena","Cruz","14A"],["2","Marco","Bautista","22C"],["3","Rosa","Fernandez","9B"],["4","Carla","Garcia","17D"],["5","Linda","Lim","3A"]],
 	  "result_msg": "5 rows returned. Rows 6 and 7 were not fetched. LIMIT saves time on large tables.",
@@ -1782,7 +1782,7 @@ const LESSONS: Dictionary = {
 	  ]
 	},
 	{ "type": "dialogue", "char": "pilot", "name": "CAPTAIN", "npc": "NPC_occupations/pilot/talk",
-	  "text": "5 rows only — much faster. LIMIT is great with ORDER BY to get the top or bottom N records." },
+	  "text": "5 rows only. Much faster. LIMIT is great with ORDER BY to get the top or bottom N records." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/pilot/idle",
 	  "text": "For example: SELECT * FROM passengers ORDER BY id DESC LIMIT 3 gives the 3 most recently checked-in passengers." },
 	{ "type": "end" }
@@ -1797,7 +1797,7 @@ const LESSONS: Dictionary = {
 	{ "type": "dialogue", "char": "pilot", "name": "CAPTAIN", "npc": "NPC_occupations/pilot/talk",
 	  "text": "How many passengers do we have checked in? I need a single number, not a list." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/pilot/idle",
-	  "text": "COUNT is an aggregate function — it collapses many rows into a single calculated value." },
+	  "text": "COUNT is an aggregate function: it collapses many rows into a single calculated value." },
 	{ "type": "sql_fill", "gamemode": "aggregate",
 	  "desc": "Count the total number of passengers. Fill in the aggregate function name.",
 	  "table": "passengers",
@@ -1829,7 +1829,7 @@ const LESSONS: Dictionary = {
 	  "answer": "SUM",
 	  "table_headers": ["id","destination","ticket_price"],
 	  "table_rows": [["1","Manila","150"],["2","Cebu","320"],["3","Davao","650"],["4","Manila","180"],["5","Cebu","480"],["6","Davao","720"],["7","Manila","250"]],
-	  "hint": "You need the aggregate function that totals a column's values together — not the one that just counts rows.",
+	  "hint": "You need the aggregate function that totals a column's values together, not the one that just counts rows.",
 	  "result_headers": ["SUM(ticket_price)"],
 	  "result_rows": [["2750"]],
 	  "result_msg": "Total ticket revenue: 2750. SUM adds every value together, unlike COUNT which just counts rows.",
@@ -1888,7 +1888,7 @@ const LESSONS: Dictionary = {
 # ─────────────────────────────────────────────
 "A23": [
 	{ "type": "dialogue", "char": "scene", "name": "SCENE", "npc": "NPC_occupations/pilot/idle",
-	  "text": "The captain wants to know which destinations have more than one booking today — a quick overbooking check." },
+	  "text": "The captain wants to know which destinations have more than one booking today: a quick overbooking check." },
 	{ "type": "dialogue", "char": "pilot", "name": "CAPTAIN", "npc": "NPC_occupations/pilot/talk",
 	  "text": "I need destinations with more than 1 booking. But WHERE cannot filter on GROUP BY results. What do I use?" },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/pilot/idle",
@@ -1900,7 +1900,7 @@ const LESSONS: Dictionary = {
 	  "answer": "COUNT",
 	  "table_headers": ["id","destination","passenger_id"],
 	  "table_rows": [["1","Manila","1"],["2","Cebu","2"],["3","Manila","3"],["4","Davao","4"],["5","Cebu","5"],["6","Manila","6"]],
-	  "hint": "HAVING filters on a calculated number from the GROUP BY — think about which aggregate function produced group sizes.",
+	  "hint": "HAVING filters on a calculated number from the GROUP BY. Think about which aggregate function produced group sizes.",
 	  "result_headers": ["destination","COUNT(*)"],
 	  "result_rows": [["Manila","3"],["Cebu","2"]],
 	  "result_msg": "Manila (3) and Cebu (2) appear more than once. Davao had only 1 booking so it was filtered out.",
@@ -1959,7 +1959,7 @@ const LESSONS: Dictionary = {
 	  "table_rows": [["1","Manila","1"],["2","Cebu","2"],["3","Manila","3"],["4","Davao","4"],["5","Cebu","5"],["6","Manila","6"]],
 	  "code": "SELECT destination, COUNT(*) FROM bookings GROUP BY destination [BLANK] COUNT(*) > 1;",
 	  "answer": "HAVING",
-	  "hint": "This keyword filters group results after GROUP BY has already run — it's WHERE's counterpart for groups.",
+	  "hint": "This keyword filters group results after GROUP BY has already run. It's WHERE's counterpart for groups.",
 	  "result_headers": ["destination","COUNT(*)"],
 	  "result_rows": [["Manila","3"],["Cebu","2"]],
 	  "result_msg": "HAVING is the keyword that filters results after grouping.",
@@ -1992,10 +1992,10 @@ const LESSONS: Dictionary = {
 	  "answer": "price_with_tax",
 	  "table_headers": ["id","destination","ticket_price"],
 	  "table_rows": [["1","Manila","200"],["2","Cebu","300"],["3","Davao","400"]],
-	  "hint": "AS just needs a short, readable name for the calculated column — check what the request called it.",
+	  "hint": "AS just needs a short, readable name for the calculated column. Check what the request called it.",
 	  "result_headers": ["price_with_tax"],
 	  "result_rows": [["224.0"],["336.0"],["448.0"]],
-	  "result_msg": "Column now displays as 'price_with_tax' in results. AS only affects output — the table is unchanged.",
+	  "result_msg": "Column now displays as 'price_with_tax' in results. AS only affects output. The table is unchanged.",
 	  "fail": [
 		{ "type": "dialogue", "char": "pilot", "name": "CAPTAIN", "npc": "NPC_occupations/pilot/shock", "text": "That alias is not right. The alias should be: price_with_tax" },
 		{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/pilot/idle", "text": "Type the alias: price_with_tax" }
@@ -2061,7 +2061,7 @@ const LESSONS: Dictionary = {
 	  ]
 	},
 	{ "type": "dialogue", "char": "pilot", "name": "CAPTAIN", "npc": "NPC_occupations/pilot/talk",
-	  "text": "Clean! AS also works on table names in JOINs: FROM bookings AS b — useful in long queries." },
+	  "text": "Clean! AS also works on table names in JOINs, like FROM bookings AS b, which is useful in long queries." },
 	{ "type": "dialogue", "char": "you", "name": "YOU", "npc": "NPC_occupations/pilot/idle",
 	  "text": "Right. Short aliases like 'b' or 'p' keep JOIN queries readable when referencing multiple tables." },
 	{ "type": "end" }

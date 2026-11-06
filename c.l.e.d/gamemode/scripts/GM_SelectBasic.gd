@@ -71,7 +71,7 @@ func _wire_grow(le: LineEdit) -> void:
 func _on_execute() -> void:
 	if _blank == null: return
 	var val: String = _blank.text.strip_edges()
-	if val.is_empty(): _fill_error(%ResultBox, "Type what you want to select — * for every column."); return
+	if val.is_empty(): _fill_error(%ResultBox, "Type what you want to select, or * for every column."); return
 	if val.to_lower() == _answer.to_lower():
 		_blank.text = _answer
 		_fit_grow(_blank, _answer)

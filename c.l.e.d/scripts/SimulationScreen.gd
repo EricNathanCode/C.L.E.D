@@ -186,11 +186,11 @@ func _show_empty_message() -> void:
 
 func _show_drained_message() -> void:
 	$DialogueBox/DialogueVBox/NPCNameLabel.text = "ALL CLEAR"
-	$DialogueBox/DialogueVBox/ProblemLabel.text = "You've cleared out every record available in this mode. Nice work — hit End Run to bank your score."
+	$DialogueBox/DialogueVBox/ProblemLabel.text = "You've cleared out every record available in this mode. Nice work! Hit End Run to bank your score."
 
 func _show_coming_soon_message() -> void:
 	$DialogueBox/DialogueVBox/NPCNameLabel.text = "COMING SOON"
-	$DialogueBox/DialogueVBox/ProblemLabel.text = "%s Simulation problems aren't ready yet — check back after a future update." % FOLDER_DISPLAY.get(_folder, _folder)
+	$DialogueBox/DialogueVBox/ProblemLabel.text = "%s Simulation problems aren't ready yet. Check back after a future update." % FOLDER_DISPLAY.get(_folder, _folder)
 
 func _end_run() -> void:
 	_typing = false
@@ -200,7 +200,7 @@ func _end_run() -> void:
 	$GameOverOverlay/CenterContainer/ResultPanel/ResultVBox/ScoreLabel.text = "You served %d correctly." % _score
 	var best_text: String = "Best: %d" % GameManager.get_sim_best(_score_key())
 	if is_new_best:
-		best_text += "  —  New Best!"
+		best_text += "  ·  New Best!"
 	$GameOverOverlay/CenterContainer/ResultPanel/ResultVBox/BestLabel.text = best_text
 	var table: String = _current_template.get("table", "")
 	var headers: Array = _current_template.get("table_headers", [])
@@ -463,7 +463,7 @@ func _on_execute() -> void:
 		_walk_out_then_advance()
 	else:
 		_terminal_status.modulate = Comic.RED
-		_terminal_status.text = "That's not right — the run ends here."
+		_terminal_status.text = "That's not right. The run ends here."
 		GameManager.play_wrong()
 		await get_tree().create_timer(0.9).timeout
 		_end_run()

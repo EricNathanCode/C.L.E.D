@@ -40,7 +40,7 @@ const TEMPLATES: Array = [
 			[1, "Maria", "Latte", "Croissant"], [2, "Rivera", "Iced Tea", "None"],
 			[3, "Kim", "Americano", "Bagel"], [4, "Reyes", "Mocha", "Cookie"],
 		],
-		"problem_template": "Just the {column} column, please — I'm doing a quick headcount.",
+		"problem_template": "Just the {column} column, please. I'm doing a quick headcount.",
 		"pick_from_columns": ["customer_name", "drink", "food"],
 		"role": "staff",
 	},
@@ -86,7 +86,7 @@ const TEMPLATES: Array = [
 			[1, "Maria", "Latte", "Croissant"], [2, "Rivera", "Iced Tea", "None"],
 			[3, "Kim", "Americano", "Bagel"], [4, "Reyes", "Mocha", "Cookie"],
 		],
-		"problem_template": "Order for {customer_name} — a {drink}, and a {food} on the side.",
+		"problem_template": "Order for {customer_name}: a {drink}, and a {food} on the side.",
 		"variables": {
 			"drink": ["Hot Chocolate", "Flat White", "Iced Latte", "Green Tea"],
 			"food":  ["Brownie", "Bagel", "Waffle", "Cinnamon Roll"],
@@ -178,7 +178,7 @@ const TEMPLATES: Array = [
 			[1, "Maria", "Latte", "Croissant"], [2, "Rivera", "Iced Tea", "None"],
 			[3, "Kim", "Americano", "Bagel"], [4, "Reyes", "Mocha", "Cookie"],
 		],
-		"problem_template": "That's a duplicate — order id {target_id} was rung up twice. Remove one.",
+		"problem_template": "That's a duplicate. Order id {target_id} was rung up twice. Remove one.",
 		"pick_id_from": "id",
 		"role": "staff",
 	},
@@ -273,7 +273,7 @@ const TEMPLATES: Array = [
 			[7, "Gil", "Espresso", 3.00, "No"], [8, "Hana", "Latte", 4.50, "Yes"],
 		],
 		"col1": "item", "val1": "Latte", "col2": "paid", "val2": "Yes", "connector": "OR",
-		"problem": "Now show me every order that's a Latte OR already paid — either one qualifies for the closing report.",
+		"problem": "Now show me every order that's a Latte OR already paid. Either one qualifies for the closing report.",
 		"role": "staff",
 	},
 
@@ -335,7 +335,7 @@ const TEMPLATES: Array = [
 		],
 		"column": "item",
 		"letter_pool": ["L", "C"],
-		"problem_template": "A customer's asking — pull every item on today's board that starts with {letter}.",
+		"problem_template": "A customer's asking: pull every item on today's board that starts with {letter}.",
 		"role": "staff",
 	},
 
@@ -353,7 +353,7 @@ const TEMPLATES: Array = [
 		],
 		"column": "item",
 		"value_pool": ["Latte", "Espresso", "Tea"],
-		"problem_template": "Show me orders for {val1} and {val2} only — instead of writing two OR conditions, use a list.",
+		"problem_template": "Show me orders for {val1} and {val2} only. Instead of writing two OR conditions, use a list.",
 		"role": "staff",
 	},
 	{
@@ -387,7 +387,7 @@ const TEMPLATES: Array = [
 			[9, "Donut", "Pastries", 2.00],
 		],
 		"column": "price", "direction": "ASC",
-		"problem": "Can you pull up all menu items sorted by price — cheapest to most expensive? We're updating the board.",
+		"problem": "Can you pull up all menu items sorted by price, cheapest to most expensive? We're updating the board.",
 		"role": "staff",
 	},
 	{
@@ -403,7 +403,7 @@ const TEMPLATES: Array = [
 			[9, "Donut", "Pastries", 2.00],
 		],
 		"column": "price", "direction": "DESC",
-		"problem": "For the specials board, flip that — most expensive first this time.",
+		"problem": "For the specials board, flip that: most expensive first this time.",
 		"role": "staff",
 	},
 
@@ -420,7 +420,7 @@ const TEMPLATES: Array = [
 			[7, "Gil", "Espresso", 3.00, "No"], [8, "Hana", "Latte", 4.50, "Yes"],
 		],
 		"count_pool": [3, 5, 7],
-		"problem_template": "Morning rush is over — just show me the first {n} orders. I don't need the whole list.",
+		"problem_template": "Morning rush is over, so just show me the first {n} orders. I don't need the whole list.",
 		"role": "staff",
 	},
 	{
@@ -499,7 +499,7 @@ const TEMPLATES: Array = [
 			[4, "Cappuccino", 4.00], [5, "Juice", 6.00], [6, "Tea", 2.50],
 		],
 		"func": "SUM", "column": "price",
-		"problem": "I need today's total revenue — add up every price across all orders.",
+		"problem": "I need today's total revenue. Add up every price across all orders.",
 		"role": "staff",
 	},
 
@@ -546,7 +546,7 @@ const TEMPLATES: Array = [
 			[4, "Cappuccino", 4.00], [5, "Juice", 6.00], [6, "Tea", 2.50],
 		],
 		"base_col": "price", "multiplier": "0.9", "alias": "discounted_price",
-		"problem": "For the loyalty promo, apply a 10% discount to every price — but label the column 'discounted_price'.",
+		"problem": "For the loyalty promo, apply a 10% discount to every price, but label the column 'discounted_price'.",
 		"role": "staff",
 	},
 	{
@@ -559,7 +559,7 @@ const TEMPLATES: Array = [
 			[4, "Cappuccino", 4.00], [5, "Juice", 6.00], [6, "Tea", 2.50],
 		],
 		"base_col": "price", "multiplier": "1.1", "alias": "price_with_tax",
-		"problem": "The report needs prices with tax added, but the column name should be readable — call it 'price_with_tax'.",
+		"problem": "The report needs prices with tax added, but the column name should be readable. Call it 'price_with_tax'.",
 		"role": "staff",
 	},
 ]

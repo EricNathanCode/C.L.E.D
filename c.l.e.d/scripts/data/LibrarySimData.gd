@@ -42,7 +42,7 @@ const TEMPLATES: Array = [
 			[1, "SQL Basics", "Rivera", "Technology"], [2, "The Universe", "Hawking", "Science"],
 			[3, "Brief History", "Sagan", "Science"], [4, "Animal Farm", "Orwell", "Fiction"],
 		],
-		"problem_template": "I just need the {column} for every book — skip the rest.",
+		"problem_template": "I just need the {column} for every book. Skip the rest.",
 		"pick_from_columns": ["title", "author", "genre"],
 	},
 	{
@@ -136,7 +136,7 @@ const TEMPLATES: Array = [
 			[1, "Maria Santos", "SQL Basics", "June 10"], [2, "Mr. Tan", "The Universe", "June 15"],
 			[3, "Sofia Mendez", "Brief History", "June 20"], [4, "Carlos Reyes", "Animal Farm", "June 18"],
 		],
-		"problem_template": "I borrowed record id {target_id} but I need more time — can you extend it to {new_value}?",
+		"problem_template": "I borrowed record id {target_id} but I need more time. Can you extend it to {new_value}?",
 		"set_column": "return_date",
 		"pick_id_from": "id",
 		"new_value_pool": ["June 30", "July 2", "July 5", "June 28"],
@@ -150,7 +150,7 @@ const TEMPLATES: Array = [
 			[1, "Maria Santos", "SQL Basics", "June 10"], [2, "Mr. Tan", "The Universe", "June 15"],
 			[3, "Sofia Mendez", "Brief History", "June 20"], [4, "Carlos Reyes", "Animal Farm", "June 18"],
 		],
-		"problem_template": "Borrow record id {target_id} has the wrong due date — it should be {new_value}.",
+		"problem_template": "Borrow record id {target_id} has the wrong due date. It should be {new_value}.",
 		"set_column": "return_date",
 		"pick_id_from": "id",
 		"new_value_pool": ["June 24", "June 26", "July 1", "June 29"],
@@ -243,7 +243,7 @@ const TEMPLATES: Array = [
 			[7, "Sherlock Holmes", "Doyle", "Mystery"], [8, "Brave New World", "Huxley", "Fiction"],
 		],
 		"column": "genre",
-		"problem": "For the genre catalogue display, list each unique genre once — nothing repeated.",
+		"problem": "For the genre catalogue display, list each unique genre once, nothing repeated.",
 		"role": "staff",
 	},
 
@@ -273,7 +273,7 @@ const TEMPLATES: Array = [
 			[5, "Hamlet", "Drama", "Available"],
 		],
 		"col1": "genre", "val1": "Sci-Fi", "col2": "status", "val2": "Available", "connector": "OR",
-		"problem": "Now show me every book that's Sci-Fi OR already Available — either one gets a shelf tag.",
+		"problem": "Now show me every book that's Sci-Fi OR already Available. Either one gets a shelf tag.",
 		"role": "staff",
 	},
 
@@ -322,7 +322,7 @@ const TEMPLATES: Array = [
 		],
 		"column": "title",
 		"letter_pool": ["T", "D", "F"],
-		"problem_template": "A visitor partially remembers a title — can you find every book whose title starts with {letter}?",
+		"problem_template": "A visitor partially remembers a title. Can you find every book whose title starts with {letter}?",
 		"role": "staff",
 	},
 	{
@@ -354,7 +354,7 @@ const TEMPLATES: Array = [
 		],
 		"column": "genre",
 		"value_pool": ["Sci-Fi", "Fantasy", "Mystery"],
-		"problem_template": "I need books from {val1} or {val2} only — is there a cleaner way than writing OR conditions?",
+		"problem_template": "I need books from {val1} or {val2} only. Is there a cleaner way than writing OR conditions?",
 		"role": "staff",
 	},
 	{
@@ -401,7 +401,7 @@ const TEMPLATES: Array = [
 			[7, "Sherlock Holmes", "Doyle", "Mystery"], [8, "Brave New World", "Huxley", "Fiction"],
 		],
 		"column": "title", "direction": "DESC",
-		"problem": "For the printed shelf guide, flip that — sort titles Z to A this time.",
+		"problem": "For the printed shelf guide, flip that: sort titles Z to A this time.",
 		"role": "staff",
 	},
 
@@ -418,7 +418,7 @@ const TEMPLATES: Array = [
 			[7, "Sherlock Holmes", "Doyle", "Mystery"], [8, "Brave New World", "Huxley", "Fiction"],
 		],
 		"count_pool": [3, 5, 7],
-		"problem_template": "The website needs a 'Recently Added' preview — just the first {n} books, not the whole catalog.",
+		"problem_template": "The website needs a 'Recently Added' preview: just the first {n} books, not the whole catalog.",
 		"role": "staff",
 	},
 	{
@@ -551,7 +551,7 @@ const TEMPLATES: Array = [
 			[1, "Mendez", 10], [2, "Santos", 4], [3, "Reyes", 0],
 		],
 		"base_col": "overdue_days", "multiplier": "1.5", "alias": "rush_fee",
-		"problem": "For expedited notices, apply the rush penalty rate — but label the column 'rush_fee'.",
+		"problem": "For expedited notices, apply the rush penalty rate, but label the column 'rush_fee'.",
 		"role": "staff",
 	},
 ]

@@ -14,7 +14,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 [application]
 
-config/name="C.L.I.D"
+config/name="CLID"
 run/main_scene="res://scene/Main.tscn"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="Godot/app_userdata/C.L.E.D"
@@ -25,6 +25,7 @@ config/windows_native_icon="res://images/app_icon.ico"
 [autoload]
 
 GameManager="*res://scripts/GameManager.gd"
+LanRank="*res://scripts/LanRank.gd"
 
 [display]
 
