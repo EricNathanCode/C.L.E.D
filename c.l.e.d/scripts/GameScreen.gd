@@ -83,6 +83,7 @@ var _current_gm:      Node       = null
 var _dlg_line:        ColorRect  = null
 var _saved_story:     Array      = []   # story to resume once the "fail" dialogue's retry step fires
 var _saved_step:      int        = 0
+var _answer_fx:       Control    = null   # the big CORRECT!/WRONG! burst while it plays
 
 func _ready() -> void:
 	$SceneBG.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
@@ -272,6 +273,10 @@ func _unhandled_input(event: InputEvent) -> void:
 	if not visible:
 		return
 	if not event is InputEventKey or not event.pressed:
+		return
+	# Keys wait while "WRONG!" plays before the fail scene
+	if is_instance_valid(_answer_fx) and _answer_fx.mouse_filter == Control.MOUSE_FILTER_STOP:
+		get_viewport().set_input_as_handled()
 		return
 
 	var sql_open: bool = $SQLOverlay.visible
@@ -485,6 +490,7 @@ func _show_challenge(step: Dictionary, gm_key: String) -> void:
 			if cont.visible and cont.is_visible_in_tree() and not chimed[0]:
 				chimed[0] = true
 				GameManager.play_correct()
+				_answer_burst(true)
 		)
 
 	$SceneBG.visible      = false
@@ -497,18 +503,34 @@ func _show_challenge(step: Dictionary, gm_key: String) -> void:
 func _on_gm_wrong() -> void:
 	GameManager.play_wrong()
 	GameManager.stop_speaking()
-	if _current_gm and is_instance_valid(_current_gm):
-		if _current_gm.on_wrong.is_connected(_on_gm_wrong):
-			_current_gm.on_wrong.disconnect(_on_gm_wrong)
 
 	var current_step: Dictionary = _story[_step]
 	var fail_steps: Array = current_step.get("fail", [])
 	if fail_steps.is_empty():
+		_answer_burst(false)   # no fail scene: stay on the challenge and try again
 		return
+
+	if _current_gm and is_instance_valid(_current_gm):
+		if _current_gm.on_wrong.is_connected(_on_gm_wrong):
+			_current_gm.on_wrong.disconnect(_on_gm_wrong)
 
 	# Only count as a wrong attempt when a fail path actually branches
 	GameManager.record_wrong()
 
+	# "WRONG!" pops up first; the fail scene starts once it has faded away
+	var gm: Node = _current_gm
+	_answer_burst(false, func():
+		if gm == _current_gm and is_instance_valid(gm) and is_visible_in_tree():
+			_start_fail(fail_steps)
+	, true)
+
+# Big centre "CORRECT!" / "WRONG!" (see ComicFx.answer_burst)
+func _answer_burst(correct: bool, on_done: Callable = Callable(), block: bool = false) -> void:
+	if is_instance_valid(_answer_fx):
+		_answer_fx.queue_free()
+	_answer_fx = Fx.answer_burst(self, correct, on_done, block)
+
+func _start_fail(fail_steps: Array) -> void:
 	var fail_story: Array = fail_steps.duplicate(true)
 	fail_story.append({ "type": "retry" })
 

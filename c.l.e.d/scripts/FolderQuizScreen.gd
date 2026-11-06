@@ -473,10 +473,10 @@ func _on_submit(text: String) -> void:
 		_result_lbl.text = "Correct!"
 		(_result_lbl.get_meta("icon") as TextureRect).texture = Fx.icon("check", 30)
 		panel.visible    = true
-		_v2_pop_correct(panel)
+		Fx.answer_burst(self, true)
 		GameManager.play_correct()
 		_current_q += 1
-		await get_tree().create_timer(0.75).timeout
+		await get_tree().create_timer(1.0).timeout
 		_show_question()
 	else:
 		sbox.bg_color = Color("#FFD9D3")
@@ -484,6 +484,7 @@ func _on_submit(text: String) -> void:
 		_result_lbl.text = "Wrong answer check the hint and try again."
 		(_result_lbl.get_meta("icon") as TextureRect).texture = Fx.icon("cross", 30)
 		panel.visible    = true
+		Fx.answer_burst(self, false)
 		GameManager.play_wrong()
 		_input.select_all()
 		_shake(panel)
@@ -552,24 +553,6 @@ func _style_primary(btn: Button) -> void:
 # Cream secondary button (kept under its old name so every call site still works)
 func _style_ghost(btn: Button) -> void:
 	Comic.apply_button(btn, "secondary", 20, true, 16, 7)
-
-# ── Comic v2: a "CORRECT!" burst pops beside the feedback box ──
-func _v2_pop_correct(panel: Control) -> void:
-	var b := Fx.sticker("CORRECT!", "", Comic.YELLOW, Comic.RED, Vector2(190, 110), 36, 14, 8.0)
-	b.z_index = 30
-	b.visible = false
-	add_child(b)
-	# The feedback bar was hidden until now: wait one frame so it has its real
-	# position, then sit the burst on its right end (clear of the question text).
-	await get_tree().process_frame
-	if not is_instance_valid(b) or not is_instance_valid(panel):
-		return
-	b.position = panel.global_position - global_position + Vector2(panel.size.x - 170.0, (panel.size.y - 110.0) * 0.5)
-	b.visible = true
-	Fx.pop(b)
-	var tw := b.create_tween()
-	tw.tween_interval(0.7)
-	tw.tween_callback(b.queue_free)
 
 # ── Comic v2 look (decoration only) ───────────────────────
 const V2_CHAR: Dictionary = {

@@ -17,6 +17,7 @@ CLID is a free educational game for practicing SQL through story-based lessons. 
 
 [b]2. Using the game[/b]
 You may play CLID for free for personal and educational use. Please do not sell it, re-upload it as your own work, or remove its credits.
+The game runs in fullscreen. During a lesson, a Folder Challenge or a Simulation run, stay in the game: if you leave it (for example with Alt+Tab), a 10-second warning starts, and if you stay away longer, that lesson or run stops and is not saved.
 
 [b]3. Your account[/b]
 Your account exists only on this device (or in this web browser). There is no online server, so:

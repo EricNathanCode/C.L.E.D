@@ -118,19 +118,7 @@ static func _dress_up(gm: Control, term_win: FloatingWindow) -> void:
 				c.set_corner_radius_all(26)
 				hint.add_theme_stylebox_override(st, c)
 
-	# A "CORRECT!" burst pops onto the terminal window when the answer is right
+	# (The big "CORRECT!" burst is shown by GameScreen in the middle of the screen)
 	var cont: Button = gm.get_node_or_null("%ContinueButton")
 	if cont != null:
 		cont.text = "Continue Story  ▶"
-		var stick: Array = [null]
-		cont.visibility_changed.connect(func():
-			if cont.visible and stick[0] == null and is_instance_valid(term_win):
-				var b := Fx.sticker("CORRECT!", "", Comic.YELLOW, Comic.RED, Vector2(200, 108), 38, 16, 7.0)
-				b.position = Vector2(term_win.size.x - 292.0, -62.0)
-				term_win.add_child(b)
-				Fx.pop(b)
-				stick[0] = b
-			elif not cont.visible and stick[0] != null and is_instance_valid(stick[0]):
-				stick[0].queue_free()
-				stick[0] = null
-		)

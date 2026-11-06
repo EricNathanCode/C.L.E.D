@@ -561,6 +561,81 @@ static func sticker(word: String, sub: String, fill: Color, word_color: Color, s
 		b.add_child(s)
 	return b
 
+# Big "CORRECT!" / "WRONG!" burst in the middle of `host`. It pops in, wobbles
+# (correct) or shakes "no" (wrong), then grows and fades away (about 1.3 s).
+# `on_done` runs once it's gone. With block = true nothing behind it can be
+# clicked while it plays (used before the fail scene starts).
+static func answer_burst(host: Control, correct: bool, on_done: Callable = Callable(), block: bool = false) -> Control:
+	var layer := Control.new()
+	layer.z_index = 90
+	layer.mouse_filter = Control.MOUSE_FILTER_STOP if block else Control.MOUSE_FILTER_IGNORE
+	host.add_child(layer)
+	layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+
+	var lines := SpeedLines.new()
+	lines.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	lines.center = Vector2(0.5, 0.5)
+	lines.inner_r = 240.0
+	lines.color = Color(INK, 0.2) if correct else Color(RED, 0.24)
+	lines.modulate.a = 0.0
+	layer.add_child(lines)
+
+	# The group flattens the burst so it fades as one picture (no shadow or
+	# outline dots showing through). The holder is centred and does the
+	# scaling; the burst inside it shakes.
+	var group := CanvasGroup.new()
+	layer.add_child(group)
+	var sz := Vector2(640, 340)
+	var holder := Control.new()
+	holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	holder.size = sz
+	holder.pivot_offset = sz / 2.0
+	group.add_child(holder)
+	var centre := func(): holder.position = (layer.size - sz) / 2.0
+	layer.resized.connect(centre)
+	centre.call()
+
+	var b := sticker("CORRECT!" if correct else "WRONG!", "", YELLOW if correct else RED,
+			RED if correct else Color.WHITE, sz, 118, 18, 0.0)
+	b.shadow = 13.0
+	b.outline = 7.0
+	b.seed_value = 33 if correct else 71
+	var word: Label = b.get_child(0)
+	word.add_theme_constant_override("outline_size", 16)
+	word.add_theme_color_override("font_shadow_color", INK)
+	word.add_theme_constant_override("shadow_offset_x", 5)
+	word.add_theme_constant_override("shadow_offset_y", 6)
+	holder.add_child(b)
+
+	holder.scale = Vector2(0.15, 0.15)
+	holder.rotation_degrees = -18.0 if correct else 12.0
+	var tw := layer.create_tween()
+	# Pop in
+	tw.tween_property(holder, "scale", Vector2(1.12, 1.12), 0.22).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tw.parallel().tween_property(holder, "rotation_degrees", -5.0 if correct else 3.0, 0.22).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tw.parallel().tween_property(lines, "modulate:a", 1.0, 0.16)
+	tw.tween_property(holder, "scale", Vector2.ONE, 0.08)
+	if correct:
+		# Happy wobble
+		tw.tween_property(holder, "rotation_degrees", 4.0, 0.1)
+		tw.tween_property(holder, "rotation_degrees", -2.0, 0.1)
+		tw.tween_property(holder, "rotation_degrees", 0.0, 0.1)
+	else:
+		# Shakes its head "no"
+		for x in [-22.0, 20.0, -14.0, 10.0, 0.0]:
+			tw.tween_property(b, "position:x", x, 0.06)
+	tw.tween_interval(0.35)
+	# Grow a little and fade away
+	tw.tween_property(holder, "scale", Vector2(1.3, 1.3), 0.3).set_ease(Tween.EASE_IN)
+	tw.parallel().tween_property(group, "self_modulate:a", 0.0, 0.3)
+	tw.parallel().tween_property(lines, "modulate:a", 0.0, 0.3)
+	tw.tween_callback(func():
+		layer.queue_free()
+		if on_done.is_valid():
+			on_done.call()
+	)
+	return layer
+
 # Quick "pop in" for a sticker.
 static func pop(ctrl: Control) -> void:
 	var final_scale: Vector2 = ctrl.scale

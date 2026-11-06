@@ -82,6 +82,7 @@ CLID is a desktop game built with the Godot Engine and packaged as MSIX with the
 ### Notes for certification
 No internet connection or online account is needed. On first launch, choose "Sign Up" and create a local account (username: 3–20 letters, numbers or underscores; any password), then pick a world and start Lesson 1. Simulation Mode is on the lesson dashboard.
 The "Rank" button on the lesson dashboard opens the Class Ranking. It uses UDP broadcast on the local network only (port 47823) to share the username, lesson stars and Simulation best scores with other copies of CLID on the same Wi-Fi; Windows may show a firewall prompt the first time it opens. On a single PC it shows only your own scores. Sharing can be turned off in the same window.
+The app starts in fullscreen and has a classroom anti-cheat rule: leaving the window (Alt+Tab) during a lesson, Folder Challenge or Simulation run shows a 10-second warning with a beep, and staying away longer stops that lesson without saving it. Menus and the lesson list are not affected, and "Exit Game" on the world screen closes the app normally.
 The Windows App Certification Kit passes all required tests. Its optional "Blocked executables" check flags text inside the Godot engine runtime; the app does not launch other programs.
 
 ### Publishing hold
